@@ -2,10 +2,6 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
-/**
- * @file
- * The file declars the LottiePlayer class.
- */
 package lottie4cj
 
 public class ShapeData {
