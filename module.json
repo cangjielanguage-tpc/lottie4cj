@@ -1,0 +1,12 @@
+{
+  "cjc_version": "0.48.2",
+  "organization": "PLLab",
+  "name": "lottie4cj",
+  "description": "parse animation",
+  "version": "0.0.1",
+  "requires": {},
+  "package_requires": {},
+  "foreign_requires": {},
+  "output_type": "dynamic",
+  "command_option": "-O2"
+}
