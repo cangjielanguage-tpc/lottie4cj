@@ -34,7 +34,7 @@ public class AnimatablePathValueParser {
             }
         } else {
             //Gets system/device pixel density => let scale: Float64 = Utils.dpScale()
-            let scale: Float64 = 1.0
+            let scale: Float64 = SCALE_FEFAULT
             keyframes.append(Keyframe<PointF>(JsonUtils.jsonToPoint(reader, scale)))
         }
         return keyframes

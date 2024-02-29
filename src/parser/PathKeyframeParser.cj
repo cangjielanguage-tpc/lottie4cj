@@ -14,7 +14,7 @@ class PathKeyframeParser {
         }
 
         //Gets system/device pixel density => let scale: Float64 = Utils.dpScale()
-        let scale: Float64 = 1.0
+        let scale: Float64 = SCALE_FEFAULT
         let keyframe: Keyframe<PointF> = KeyframeParser.parse(reader, composition, scale, PathParser.INSTANCE, animated, false)
 
         return keyframe
