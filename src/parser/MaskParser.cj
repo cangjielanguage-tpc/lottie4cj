@@ -17,7 +17,7 @@ class MaskParser {
         "nm"    // 6 = nm
     ]
 
-    static func parse(jo: JsonObject, composition: AnimationData): Mask {
+    static func parse(jo: JsonObject): Mask {
 
         var cl: Bool = false
         var inverted: Bool = false
@@ -39,17 +39,17 @@ class MaskParser {
 
         if (jo.containsKey(NAMES[3])) { //"pt"
             let jsonObject: JsonObject = jo[NAMES[3]].asObject()
-            maskPath = AnimatableValueParser.parseShapeData(jsonObject, composition)
+            maskPath = AnimatableValueParser.parseShapeData(jsonObject)
         }
 
         if (jo.containsKey(NAMES[4])) { //"o"
             let jsonObject: JsonObject = jo[NAMES[4]].asObject()
-            opacity = AnimatableValueParser.parseInteger(jsonObject, composition)
+            opacity = AnimatableValueParser.parseInteger(jsonObject)
         }
 
         if (jo.containsKey(NAMES[5])) { //"x"
             let jsonObject: JsonObject = jo[NAMES[5]].asObject()
-            x = AnimatableValueParser.parseInteger(jsonObject, composition)
+            x = AnimatableValueParser.parseInteger(jsonObject)
         }
 
         if (jo.containsKey(NAMES[6])) { //"nm"

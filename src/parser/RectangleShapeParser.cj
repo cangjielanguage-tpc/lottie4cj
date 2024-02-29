@@ -14,7 +14,7 @@ class RectangleShapeParser {
         "hd"     // 4
     ]
 
-    static func parse(reader: JsonObject, composition: AnimationData): RectangleShape {
+    static func parse(reader: JsonObject): RectangleShape {
         var name: String = ""
 
         var position: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()
@@ -28,13 +28,13 @@ class RectangleShapeParser {
         }
 
         if (reader.containsKey(NAMES[1])) {  //"p"
-            position = AnimatablePathValueParser.parseSplitPath(reader[NAMES[1]], composition)
+            position = AnimatablePathValueParser.parseSplitPath(reader[NAMES[1]])
         }
         if (reader.containsKey(NAMES[2])) {  //"s"
-            size = AnimatableValueParser.parsePoint(reader[NAMES[2]], composition)
+            size = AnimatableValueParser.parsePoint(reader[NAMES[2]])
         }
         if (reader.containsKey(NAMES[3])) {  //"s"
-            roundedness = AnimatableValueParser.parseFloat(reader[NAMES[3]], composition)
+            roundedness = AnimatableValueParser.parseFloat(reader[NAMES[3]])
         }
 
         if (reader.containsKey(NAMES[4])) {  //"hd"

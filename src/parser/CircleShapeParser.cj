@@ -14,7 +14,7 @@ class CircleShapeParser {
         "d"     // 4
     ]
 
-    static func parse(reader: JsonObject, composition: AnimationData, d: Int64): CircleShape {
+    static func parse(reader: JsonObject): CircleShape {
         var name: String = ""
         var position: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()
         var size: ArrayList<Keyframe<PointF>> = ArrayList<Keyframe<PointF>>()
@@ -26,10 +26,10 @@ class CircleShapeParser {
         }
 
         if (reader.containsKey(NAMES[1])) {  //"p"
-            position = AnimatablePathValueParser.parseSplitPath(reader[NAMES[1]], composition)
+            position = AnimatablePathValueParser.parseSplitPath(reader[NAMES[1]])
         }
         if (reader.containsKey(NAMES[2])) {  //"s"
-            size = AnimatableValueParser.parsePoint(reader[NAMES[2]], composition)
+            size = AnimatableValueParser.parsePoint(reader[NAMES[2]])
         }
         if (reader.containsKey(NAMES[3])) {  //"hd"
             hidden = reader[NAMES[3]].asBool().getValue()

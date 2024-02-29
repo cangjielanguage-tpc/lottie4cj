@@ -18,6 +18,7 @@ class Effect <: ToString {
     init(ty: Int64, v: ContentModelPK, isNull: Bool){
         this.ty = ty
         this.v = v
+        this.isNull = isNull
     }
 
     public func toString(): String {

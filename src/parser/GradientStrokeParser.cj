@@ -29,7 +29,7 @@ class GradientStrokeParser {
         "v"
     ]
 
-    static func parse(reader: JsonObject, composition: AnimationData): GradientStroke {
+    static func parse(reader: JsonObject): GradientStroke {
         var name: String = ""
         var g: ContentModelP = ContentModelP()
         var opacity: ArrayList<Keyframe<Int64>> = ArrayList<Keyframe<Int64>>()
@@ -57,13 +57,13 @@ class GradientStrokeParser {
             }
 
             if (jo.containsKey(GRADIENT_NAMES[1])) { // "k"
-                g.k = AnimatableValueParser.parseGradientColor(jo[GRADIENT_NAMES[1]], composition, points)
+                g.k = AnimatableValueParser.parseGradientColor(jo[GRADIENT_NAMES[1]], points)
             }
         }
 
         if (reader.containsKey(NAMES[2])) { // "o"
             let jv: JsonValue = reader[NAMES[2]]
-            opacity = AnimatableValueParser.parseInteger(jv, composition)
+            opacity = AnimatableValueParser.parseInteger(jv)
         }
         if (reader.containsKey(NAMES[3])) { // "t"
             gradientType = reader[NAMES[3]].asInt().getValue()
@@ -71,15 +71,15 @@ class GradientStrokeParser {
 
         if (reader.containsKey(NAMES[4])) { // "s"
             let jv: JsonValue = reader[NAMES[4]]
-            startPoint = AnimatableValueParser.parsePoint(jv, composition)
+            startPoint = AnimatableValueParser.parsePoint(jv)
         }
         if (reader.containsKey(NAMES[5])) { // "e"
             let jv: JsonValue = reader[NAMES[5]]
-            endPoint = AnimatableValueParser.parsePoint(jv, composition)
+            endPoint = AnimatableValueParser.parsePoint(jv)
         }
         if (reader.containsKey(NAMES[6])) { // "w"
             let jv: JsonValue = reader[NAMES[6]]
-            width = AnimatableValueParser.parseFloat(jv, composition)
+            width = AnimatableValueParser.parseFloat(jv)
         }
 
         if (reader.containsKey(NAMES[7])) { // "lc"
@@ -106,7 +106,7 @@ class GradientStrokeParser {
                     n = jo[DASH_PATTERN_NAMES[0]].asString().getValue()
                 }
                 if (jo.containsKey(DASH_PATTERN_NAMES[1])) { // "v"
-                    v = AnimatableValueParser.parseFloat(reader, composition)
+                    v = AnimatableValueParser.parseFloat(reader)
                 }
 
                 if (n == "d" || n == "g") {

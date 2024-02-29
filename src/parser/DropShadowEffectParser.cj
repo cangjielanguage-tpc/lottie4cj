@@ -14,21 +14,21 @@ public class DropShadowEffectParser {
         "ty"
     ]
 
-    func parse(reader: JsonObject, composition: AnimationData): ArrayList<DropShadowEffect> {
+    func parse(reader: JsonObject): ArrayList<DropShadowEffect> {
       
         let ef: ArrayList<DropShadowEffect> = ArrayList<DropShadowEffect>()
         if (reader.containsKey(DROP_SHADOW_EFFECT_NAMES)) { //"layers"."ef"."ef"
             let ja: JsonArray = reader[DROP_SHADOW_EFFECT_NAMES].asArray()
             for (i in 0..ja.size()) {
                 let jo: JsonObject = ja[i].asObject()
-                let dse: DropShadowEffect = maybeParseInnerEffect(jo, composition)
+                let dse: DropShadowEffect = maybeParseInnerEffect(jo)
                 ef.append(dse)
             }
         }
         return ef
     }
 
-    private func maybeParseInnerEffect(reader: JsonObject, composition: AnimationData): DropShadowEffect {
+    private func maybeParseInnerEffect(reader: JsonObject): DropShadowEffect {
 
         var currentEffectName: String = ""
         var isCorrectType: Int64 = 0
@@ -39,11 +39,11 @@ public class DropShadowEffectParser {
         }
         if (reader.containsKey(INNER_EFFECT_NAMES[1])) {//"v" //"layers"."ef"."ef"."v"
             if (currentEffectName == "Shadow Color") {
-                v = AnimatableValueParser.parseColor(reader[INNER_EFFECT_NAMES[1]], composition)
+                v = AnimatableValueParser.parseColor(reader[INNER_EFFECT_NAMES[1]])
             } else if (currentEffectName == "Opacity" || currentEffectName == "Direction") {
-                v = AnimatableValueParser.parseArrayFloat(reader[INNER_EFFECT_NAMES[1]], composition, false)
+                v = AnimatableValueParser.parseArrayFloat(reader[INNER_EFFECT_NAMES[1]])
             } else if (currentEffectName == "Distance" || currentEffectName == "Softness") {
-                v = AnimatableValueParser.parseArrayFloat(reader[INNER_EFFECT_NAMES[1]], composition)
+                v = AnimatableValueParser.parseArrayFloat(reader[INNER_EFFECT_NAMES[1]])
             }
         }
 

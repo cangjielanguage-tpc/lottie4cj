@@ -5,8 +5,11 @@
 package parser
 
 from std import convert.*
+from std import log.*
 
 public let SCALE_FEFAULT: Float64 = 1.0
+
+public let logger: SimpleLogger = SimpleLogger()
 
 /**
  * A parser for lottie json that parses into AnimationData objects.
@@ -33,8 +36,6 @@ public class AnimationDataParser {
     ]
     
     public static func parse(reader: String): AnimationData {
-        /* Get system/device pixel density. let scale: Float64 = Utils.dpScale() */
-        let scale: Float64 = SCALE_FEFAULT
 
         var startFrame: Float64 = 0.0
         var endFrame: Float64 = 0.0
@@ -84,17 +85,17 @@ public class AnimationDataParser {
             let minorVersion: Int32 = Int32.parse(versions[1])
             let patchVersion: Int32 = Int32.parse(versions[2])
             if (!Utils.isAtLeastVersion(majorVersion, minorVersion, patchVersion, 4, 4, 0)) {
-                composition.addWarning("Lottie only supports bodymovin >= 4.4.0")
+                throw Exception("Lottie only supports bodymovin >= 4.4.0")
             }
         }
 
         if (jsonObject.containsKey(NAMES[6])) {
             let ja: JsonArray = jsonObject[NAMES[6]].asArray()
-            parseLayers(ja, composition, layers, layerMap)
+            parseLayers(ja, layers, layerMap)
         }
         if (jsonObject.containsKey(NAMES[7])) {
             let ja: JsonArray = jsonObject[NAMES[7]].asArray()
-            parseAssets(ja, composition, assets)
+            parseAssets(ja, assets)
         }
 
         if (jsonObject.containsKey(NAMES[8])) {
@@ -103,7 +104,7 @@ public class AnimationDataParser {
         }
         if (jsonObject.containsKey(NAMES[9])) {
             let ja: JsonArray = jsonObject[NAMES[9]].asArray()
-            parseChars(ja, composition, chars)
+            parseChars(ja, chars)
         }
 
         if (jsonObject.containsKey(NAMES[10])) {
@@ -134,13 +135,13 @@ public class AnimationDataParser {
         return composition
     }
 
-    private static func parseLayers(reader: JsonArray, composition: AnimationData, layers: ArrayList<Layer>, layerMap: HashMap<Int64, Layer>): Unit {
+    private static func parseLayers(reader: JsonArray, layers: ArrayList<Layer>, layerMap: HashMap<Int64, Layer>): Unit {
         var imageCount: Int32 = 0
         /* Iterate through and parse each layer. */
         for (i in 0..reader.size()) {
             let jv: JsonValue = reader[i]
             /* Layer parsing. */
-            let layer: Layer = LayerParser.parse(jv, composition)
+            let layer: Layer = LayerParser.parse(jv)
             if (layer.ty == LAYERS_TY_IMAGE) {
                 imageCount++
             }
@@ -160,7 +161,7 @@ public class AnimationDataParser {
         "u"       // 5  // Picture path
     ]
 
-    private static func parseAssets(reader: JsonArray, composition: AnimationData, assets: ArrayList<Asset>): Unit {
+    private static func parseAssets(reader: JsonArray, assets: ArrayList<Asset>): Unit {
         for (i in 0..reader.size()) {
             var id: String = ""
             let layers: ArrayList<Layer> = ArrayList<Layer>()
@@ -181,7 +182,7 @@ public class AnimationDataParser {
                 let ja: JsonArray = jo[ASSETS_NAMES[1]].asArray()
                 for (j in 0..ja.size()) {
                   let jsonValue: JsonValue = ja[j]
-                  let layer: Layer = LayerParser.parse(jsonValue, composition)
+                  let layer: Layer = LayerParser.parse(jsonValue)
                   layerMap.put(layer.ind, layer)
                   layers.append(layer)
                 }
@@ -222,10 +223,10 @@ public class AnimationDataParser {
         }
     }
     
-    private static func parseChars(reader: JsonArray, composition: AnimationData, chars: ArrayList<FontCharacter>): Unit {
+    private static func parseChars(reader: JsonArray, chars: ArrayList<FontCharacter>): Unit {
         for (i in 0..reader.size()) {
             let jo: JsonObject = reader[i].asObject()
-            let character: FontCharacter = FontCharacterParser.parse(jo, composition)
+            let character: FontCharacter = FontCharacterParser.parse(jo)
             chars.append(character)
         }
     }

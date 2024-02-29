@@ -22,7 +22,7 @@ class ShapeStrokeParser {
         "v"    // 1
     ]
 
-    static func parse(reader: JsonObject, composition: AnimationData): ShapeStroke {
+    static func parse(reader: JsonObject): ShapeStroke {
         var name: String = ""
         var color: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>()
 
@@ -39,15 +39,15 @@ class ShapeStrokeParser {
         }
         if (reader.containsKey(NAMES[1])) { //"c"  //"layers"."shapes"."c"  <==  "layers"."shapes".{"ty": "st"}
             let jv: JsonValue = reader[NAMES[1]]
-            color = AnimatableValueParser.parseColor(jv, composition)
+            color = AnimatableValueParser.parseColor(jv)
         }
         if (reader.containsKey(NAMES[2])) {//"w"
             let jv: JsonValue = reader[NAMES[2]]
-            width = AnimatableValueParser.parseFloat(jv, composition)
+            width = AnimatableValueParser.parseFloat(jv)
         }
         if (reader.containsKey(NAMES[3])) {//"o"
             let jo: JsonObject = reader[NAMES[3]].asObject()
-            opacity = AnimatableValueParser.parseInteger(jo, composition)
+            opacity = AnimatableValueParser.parseInteger(jo)
         }
 
         if (reader.containsKey(NAMES[4])) { // "lc"
@@ -75,7 +75,7 @@ class ShapeStrokeParser {
                     n = jo[DASH_PATTERN_NAMES[0]].asString().getValue()
                 }
                 if (jo.containsKey(DASH_PATTERN_NAMES[1])) { // "v"
-                    v = AnimatableValueParser.parseFloat(jo[DASH_PATTERN_NAMES[1]], composition)
+                    v = AnimatableValueParser.parseFloat(jo[DASH_PATTERN_NAMES[1]])
                 }
 
                 let cmd: ContentModelD = ContentModelD(n: n, v: ContentModelDK(v))

@@ -12,7 +12,7 @@ class ShapeGroupParser {
         "it"
     ]
 
-    static func parse(reader: JsonObject, composition: AnimationData): ShapeGroup {
+    static func parse(reader: JsonObject): ShapeGroup {
         var name: String = ""
         var hidden: Bool = false
         var items: ArrayList<ContentModel> = ArrayList<ContentModel>()
@@ -27,7 +27,7 @@ class ShapeGroupParser {
             let ja: JsonArray = reader[NAMES[2]].asArray()
             for (i in 0..ja.size()) {
                 let jo: JsonObject = ja[i].asObject()
-                let newItem: ContentModel = ContentModelParser.parse(jo, composition)
+                let newItem: ContentModel = ContentModelParser.parse(jo)
                 if (newItem.types != -1) {
                     items.append(newItem)
                 }

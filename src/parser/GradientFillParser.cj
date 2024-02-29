@@ -21,7 +21,7 @@ class GradientFillParser {
         "k"
     ]
 
-    static func parse(reader: JsonObject, composition: AnimationData): GradientFill {
+    static func parse(reader: JsonObject): GradientFill {
         var name: String = ""
         var g: ContentModelP = ContentModelP()
         var opacity: ArrayList<Keyframe<Int64>> = ArrayList<Keyframe<Int64>>()
@@ -42,13 +42,13 @@ class GradientFillParser {
                 g.p = jo[GRADIENT_NAMES[0]].asInt().getValue()
             }
             if (jo.containsKey(GRADIENT_NAMES[1])) { // "k"
-                g.k = AnimatableValueParser.parseGradientColor(jo[GRADIENT_NAMES[1]], composition, points)
+                g.k = AnimatableValueParser.parseGradientColor(jo[GRADIENT_NAMES[1]], points)
             }
         }
 
         if (reader.containsKey(NAMES[2])) { // "o"
             let jv: JsonValue = reader[NAMES[2]]
-            opacity = AnimatableValueParser.parseInteger(jv, composition)
+            opacity = AnimatableValueParser.parseInteger(jv)
         }
         if (reader.containsKey(NAMES[3])) { // "t"
             gradientType = reader[NAMES[3]].asInt().getValue()
@@ -56,11 +56,11 @@ class GradientFillParser {
 
         if (reader.containsKey(NAMES[4])) { // "s"
             let jv: JsonValue = reader[NAMES[4]]
-            startPoint = AnimatableValueParser.parsePoint(jv, composition)
+            startPoint = AnimatableValueParser.parsePoint(jv)
         }
         if (reader.containsKey(NAMES[5])) { // "e"
             let jv: JsonValue = reader[NAMES[5]]
-            endPoint = AnimatableValueParser.parsePoint(jv, composition)
+            endPoint = AnimatableValueParser.parsePoint(jv)
         }
 
         if (reader.containsKey(NAMES[6])) { // "r"

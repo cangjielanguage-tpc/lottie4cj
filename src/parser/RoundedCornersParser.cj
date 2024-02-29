@@ -12,7 +12,7 @@ public class RoundedCornersParser {
         "hd"  // 2
     ]
 
-    static func parse(reader: JsonObject, composition: AnimationData): RoundedCorners {
+    static func parse(reader: JsonObject): RoundedCorners {
         var name: String = ""
         var cornerRadius: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>() //用例1/2
         var hidden: Bool = false
@@ -21,7 +21,7 @@ public class RoundedCornersParser {
             name = reader[NAMES[0]].asString().getValue()
         }
         if (reader.containsKey(NAMES[1])) { // "r"
-            cornerRadius = AnimatableValueParser.parseFloat(reader[NAMES[1]], composition, true)
+            cornerRadius = AnimatableValueParser.parseFloat(reader[NAMES[1]])
         }
         if (reader.containsKey(NAMES[2])) { // "hd"
             hidden = reader[NAMES[2]].asBool().getValue()

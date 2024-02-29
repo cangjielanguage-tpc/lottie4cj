@@ -15,7 +15,7 @@ class ShapeFillParser {
         "hd"           // 5
     ]
 
-    static func parse(reader: JsonObject, composition: AnimationData): ShapeFill {
+    static func parse(reader: JsonObject): ShapeFill {
         var color: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>()
         var fillEnabled: Bool = false
         var opacity: ArrayList<Keyframe<Int64>> = ArrayList<Keyframe<Int64>>()
@@ -29,11 +29,11 @@ class ShapeFillParser {
         }
         if (reader.containsKey(NAMES[1])) { //"c"  //"layers"."shapes"."c"  <==  "layers"."shapes".{"ty": "fl"}
             let jv: JsonValue = reader[NAMES[1]]
-            color = AnimatableValueParser.parseColor(jv, composition)
+            color = AnimatableValueParser.parseColor(jv)
         }
         if (reader.containsKey(NAMES[2])) { // "o"
             let jv: JsonValue = reader[NAMES[2]]
-            opacity = AnimatableValueParser.parseInteger(jv, composition)
+            opacity = AnimatableValueParser.parseInteger(jv)
         }
         if (reader.containsKey(NAMES[3])) { //"fillEnabled"
             fillEnabled = reader[NAMES[3]].asBool().getValue()

@@ -11,7 +11,7 @@ public class GradientColorParser <: ValueParser<Array<Float64>> {
         this.colorPoints = colorPoints
     }
 
-    public func parse(reader: JsonValue, scale: Float64): Array<Float64> {
+    public func parse(reader: JsonValue): Array<Float64> {
         let ja: JsonArray = reader.asArray()
         let len: Int64 = ja.size()
         let array: Array<Float64> = Array<Float64>(len, item: 0.0)
