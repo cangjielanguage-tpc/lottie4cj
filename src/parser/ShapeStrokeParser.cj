@@ -75,13 +75,11 @@ class ShapeStrokeParser {
                     n = jo[DASH_PATTERN_NAMES[0]].asString().getValue()
                 }
                 if (jo.containsKey(DASH_PATTERN_NAMES[1])) { // "v"
-                    v = AnimatableValueParser.parseFloat(reader, composition)
+                    v = AnimatableValueParser.parseFloat(jo[DASH_PATTERN_NAMES[1]], composition)
                 }
 
-                if (n == "g") {
-                    let cmd: ContentModelD = ContentModelD(n: n, v: v)
-                    lineDashPattern.append(cmd)
-                }
+                let cmd: ContentModelD = ContentModelD(n: n, v: ContentModelDK(v))
+                lineDashPattern.append(cmd)
             }
         }
 

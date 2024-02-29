@@ -110,7 +110,7 @@ class GradientStrokeParser {
                 }
 
                 if (n == "d" || n == "g") {
-                    let cmd: ContentModelD = ContentModelD(n: n, v: v)
+                    let cmd: ContentModelD = ContentModelD(n: n, v: ContentModelDK(v))
                     lineDashPattern.append(cmd)
                 }
             }

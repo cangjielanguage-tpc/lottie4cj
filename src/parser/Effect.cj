@@ -10,12 +10,12 @@ type DropShadowEffect = Effect
 class Effect <: ToString {
     var ty: Int64 = 0
     var nm: String = ""
-    var v: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>()
+    var v: ContentModelPK = ContentModelPK()
     var isNull: Bool = true
 
     init(){}
 
-    init(ty: Int64, v: ArrayList<Keyframe<Array<Float64>>>, isNull: Bool){
+    init(ty: Int64, v: ContentModelPK, isNull: Bool){
         this.ty = ty
         this.v = v
     }

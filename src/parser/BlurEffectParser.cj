@@ -41,6 +41,6 @@ class BlurEffectParser {
             isNull = false
         }
 
-        return BlurEffect(isCorrectType, blurEffect, isNull)
+        return BlurEffect(isCorrectType, ContentModelPK(blurEffect), isNull)
     }
 }

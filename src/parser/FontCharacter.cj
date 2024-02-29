@@ -13,17 +13,23 @@ public class CharsData <: ToString {
     }
 
     public func toString(): String {
-        "CharsData: {\n shapes.size = ${shapes.size}\n }\n"
+        "CharsData: {\n shapes.size = ${shapes.size},\n shapes = ${shapes}\n }\n"
     }
 }
 
 public class FontCharacter <: Hashable & ToString {
 
+    private static let CHARS_HASH_DEFAULT: Int64 = 31
+
     public static func hashFor(ch: String, fFamily: String, style: String): Int64 {
-        //var result: Int64 = Int64(UInt32(ch))
+        /*
+         * Instead of calling hashcode directly,
+         * ch converts it to characters and then calculates the corresponding ASCII value
+         * var result: Int64 = Int64(UInt32(ch))
+         */
         var result: Int64 = ch.hashCode()
-        result = 31 * result + fFamily.hashCode()
-        result = 31 * result + style.hashCode()
+        result = CHARS_HASH_DEFAULT * result + fFamily.hashCode()
+        result = CHARS_HASH_DEFAULT * result + style.hashCode()
         return result
     }
 

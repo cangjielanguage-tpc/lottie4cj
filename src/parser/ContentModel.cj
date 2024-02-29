@@ -13,7 +13,6 @@ public open class ContentModel <: ToString {
     public open func toString(): String { "The ContentModel is None." }
 }
 
-// "g": {"p": points/Int64, "k": color/ArrayList<Keyframe<T>>}
 public open class ContentModelP <: ToString {
 
     var p: Int64 = 0
@@ -31,13 +30,26 @@ public open class ContentModelP <: ToString {
     }
 }
 
-//"d": [{"n": "String "v": ArrayList<Keyframe<T>>}]
+public open class ContentModelPK <: ToString {
+
+    var k: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>()
+
+    init(){}
+    init(k: ArrayList<Keyframe<Array<Float64>>>){
+        this.k = k
+    }
+
+    public func toString(): String {
+        return "ContentModelPK: { k = ${k} }"
+    }
+}
+
 public open class ContentModelD <: ToString {
 
     var n: String = ""
-    var v: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
+    var v: ContentModelDK = ContentModelDK()
 
-    init(n!: String = "", v!: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()){
+    init(n!: String = "", v!: ContentModelDK = ContentModelDK()){
         this.n = n
         this.v = v
     }
@@ -46,5 +58,18 @@ public open class ContentModelD <: ToString {
         return "ContentModelD: { \n" +
                "n = ${n},\n" +
                "v = ${v} \n}"
+    }
+}
+
+public open class ContentModelDK <: ToString {
+    var k: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
+
+    init(){}
+    init(k: ArrayList<Keyframe<Float64>>){
+        this.k = k
+    }
+
+    public func toString(): String {
+        return "ContentModelDK: { k = ${k} }"
     }
 }

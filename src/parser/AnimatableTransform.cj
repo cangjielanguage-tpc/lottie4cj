@@ -13,14 +13,15 @@ public class AnimatableTransform <: ContentModel {
     var p: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()      // 1 = position
     var s: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>()  // 2 = scale
 
-    var r: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()        // 4 = rotation
+    var r: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()                                // 4 = rotation
+
     var o: ArrayList<Keyframe<Int64>> = ArrayList<Keyframe<Int64>>()            // 5 = opacity
     var so: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()       // 6 = startOpacity
     var eo: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()       // 7 = endOpacity
     var sk: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()       // 8 = skew
     var sa: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()       // 9 = skewAngle
 
-    let ty: String = "tr"
+    var ty: String = ""
 
     init(){}
 

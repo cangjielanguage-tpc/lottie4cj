@@ -4,12 +4,28 @@
 
 package parser
 
+public class AnimatableTextPropertiesA <: ToString {
+
+    var a: AnimatableTextProperties = AnimatableTextProperties()
+
+    init(){}
+    init (a: AnimatableTextProperties){
+        this.a = a
+    }
+
+    public func toString(): String {
+        return "AnimatableTextPropertiesA: { a = ${a} }"
+    }
+}
+
 public class AnimatableTextProperties <: ToString {
 
-    var fc: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>() //0 = color
-    var sc: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>() //1 = stroke
-    var sw: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()               //2 = strokeWidth
-    var t: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()                //3 = tracking
+    var fc: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64()                       //0 = color
+
+    var sc: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>()   //1 = stroke
+    var sw: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()                 //2 = strokeWidth
+
+    var t: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()                                  //3 = tracking
 
     init(){}
 

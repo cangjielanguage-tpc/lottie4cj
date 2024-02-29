@@ -16,12 +16,12 @@ public class AnimatableTransformParser {
         "so", // 6
         "eo", // 7
         "sk", // 8
-        "sa"  // 9
+        "sa", // 9
+        "ty" // 10
     ]
     private static let ANIMATABLE_NAMES: String = "k"
 
     public static func parse(jsonObject: JsonObject, composition: AnimationData): AnimatableTransform {
-
         var anchorPoint: ArrayList<Keyframe<PointF>> = ArrayList<Keyframe<PointF>>()
         var position: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()
         var scale: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>()
@@ -32,10 +32,11 @@ public class AnimatableTransformParser {
         var endOpacity: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
         var skew: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
         var skewAngle: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
+        var ty: String = ""
 
         if (jsonObject.containsKey(NAMES[0])) { // "a"
             let jo: JsonObject = jsonObject[NAMES[0]].asObject()
-            if (jo.containsKey(ANIMATABLE_NAMES)) { //"k"
+            if (jo.containsKey(ANIMATABLE_NAMES)) {//"k"
                 let jv: JsonValue = jo[ANIMATABLE_NAMES]
                 anchorPoint = AnimatablePathValueParser.parse(jv, composition)
             }
@@ -74,17 +75,21 @@ public class AnimatableTransformParser {
             let jv: JsonValue = jsonObject[NAMES[9]]
             skewAngle = AnimatableValueParser.parseFloat(jv, composition, false)
         }
+        if (jsonObject.containsKey(NAMES[10])) { //  "ty"
+            ty = jsonObject[NAMES[10]].asString().getValue()
+        }
 
         let cm: AnimatableTransform = AnimatableTransform()
         cm.a = anchorPoint
         cm.p = position
         cm.s = scale
-        cm.r = rotation
+        cm.r = ArrayKeyframeFloat64(rotation)
         cm.o = opacity
         cm.so = startOpacity
         cm.eo = endOpacity
         cm.sk = skew
         cm.sa = skewAngle
+        cm.ty = ty
         return cm
     }
 

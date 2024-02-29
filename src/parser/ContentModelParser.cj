@@ -23,13 +23,11 @@ class ContentModelParser {
             types = reader[NAMES[0]].asString().getValue()
         }
 
-        println("types = ${types}")
-
         if (types.isEmpty()) {
             return model
         }
 
-        if (reader.containsKey(NAMES[1])) {
+        if (reader.containsKey(NAMES[1]) && (types == "el" || types == "sr")) {
             d = reader[NAMES[1]].asInt().getValue()
         }
 
