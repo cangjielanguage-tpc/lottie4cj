@@ -52,10 +52,10 @@ public class AnimatableTextPropertiesParser {
         }
 
         let cm: AnimatableTextProperties = AnimatableTextProperties()
-        cm.fc = color
+        cm.fc = ArrayKeyframeArrayFloat64(color)
         cm.sc = stroke
         cm.sw = strokeWidth
-        cm.t = tracking
+        cm.t = ArrayKeyframeFloat64(tracking)
         return cm
     }
 }

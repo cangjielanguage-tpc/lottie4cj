@@ -11,7 +11,7 @@ public class ShapeGroup <: ContentModel {
      */
     var nm: String = ""                                          // 0 = name
     var hd: Bool = false                                         // 1 = hidden
-    var it: ArrayList<ContentModel> = ArrayList<ContentModel>()  // 2 = items
+    public var it: ArrayList<ContentModel> = ArrayList<ContentModel>()  // 2 = items
 
     let ty: String = "gr"
 

@@ -54,7 +54,7 @@ public class DropShadowEffectParser {
         let dse: DropShadowEffect = DropShadowEffect()
         dse.ty = isCorrectType
         dse.nm = currentEffectName
-        dse.v = v
+        dse.v = ContentModelPK(v)
         return dse
     }
 }

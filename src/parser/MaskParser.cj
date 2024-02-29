@@ -42,17 +42,17 @@ class MaskParser {
             maskPath = AnimatableValueParser.parseShapeData(jsonObject, composition)
         }
 
-        if (jo.containsKey(NAMES[4])) {
+        if (jo.containsKey(NAMES[4])) { //"o"
             let jsonObject: JsonObject = jo[NAMES[4]].asObject()
             opacity = AnimatableValueParser.parseInteger(jsonObject, composition)
         }
 
-        if (jo.containsKey(NAMES[5])) {
+        if (jo.containsKey(NAMES[5])) { //"x"
             let jsonObject: JsonObject = jo[NAMES[5]].asObject()
             x = AnimatableValueParser.parseInteger(jsonObject, composition)
         }
 
-        if (jo.containsKey(NAMES[6])) {
+        if (jo.containsKey(NAMES[6])) { //"nm"
             nm = jo[NAMES[6]].asString().getValue()
         }
         return Mask(cl, inverted, maskMode, maskPath, opacity, x, nm)
