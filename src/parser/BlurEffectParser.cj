@@ -13,21 +13,21 @@ class BlurEffectParser {
     ]
 
 
-    static func parse(reader: JsonObject, composition: AnimationData): ArrayList<BlurEffect> {
+    static func parse(reader: JsonObject): ArrayList<BlurEffect> {
 
         let ef: ArrayList<BlurEffect> = ArrayList<BlurEffect>()
         if (reader.containsKey(BLUR_EFFECT_NAMES)) { //"layers"."ef"."ef"
             let ja: JsonArray = reader[BLUR_EFFECT_NAMES].asArray()
             for (i in 0..ja.size()) {
                 let jo: JsonObject = ja[i].asObject()
-                let be: BlurEffect = maybeParseInnerEffect(jo, composition)
+                let be: BlurEffect = maybeParseInnerEffect(jo)
                 ef.append(be)
             }
         }
         return ef
     }
 
-    private static func maybeParseInnerEffect(reader: JsonObject, composition: AnimationData): BlurEffect {
+    private static func maybeParseInnerEffect(reader: JsonObject): BlurEffect {
 
         var blurEffect: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>()
         var isCorrectType: Int64 = 0
@@ -37,7 +37,7 @@ class BlurEffectParser {
             isCorrectType = reader[INNER_BLUR_EFFECT_NAMES[0]].asInt().getValue()
         }
         if (reader.containsKey(INNER_BLUR_EFFECT_NAMES[1])) {//"v" //"layers"."ef"."ef"."v"
-            blurEffect = AnimatableValueParser.parseArrayFloat(reader[INNER_BLUR_EFFECT_NAMES[1]], composition)
+            blurEffect = AnimatableValueParser.parseArrayFloat(reader[INNER_BLUR_EFFECT_NAMES[1]])
             isNull = false
         }
 

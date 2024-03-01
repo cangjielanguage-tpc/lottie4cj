@@ -17,7 +17,7 @@ class FontCharacterParser {
     ]
     private static let DATA_NAMES: String = "shapes"
 
-    static func parse(reader: JsonObject, composition: AnimationData): FontCharacter {
+    static func parse(reader: JsonObject): FontCharacter {
         var character: String = ""
         var size: Float64 = 0.0
         var width: Float64 = 0.0
@@ -47,7 +47,7 @@ class FontCharacterParser {
                 let ja: JsonArray = jo[DATA_NAMES].asArray()
                 for (i in 0..ja.size()) {
                     let jsonObject: JsonObject = ja[i].asObject()
-                    shapes.append(ContentModelParser.parse(jsonObject, composition))
+                    shapes.append(ContentModelParser.parse(jsonObject))
                 }
             }
         }

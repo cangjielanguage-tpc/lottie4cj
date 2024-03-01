@@ -6,17 +6,14 @@ package parser
 
 class PathKeyframeParser {
 
-    static func parse(reader: JsonValue, composition: AnimationData): Keyframe<PointF> {
+    static func parse(reader: JsonValue): Keyframe<PointF> {
         let jk: JsonKind = reader.kind()
         var animated: Bool = false
         if (equalsJsonKind(jk, JsonKind.JsObject)) {
             animated = true
         }
 
-        //Gets system/device pixel density => let scale: Float64 = Utils.dpScale()
-        let scale: Float64 = SCALE_FEFAULT
-        let keyframe: Keyframe<PointF> = KeyframeParser.parse(reader, composition, scale, PathParser.INSTANCE, animated, false)
-
+        let keyframe: Keyframe<PointF> = KeyframeParser.parse(reader, PathParser.INSTANCE, animated)
         return keyframe
     }
 }

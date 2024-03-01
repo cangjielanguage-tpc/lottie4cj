@@ -13,7 +13,7 @@ class ShapePathParser {
         "hd"     //3
     ]
 
-    static func parse(reader: JsonValue, composition: AnimationData): ShapePath {
+    static func parse(reader: JsonValue): ShapePath {
         var name: String = ""
         var ind: Int64 = 0
 
@@ -29,7 +29,7 @@ class ShapePathParser {
         }
         if (jo.containsKey(NAMES[2])) { // "ks"
             let jv: JsonValue = jo[NAMES[2]]
-            shape = AnimatableValueParser.parseShapeData(jv, composition)
+            shape = AnimatableValueParser.parseShapeData(jv)
         }
         if (jo.containsKey(NAMES[3])) { // "hd"
             hidden = jo[NAMES[3]].asBool().getValue()

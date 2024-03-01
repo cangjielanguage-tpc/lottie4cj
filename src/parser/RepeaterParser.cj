@@ -14,7 +14,7 @@ class RepeaterParser {
         "hd"    // 4
     ]
 
-    static func parse(reader: JsonObject, composition: AnimationData): Repeater {
+    static func parse(reader: JsonObject): Repeater {
         var name: String = ""
 
         var copies: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
@@ -27,13 +27,13 @@ class RepeaterParser {
             name = reader[NAMES[0]].asString().getValue()
         }
         if (reader.containsKey(NAMES[1])) { // "c"
-            copies = AnimatableValueParser.parseFloat(reader[NAMES[1]], composition, false)
+            copies = AnimatableValueParser.parseFloat(reader[NAMES[1]])
         }
         if (reader.containsKey(NAMES[2])) { // "o"
-            offset = AnimatableValueParser.parseFloat(reader[NAMES[2]], composition, false)
+            offset = AnimatableValueParser.parseFloat(reader[NAMES[2]])
         }
         if (reader.containsKey(NAMES[3])) { // "tr"
-            transform = AnimatableTransformParser.parse(reader[NAMES[3]].asObject(), composition)
+            transform = AnimatableTransformParser.parse(reader[NAMES[3]].asObject())
         }
         if (reader.containsKey(NAMES[4])) { //"hd"
             hidden = reader[NAMES[4]].asBool().getValue()

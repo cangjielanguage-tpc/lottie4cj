@@ -22,17 +22,17 @@ class KeyframeParser {
         "y"   // 1
     ]
 
-    static func parse<T>(reader: JsonValue, composition: AnimationData, scale: Float64, valueParser: ValueParser<T>,
-                            animated: Bool, multiDimensional: Bool): Keyframe<T> where T <: ToString  {
+    static func parse<T>(reader: JsonValue, valueParser: ValueParser<T>, animated: Bool):
+                            Keyframe<T> where T <: ToString  {
 
         if (animated) {
-            return parseKeyframe<T>(composition, reader, scale, valueParser)
+            return parseKeyframe<T>(reader, valueParser)
         } else {
-            return parseStaticValue<T>(reader, scale, valueParser)
+            return parseStaticValue<T>(reader, valueParser)
         }
     }
 
-    private static func parseKeyframe<T>(composition: AnimationData, reader: JsonValue, scale: Float64, valueParser: ValueParser<T>): Keyframe<T> where T <: ToString  {
+    private static func parseKeyframe<T>(reader: JsonValue, valueParser: ValueParser<T>): Keyframe<T> where T <: ToString  {
 
         var cp1: PointF = PointF()
         var cp2: PointF = PointF()
@@ -63,13 +63,13 @@ class KeyframeParser {
                     let jk: JsonKind = jsonValue.kind()
 
                     if (equalsJsonKind(jk, JsonKind.JsObject)) {
-                        startValue = valueParser.parse(ja[0], scale)
+                        startValue = valueParser.parse(ja[0])
                     } else {
-                        startValue = valueParser.parse(jv, scale)
+                        startValue = valueParser.parse(jv)
                     }
                 }
             } else {
-                startValue = valueParser.parse(jv, scale)
+                startValue = valueParser.parse(jv)
             }
         }
         if (jo.containsKey(NAMES[2])) { // e
@@ -83,33 +83,33 @@ class KeyframeParser {
                     let jk: JsonKind = jsonValue.kind()
 
                     if (equalsJsonKind(jk, JsonKind.JsObject)) {
-                        endValue = valueParser.parse(ja[0], scale)
+                        endValue = valueParser.parse(ja[0])
                     } else {
-                        endValue = valueParser.parse(jv, scale)
+                        endValue = valueParser.parse(jv)
                     }
                 }
             } else {
-                endValue = valueParser.parse(jv, scale)
+                endValue = valueParser.parse(jv)
             }
         }
         if (jo.containsKey(NAMES[3])) { // o
             let jv: JsonValue = jo[NAMES[3]]
-            cp1 = JsonUtils.jsonToPoint(jv, 1.0)
+            cp1 = JsonUtils.jsonToPoint(jv)
         }
         if (jo.containsKey(NAMES[4])) { // i
             let jv: JsonValue = jo[NAMES[4]]
-            cp2 = JsonUtils.jsonToPoint(jv, 1.0)
+            cp2 = JsonUtils.jsonToPoint(jv)
         }
         if (jo.containsKey(NAMES[5])) { // h
             hold = jo[NAMES[5]].asInt().getValue()
         }
         if (jo.containsKey(NAMES[6])) { // to
             let jv: JsonValue = jo[NAMES[6]]
-            pathCp1 = JsonUtils.jsonToPoint(jv, scale)
+            pathCp1 = JsonUtils.jsonToPoint(jv)
         }
         if (jo.containsKey(NAMES[7])) { // ti
             let jv: JsonValue = jo[NAMES[7]]
-            pathCp2 = JsonUtils.jsonToPoint(jv, scale)
+            pathCp2 = JsonUtils.jsonToPoint(jv)
         }
 
         let keyframe: Keyframe<T> = Keyframe<T>()
@@ -125,8 +125,8 @@ class KeyframeParser {
         return keyframe
     }
 
-    private static func parseStaticValue<T>(reader: JsonValue, scale: Float64, valueParser: ValueParser<T>): Keyframe<T> where T <: ToString  {
-        let value: T = valueParser.parse(reader, scale)
+    private static func parseStaticValue<T>(reader: JsonValue, valueParser: ValueParser<T>): Keyframe<T> where T <: ToString  {
+        let value: T = valueParser.parse(reader)
         return Keyframe<T>(value)
     }
 

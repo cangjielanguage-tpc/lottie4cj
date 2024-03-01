@@ -21,7 +21,7 @@ public class AnimatableTransformParser {
     ]
     private static let ANIMATABLE_NAMES: String = "k"
 
-    public static func parse(jsonObject: JsonObject, composition: AnimationData): AnimatableTransform {
+    public static func parse(jsonObject: JsonObject): AnimatableTransform {
         var anchorPoint: ArrayList<Keyframe<PointF>> = ArrayList<Keyframe<PointF>>()
         var position: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()
         var scale: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>()
@@ -38,42 +38,42 @@ public class AnimatableTransformParser {
             let jo: JsonObject = jsonObject[NAMES[0]].asObject()
             if (jo.containsKey(ANIMATABLE_NAMES)) {//"k"
                 let jv: JsonValue = jo[ANIMATABLE_NAMES]
-                anchorPoint = AnimatablePathValueParser.parse(jv, composition)
+                anchorPoint = AnimatablePathValueParser.parse(jv)
             }
         }
         if (jsonObject.containsKey(NAMES[1])) { // "p"
             let jv: JsonValue = jsonObject[NAMES[1]]
-            position = AnimatablePathValueParser.parseSplitPath(jv, composition)
+            position = AnimatablePathValueParser.parseSplitPath(jv)
         }
 
         if (jsonObject.containsKey(NAMES[2])) { //  "s"
             let jv: JsonValue = jsonObject[NAMES[2]]
-            scale = AnimatableValueParser.parseScale(jv, composition)
+            scale = AnimatableValueParser.parseScale(jv)
         }
 
         if (jsonObject.containsKey(NAMES[4])) { //  r
               let jv: JsonValue = jsonObject[NAMES[4]]
-              rotation = AnimatableValueParser.parseFloat(jv, composition, false)
+              rotation = AnimatableValueParser.parseFloat(jv)
         }
         if (jsonObject.containsKey(NAMES[5])) { //  o
             let jv: JsonValue = jsonObject[NAMES[5]]
-            opacity = AnimatableValueParser.parseInteger(jv, composition)
+            opacity = AnimatableValueParser.parseInteger(jv)
         }
         if (jsonObject.containsKey(NAMES[6])) { //  "so"
             let jv: JsonValue = jsonObject[NAMES[2]]
-            startOpacity = AnimatableValueParser.parseFloat(jv, composition, false)
+            startOpacity = AnimatableValueParser.parseFloat(jv)
         }
         if (jsonObject.containsKey(NAMES[7])) { //  "eo"
             let jv: JsonValue = jsonObject[NAMES[7]]
-            endOpacity = AnimatableValueParser.parseFloat(jv, composition, false)
+            endOpacity = AnimatableValueParser.parseFloat(jv)
         }
         if (jsonObject.containsKey(NAMES[8])) { //  "sk"
             let jv: JsonValue = jsonObject[NAMES[8]]
-            skew = AnimatableValueParser.parseFloat(jv, composition, false)
+            skew = AnimatableValueParser.parseFloat(jv)
         }
         if (jsonObject.containsKey(NAMES[9])) { //  "sa"
             let jv: JsonValue = jsonObject[NAMES[9]]
-            skewAngle = AnimatableValueParser.parseFloat(jv, composition, false)
+            skewAngle = AnimatableValueParser.parseFloat(jv)
         }
         if (jsonObject.containsKey(NAMES[10])) { //  "ty"
             ty = jsonObject[NAMES[10]].asString().getValue()

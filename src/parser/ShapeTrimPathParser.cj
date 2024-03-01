@@ -15,7 +15,7 @@ class ShapeTrimPathParser {
         "hd"    // 5
     ]
 
-    static func parse(reader: JsonObject, composition: AnimationData): ShapeTrimPath {
+    static func parse(reader: JsonObject): ShapeTrimPath {
         var name: String = ""
         var types: Int64 = 0
 
@@ -26,13 +26,13 @@ class ShapeTrimPathParser {
         var hidden: Bool = false
 
         if (reader.containsKey(NAMES[0])) {  //"s"
-            start = AnimatableValueParser.parseFloat(reader[NAMES[0]], composition, false)
+            start = AnimatableValueParser.parseFloat(reader[NAMES[0]])
         }
         if (reader.containsKey(NAMES[1])) {  //"e"
-            end = AnimatableValueParser.parseFloat(reader[NAMES[1]], composition, false)
+            end = AnimatableValueParser.parseFloat(reader[NAMES[1]])
         }
         if (reader.containsKey(NAMES[2])) {  //"o"
-            offset = AnimatableValueParser.parseFloat(reader[NAMES[2]], composition, false)
+            offset = AnimatableValueParser.parseFloat(reader[NAMES[2]])
         }
         if (reader.containsKey(NAMES[3])) {  //"nm"
             name = reader[NAMES[3]].asString().getValue()

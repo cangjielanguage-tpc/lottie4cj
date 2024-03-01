@@ -8,14 +8,13 @@ class KeyframesParser {
 
     static let NAMES: String = "k"
 
-    static func parse<T>(reader: JsonValue, composition: AnimationData, scale: Float64, valueParser: ValueParser<T>,
-                            multiDimensional: Bool): ArrayList<Keyframe<T>> where T <: ToString  {
+    static func parse<T>(reader: JsonValue, valueParser: ValueParser<T>): ArrayList<Keyframe<T>> where T <: ToString  {
 
         let keyframes: ArrayList<Keyframe<T>> = ArrayList<Keyframe<T>>()
 
         var jk: JsonKind = reader.kind()
         if (equalsJsonKind(jk, JsonKind.JsString)) {
-            composition.addWarning("Lottie doesn't support expressions.")
+            logger.log(LogLevel.INFO,"Lottie doesn't support expressions.")
             return keyframes
         }
 
@@ -31,15 +30,15 @@ class KeyframesParser {
                 }
                 jk = ja[0].kind()
                 if (equalsJsonKind(jk, JsonKind.JsInt) || equalsJsonKind(jk, JsonKind.JsFloat)) {
-                    keyframes.append(KeyframeParser.parse(jv, composition, scale, valueParser, false, multiDimensional))
+                    keyframes.append(KeyframeParser.parse(jv, valueParser, false))
                 } else {
                     for (i in 0..len) {
                         let jsonValue: JsonValue = ja[i]
-                        keyframes.append(KeyframeParser.parse(jsonValue, composition, scale, valueParser, true, multiDimensional))
+                        keyframes.append(KeyframeParser.parse(jsonValue, valueParser, true))
                     }
                 }
             } else {
-                keyframes.append(KeyframeParser.parse(jv, composition, scale, valueParser, false, multiDimensional))
+                keyframes.append(KeyframeParser.parse(jv, valueParser, false))
             }
         }
         return keyframes

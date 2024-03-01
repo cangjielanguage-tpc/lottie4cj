@@ -33,42 +33,42 @@ class JsonUtils {
         return color
     }
 
-    static func jsonToPoints(reader: JsonValue, scale: Float64): ArrayList<PointF> {
+    static func jsonToPoints(reader: JsonValue): ArrayList<PointF> {
         var points: ArrayList<PointF> = ArrayList<PointF>()
         let jk: JsonKind = reader.kind()
         if (equalsJsonKind(jk, JsonKind.JsArray)) {
             let ja: JsonArray = reader.asArray()
             for (i in 0..ja.size()) {
                 let jv: JsonValue = ja[i]
-                points.append(jsonToPoint(jv, scale))
+                points.append(jsonToPoint(jv))
             }
         }
         return points
     }
 
-    static func jsonToPoint(reader: JsonValue, scale: Float64): PointF {
+    static func jsonToPoint(reader: JsonValue): PointF {
         var jk: JsonKind = reader.kind()
         if (equalsJsonKind(jk, JsonKind.JsArray)) {
-            return jsonArrayToPoint(reader, scale)
+            return jsonArrayToPoint(reader)
         } else if (equalsJsonKind(jk, JsonKind.JsObject)) {
-            return jsonObjectToPoint(reader, scale)
+            return jsonObjectToPoint(reader)
         } else {
             throw IllegalArgumentException("Unknown point starts with JsonKind.")
         }
     }
 
-    private static func jsonArrayToPoint(reader: JsonValue, scale: Float64): PointF {
+    private static func jsonArrayToPoint(reader: JsonValue): PointF {
         let ja: JsonArray = reader.asArray()
 
         let x: Float64 = ja[0].asFloat().getValue()
         let y: Float64 = ja[1].asFloat().getValue()
 
-        return PointF(x * scale, y * scale)
+        return PointF(x, y)
     }
 
     private static let POINT_NAMES: Array<String> = ["x", "y"]
 
-    private static func jsonObjectToPoint(reader: JsonValue, scale: Float64): PointF {
+    private static func jsonObjectToPoint(reader: JsonValue): PointF {
         var x: Float64 = 0.0
         var y: Float64 = 0.0
 
@@ -79,7 +79,7 @@ class JsonUtils {
         if (jo.containsKey(POINT_NAMES[1])) { // "y"
             y = valueFromObject(jo[POINT_NAMES[1]])
         }
-        return PointF(x * scale, y * scale)
+        return PointF(x, y)
     }
 
     static func valueFromObject(reader: JsonValue): Float64 {

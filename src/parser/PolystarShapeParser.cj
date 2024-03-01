@@ -20,7 +20,7 @@ class PolystarShapeParser {
         "d"     // 10
     ]
 
-    static func parse(reader: JsonObject, composition: AnimationData, d: Int64): PolystarShape {
+    static func parse(reader: JsonObject): PolystarShape {
         var name: String = ""
         var types: Int64 = 0
         var position: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()
@@ -42,25 +42,25 @@ class PolystarShapeParser {
             types = reader[NAMES[1]].asInt().getValue()
         }
         if (reader.containsKey(NAMES[2])) { // "pt"
-            points = AnimatableValueParser.parseFloat(reader[NAMES[2]], composition, false)
+            points = AnimatableValueParser.parseFloat(reader[NAMES[2]])
         }
         if (reader.containsKey(NAMES[3])) { // "p"
-            position = AnimatablePathValueParser.parseSplitPath(reader[NAMES[3]], composition)
+            position = AnimatablePathValueParser.parseSplitPath(reader[NAMES[3]])
         }
         if (reader.containsKey(NAMES[4])) { // "r"
-            rotation = AnimatableValueParser.parseFloat(reader[NAMES[4]], composition, false)
+            rotation = AnimatableValueParser.parseFloat(reader[NAMES[4]])
         }
         if (reader.containsKey(NAMES[5])) { // "or"
-            outerRadius = AnimatableValueParser.parseFloat(reader[NAMES[5]], composition)
+            outerRadius = AnimatableValueParser.parseFloat(reader[NAMES[5]])
         }
         if (reader.containsKey(NAMES[6])) { // "os"
-            outerRoundedness = AnimatableValueParser.parseFloat(reader[NAMES[6]], composition, false)
+            outerRoundedness = AnimatableValueParser.parseFloat(reader[NAMES[6]])
         }
         if (reader.containsKey(NAMES[7])) { // "ir"
-            innerRadius = AnimatableValueParser.parseFloat(reader[NAMES[7]], composition)
+            innerRadius = AnimatableValueParser.parseFloat(reader[NAMES[7]])
         }
         if (reader.containsKey(NAMES[8])) { // "is"
-            innerRoundedness = AnimatableValueParser.parseFloat(reader[NAMES[8]], composition, false)
+            innerRoundedness = AnimatableValueParser.parseFloat(reader[NAMES[8]])
         }
         if (reader.containsKey(NAMES[9])) { // "hd"
             hidden = reader[NAMES[9]].asBool().getValue()

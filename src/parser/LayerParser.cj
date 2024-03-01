@@ -50,7 +50,7 @@ public class LayerParser {
         "nm"
     ]
 
-    public static func parse(reader: JsonValue, composition: AnimationData): Layer {
+    public static func parse(reader: JsonValue): Layer {
 
         var layerName: String = "UNSET"
         var layerType: Int64 = 0
@@ -103,14 +103,11 @@ public class LayerParser {
             parentId = jo[NAMES[4]].asInt().getValue()
         }
 
-        // Gets system/device pixel density => let scale: Float64 = Utils.dpScale()
-        let scale: Float64 = SCALE_FEFAULT
-
         if (jo.containsKey(NAMES[5])) {
-            solidWidth = jo[NAMES[5]].asInt().getValue() * Int64(scale)
+            solidWidth = jo[NAMES[5]].asInt().getValue()
         }
         if (jo.containsKey(NAMES[6])) {
-            solidHeight = jo[NAMES[6]].asInt().getValue() * Int64(scale)
+            solidHeight = jo[NAMES[6]].asInt().getValue()
         }
         if (jo.containsKey(NAMES[7])) {
             solidColor = jo[NAMES[7]].asString().getValue()
@@ -119,7 +116,7 @@ public class LayerParser {
         /* Layer change, animation. */
         if (jo.containsKey(NAMES[8])) {
             let jsonObject: JsonObject = jo[NAMES[8]].asObject()
-            transform = AnimatableTransformParser.parse(jsonObject, composition)
+            transform = AnimatableTransformParser.parse(jsonObject)
         }
 
         if (jo.containsKey(NAMES[9])) {
@@ -131,7 +128,7 @@ public class LayerParser {
             let ja: JsonArray = jo[NAMES[10]].asArray()
             for (i in 0..ja.size()) {
                 let jsonObject: JsonObject = ja[i].asObject()
-                masks.append(MaskParser.parse(jsonObject, composition))
+                masks.append(MaskParser.parse(jsonObject))
             }
         }
 
@@ -139,7 +136,7 @@ public class LayerParser {
             let ja: JsonArray = jo[NAMES[11]].asArray()
             for (i in 0..ja.size()) {
                 let jsonObject: JsonObject = ja[i].asObject()
-                let shape: ContentModel = ContentModelParser.parse(jsonObject, composition)
+                let shape: ContentModel = ContentModelParser.parse(jsonObject)
                 if (shape.types != -1) {
                     shapes.append(shape)
                 }
@@ -150,14 +147,14 @@ public class LayerParser {
             let jsonObject: JsonObject = jo[NAMES[12]].asObject()
             if (jsonObject.containsKey(TEXT_NAMES[0])) { //"d"
                 let jv: JsonValue = jsonObject[TEXT_NAMES[0]]
-                let tdk: ArrayList<Keyframe<DocumentData>> = AnimatableValueParser.parseDocumentData(jv, composition)
+                let tdk: ArrayList<Keyframe<DocumentData>> = AnimatableValueParser.parseDocumentData(jv)
                 t.d = LayerTD(tdk)
             }
             if (jsonObject.containsKey(TEXT_NAMES[1])) { //"a"
                 let ja: JsonArray = jsonObject[TEXT_NAMES[1]].asArray()
                 for (i in 0..ja.size()) {
                     let jo: JsonObject = ja[i].asObject()
-                    let textProperties: AnimatableTextProperties = AnimatableTextPropertiesParser.parse(jo, composition)
+                    let textProperties: AnimatableTextProperties = AnimatableTextPropertiesParser.parse(jo)
                     t.a.append(AnimatableTextPropertiesA(textProperties))
                 }
             }
@@ -174,10 +171,10 @@ public class LayerParser {
                     let types: Int64 = jsonObject[EFFECTS_NAMES[0]].asInt().getValue()
                     effect.ty = types
                     if (types == LAYERS_EF_TY_BLUR) {
-                        let blurEffect: ArrayList<BlurEffect> = BlurEffectParser.parse(jsonObject, composition)
+                        let blurEffect: ArrayList<BlurEffect> = BlurEffectParser.parse(jsonObject)
                         effect.ef = blurEffect
                     } else if (types == LAYERS_EF_TY_DROPSHADOW) {
-                        let dropShadowEffect: ArrayList<DropShadowEffect> = DropShadowEffectParser().parse(jsonObject, composition)
+                        let dropShadowEffect: ArrayList<DropShadowEffect> = DropShadowEffectParser().parse(jsonObject)
                         effect.ef = dropShadowEffect
                     }
                 }
@@ -188,7 +185,7 @@ public class LayerParser {
                 }
                 ef.append(effect)
 
-                composition.addWarning("Lottie doesn't support layer effects. If you are using them for " +
+                logger.log(LogLevel.INFO,"Lottie doesn't support layer effects. If you are using them for " +
                     " fills, strokes, trim paths etc. then try adding them directly as contents " +
                     " in your shape. Found: " + effectNames.toString())
             }
@@ -216,7 +213,7 @@ public class LayerParser {
         }
 
         if (jo.containsKey(NAMES[20])) {
-            timeRemapping = AnimatableValueParser.parseFloat(jo[NAMES[20]], composition, false)
+            timeRemapping = AnimatableValueParser.parseFloat(jo[NAMES[20]])
         }
 
         if (jo.containsKey(NAMES[21])) {

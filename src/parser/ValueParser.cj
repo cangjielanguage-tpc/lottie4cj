@@ -5,7 +5,7 @@
 package parser
 
 public interface ValueParser<T> {
-    func parse(reader: JsonValue, scale: Float64): T
+    func parse(reader: JsonValue): T
 }
 
 public class IntegerParser <: ValueParser<Int64> {
@@ -14,8 +14,8 @@ public class IntegerParser <: ValueParser<Int64> {
     private init() {}
 
     @OverflowWrapping
-    public func parse(reader: JsonValue, scale: Float64): Int64 {
-        return Int64(round(JsonUtils.valueFromObject(reader) * scale))
+    public func parse(reader: JsonValue): Int64 {
+        return Int64(round(JsonUtils.valueFromObject(reader)))
     }
 }
 
@@ -24,8 +24,8 @@ public class FloatParser <: ValueParser<Float64> {
 
     private init() {}
 
-    public func parse(reader: JsonValue, scale: Float64): Float64 {
-        return JsonUtils.valueFromObject(reader) * scale
+    public func parse(reader: JsonValue): Float64 {
+        return JsonUtils.valueFromObject(reader)
     }
 }
 
@@ -33,7 +33,7 @@ public class ArrayFloat64Parser <: ValueParser<Array<Float64>> {
     public static let INSTANCE: ArrayFloat64Parser = ArrayFloat64Parser()
     init(){}
 
-    public func parse(reader: JsonValue, scale: Float64): Array<Float64> {
+    public func parse(reader: JsonValue): Array<Float64> {
 
         let jk: JsonKind = reader.kind()
         if (equalsJsonKind(jk, JsonKind.JsArray)) {
@@ -57,10 +57,10 @@ public class PointFParser <: ValueParser<PointF> {
 
     private PointFParser() {}
 
-    public func parse(reader: JsonValue, scale: Float64): PointF {
+    public func parse(reader: JsonValue): PointF {
         var jk: JsonKind = reader.kind()
         if (equalsJsonKind(jk, JsonKind.JsArray) || equalsJsonKind(jk, JsonKind.JsObject)) {
-            return JsonUtils.jsonToPoint(reader, scale)
+            return JsonUtils.jsonToPoint(reader)
         } else {
             throw IllegalArgumentException("Cannot convert json to point. Next token is not array and object.")
         }
@@ -89,7 +89,7 @@ public class DocumentDataParser <: ValueParser<DocumentData> {
 
     private init() {}
 
-    public func parse(jv: JsonValue, scale: Float64): DocumentData {
+    public func parse(jv: JsonValue): DocumentData {
         var text: String = ""
         var fontName: String = ""
         var size: Float64 = 0.0
@@ -144,13 +144,13 @@ public class DocumentDataParser <: ValueParser<DocumentData> {
             let ja: JsonArray = reader[NAMES[11]].asArray()
             var x: Float64 = ja[0].asFloat().getValue()
             var y: Float64 = ja[1].asFloat().getValue()
-            boxPosition = PointF(x * scale, y * scale)
+            boxPosition = PointF(x, y)
         }
         if (reader.containsKey(NAMES[12])) { // "sz"
             let ja: JsonArray = reader[NAMES[12]].asArray()
             var x: Float64 = ja[0].asFloat().getValue()
             var y: Float64 = ja[1].asFloat().getValue()
-            boxSize = PointF(x * scale, y * scale)
+            boxSize = PointF(x, y)
         }
 
         let dd: DocumentData = DocumentData()
@@ -184,7 +184,7 @@ public class ShapeDataParser <: ValueParser<ShapeData> {
 
     private init() {}
 
-    public func parse(reader: JsonValue, scale: Float64): ShapeData {
+    public func parse(reader: JsonValue): ShapeData {
         var closed: Bool = false
         var pointsArray: ArrayList<PointF> = ArrayList<PointF>()
         var inTangents: ArrayList<PointF> = ArrayList<PointF>()
@@ -200,17 +200,17 @@ public class ShapeDataParser <: ValueParser<ShapeData> {
         }
         if (jo.containsKey(NAMES[1])) { // "v"
             let jv: JsonValue = jo[NAMES[1]]
-            pointsArray = JsonUtils.jsonToPoints(jv, scale)
+            pointsArray = JsonUtils.jsonToPoints(jv)
             hasv = true
         }
         if (jo.containsKey(NAMES[2])) { // "i"
             let jv: JsonValue = jo[NAMES[2]]
-            inTangents = JsonUtils.jsonToPoints(jv, scale)
+            inTangents = JsonUtils.jsonToPoints(jv)
             hasi = true
         }
         if (jo.containsKey(NAMES[3])) { // "o"
             let jv: JsonValue = jo[NAMES[3]]
-            outTangents = JsonUtils.jsonToPoints(jv, scale)
+            outTangents = JsonUtils.jsonToPoints(jv)
             haso = true
         }
 
@@ -234,8 +234,8 @@ public class PathParser <: ValueParser<PointF> {
     public static let INSTANCE: PathParser = PathParser()
     private init() {}
 
-    public func parse(reader: JsonValue, scale: Float64): PointF {
-        return JsonUtils.jsonToPoint(reader, scale)
+    public func parse(reader: JsonValue): PointF {
+        return JsonUtils.jsonToPoint(reader)
     }
 }
 
@@ -243,7 +243,7 @@ public class ScaleXYParser <: ValueParser<Array<Float64>> {
     public static let INSTANCE: ScaleXYParser = ScaleXYParser()
     init(){}
 
-    public func parse(reader: JsonValue, scale: Float64): Array<Float64> {
+    public func parse(reader: JsonValue): Array<Float64> {
         let ja: JsonArray = reader.asArray()
         let len: Int64 = ja.size()
         let res: Array<Float64> = Array<Float64>(len, item: 0.0)
@@ -261,7 +261,7 @@ public class ColorParser <: ValueParser<Array<Float64>> {
 
     private init() {}
 
-    public func parse(reader: JsonValue, scale: Float64): Array<Float64> {
+    public func parse(reader: JsonValue): Array<Float64> {
         let ja: JsonArray = reader.asArray()
 
         let res: Array<Float64> = Array<Float64>(4, item: 1.0)
@@ -277,7 +277,7 @@ public class ColorParser <: ValueParser<Array<Float64>> {
     }
 
     @OverflowWrapping
-    public func parseColor(reader: JsonValue, scale: Float64): Color {
+    public func parseColor(reader: JsonValue): Color {
         let ja: JsonArray = reader.asArray()
 
         var r: Int64 = Int64(ja[0].asFloat().getValue())

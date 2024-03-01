@@ -13,7 +13,7 @@ public class AnimatablePathValueParser {
         "y"
     ]
 
-    public static func parse(reader: JsonValue, composition: AnimationData): ArrayList<Keyframe<PointF>> {
+    public static func parse(reader: JsonValue): ArrayList<Keyframe<PointF>> {
         let keyframes: ArrayList<Keyframe<PointF>> = ArrayList<Keyframe<PointF>>()
 
         var jk: JsonKind = reader.kind()
@@ -26,21 +26,19 @@ public class AnimatablePathValueParser {
             }
             jk = ja[0].kind()
             if (equalsJsonKind(jk, JsonKind.JsInt) || equalsJsonKind(jk, JsonKind.JsFloat)) {
-                keyframes.append(PathKeyframeParser.parse(ja, composition))
+                keyframes.append(PathKeyframeParser.parse(ja))
             } else if (equalsJsonKind(jk, JsonKind.JsObject)) {
                 for (i in 0..len) {
-                    keyframes.append(PathKeyframeParser.parse(ja[i], composition))
+                    keyframes.append(PathKeyframeParser.parse(ja[i]))
                 }
             }
         } else {
-            //Gets system/device pixel density => let scale: Float64 = Utils.dpScale()
-            let scale: Float64 = SCALE_FEFAULT
-            keyframes.append(Keyframe<PointF>(JsonUtils.jsonToPoint(reader, scale)))
+            keyframes.append(Keyframe<PointF>(JsonUtils.jsonToPoint(reader)))
         }
         return keyframes
     }
 
-    static func parseSplitPath(reader: JsonValue, composition: AnimationData): AnimatableSplitDimensionPathValue {
+    static func parseSplitPath(reader: JsonValue): AnimatableSplitDimensionPathValue {
 
         var pathAnimation: ArrayList<Keyframe<PointF>> = ArrayList<Keyframe<PointF>>()
         var xAnimation: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
@@ -51,7 +49,7 @@ public class AnimatablePathValueParser {
         let jsonObject: JsonObject = reader.asObject()
         if (jsonObject.containsKey(NAMES[0])) { //"k"
             let jv: JsonValue = jsonObject[NAMES[0]]
-            pathAnimation = AnimatablePathValueParser.parse(jv, composition)
+            pathAnimation = AnimatablePathValueParser.parse(jv)
         }
         if (jsonObject.containsKey(NAMES[1])) { //"x"
             let jv: JsonValue = jsonObject[NAMES[1]]
@@ -59,7 +57,7 @@ public class AnimatablePathValueParser {
             if (equalsJsonKind(jk, JsonKind.JsString)) {
                 hasExpressions = true
             } else {
-                xAnimation = AnimatableValueParser.parseFloat(jv, composition)
+                xAnimation = AnimatableValueParser.parseFloat(jv)
             }
         }
         if (jsonObject.containsKey(NAMES[2])) { //"y"
@@ -68,12 +66,12 @@ public class AnimatablePathValueParser {
             if (equalsJsonKind(jk, JsonKind.JsString)) {
                 hasExpressions = true
             } else {
-                yAnimation = AnimatableValueParser.parseFloat(jv, composition)
+                yAnimation = AnimatableValueParser.parseFloat(jv)
             }
         }
 
         if (hasExpressions) {
-            composition.addWarning("Lottie doesn't support expressions.")
+            logger.log(LogLevel.INFO, "Lottie doesn't support expressions.")
         }
 
         let aspv: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()

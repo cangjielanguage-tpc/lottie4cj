@@ -29,9 +29,6 @@ public class AnimationData <: ToString {
 
     init(){}
 
-
-    public func addWarning(warning: String): Unit {}
-
     public func toString(): String {
         "AnimationData {\n" +
         "w  = ${w}\n" +                       // 0 = width
