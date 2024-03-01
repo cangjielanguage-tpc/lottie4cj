@@ -18,20 +18,17 @@ class MergePathsParser {
         var mode: Int64 = 0
         var hidden: Bool = false
 
-        if (reader.containsKey(NAMES[0])) { // "nm"
-            name = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
+            name = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[1])) { // "mm"
-            mode = reader[NAMES[1]].asInt().getValue()
+        if (let Some(v) <- reader.get(NAMES[1])) { // "mm"
+            mode = v.asInt().getValue()
         }
-        if (reader.containsKey(NAMES[2])) {  //"hd"
-            hidden = reader[NAMES[2]].asBool().getValue()
+        if (let Some(v) <- reader.get(NAMES[2])) {  //"hd"
+            hidden = v.asBool().getValue()
         }
 
-        let cm: MergePaths = MergePaths()
-        cm.nm = name
-        cm.mm = mode
-        cm.hd = hidden
+        let cm: MergePaths = MergePaths(nm: name, mm: mode, hd: hidden)
         return cm
     }
 }

@@ -4,10 +4,13 @@
 
 package parser
 
+from std import math.*
+from encoding import json.*
+from std import collection.*
 from std import convert.*
 from std import log.*
 
-public let SCALE_FEFAULT: Float64 = 1.0
+import model.*
 
 public let logger: SimpleLogger = SimpleLogger()
 
@@ -30,9 +33,9 @@ public class AnimationDataParser {
         "assets",  // 7
         "fonts",   // 8
         "chars",   // 9
-        "markers", // 1
-        "nm",      // 1
-        "ddd"      // 1
+        "markers", // 10
+        "nm",      // 11
+        "ddd"      // 12
     ]
     
     public static func parse(reader: String): AnimationData {
@@ -43,42 +46,40 @@ public class AnimationDataParser {
         var version: String = ""
 
         let layerMap: HashMap<Int64, Layer> = HashMap<Int64, Layer>()
-        let layers: ArrayList<Layer> = ArrayList<Layer>()
-        let assets: ArrayList<Asset> = ArrayList<Asset>()
+        var layers: Array<Layer> = Array<Layer>()
+        var assets: Array<Asset> = Array<Asset>()
 
         var width: Int64 = 0
         var height: Int64 = 0
 
-        let fonts: Fonts = Fonts()
-        let markers: ArrayList<Marker> = ArrayList<Marker>()
-        let chars: ArrayList<FontCharacter> = ArrayList<FontCharacter>()
+        var fonts: Fonts = Fonts()
+        var markers: Array<Marker> = Array<Marker>()
+        var chars: Array<FontCharacter> = Array<FontCharacter>()
 
         var nm: String = ""
         var ddd: Int64 = 0
 
-        let composition: AnimationData = AnimationData()
-
         let jsonObject: JsonObject = JsonValue.fromStr(reader).asObject()
 
         /* Obtain key information by NAMES[0-10]. Other fields are skipped, not processed, and not saved. */
-        if (jsonObject.containsKey(NAMES[0])) {
-            width = jsonObject[NAMES[0]].asInt().getValue()
+        if (let Some(v) <- jsonObject.get(NAMES[0])) {
+            width = v.asInt().getValue()
         }
-        if (jsonObject.containsKey(NAMES[1])) {
-            height = jsonObject[NAMES[1]].asInt().getValue()
+        if (let Some(v) <- jsonObject.get(NAMES[1])) {
+            height = v.asInt().getValue()
         }
-        if (jsonObject.containsKey(NAMES[2])) {
-            startFrame = jsonObject[NAMES[2]].asFloat().getValue()
+        if (let Some(v) <- jsonObject.get(NAMES[2])) {
+            startFrame = v.asFloat().getValue()
         }
-        if (jsonObject.containsKey(NAMES[3])) {
-            endFrame = jsonObject[NAMES[3]].asFloat().getValue()
+        if (let Some(v) <- jsonObject.get(NAMES[3])) {
+            endFrame = v.asFloat().getValue()
         }
-        if (jsonObject.containsKey(NAMES[4])) {
-            frameRate = jsonObject[NAMES[4]].asFloat().getValue()
+        if (let Some(v) <- jsonObject.get(NAMES[4])) {
+            frameRate = v.asFloat().getValue()
         }
 
-        if (jsonObject.containsKey(NAMES[5])) {
-            version = jsonObject[NAMES[5]].asString().getValue()
+        if (let Some(v) <- jsonObject.get(NAMES[5])) {
+            version = v.asString().getValue()
             let versions: Array<String> = version.split(".")
 
             let majorVersion: Int32 = Int32.parse(versions[0])
@@ -89,56 +90,60 @@ public class AnimationDataParser {
             }
         }
 
-        if (jsonObject.containsKey(NAMES[6])) {
-            let ja: JsonArray = jsonObject[NAMES[6]].asArray()
-            parseLayers(ja, layers, layerMap)
+        if (let Some(v) <- jsonObject.get(NAMES[6])) {
+            let ja: JsonArray = v.asArray()
+            layers = parseLayers(ja, layerMap)
         }
-        if (jsonObject.containsKey(NAMES[7])) {
-            let ja: JsonArray = jsonObject[NAMES[7]].asArray()
-            parseAssets(ja, assets)
-        }
-
-        if (jsonObject.containsKey(NAMES[8])) {
-            let jv: JsonValue = jsonObject[NAMES[8]]
-            parseFonts(jv, fonts)
-        }
-        if (jsonObject.containsKey(NAMES[9])) {
-            let ja: JsonArray = jsonObject[NAMES[9]].asArray()
-            parseChars(ja, chars)
+        if (let Some(v) <- jsonObject.get(NAMES[7])) {
+            let ja: JsonArray = v.asArray()
+            assets = parseAssets(ja)
         }
 
-        if (jsonObject.containsKey(NAMES[10])) {
-            let ja: JsonArray = jsonObject[NAMES[10]].asArray()
-            parseMarkers(ja, markers)
+        if (let Some(v) <- jsonObject.get(NAMES[8])) {
+            fonts = parseFonts(v)
+        }
+        if (let Some(v) <- jsonObject.get(NAMES[9])) {
+            let ja: JsonArray = v.asArray()
+            chars = parseChars(ja)
         }
 
-        if (jsonObject.containsKey(NAMES[11])) {
-            nm = jsonObject[NAMES[11]].asString().getValue()
-        }
-        if (jsonObject.containsKey(NAMES[12])) {
-            ddd = jsonObject[NAMES[12]].asInt().getValue()
+        if (let Some(v) <- jsonObject.get(NAMES[10])) {
+            let ja: JsonArray = v.asArray()
+            markers = parseMarkers(ja)
         }
 
-        composition.w = width
-        composition.h = height
-        composition.ip = startFrame
-        composition.op = endFrame
-        composition.fr = frameRate
-        composition.v = version
-        composition.layers = layers
-        composition.assets = assets
-        composition.fonts = fonts
-        composition.chars = chars
-        composition.markers = markers
-        composition.nm = nm
-        composition.ddd = ddd
+        if (let Some(v) <- jsonObject.get(NAMES[11])) {
+            nm = v.asString().getValue()
+        }
+        if (let Some(v) <- jsonObject.get(NAMES[12])) {
+            ddd = v.asInt().getValue()
+        }
+
+        let composition: AnimationData = AnimationData(
+            w: width,
+            h: height,
+            ip: startFrame,
+            op: endFrame,
+            fr: frameRate,
+            v: version,
+            layers: layers,
+            assets: assets,
+            fonts: fonts,
+            chars: chars,
+            markers: markers,
+            nm: nm,
+            ddd: ddd
+        )
         return composition
     }
 
-    private static func parseLayers(reader: JsonArray, layers: ArrayList<Layer>, layerMap: HashMap<Int64, Layer>): Unit {
+    private static func parseLayers(reader: JsonArray, layerMap: HashMap<Int64, Layer>): Array<Layer> {
         var imageCount: Int32 = 0
         /* Iterate through and parse each layer. */
-        for (i in 0..reader.size()) {
+        let len: Int64 = reader.size()
+        let EMPTY_LAYER: Layer = Layer()
+        let layers: Array<Layer> = Array<Layer>(len, item: EMPTY_LAYER)
+        for (i in 0..len) {
             let jv: JsonValue = reader[i]
             /* Layer parsing. */
             let layer: Layer = LayerParser.parse(jv)
@@ -146,9 +151,10 @@ public class AnimationDataParser {
                 imageCount++
             }
             /* Add layers and map to improve efficiency. */
-            layers.append(layer)
+            layers[i] = layer
             layerMap.put(layer.ind, layer)
         }
+        return layers
     }
 
     //"assets"
@@ -161,10 +167,17 @@ public class AnimationDataParser {
         "u"       // 5  // Picture path
     ]
 
-    private static func parseAssets(reader: JsonArray, assets: ArrayList<Asset>): Unit {
-        for (i in 0..reader.size()) {
+    private static func parseAssets(reader: JsonArray): Array<Asset> {
+        let len: Int64 = reader.size()
+        if (len <= 0) {
+            return Array<Asset>()
+        }
+        let EMPTY_ARRAY_LAYER: Array<Layer> = Array<Layer>()
+        let EMPTY_ASSET: Asset = Asset("", Array<Layer>(), 0, 0, "", "")
+        let assets: Array<Asset> = Array<Asset>(len, item: EMPTY_ASSET)
+        for (i in 0..len) {
             var id: String = ""
-            let layers: ArrayList<Layer> = ArrayList<Layer>()
+            var layers: Array<Layer> = EMPTY_ARRAY_LAYER
             let layerMap: HashMap<Int64, Layer> = HashMap<Int64, Layer>()
 
             /* For images. */
@@ -175,62 +188,74 @@ public class AnimationDataParser {
 
             let jo: JsonObject = reader[i].asObject()
 
-            if (jo.containsKey(ASSETS_NAMES[0])) {
-                id = jo[ASSETS_NAMES[0]].asString().getValue()
+            if (let Some(v) <- jo.get(ASSETS_NAMES[0])) {
+                id = v.asString().getValue()
             }
-            if (jo.containsKey(ASSETS_NAMES[1])) {
-                let ja: JsonArray = jo[ASSETS_NAMES[1]].asArray()
-                for (j in 0..ja.size()) {
+            if (let Some(v) <- jo.get(ASSETS_NAMES[1])) {
+                let ja: JsonArray = v.asArray()
+                let len: Int64 = ja.size()
+                let EMPTY_LAYER: Layer = Layer()
+                layers = Array<Layer>(len, item: EMPTY_LAYER)
+                for (j in 0..len) {
                   let jsonValue: JsonValue = ja[j]
                   let layer: Layer = LayerParser.parse(jsonValue)
                   layerMap.put(layer.ind, layer)
-                  layers.append(layer)
+                  layers[j] = layer
                 }
             }
-            if (jo.containsKey(ASSETS_NAMES[2])) {
-                width = jo[ASSETS_NAMES[2]].asInt().getValue()
+            if (let Some(v) <- jo.get(ASSETS_NAMES[2])) {
+                width = v.asInt().getValue()
             }
-            if (jo.containsKey(ASSETS_NAMES[3])) {
-                height = jo[ASSETS_NAMES[3]].asInt().getValue()
+            if (let Some(v) <- jo.get(ASSETS_NAMES[3])) {
+                height = v.asInt().getValue()
             }
-            if (jo.containsKey(ASSETS_NAMES[4])) {
-                imageFileName = jo[ASSETS_NAMES[4]].asString().getValue()
+            if (let Some(v) <- jo.get(ASSETS_NAMES[4])) {
+                imageFileName = v.asString().getValue()
             }
-            if (jo.containsKey(ASSETS_NAMES[5])) {
-                relativeFolder = jo[ASSETS_NAMES[5]].asString().getValue()
+            if (let Some(v) <- jo.get(ASSETS_NAMES[5])) {
+                relativeFolder = v.asString().getValue()
             }
 
             let asset: Asset = Asset(id, layers, width, height, imageFileName, relativeFolder)
-            assets.append(asset)
+            assets[i] = asset
         }
+        return assets
     }
 
     //"fonts"
     private static let FONT_NAMES: String = "list"
 
-    private static func parseFonts(reader: JsonValue, fonts: Fonts): Unit {
+    private static func parseFonts(reader: JsonValue): Fonts {
         let jsonObject: JsonObject = reader.asObject()
-        if (jsonObject.containsKey(FONT_NAMES)) {
-            let ja: JsonArray = jsonObject[FONT_NAMES].asArray()
+        var list: Array<Font> = Array<Font>()
+        if (let Some(v) <- jsonObject.get(FONT_NAMES)) {
+            let ja: JsonArray = v.asArray()
             let len: Int64 = ja.size()
-            var list: Array<Font> = Array<Font>(len, item: FONT_EMPTY)
-            for (i in 0..len) {
-                let jo: JsonObject = ja[i].asObject()
-                let font: Font = FontParser.parse(jo)
-                list[i] = font
+            if (len > 0) {
+                let EMPTY_FONT: Font = Font("", "", "", 0.0)
+                list = Array<Font>(len, item: EMPTY_FONT)
+                for (i in 0..len) {
+                    let jo: JsonObject = ja[i].asObject()
+                    let font: Font = FontParser.parse(jo)
+                    list[i] = font
+                }
             }
-            fonts.list = list
         }
+        return Fonts(list: list)
     }
-    
-    private static func parseChars(reader: JsonArray, chars: ArrayList<FontCharacter>): Unit {
-        for (i in 0..reader.size()) {
+
+    private static func parseChars(reader: JsonArray): Array<FontCharacter> {
+        let len: Int64 = reader.size()
+        let EMPTY_FCHARS: FontCharacter = FontCharacter(CharsData(shapes: Array<ContentModel>()), "", 0.0, 0.0, "", "")
+        let chars: Array<FontCharacter> = Array<FontCharacter>(len, item: EMPTY_FCHARS)
+        for (i in 0..len) {
             let jo: JsonObject = reader[i].asObject()
             let character: FontCharacter = FontCharacterParser.parse(jo)
-            chars.append(character)
+            chars[i] = character
         }
+        return chars
     }
-    
+
     //"markers"
     private static let MARKER_NAMES: Array<String> = [
         "cm",
@@ -238,24 +263,31 @@ public class AnimationDataParser {
         "dr"
     ]
 
-    private static func parseMarkers(reader: JsonArray, markers: ArrayList<Marker>): Unit {
-        for (i in 0..reader.size()) {
+    private static func parseMarkers(reader: JsonArray): Array<Marker> {
+        let len: Int64 = reader.size()
+        if (len <= 0) {
+            return Array<Marker>()
+        }
+        let EMPTY_MARKER: Marker = Marker("", 0.0, 0.0)
+        let markers: Array<Marker> = Array<Marker>(len, item: EMPTY_MARKER)
+        for (i in 0..len) {
             var comment: String = ""
             var frame: Float64 = 0.0
             var durationFrames: Float64 = 0.0
 
             let jo: JsonObject = reader[i].asObject()
-            if (jo.containsKey(MARKER_NAMES[0])) {
-                comment = jo[MARKER_NAMES[0]].asString().getValue()
+            if (let Some(v) <- jo.get(MARKER_NAMES[0])) {
+                comment = v.asString().getValue()
             }
-            if (jo.containsKey(MARKER_NAMES[1])) {
-                frame = jo[MARKER_NAMES[1]].asFloat().getValue()
+            if (let Some(v) <- jo.get(MARKER_NAMES[1])) {
+                frame = v.asFloat().getValue()
             }
-            if (jo.containsKey(MARKER_NAMES[2])) {
-                durationFrames = jo[MARKER_NAMES[2]].asFloat().getValue()
+            if (let Some(v) <- jo.get(MARKER_NAMES[2])) {
+                durationFrames = v.asFloat().getValue()
             }
-            markers.append(Marker(comment, frame, durationFrames))
+            markers[i] = Marker(comment, frame, durationFrames)
         }
+        return markers
     }
 
 }

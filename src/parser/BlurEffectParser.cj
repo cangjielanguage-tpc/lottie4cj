@@ -13,34 +13,37 @@ class BlurEffectParser {
     ]
 
 
-    static func parse(reader: JsonObject): ArrayList<BlurEffect> {
+    static func parse(reader: JsonObject): Array<Effect> {
 
-        let ef: ArrayList<BlurEffect> = ArrayList<BlurEffect>()
-        if (reader.containsKey(BLUR_EFFECT_NAMES)) { //"layers"."ef"."ef"
-            let ja: JsonArray = reader[BLUR_EFFECT_NAMES].asArray()
-            for (i in 0..ja.size()) {
+        var ef: Array<Effect> = Array<Effect>()
+        if (let Some(v) <- reader.get(BLUR_EFFECT_NAMES)) { //"layers"."ef"."ef"
+            let ja: JsonArray = v.asArray()
+            let len: Int64 = ja.size()
+            let EMPTY_EFFECT: Effect = Effect()
+            ef = Array<Effect>(len, item: EMPTY_EFFECT)
+            for (i in 0..len) {
                 let jo: JsonObject = ja[i].asObject()
-                let be: BlurEffect = maybeParseInnerEffect(jo)
-                ef.append(be)
+                let be: Effect = maybeParseInnerEffect(jo)
+                ef[i] = be
             }
         }
         return ef
     }
 
-    private static func maybeParseInnerEffect(reader: JsonObject): BlurEffect {
+    private static func maybeParseInnerEffect(reader: JsonObject): Effect {
 
-        var blurEffect: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>()
+        var blurEffect: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
         var isCorrectType: Int64 = 0
         var isNull: Bool = true
 
-        if (reader.containsKey(INNER_BLUR_EFFECT_NAMES[0])) {//"ty" //"layers"."ef"."ef"."ty"
-            isCorrectType = reader[INNER_BLUR_EFFECT_NAMES[0]].asInt().getValue()
+        if (let Some(v) <- reader.get(INNER_BLUR_EFFECT_NAMES[0])) {//"ty" //"layers"."ef"."ef"."ty"
+            isCorrectType = v.asInt().getValue()
         }
-        if (reader.containsKey(INNER_BLUR_EFFECT_NAMES[1])) {//"v" //"layers"."ef"."ef"."v"
-            blurEffect = AnimatableValueParser.parseArrayFloat(reader[INNER_BLUR_EFFECT_NAMES[1]])
+        if (let Some(v) <- reader.get(INNER_BLUR_EFFECT_NAMES[1])) {//"v" //"layers"."ef"."ef"."v"
+            blurEffect = AnimatableValueParser.parseArrayFloat(v)
             isNull = false
         }
 
-        return BlurEffect(isCorrectType, ContentModelPK(blurEffect), isNull)
+        return Effect(ty: isCorrectType, nm: "", v: ContentModelPK(k: blurEffect), isNull: isNull)
     }
 }

@@ -17,28 +17,28 @@ class ShapePathParser {
         var name: String = ""
         var ind: Int64 = 0
 
-        var shape: ArrayList<Keyframe<ShapeData>> = ArrayList<Keyframe<ShapeData>>()
+        var shape: Array<Keyframe<ShapeData>> = Array<Keyframe<ShapeData>>()
         var hidden: Bool = false
 
         let jo: JsonObject = reader.asObject()
-        if (jo.containsKey(NAMES[0])) { // "nm"
-            name = jo[NAMES[0]].asString().getValue()
+        if (let Some(v) <- jo.get(NAMES[0])) { // "nm"
+            name = v.asString().getValue()
         }
-        if (jo.containsKey(NAMES[1])) { // //"ind"
-            ind = jo[NAMES[1]].asInt().getValue()
+        if (let Some(v) <- jo.get(NAMES[1])) { // //"ind"
+            ind = v.asInt().getValue()
         }
-        if (jo.containsKey(NAMES[2])) { // "ks"
-            let jv: JsonValue = jo[NAMES[2]]
-            shape = AnimatableValueParser.parseShapeData(jv)
+        if (let Some(v) <- jo.get(NAMES[2])) { // "ks"
+            shape = AnimatableValueParser.parseShapeData(v)
         }
-        if (jo.containsKey(NAMES[3])) { // "hd"
-            hidden = jo[NAMES[3]].asBool().getValue()
+        if (let Some(v) <- jo.get(NAMES[3])) { // "hd"
+            hidden = v.asBool().getValue()
         }
-        let cm: ShapePath = ShapePath()
-        cm.nm = name
-        cm.ind = ind
-        cm.ks = shape
-        cm.hd = hidden
+        let cm: ShapePath = ShapePath(
+            nm: name,
+            ind: ind,
+            ks: shape,
+            hd: hidden
+        )
         return cm
     }
 }

@@ -23,36 +23,39 @@ class FontCharacterParser {
         var width: Float64 = 0.0
         var style: String = ""
         var fontFamily: String = ""
-        var shapes: ArrayList<ContentModel> = ArrayList<ContentModel>()
+        var shapes: Array<ContentModel> = Array<ContentModel>()
 
-        if (reader.containsKey(NAMES[0])) {
-            character = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) {
+            character = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[1])) {
-            size = reader[NAMES[1]].asFloat().getValue()
+        if (let Some(v) <- reader.get(NAMES[1])) {
+            size = v.asFloat().getValue()
         }
-        if (reader.containsKey(NAMES[2])) {
-            width = reader[NAMES[2]].asFloat().getValue()
+        if (let Some(v) <- reader.get(NAMES[2])) {
+            width = v.asFloat().getValue()
         }
-        if (reader.containsKey(NAMES[3])) {
-            style = reader[NAMES[3]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[3])) {
+            style = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[4])) {
-            fontFamily = reader[NAMES[4]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[4])) {
+            fontFamily = v.asString().getValue()
         }
 
-        if (reader.containsKey(NAMES[5])) {
-            let jo: JsonObject = reader[NAMES[5]].asObject()
-            if (jo.size() > 0 && jo.containsKey(DATA_NAMES)) {
-                let ja: JsonArray = jo[DATA_NAMES].asArray()
-                for (i in 0..ja.size()) {
+        if (let Some(v) <- reader.get(NAMES[5])) {
+            let jo: JsonObject = v.asObject()
+            if (let Some(val) <- jo.get(DATA_NAMES)) {
+                let ja: JsonArray = val.asArray()
+                let len: Int64 = ja.size()
+                let EMPTY_CM: ContentModel = ContentModel()
+                shapes = Array<ContentModel>(len, item: EMPTY_CM)
+                for (i in 0..len) {
                     let jsonObject: JsonObject = ja[i].asObject()
-                    shapes.append(ContentModelParser.parse(jsonObject))
+                    shapes[i] = ContentModelParser.parse(jsonObject)
                 }
             }
         }
 
-        let data: CharsData = CharsData(shapes)
+        let data: CharsData = CharsData(shapes: shapes)
         return FontCharacter(data, character, size, width, style, fontFamily)
     }
 }

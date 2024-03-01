@@ -24,75 +24,79 @@ class ShapeStrokeParser {
 
     static func parse(reader: JsonObject): ShapeStroke {
         var name: String = ""
-        var color: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>()
+        var color: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
 
-        var width: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
-        var opacity: ArrayList<Keyframe<Int64>> = ArrayList<Keyframe<Int64>>()
+        var width: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+        var opacity: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>()
         var capType: Int64 = 0
         var joinType: Int64 = 0
         var miterLimit: Float64 = 0.0
         var hidden: Bool = false
-        var lineDashPattern: ArrayList<ContentModelD> = ArrayList<ContentModelD>()
+        var lineDashPattern: Array<ContentModelD> = Array<ContentModelD>()
 
-        if (reader.containsKey(NAMES[0])) { // "nm"
-            name = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
+            name = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[1])) { //"c"  //"layers"."shapes"."c"  <==  "layers"."shapes".{"ty": "st"}
-            let jv: JsonValue = reader[NAMES[1]]
-            color = AnimatableValueParser.parseColor(jv)
+        if (let Some(v) <- reader.get(NAMES[1])) { //"c"  //"layers"."shapes"."c"  <==  "layers"."shapes".{"ty": "st"}
+            color = AnimatableValueParser.parseColor(v)
         }
-        if (reader.containsKey(NAMES[2])) {//"w"
-            let jv: JsonValue = reader[NAMES[2]]
-            width = AnimatableValueParser.parseFloat(jv)
+        if (let Some(v) <- reader.get(NAMES[2])) {//"w"
+            width = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[3])) {//"o"
-            let jo: JsonObject = reader[NAMES[3]].asObject()
+        if (let Some(v) <- reader.get(NAMES[3])) {//"o"
+            let jo: JsonObject = v.asObject()
             opacity = AnimatableValueParser.parseInteger(jo)
         }
 
-        if (reader.containsKey(NAMES[4])) { // "lc"
-            capType = reader[NAMES[4]].asInt().getValue()
+        if (let Some(v) <- reader.get(NAMES[4])) { // "lc"
+            capType = v.asInt().getValue()
         }
-        if (reader.containsKey(NAMES[5])) { // "lj"
-            joinType = reader[NAMES[5]].asInt().getValue()
+        if (let Some(v) <- reader.get(NAMES[5])) { // "lj"
+            joinType = v.asInt().getValue()
         }
-        if (reader.containsKey(NAMES[6])) { // "ml"
-            miterLimit = reader[NAMES[6]].asFloat().getValue()
-        }
-
-        if (reader.containsKey(NAMES[7])) { // "hd"
-            hidden = reader[NAMES[7]].asBool().getValue()
+        if (let Some(v) <- reader.get(NAMES[6])) { // "ml"
+            miterLimit = v.asFloat().getValue()
         }
 
-        //"d": [{"n": "String", "v": ArrayList<Keyframe<T>>}]  ==  ArrayList<ContentModelD>
-        if (reader.containsKey(NAMES[8])) { // "d"
-            let ja: JsonArray = reader[NAMES[8]].asArray()
-            for (i in 0..ja.size()) {
-                let jo: JsonObject = ja[i].asObject()
-                var n: String = ""
-                var v: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
-                if (jo.containsKey(DASH_PATTERN_NAMES[0])) { // "n"
-                    n = jo[DASH_PATTERN_NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[7])) { // "hd"
+            hidden = v.asBool().getValue()
+        }
+
+        //"d": [{"n": "String", "v": Array<Keyframe<T>>}]  ==  Array<ContentModelD>
+        if (let Some(k) <- reader.get(NAMES[8])) { // "d"
+            let ja: JsonArray = k.asArray()
+            let len: Int64 = ja.size()
+            if (len > 0) {
+                let EMPTY_CMD: ContentModelD = ContentModelD(n: "", v: ContentModelDK())
+                lineDashPattern = Array<ContentModelD>(len, item: EMPTY_CMD)
+                for (i in 0..len) {
+                    let jo: JsonObject = ja[i].asObject()
+                    var n: String = ""
+                    var v: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+                    if (let Some(val) <- jo.get(DASH_PATTERN_NAMES[0])) { // "n"
+                        n = val.asString().getValue()
+                    }
+                    if (let Some(val) <- jo.get(DASH_PATTERN_NAMES[1])) { // "v"
+                        v = AnimatableValueParser.parseFloat(val)
+                    }
+
+                    let cmd: ContentModelD = ContentModelD(n: n, v: ContentModelDK(k: v))
+                    lineDashPattern[i] = cmd
                 }
-                if (jo.containsKey(DASH_PATTERN_NAMES[1])) { // "v"
-                    v = AnimatableValueParser.parseFloat(jo[DASH_PATTERN_NAMES[1]])
-                }
-
-                let cmd: ContentModelD = ContentModelD(n: n, v: ContentModelDK(v))
-                lineDashPattern.append(cmd)
             }
         }
 
-        let cm: ShapeStroke = ShapeStroke()
-        cm.nm = name
-        cm.c = color
-        cm.w = width
-        cm.o = opacity
-        cm.lc = capType
-        cm.lj = joinType
-        cm.ml = miterLimit
-        cm.hd = hidden
-        cm.d = lineDashPattern
+        let cm: ShapeStroke = ShapeStroke(
+            nm: name,
+            c: color,
+            w: width,
+            o: opacity,
+            lc: capType,
+            lj: joinType,
+            ml: miterLimit,
+            hd: hidden,
+            d: lineDashPattern
+        )
         return cm
     }
 }

@@ -18,35 +18,36 @@ class RectangleShapeParser {
         var name: String = ""
 
         var position: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()
-        var size: ArrayList<Keyframe<PointF>> = ArrayList<Keyframe<PointF>>()
+        var size: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
 
-        var roundedness: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
+        var roundedness: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
         var hidden: Bool = false
 
-        if (reader.containsKey(NAMES[0])) { // "nm"
-            name = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
+            name = v.asString().getValue()
         }
 
-        if (reader.containsKey(NAMES[1])) {  //"p"
-            position = AnimatablePathValueParser.parseSplitPath(reader[NAMES[1]])
+        if (let Some(v) <- reader.get(NAMES[1])) {  //"p"
+            position = AnimatablePathValueParser.parseSplitPath(v)
         }
-        if (reader.containsKey(NAMES[2])) {  //"s"
-            size = AnimatableValueParser.parsePoint(reader[NAMES[2]])
+        if (let Some(v) <- reader.get(NAMES[2])) {  //"s"
+            size = AnimatableValueParser.parsePoint(v)
         }
-        if (reader.containsKey(NAMES[3])) {  //"s"
-            roundedness = AnimatableValueParser.parseFloat(reader[NAMES[3]])
-        }
-
-        if (reader.containsKey(NAMES[4])) {  //"hd"
-            hidden = reader[NAMES[4]].asBool().getValue()
+        if (let Some(v) <- reader.get(NAMES[3])) {  //"s"
+            roundedness = AnimatableValueParser.parseFloat(v)
         }
 
-        let cm: RectangleShape = RectangleShape()
-        cm.nm = name
-        cm.p = position
-        cm.s = size
-        cm.r = roundedness
-        cm.hd = hidden
+        if (let Some(v) <- reader.get(NAMES[4])) {  //"hd"
+            hidden = v.asBool().getValue()
+        }
+
+        let cm: RectangleShape = RectangleShape(
+            nm: name,
+            p: position,
+            s: size,
+            r: roundedness,
+            hd: hidden
+        )
         return cm
     }
 }

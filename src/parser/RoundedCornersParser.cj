@@ -4,7 +4,7 @@
 
 package parser
 
-public class RoundedCornersParser {
+class RoundedCornersParser {
 
     private static let NAMES: Array<String> = [
         "nm", // 0
@@ -14,23 +14,20 @@ public class RoundedCornersParser {
 
     static func parse(reader: JsonObject): RoundedCorners {
         var name: String = ""
-        var cornerRadius: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>() //用例1/2
+        var cornerRadius: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>() //用例1/2
         var hidden: Bool = false
 
-        if (reader.containsKey(NAMES[0])) { // "nm"
-            name = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
+            name = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[1])) { // "r"
-            cornerRadius = AnimatableValueParser.parseFloat(reader[NAMES[1]])
+        if (let Some(v) <- reader.get(NAMES[1])) { // "r"
+            cornerRadius = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[2])) { // "hd"
-            hidden = reader[NAMES[2]].asBool().getValue()
+        if (let Some(v) <- reader.get(NAMES[2])) { // "hd"
+            hidden = v.asBool().getValue()
         }
 
-        let cm: RoundedCorners = RoundedCorners()
-        cm.nm = name
-        cm.r = cornerRadius
-        cm.hd = hidden
+        let cm: RoundedCorners = RoundedCorners(nm: name, r: cornerRadius, hd: hidden)
         return cm
     }
 }

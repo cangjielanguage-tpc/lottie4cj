@@ -32,7 +32,8 @@ class KeyframeParser {
         }
     }
 
-    private static func parseKeyframe<T>(reader: JsonValue, valueParser: ValueParser<T>): Keyframe<T> where T <: ToString  {
+    private static func parseKeyframe<T>(reader: JsonValue, valueParser: ValueParser<T>):
+                                            Keyframe<T> where T <: ToString  {
 
         var cp1: PointF = PointF()
         var cp2: PointF = PointF()
@@ -49,14 +50,12 @@ class KeyframeParser {
 
 
         let jo: JsonObject = reader.asObject()
-        if (jo.containsKey(NAMES[0])) { // t
-            startFrame = jo[NAMES[0]].asFloat().getValue()
+        if (let Some(v) <- jo.get(NAMES[0])) { // t
+            startFrame = v.asFloat().getValue()
         }
-        if (jo.containsKey(NAMES[1])) { // s
-            let jv: JsonValue = jo[NAMES[1]]
-
-            if (equalsJsonKind(jv.kind(), JsonKind.JsArray)) {
-                let ja: JsonArray = jv.asArray()
+        if (let Some(v) <- jo.get(NAMES[1])) { // s
+            if (equalsJsonKind(v.kind(), JsonKind.JsArray)) {
+                let ja: JsonArray = v.asArray()
                 let len: Int64 = ja.size()
                 if (len > 0) {
                     let jsonValue: JsonValue = ja[0]
@@ -65,17 +64,17 @@ class KeyframeParser {
                     if (equalsJsonKind(jk, JsonKind.JsObject)) {
                         startValue = valueParser.parse(ja[0])
                     } else {
-                        startValue = valueParser.parse(jv)
+                        startValue = valueParser.parse(v)
                     }
                 }
             } else {
-                startValue = valueParser.parse(jv)
+                startValue = valueParser.parse(v)
             }
         }
-        if (jo.containsKey(NAMES[2])) { // e
-            let jv: JsonValue = jo[NAMES[2]]
-            if (equalsJsonKind(jv.kind(), JsonKind.JsArray)) {
-                let ja: JsonArray = jv.asArray()
+
+        if (let Some(v) <- jo.get(NAMES[2])) { // e
+            if (equalsJsonKind(v.kind(), JsonKind.JsArray)) {
+                let ja: JsonArray = v.asArray()
                 let len: Int64 = ja.size()
 
                 if (len > 0) {
@@ -85,49 +84,48 @@ class KeyframeParser {
                     if (equalsJsonKind(jk, JsonKind.JsObject)) {
                         endValue = valueParser.parse(ja[0])
                     } else {
-                        endValue = valueParser.parse(jv)
+                        endValue = valueParser.parse(v)
                     }
                 }
             } else {
-                endValue = valueParser.parse(jv)
+                endValue = valueParser.parse(v)
             }
         }
-        if (jo.containsKey(NAMES[3])) { // o
-            let jv: JsonValue = jo[NAMES[3]]
-            cp1 = JsonUtils.jsonToPoint(jv)
+
+        if (let Some(v) <- jo.get(NAMES[3])) { // o
+            cp1 = JsonUtils.jsonToPoint(v)
         }
-        if (jo.containsKey(NAMES[4])) { // i
-            let jv: JsonValue = jo[NAMES[4]]
-            cp2 = JsonUtils.jsonToPoint(jv)
+        if (let Some(v) <- jo.get(NAMES[4])) { // i
+            cp2 = JsonUtils.jsonToPoint(v)
         }
-        if (jo.containsKey(NAMES[5])) { // h
-            hold = jo[NAMES[5]].asInt().getValue()
+        if (let Some(v) <- jo.get(NAMES[5])) { // h
+            hold = v.asInt().getValue()
         }
-        if (jo.containsKey(NAMES[6])) { // to
-            let jv: JsonValue = jo[NAMES[6]]
-            pathCp1 = JsonUtils.jsonToPoint(jv)
+        if (let Some(v) <- jo.get(NAMES[6])) { // to
+            pathCp1 = JsonUtils.jsonToPoint(v)
         }
-        if (jo.containsKey(NAMES[7])) { // ti
-            let jv: JsonValue = jo[NAMES[7]]
-            pathCp2 = JsonUtils.jsonToPoint(jv)
+        if (let Some(v) <- jo.get(NAMES[7])) { // ti
+            pathCp2 = JsonUtils.jsonToPoint(v)
         }
 
-        let keyframe: Keyframe<T> = Keyframe<T>()
-        keyframe.t = startFrame
-        keyframe.s = startValue
-        keyframe.e = endValue
-        keyframe.o = cp1
-        keyframe.i = cp2
-        keyframe.h = hold
-        keyframe.to = pathCp1
-        keyframe.ti = pathCp2
+        let keyframe: Keyframe<T> = Keyframe<T>(
+            t: startFrame,
+            s: startValue,
+            e: endValue,
+            o: cp1,
+            i: cp2,
+            h: hold,
+            to: pathCp1,
+            ti: pathCp2
+        )
 
         return keyframe
     }
 
-    private static func parseStaticValue<T>(reader: JsonValue, valueParser: ValueParser<T>): Keyframe<T> where T <: ToString  {
+    private static func parseStaticValue<T>(reader: JsonValue, valueParser: ValueParser<T>):
+                                                Keyframe<T> where T <: ToString  {
         let value: T = valueParser.parse(reader)
-        return Keyframe<T>(value)
+        return Keyframe<T>(k: value)
     }
 
 }

@@ -107,66 +107,67 @@ public class DocumentDataParser <: ValueParser<DocumentData> {
         var boxSize: PointF = PointF()
 
         let reader: JsonObject = jv.asObject()
-        if (reader.containsKey(NAMES[0])) { // "t"
-            text = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) { // "t"
+            text = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[1])) { // "f"
-            fontName = reader[NAMES[1]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[1])) { // "f"
+            fontName = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[2])) { // "s"
-            size = reader[NAMES[2]].asFloat().getValue()
+        if (let Some(v) <- reader.get(NAMES[2])) { // "s"
+            size = v.asFloat().getValue()
         }
-        if (reader.containsKey(NAMES[3])) { // "j"
-            justification = reader[NAMES[3]].asInt().getValue()
+        if (let Some(v) <- reader.get(NAMES[3])) { // "j"
+            justification = v.asInt().getValue()
         }
-        if (reader.containsKey(NAMES[4])) { // "tr"
-            tracking = reader[NAMES[4]].asInt().getValue()
+        if (let Some(v) <- reader.get(NAMES[4])) { // "tr"
+            tracking = v.asInt().getValue()
         }
-        if (reader.containsKey(NAMES[5])) { // "lh"
-            lineHeight = reader[NAMES[5]].asFloat().getValue()
+        if (let Some(v) <- reader.get(NAMES[5])) { // "lh"
+            lineHeight = v.asFloat().getValue()
         }
-        if (reader.containsKey(NAMES[6])) { // "ls"
-            baselineShift = reader[NAMES[6]].asFloat().getValue()
+        if (let Some(v) <- reader.get(NAMES[6])) { // "ls"
+            baselineShift = v.asFloat().getValue()
         }
-        if (reader.containsKey(NAMES[7])) { // "fc"
-            fillColor = JsonUtils.jsonToColor(reader[NAMES[7]])
+        if (let Some(v) <- reader.get(NAMES[7])) { // "fc"
+            fillColor = JsonUtils.jsonToColor(v)
         }
-        if (reader.containsKey(NAMES[8])) { // "sc"
-            strokeColor = JsonUtils.jsonToColor(reader[NAMES[8]])
+        if (let Some(v) <- reader.get(NAMES[8])) { // "sc"
+            strokeColor = JsonUtils.jsonToColor(v)
         }
-        if (reader.containsKey(NAMES[9])) { // "sw"
-            strokeWidth = reader[NAMES[9]].asFloat().getValue()
+        if (let Some(v) <- reader.get(NAMES[9])) { // "sw"
+            strokeWidth = v.asFloat().getValue()
         }
-        if (reader.containsKey(NAMES[10])) { // "of"
-            strokeOverFill = reader[NAMES[10]].asBool().getValue()
+        if (let Some(v) <- reader.get(NAMES[10])) { // "of"
+            strokeOverFill = v.asBool().getValue()
         }
-        if (reader.containsKey(NAMES[11])) { // "ps"
-            let ja: JsonArray = reader[NAMES[11]].asArray()
+        if (let Some(v) <- reader.get(NAMES[11])) { // "ps"
+            let ja: JsonArray = v.asArray()
             var x: Float64 = ja[0].asFloat().getValue()
             var y: Float64 = ja[1].asFloat().getValue()
-            boxPosition = PointF(x, y)
+            boxPosition = PointF(x: x, y: y)
         }
-        if (reader.containsKey(NAMES[12])) { // "sz"
-            let ja: JsonArray = reader[NAMES[12]].asArray()
+        if (let Some(v) <- reader.get(NAMES[12])) { // "sz"
+            let ja: JsonArray = v.asArray()
             var x: Float64 = ja[0].asFloat().getValue()
             var y: Float64 = ja[1].asFloat().getValue()
-            boxSize = PointF(x, y)
+            boxSize = PointF(x: x, y: y)
         }
 
-        let dd: DocumentData = DocumentData()
-        dd.t = text
-        dd.f = fontName
-        dd.s = size
-        dd.j = justification
-        dd.tr = tracking
-        dd.lh = lineHeight
-        dd.ls = baselineShift
-        dd.fc = fillColor
-        dd.sc = strokeColor
-        dd.sw = strokeWidth
-        dd.of = strokeOverFill
-        dd.ps = boxPosition
-        dd.sz = boxSize
+        let dd: DocumentData = DocumentData(
+            t: text,
+            f: fontName,
+            s: size,
+            j: justification,
+            tr: tracking,
+            lh: lineHeight,
+            ls: baselineShift,
+            fc: fillColor,
+            sc: strokeColor,
+            sw: strokeWidth,
+            of: strokeOverFill,
+            ps: boxPosition,
+            sz: boxSize
+        )
         return dd
     }
 }
@@ -186,31 +187,28 @@ public class ShapeDataParser <: ValueParser<ShapeData> {
 
     public func parse(reader: JsonValue): ShapeData {
         var closed: Bool = false
-        var pointsArray: ArrayList<PointF> = ArrayList<PointF>()
-        var inTangents: ArrayList<PointF> = ArrayList<PointF>()
-        var outTangents: ArrayList<PointF> = ArrayList<PointF>()
+        var pointsArray: Array<PointF> = Array<PointF>()
+        var inTangents: Array<PointF> = Array<PointF>()
+        var outTangents: Array<PointF> = Array<PointF>()
 
         var hasv: Bool = false
         var hasi: Bool = false
         var haso: Bool = false
 
         let jo: JsonObject = reader.asObject()
-        if (jo.containsKey(NAMES[0])) { // "c"
-            closed = jo[NAMES[0]].asBool().getValue()
+        if (let Some(v) <- jo.get(NAMES[0])) { // "c"
+            closed = v.asBool().getValue()
         }
-        if (jo.containsKey(NAMES[1])) { // "v"
-            let jv: JsonValue = jo[NAMES[1]]
-            pointsArray = JsonUtils.jsonToPoints(jv)
+        if (let Some(v) <- jo.get(NAMES[1])) { // "v"
+            pointsArray = JsonUtils.jsonToPoints(v)
             hasv = true
         }
-        if (jo.containsKey(NAMES[2])) { // "i"
-            let jv: JsonValue = jo[NAMES[2]]
-            inTangents = JsonUtils.jsonToPoints(jv)
+        if (let Some(v) <- jo.get(NAMES[2])) { // "i"
+            inTangents = JsonUtils.jsonToPoints(v)
             hasi = true
         }
-        if (jo.containsKey(NAMES[3])) { // "o"
-            let jv: JsonValue = jo[NAMES[3]]
-            outTangents = JsonUtils.jsonToPoints(jv)
+        if (let Some(v) <- jo.get(NAMES[3])) { // "o"
+            outTangents = JsonUtils.jsonToPoints(v)
             haso = true
         }
 
@@ -221,11 +219,12 @@ public class ShapeDataParser <: ValueParser<ShapeData> {
             return ShapeData()
         }
 
-        let sd: ShapeData = ShapeData()
-        sd.c =  closed
-        sd.v =  pointsArray
-        sd.i =  inTangents
-        sd.o =  outTangents
+        let sd: ShapeData = ShapeData(
+            c: closed,
+            v: pointsArray,
+            i: inTangents,
+            o: outTangents
+        )
         return sd
     }
 }

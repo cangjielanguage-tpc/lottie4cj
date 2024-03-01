@@ -16,8 +16,8 @@ class ContentModelParser {
         var types: String = ""
 
         var model: ContentModel = ContentModel()
-        if (reader.containsKey(NAMES[0])) {
-            types = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) {
+            types = v.asString().getValue()
         }
         if (types.isEmpty()) {
             return model
@@ -47,7 +47,7 @@ class ContentModelParser {
             model = PolystarShapeParser.parse(reader)
         } else if (types == "mm") {
             model = MergePathsParser.parse(reader)
-            logger.log(LogLevel.INFO, "Animation contains merge paths. Merge paths are only " +
+            logger.log(LogLevel.INFO,  "Animation contains merge paths. Merge paths are only " +
                 "supported on KitKat+ and must be manually enabled by calling " +
                 "enableMergePathsForKitKatAndAbove().")
         } else if (types == "rp") {
