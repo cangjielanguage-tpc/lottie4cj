@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a DocumentData structure.
+ */
 package model
 
 public class DocumentData <: ToString {
@@ -21,6 +24,23 @@ public class DocumentData <: ToString {
     public let ps: PointF                 // 11 = boxPosition
     public let sz: PointF                 // 12 = boxSize
 
+    /**
+     * Create a DocumentData instance based on parameters.
+     *
+     * @param t - Type of String, the value of t.
+     * @param f - Type of String, the value of f.
+     * @param s - Type of Float64, the value of s.
+     * @param j - Type of Int64, the value of j.
+     * @param tr - Type of Int64, the value of tr.
+     * @param lh - Type of Float64, the value of lh.
+     * @param ls - Type of Float64, the value of ls.
+     * @param fc - Type of Array<Float64>, the value of fc.
+     * @param sc - Type of Array<Float64>, the value of sc.
+     * @param sw - Type of Float64, the value of sw.
+     * @param of - Type of Bool, the value of of.
+     * @param ps - Type of PointF, the value of ps.
+     * @param sz - Type of PointF, the value of sz.
+     */
     public init(t!: String, f!: String, s!: Float64, j!: Int64, tr!: Int64, lh!: Float64, ls!: Float64,
         fc!: Array<Float64>, sc!: Array<Float64>, sw!: Float64, of!: Bool, ps!: PointF, sz!: PointF
     ){
@@ -39,14 +59,25 @@ public class DocumentData <: ToString {
         this.sz = sz
     }
 
+    /**
+     * Obtain the fc of DocumentData.
+     */
     public prop fc: Array<Float64> {
         get() { this._fc.clone() }
     }
 
+    /**
+     * Obtain the sc of DocumentData.
+     */
     public prop sc: Array<Float64> {
         get() { this._sc.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "DocumentData: {\n" +
                "t = ${t}\n" +

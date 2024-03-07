@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a Keyframe structure.
+ */
 package model
 
 public class Keyframe<T> <: ToString where T <: ToString {
@@ -22,6 +25,19 @@ public class Keyframe<T> <: ToString where T <: ToString {
     public let to: PointF       // 6
     public let ti: PointF       // 7
 
+    /**
+     * Create a Keyframe instance based on parameters.
+     *
+     * @param k - Type of Option<T>, the value of k.
+     * @param t - Type of Float64, the value of t.
+     * @param s - Type of Option<T>, the value of s.
+     * @param e - Type of Option<T>, the value of e.
+     * @param o - Type of PointF, the value of o.
+     * @param i - Type of PointF, the value of i.
+     * @param h - Type of Int64, the value of h.
+     * @param to - Type of PointF, the value of to.
+     * @param ti - Type of PointF, the value of ti.
+     */
     public init(
         k!: Option<T> = Option<T>.None,
         t!: Float64 = 0.0,
@@ -44,6 +60,11 @@ public class Keyframe<T> <: ToString where T <: ToString {
         this.ti = ti
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         let strk: String = match (k) {
             case Some(v) => v.toString()

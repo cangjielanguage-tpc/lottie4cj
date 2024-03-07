@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a LayerParser structure.
+ */
 package parser
 
 /**
@@ -50,6 +53,12 @@ public class LayerParser {
         "nm"
     ]
 
+    /**
+     * Animate the "layers" data in the json data, parsed and encapsulated into the corresponding Layer entity class.
+     *
+     * @param reader - Type of JsonValue, animate json data in "layers" data.
+     * @return Type of Layer, an instance of the "layers" data that encapsulates the animation.
+     */
     public static func parse(reader: JsonValue): Layer {
 
         var layerName: String = "UNSET"

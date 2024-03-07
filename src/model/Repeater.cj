@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a Repeater structure.
+ */
 package model
 
 public class Repeater <: ContentModel {
@@ -17,6 +20,15 @@ public class Repeater <: ContentModel {
 
     let ty: String = "rp"
 
+    /**
+     * Create a Repeater instance based on parameters.
+     *
+     * @param nm - Type of String, the value of nm.
+     * @param c - Type of Array<Keyframe<Float64>>, the value of c.
+     * @param o - Type of Array<Keyframe<Float64>>, the value of o.
+     * @param tr - Type of AnimatableTransform, the value of tr.
+     * @param hd - Type of Bool, the value of hd.
+     */
     public init(nm!: String, c!: Array<Keyframe<Float64>>, o!: Array<Keyframe<Float64>>, tr!: AnimatableTransform, hd!: Bool){
         this.nm = nm
         this._c = c
@@ -25,18 +37,32 @@ public class Repeater <: ContentModel {
         this.hd = hd
     }
 
+    /**
+     * Obtain the type of Repeater.
+     */
     public override prop types: Int8 {
         get() { 12 }
     }
 
+    /**
+     * Obtain the c of Repeater.
+     */
     public prop c: Array<Keyframe<Float64>> {
         get() { this._c.clone() }
     }
 
+    /**
+     * Obtain the o of Repeater.
+     */
     public prop o: Array<Keyframe<Float64>> {
         get() { this._o.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "Repeater[rp]: {\n" +
                "ty = ${ty}\n" +

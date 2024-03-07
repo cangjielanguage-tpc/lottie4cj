@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a AnimatableTextPropertiesParser structure.
+ */
 package parser
 
 public class AnimatableTextPropertiesParser {
@@ -17,6 +20,13 @@ public class AnimatableTextPropertiesParser {
         "t"   //3
     ]
 
+    /**
+     * Animate the data of a special "a" in json data, parsed into the corresponding AnimatableTextProperties instance.
+     *
+     * @param reader - Type of JsonObject. Animate special "a" data in json data.
+     * @return Type of AnimatableTextProperties.
+     *                 an array of instances of the special "a" data that encapsulates the animation.
+     */
     public static func parse(reader: JsonObject): AnimatableTextProperties {
         var anim: AnimatableTextProperties = AnimatableTextProperties()
         if (let Some(v) <- reader.get(PROPERTIES_NAMES)) { //"a"   //"layers"."t"."a"(."a")

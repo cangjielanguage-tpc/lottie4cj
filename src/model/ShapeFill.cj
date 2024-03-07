@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a ShapeFill structure.
+ */
 package model
 
 public class ShapeFill <: ContentModel {
@@ -18,6 +21,16 @@ public class ShapeFill <: ContentModel {
 
     let ty: String = "fl"
 
+    /**
+     * Create a ShapeFill instance based on parameters.
+     *
+     * @param nm - Type of String, the value of nm.
+     * @param c - Type of Array<Keyframe<Array<Float64>>>, the value of c.
+     * @param o - Type of Array<Keyframe<Int64>>, the value of o.
+     * @param fillEnabled - Type of Bool, the value of fillEnabled.
+     * @param r - Type of Int64, the value of r.
+     * @param hd - Type of Bool, the value of hd.
+     */
     public init(nm!: String, c!: Array<Keyframe<Array<Float64>>>, o!: Array<Keyframe<Int64>>,
          fillEnabled!: Bool, r!: Int64, hd!: Bool
     ){
@@ -29,18 +42,32 @@ public class ShapeFill <: ContentModel {
         this.hd = hd
     }
 
+    /**
+     * Obtain the type of ShapeFill.
+     */
     public override prop types: Int8 {
         get() { 3 }
     }
 
+    /**
+     * Obtain the c of ShapeFill.
+     */
     public prop c: Array<Keyframe<Array<Float64>>> {
         get() { this._c.clone() }
     }
 
+    /**
+     * Obtain the o of ShapeFill.
+     */
     public prop o: Array<Keyframe<Int64>> {
         get() { this._o.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "ShapeFill[fl]: {\n" +
                "ty = ${ty}\n" +

@@ -4,7 +4,7 @@
 
 package parser
 
-public class DropShadowEffectParser {
+class DropShadowEffectParser {
 
     private static let DROP_SHADOW_EFFECT_NAMES: String = "ef"
 

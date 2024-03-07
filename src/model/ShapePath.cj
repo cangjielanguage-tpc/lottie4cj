@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a ShapePath structure.
+ */
 package model
 
 public class ShapePath <: ContentModel {
@@ -16,6 +19,14 @@ public class ShapePath <: ContentModel {
 
     let ty: String = "sh"
 
+    /**
+     * Create a ShapePath instance based on parameters.
+     *
+     * @param nm - Type of String, the value of nm.
+     * @param ind - Type of Int64, the value of ind.
+     * @param ks - Type of Array<Keyframe<ShapeData>>, the value of ks.
+     * @param hd - Type of Bool, the value of hd.
+     */
     public init(nm!: String, ind!: Int64, ks!: Array<Keyframe<ShapeData>>, hd!: Bool){
         this.nm = nm
         this.ind = ind
@@ -23,14 +34,25 @@ public class ShapePath <: ContentModel {
         this.hd = hd
     }
 
+    /**
+     * Obtain the type of ShapePath.
+     */
     public override prop types: Int8 {
         get() { 6 }
     }
 
+    /**
+     * Obtain the ks of ShapePath.
+     */
     public prop ks: Array<Keyframe<ShapeData>> {
         get() { this._ks.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "ShapePath[sh]: {\n" +
                "ind: ${ind},\n" +

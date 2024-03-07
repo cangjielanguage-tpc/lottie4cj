@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a GradientFill structure.
+ */
 package model
 
 public class GradientFill <: ContentModel {
@@ -23,6 +26,18 @@ public class GradientFill <: ContentModel {
 
     let ty: String = "gf"
 
+    /**
+     * Create a GradientFill instance based on parameters.
+     *
+     * @param nm - Type of String, the value of nm.
+     * @param g - Type of ContentModelP, the value of g.
+     * @param o - Type of Array<Keyframe<Int64>>, the value of o.
+     * @param t - Type of Int64, the value of t.
+     * @param s - Type of Array<Keyframe<PointF>>, the value of s.
+     * @param e - Type of Array<Keyframe<PointF>>, the value of e.
+     * @param r - Type of Int64, the value of r.
+     * @param hd - Type of Bool, the value of hd.
+     */
     public init(nm!: String, g!: ContentModelP, o!: Array<Keyframe<Int64>>, t!: Int64,
         s!: Array<Keyframe<PointF>>, e!: Array<Keyframe<PointF>>, r!: Int64, hd!: Bool
     ){
@@ -36,22 +51,39 @@ public class GradientFill <: ContentModel {
         this.hd = hd
     }
 
+    /**
+     * Obtain the type of GradientFill.
+     */
     public override prop types: Int8 {
         get() { 4 }
     }
 
+    /**
+     * Obtain the o of GradientFill.
+     */
     public prop o: Array<Keyframe<Int64>> {
         get() { this._o.clone() }
     }
 
+    /**
+     * Obtain the s of GradientFill.
+     */
     public prop s: Array<Keyframe<PointF>> {
         get() { this._s.clone() }
     }
 
+    /**
+     * Obtain the e of GradientFill.
+     */
     public prop e: Array<Keyframe<PointF>> {
         get() { this._e.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "GradientFill[gf]: {\n" +
                "ty = ${ty}\n" +

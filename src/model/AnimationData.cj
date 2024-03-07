@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a AnimationData structure.
+ */
 package model
 
 
@@ -26,6 +29,23 @@ public class AnimationData <: ToString {
     public let nm: String                        // 11 = nm         // name
     public let ddd: Int64                        // 12 = ddd        // Whether it is 3D
 
+    /**
+     * Create a AnimationData instance based on parameters.
+     *
+     * @param w - Type of Int64, the value of w.
+     * @param h - Type of Int64, the value of h.
+     * @param ip - Type of Float64, the value of ip.
+     * @param op - Type of Float64, the value of op.
+     * @param fr - Type of Float64, the value of fr.
+     * @param v - Type of String, the value of v.
+     * @param layers - Type of Array<Layer>, the value of layers.
+     * @param assets - Type of Array<Asset>, the value of assets.
+     * @param fonts - Type of Fonts, the value of fonts.
+     * @param chars - Type of Array<FontCharacter>, the value of chars.
+     * @param markers - Type of Array<Marker>, the value of markers.
+     * @param nm - Type of String, the value of nm.
+     * @param ddd - Type of Int64, the value of ddd.
+     */
     public init(w!: Int64, h!: Int64, ip!: Float64, op!: Float64, fr!: Float64, v!: String,
         layers!: Array<Layer>, assets!: Array<Asset>, fonts!: Fonts, chars!: Array<FontCharacter>,
         markers!: Array<Marker>, nm!: String, ddd!: Int64
@@ -45,19 +65,39 @@ public class AnimationData <: ToString {
         this.ddd = ddd
     }
 
+    /**
+     * Obtain the layers of AnimationData.
+     */
     public prop layers: Array<Layer> {
         get() { this._layers.clone() }
     }
+
+    /**
+     * Obtain the assets of AnimationData.
+     */
     public prop assets: Array<Asset> {
         get() { this._assets.clone() }
     }
+
+    /**
+     * Obtain the chars of AnimationData.
+     */
     public prop chars: Array<FontCharacter> {
         get() { this._chars.clone() }
     }
+
+    /**
+     * Obtain the markers of AnimationData.
+     */
     public prop markers: Array<Marker> {
         get() { this._markers.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         "AnimationData {\n" +
         "w  = ${w}\n" +                       // 0 = width

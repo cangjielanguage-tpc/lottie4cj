@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a AnimatablePathValueParser structure.
+ */
 package parser
 
 public class AnimatablePathValueParser {
@@ -13,6 +16,14 @@ public class AnimatablePathValueParser {
         "y"
     ]
 
+    /**
+     * Animate json data in special "p" data,
+     * parse encapsulated into the corresponding Keyframe<PointF> in an array of instances.
+     *
+     * @param reader - Type of JsonValue. Animate special "p" data in json data.
+     * @return Type of Array<Keyframe<PointF>>.
+     *         An array of instances of the special "p" data that encapsulates the animation.
+     */
     public static func parse(reader: JsonValue): Array<Keyframe<PointF>> {
         var keyframes: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
 

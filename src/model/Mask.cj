@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a Mask structure.
+ */
 package model
 
 public class Mask <: ToString {
@@ -14,6 +17,17 @@ public class Mask <: ToString {
     private let _x: Array<Keyframe<Int64>>          // 5 = x
     public let nm: String                           // 6 = nm
 
+    /**
+     * Create a Mask instance based on parameters.
+     *
+     * @param cl - Type of Bool, the value of cl.
+     * @param inv - Type of Bool, the value of inv.
+     * @param mode - Type of String, the value of mode.
+     * @param pt - Type of Array<Keyframe<ShapeData>>, the value of pt.
+     * @param o - Type of Array<Keyframe<Int64>>, the value of o.
+     * @param x - Type of Array<Keyframe<Int64>>, the value of x.
+     * @param nm - Type of String, the value of nm.
+     */
     public init(
         cl!: Bool = false,
         inv!: Bool= false,
@@ -32,18 +46,32 @@ public class Mask <: ToString {
         this.nm = nm
     }
 
+    /**
+     * Obtain the pt of Mask.
+     */
     public prop pt: Array<Keyframe<ShapeData>> {
         get() { this._pt.clone() }
     }
 
+    /**
+     * Obtain the o of Mask.
+     */
     public prop o: Array<Keyframe<Int64>> {
         get() { this._o.clone() }
     }
 
+    /**
+     * Obtain the x of Mask.
+     */
     public prop x: Array<Keyframe<Int64>> {
         get() { this._x.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         "Mask: {\n" +
         "cl    = ${cl}\n" +

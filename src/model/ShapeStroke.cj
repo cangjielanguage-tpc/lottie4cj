@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a ShapeStroke structure.
+ */
 package model
 
 public class ShapeStroke <: ContentModel {
@@ -22,6 +25,19 @@ public class ShapeStroke <: ContentModel {
 
     let ty: String = "st"
 
+    /**
+     * Create a ShapeStroke instance based on parameters.
+     *
+     * @param nm - Type of String, the value of nm.
+     * @param c - Type of Array<Keyframe<Array<Float64>>>, the value of c.
+     * @param w - Type of Array<Keyframe<Float64>>, the value of w.
+     * @param o - Type of Array<Keyframe<Int64>>, the value of o.
+     * @param lc - Type of Int64, the value of lc.
+     * @param lj - Type of Int64, the value of lj.
+     * @param ml - Type of Float64, the value of ml.
+     * @param hd - Type of Bool, the value of hd.
+     * @param d - Type of Array<ContentModelD>, the value of d.
+     */
     public init(nm!: String, c!: Array<Keyframe<Array<Float64>>>, w!: Array<Keyframe<Float64>>, o!: Array<Keyframe<Int64>>,
         lc!: Int64, lj!: Int64, ml!: Float64, hd!: Bool, d!: Array<ContentModelD>
     ){
@@ -36,26 +52,46 @@ public class ShapeStroke <: ContentModel {
         this._d = d
     }
 
+    /**
+     * Obtain the type of ShapeStroke.
+     */
     public override prop types: Int8 {
         get() { 1 }
     }
 
+    /**
+     * Obtain the c of ShapeStroke.
+     */
     public prop c: Array<Keyframe<Array<Float64>>> {
         get() { this._c.clone() }
     }
 
+    /**
+     * Obtain the w of ShapeStroke.
+     */
     public prop w: Array<Keyframe<Float64>> {
         get() { this._w.clone() }
     }
 
+    /**
+     * Obtain the o of ShapeStroke.
+     */
     public prop o: Array<Keyframe<Int64>> {
         get() { this._o.clone() }
     }
 
+    /**
+     * Obtain the d of ShapeStroke.
+     */
     public prop d: Array<ContentModelD> {
         get() { this._d.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "ShapeStroke[st]: {\n" +
                "ty = ${ty}\n" +
