@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a RectangleShape structure.
+ */
 package model
 
 public class RectangleShape <: ContentModel {
@@ -17,6 +20,15 @@ public class RectangleShape <: ContentModel {
 
     let ty: String = "rc"
 
+    /**
+     * Create a RectangleShape instance based on parameters.
+     *
+     * @param nm - Type of String, the value of nm.
+     * @param p - Type of AnimatableSplitDimensionPathValue, the value of p.
+     * @param s - Type of Array<Keyframe<PointF>>, the value of s.
+     * @param r - Type of Array<Keyframe<Float64>>, the value of r.
+     * @param hd - Type of Bool, the value of hd.
+     */
     public init(
         nm!: String = "",
         p!: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(),
@@ -31,18 +43,32 @@ public class RectangleShape <: ContentModel {
         this.hd = hd
     }
 
+    /**
+     * Obtain the type of RectangleShape.
+     */
     public override prop types: Int8 {
         get() { 8 }
     }
 
+    /**
+     * Obtain the s of RectangleShape.
+     */
     public prop s: Array<Keyframe<PointF>> {
         get() { this._s.clone() }
     }
 
+    /**
+     * Obtain the r of RectangleShape.
+     */
     public prop r: Array<Keyframe<Float64>> {
         get() { this._r.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "RectangleShape[rc]: {\n" +
                "ty = ${ty}\n" +

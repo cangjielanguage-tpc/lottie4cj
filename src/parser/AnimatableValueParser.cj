@@ -2,14 +2,33 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a AnimatableValueParser structure.
+ */
 package parser
 
 public class AnimatableValueParser {
 
+    /**
+     * Animate the specified data in the json data,
+     * parsed and encapsulated into the corresponding Keyframe<Float64> in an array of instances.
+     *
+     * @param reader - Type of JsonValue. Animate the specified data in the json data.
+     * @return Type of Array<Keyframe<Float64>>.
+     *                 An array of instances of the specified data that encapsulates the animation.
+     */
     public static func parseFloat(reader: JsonValue): Array<Keyframe<Float64>> {
         return parse(reader, FloatParser.INSTANCE)
     }
 
+    /**
+     * Animate the specified data in the json data,
+     * parsed and encapsulated into the corresponding Keyframe<Array<Float64>> in an array of instances.
+     *
+     * @param reader - Type of JsonValue. Animate the specified data in the json data.
+     * @return Type of Array<Keyframe<Array<Float64>>>.
+     *                 An array of instances of the specified data that encapsulates the animation.
+     */
     public static func parseArrayFloat(reader: JsonValue): Array<Keyframe<Array<Float64>>> {
         return parse(reader, ArrayFloat64Parser.INSTANCE)
     }

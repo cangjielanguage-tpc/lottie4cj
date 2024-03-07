@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a Layer structure.
+ */
 package model
 
 public class Layer <: ToString {
@@ -32,6 +35,35 @@ public class Layer <: ToString {
     public let ao: Int64                             // 23 = autoOrient
     public let bm: Int64                             // 24 = blendMode
 
+    /**
+     * Create a Layer instance based on parameters.
+     *
+     * @param nm - Type of String, the value of nm, layer name.
+     * @param ind - Type of Int64, the value of ind, layer id.
+     * @param refId - Type of String, the value of refId.
+     * @param ty - Type of Int64, the value of ty, layerType.
+     * @param parent - Type of Int64, the value of parent, parent id.
+     * @param sw - Type of Int64, the value of sw, solid width.
+     * @param sh - Type of Int64, the value of sh, solid height.
+     * @param sc - Type of String, the value of sc, solid color.
+     * @param ks - Type of AnimatableTransform, the value of ks.
+     * @param tt - Type of Int64, the value of tt.
+     * @param masksProperties - Type of Array<Mask>, the value of masksProperties.
+     * @param shapes - Type of Array<ContentModel>, the value of shapes.
+     * @param t - Type of LayerT, the value of t.
+     * @param ef - Type of Array<LayerEF>, the value of ef.
+     * @param sr - Type of Float64, the value of sr.
+     * @param st - Type of Float64, the value of st.
+     * @param w - Type of Float64, the value of w.
+     * @param h - Type of Float64, the value of h.
+     * @param ip - Type of Float64, the value of ip.
+     * @param op - Type of Float64, the value of op.
+     * @param tm - Type of ContentModelDK, the value of tm.
+     * @param cl - Type of String, the value of cl.
+     * @param hd - Type of Bool, the value of hd.
+     * @param ao - Type of Int64, the value of ao.
+     * @param bm - Type of Int64, the value of bm.
+     */
     public init(
         nm!: String = "",
         ind!: Int64 = 0,
@@ -86,18 +118,32 @@ public class Layer <: ToString {
         this.bm              = bm
     }
 
+    /**
+     * Obtain the masksProperties of Layer.
+     */
     public prop masksProperties: Array<Mask> {
         get() { this._masksProperties.clone() }
     }
 
+    /**
+     * Obtain the shapes of Layer.
+     */
     public prop shapes: Array<ContentModel> {
         get() { this._shapes.clone() }
     }
 
+    /**
+     * Obtain the ef of Layer.
+     */
     public prop ef: Array<LayerEF> {
         get() { this._ef.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         "Layer {\n" +
         "nm     = ${nm}\n" +            // 0 = layerName
@@ -132,14 +178,27 @@ public class Layer <: ToString {
 public class LayerTD <: ToString {
     private let _k: Array<Keyframe<DocumentData>>
 
+    /**
+     * Create a LayerTD instance based on the parameter.
+     *
+     * @param k - Type of Array<Keyframe<DocumentData>>, the value of k.
+     */
     public init(k!: Array<Keyframe<DocumentData>> = Array<Keyframe<DocumentData>>()){
         this._k = k
     }
 
+    /**
+     * Obtain the k of LayerTD.
+     */
     public prop k: Array<Keyframe<DocumentData>> {
         get() { this._k.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "LayerTD: {\n k = ${_k}\n}"
     }
@@ -150,15 +209,29 @@ public class LayerT <: ToString {
     public let d: LayerTD
     private let _a: Array<AnimatableTextPropertiesA>
 
+    /**
+     * Create a LayerT instance based on parameters.
+     *
+     * @param d - Type of LayerTD, the value of d.
+     * @param a - Type of Array<AnimatableTextPropertiesA>, the value of a.
+     */
     public init(d!: LayerTD = LayerTD(), a!: Array<AnimatableTextPropertiesA> = Array<AnimatableTextPropertiesA>()){
         this.d = d
         this._a = a
     }
 
+    /**
+     * Obtain the a of LayerT.
+     */
     public prop a: Array<AnimatableTextPropertiesA> {
         get() { this._a.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "LayerT: {\n" +
                "d = ${d},\n" +
@@ -167,20 +240,36 @@ public class LayerT <: ToString {
 }
 
 public class LayerEF <: ToString {
+
     public let ty: Int64
     public let nm: String
     private let _ef: Array<Effect>
 
+    /**
+     * Create a LayerEF instance based on parameters.
+     *
+     * @param ty - Type of Int64, the value of ty.
+     * @param nm - Type of String, the value of nm.
+     * @param ef - Type of Array<Effect>, the value of ef.
+     */
     public init(ty: Int64, nm: String, ef: Array<Effect>){
         this.ty = ty
         this.nm = nm
         this._ef = ef
     }
 
+    /**
+     * Obtain the ef of LayerEF.
+     */
     public prop ef: Array<Effect> {
         get() { this._ef.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "LayerEF: {\n" +
                "ty = ${ty},\n" +

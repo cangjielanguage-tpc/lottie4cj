@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a ShapeGroup structure.
+ */
 package model
 
 public class ShapeGroup <: ContentModel {
@@ -15,20 +18,38 @@ public class ShapeGroup <: ContentModel {
 
     let ty: String = "gr"
 
+    /**
+     * Create a ShapeGroup instance based on parameters.
+     *
+     * @param nm - Type of String, the value of nm.
+     * @param it - Type of Array<ContentModel>, the value of it.
+     * @param hd - Type of Bool, the value of hd.
+     */
     public init(nm: String, it: Array<ContentModel>, hd: Bool) {
         this.nm = nm
         this._it = it
         this.hd = hd
     }
 
+    /**
+     * Obtain the type of ShapeGroup.
+     */
     public override prop types: Int8 {
         get() { 0 }
     }
 
+    /**
+     * Obtain the it of ShapeGroup.
+     */
     public prop it: Array<ContentModel> {
         get() { this._it.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "ShapeGroup[gr]: {\n" +
                "ty: ${ty},\n" +

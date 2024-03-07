@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a AnimatableTransformParser structure.
+ */
 package parser
 
 public class AnimatableTransformParser {
@@ -21,6 +24,12 @@ public class AnimatableTransformParser {
     ]
     private static let ANIMATABLE_NAMES: String = "k"
 
+    /**
+     * Animate the "ks" data in the json data, parsed into the corresponding AnimatableTransform entity class.
+     *
+     * @param reader - Type of JsonObject. Animate the "ks" data in json data.
+     * @return Type of AnimatableTransform. An instance of the "ks" data that encapsulates the animation.
+     */
     public static func parse(jsonObject: JsonObject): AnimatableTransform {
         var anchorPoint: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
         var position: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()

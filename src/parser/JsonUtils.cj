@@ -4,7 +4,7 @@
 
 package parser
 
-public func equalsJsonKind(left: JsonKind, right: JsonKind): Bool {
+func equalsJsonKind(left: JsonKind, right: JsonKind): Bool {
     return match ((left, right)) {
         case (JsNull, JsNull) => true
         case (JsBool, JsBool) => true

@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a AnimationDataParser structure.
+ */
 package parser
 
 from std import math.*
@@ -37,7 +40,13 @@ public class AnimationDataParser {
         "nm",      // 11
         "ddd"      // 12
     ]
-    
+
+    /**
+     * Encapsulate the animation's json data parsing into an AnimationData instance.
+     *
+     * @param reader - Type of String, animated json data string.
+     * @return Type of AnimationData, an instance of the json data that encapsulates the animation.
+     */
     public static func parse(reader: String): AnimationData {
 
         var startFrame: Float64 = 0.0

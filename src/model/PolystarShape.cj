@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a PolystarShape structure.
+ */
 package model
 
 public class PolystarShape <: ContentModel {
@@ -23,6 +26,21 @@ public class PolystarShape <: ContentModel {
 
     let ty: String = "sr"
 
+    /**
+     * Create a PolystarShape instance based on parameters.
+     *
+     * @param nm - Type of String, the value of nm.
+     * @param sy - Type of Int64, the value of sy.
+     * @param pt - Type of Array<Keyframe<Float64>>, the value of pt.
+     * @param p - Type of AnimatableSplitDimensionPathValue, the value of p.
+     * @param r - Type of Array<Keyframe<Float64>>, the value of r.
+     * @param or - Type of Array<Keyframe<Float64>>, the value of or.
+     * @param os - Type of Array<Keyframe<Float64>>, the value of os.
+     * @param ir - Type of Array<Keyframe<Float64>>, the value of ir.
+     * @param is2 - Type of Array<Keyframe<Float64>>, the value of is.
+     * @param hd - Type of Bool, the value of hd.
+     * @param d - Type of Int64, the value of d.
+     */
     public init(nm!: String, sy!: Int64, pt!: Array<Keyframe<Float64>>, p!: AnimatableSplitDimensionPathValue,
         r!: Array<Keyframe<Float64>>, or!: Array<Keyframe<Float64>>, os!: Array<Keyframe<Float64>>,
         ir!: Array<Keyframe<Float64>>, is2!: Array<Keyframe<Float64>>, hd!: Bool, d!: Int64
@@ -40,34 +58,60 @@ public class PolystarShape <: ContentModel {
         this.d = d
     }
 
+    /**
+     * Obtain the type of PolystarShape.
+     */
     public override prop types: Int8 {
         get() { 10 }
     }
 
+    /**
+     * Obtain the pt of PolystarShape.
+     */
     public prop pt: Array<Keyframe<Float64>> {
         get() { this._pt.clone() }
     }
 
+    /**
+     * Obtain the r of PolystarShape.
+     */
     public prop r: Array<Keyframe<Float64>> {
         get() { this._r.clone() }
     }
 
+    /**
+     * Obtain the or of PolystarShape.
+     */
     public prop or: Array<Keyframe<Float64>> {
         get() { this._or.clone() }
     }
 
+    /**
+     * Obtain the os of PolystarShape.
+     */
     public prop os: Array<Keyframe<Float64>> {
         get() { this._os.clone() }
     }
 
+    /**
+     * Obtain the ir of PolystarShape.
+     */
     public prop ir: Array<Keyframe<Float64>> {
         get() { this._ir.clone() }
     }
 
+    /**
+     * Obtain the is of PolystarShape.
+     */
     public prop is2: Array<Keyframe<Float64>> {
         get() { this._is.clone() }
     }
 
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "PolystarShape[sr]: {\n" +
                "ty = ${ty}\n" +

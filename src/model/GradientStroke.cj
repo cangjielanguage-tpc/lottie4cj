@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a GradientStroke structure.
+ */
 package model
 
 public class GradientStroke <: ContentModel {
@@ -25,10 +28,26 @@ public class GradientStroke <: ContentModel {
     public let hd: Bool                         //10 = hidden
 
     //"d": [{"n": "String", "v": Array<Keyframe<Float64>>}]  =>  Array<ContentModelD>
-    public let d: Array<ContentModelD>      //11 = lineDashPattern
+    private let _d: Array<ContentModelD>        //11 = lineDashPattern
 
     let ty: String = "gs"
 
+    /**
+     * Create a GradientStroke instance based on parameters.
+     *
+     * @param nm - Type of String, the value of nm.
+     * @param g  - Type of ContentModelP, the value of g.
+     * @param o  - Type of Array<Keyframe<Int64>>, the value of o.
+     * @param t  - Type of Int64, the value of t.
+     * @param s  - Type of Array<Keyframe<PointF>>, the value of s.
+     * @param e  - Type of Array<Keyframe<PointF>>, the value of e.
+     * @param w  - Type of Array<Keyframe<Float64>>, the value of w.
+     * @param lc - Type of Int64, the value of lc.
+     * @param lj - Type of Int64, the value of lj.
+     * @param ml - Type of Float64, the value of ml.
+     * @param hd - Type of Bool, the value of hd.
+     * @param d  - Type of Array<ContentModelD>, the value of d.
+     */
     public init(nm!: String, g!: ContentModelP, o!: Array<Keyframe<Int64>>, t!: Int64,
         s!: Array<Keyframe<PointF>>, e!: Array<Keyframe<PointF>>, w!: Array<Keyframe<Float64>>,
         lc!: Int64, lj!: Int64, ml!: Float64, hd!: Bool, d!: Array<ContentModelD>
@@ -44,29 +63,56 @@ public class GradientStroke <: ContentModel {
         this.lj = lj
         this.ml = ml
         this.hd = hd
-        this.d = d
+        this._d = d
     }
 
+    /**
+     * Obtain the type of GradientStroke.
+     */
     public override prop types: Int8 {
         get() { 2 }
     }
 
+    /**
+     * Obtain the o of GradientStroke.
+     */
     public prop o: Array<Keyframe<Int64>> {
         get() { this._o.clone() }
     }
 
+    /**
+     * Obtain the s of GradientStroke.
+     */
     public prop s: Array<Keyframe<PointF>> {
         get() { this._s.clone() }
     }
 
+    /**
+     * Obtain the e of GradientStroke.
+     */
     public prop e: Array<Keyframe<PointF>> {
         get() { this._e.clone() }
     }
 
+    /**
+     * Obtain the w of GradientStroke.
+     */
     public prop w: Array<Keyframe<Float64>> {
         get() { this._w.clone() }
     }
 
+    /**
+     * Obtain the d of GradientStroke.
+     */
+    public prop d: Array<ContentModelD> {
+        get() { this._d.clone() }
+    }
+
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
     public func toString(): String {
         return "GradientStroke[gs]: {\n" +
                 "ty = ${ty}\n" +
@@ -81,7 +127,7 @@ public class GradientStroke <: ContentModel {
                 "lj = ${lj}\n" +
                 "ml = ${ml}\n" +
                 "hd = ${hd}\n" +
-                "d = ${d}\n}"
+                "d = ${_d}\n}"
     }
 
 }

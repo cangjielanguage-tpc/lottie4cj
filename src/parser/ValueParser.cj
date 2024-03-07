@@ -2,6 +2,9 @@
  * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is a ValueParser structure.
+ */
 package parser
 
 public interface ValueParser<T> {
@@ -9,10 +12,22 @@ public interface ValueParser<T> {
 }
 
 public class IntegerParser <: ValueParser<Int64> {
+
+    /**
+     * Get IntegerParser instance.
+     *
+     * @return IntegerParser instance.
+     */
     public static let INSTANCE: IntegerParser = IntegerParser()
 
     private init() {}
 
+    /**
+     * Animate the specified data in the json data, parsed to a numerical value.
+     *
+     * @param reader - Type of JsonValue. Specify data in the json data of the animation.
+     * @return Type of Int64. Parse as a numerical value.
+     */
     @OverflowWrapping
     public func parse(reader: JsonValue): Int64 {
         return Int64(round(JsonUtils.valueFromObject(reader)))
@@ -20,19 +35,43 @@ public class IntegerParser <: ValueParser<Int64> {
 }
 
 public class FloatParser <: ValueParser<Float64> {
+
+    /**
+     * Get FloatParser instance.
+     *
+     * @return FloatParser instance.
+     */
     public static let INSTANCE: FloatParser = FloatParser()
 
     private init() {}
 
+    /**
+     * Animate the specified data in the json data, parsed to a numerical value.
+     *
+     * @param reader - Type of JsonValue. Specify data in the json data of the animation.
+     * @return Type of Float64. Parse as a numerical value.
+     */
     public func parse(reader: JsonValue): Float64 {
         return JsonUtils.valueFromObject(reader)
     }
 }
 
 public class ArrayFloat64Parser <: ValueParser<Array<Float64>> {
+
+    /**
+     * Get ArrayFloat64Parser instance.
+     *
+     * @return ArrayFloat64Parser instance.
+     */
     public static let INSTANCE: ArrayFloat64Parser = ArrayFloat64Parser()
     init(){}
 
+    /**
+     * Animate the specified data in the json data, parsed into an array.
+     *
+     * @param reader - Type of JsonValue. Specify data in the json data of the animation.
+     * @return Type of Array<Float64>. Parse as an array.
+     */
     public func parse(reader: JsonValue): Array<Float64> {
 
         let jk: JsonKind = reader.kind()
@@ -53,10 +92,21 @@ public class ArrayFloat64Parser <: ValueParser<Array<Float64>> {
 }
 
 public class PointFParser <: ValueParser<PointF> {
+    /**
+     * Get PointFParser instance.
+     *
+     * @return PointFParser instance.
+     */
     public static let INSTANCE: PointFParser = PointFParser()
 
     private PointFParser() {}
 
+    /**
+     * The specified data in the animated json data is parsed into the corresponding entity class.
+     *
+     * @param reader - Type of JsonValue. Specify data in the json data of the animation.
+     * @return Type of PointF. The parsing is encapsulated in this entity class.
+     */
     public func parse(reader: JsonValue): PointF {
         var jk: JsonKind = reader.kind()
         if (equalsJsonKind(jk, JsonKind.JsArray) || equalsJsonKind(jk, JsonKind.JsObject)) {
@@ -68,6 +118,12 @@ public class PointFParser <: ValueParser<PointF> {
 }
 
 public class DocumentDataParser <: ValueParser<DocumentData> {
+
+    /**
+     * Get DocumentDataParser instance.
+     *
+     * @return DocumentDataParser instance.
+     */
     public static let INSTANCE: DocumentDataParser = DocumentDataParser()
 
     //"layers"."t"."d"
@@ -89,6 +145,12 @@ public class DocumentDataParser <: ValueParser<DocumentData> {
 
     private init() {}
 
+    /**
+     * The specified data in the animated json data is parsed into the corresponding entity class.
+     *
+     * @param reader - Type of JsonValue. Specify data in the json data of the animation.
+     * @return Type of DocumentData. The parsing is encapsulated in this entity class.
+     */
     public func parse(jv: JsonValue): DocumentData {
         var text: String = ""
         var fontName: String = ""
@@ -173,6 +235,12 @@ public class DocumentDataParser <: ValueParser<DocumentData> {
 }
 
 public class ShapeDataParser <: ValueParser<ShapeData> {
+
+    /**
+     * Get ShapeDataParser instance.
+     *
+     * @return ShapeDataParser instance.
+     */
     public static let INSTANCE: ShapeDataParser = ShapeDataParser()
 
     //"layers"."shapes"."ks".k   <==  "layers"."shapes".{"ty": "sh"}
@@ -185,6 +253,12 @@ public class ShapeDataParser <: ValueParser<ShapeData> {
 
     private init() {}
 
+    /**
+     * The specified data in the animated json data is parsed into the corresponding entity class.
+     *
+     * @param reader - Type of JsonValue. Specify data in the json data of the animation.
+     * @return Type of ShapeData. The parsing is encapsulated in this entity class.
+     */
     public func parse(reader: JsonValue): ShapeData {
         var closed: Bool = false
         var pointsArray: Array<PointF> = Array<PointF>()
@@ -230,18 +304,42 @@ public class ShapeDataParser <: ValueParser<ShapeData> {
 }
 
 public class PathParser <: ValueParser<PointF> {
+
+    /**
+     * Get PathParser instance.
+     *
+     * @return PathParser instance.
+     */
     public static let INSTANCE: PathParser = PathParser()
     private init() {}
 
+    /**
+     * The specified data in the animated json data is parsed into the corresponding entity class.
+     *
+     * @param reader - Type of JsonValue. Specify data in the json data of the animation.
+     * @return Type of PointF. The parsing is encapsulated in this entity class.
+     */
     public func parse(reader: JsonValue): PointF {
         return JsonUtils.jsonToPoint(reader)
     }
 }
 
 public class ScaleXYParser <: ValueParser<Array<Float64>> {
+
+    /**
+     * Get ScaleXYParser instance.
+     *
+     * @return ScaleXYParser instance.
+     */
     public static let INSTANCE: ScaleXYParser = ScaleXYParser()
     init(){}
 
+    /**
+     * Animate the specified data in the json data, parsed into an array.
+     *
+     * @param reader - Type of JsonValue. Specify data in the json data of the animation.
+     * @return Type of Array<Float64>. Parse as an array.
+     */
     public func parse(reader: JsonValue): Array<Float64> {
         let ja: JsonArray = reader.asArray()
         let len: Int64 = ja.size()
@@ -256,10 +354,22 @@ public class ScaleXYParser <: ValueParser<Array<Float64>> {
 }
 
 public class ColorParser <: ValueParser<Array<Float64>> {
+
+    /**
+     * Get ColorParser instance.
+     *
+     * @return ColorParser instance.
+     */
     public static let INSTANCE: ColorParser = ColorParser()
 
     private init() {}
 
+    /**
+     * Animate the specified data in the json data, parsed into an array.
+     *
+     * @param reader - Type of JsonValue. Specify data in the json data of the animation.
+     * @return Type of Array<Float64>. Parse as an array.
+     */
     public func parse(reader: JsonValue): Array<Float64> {
         let ja: JsonArray = reader.asArray()
 
@@ -275,6 +385,12 @@ public class ColorParser <: ValueParser<Array<Float64>> {
         return res
     }
 
+    /**
+     * The specified data in the animated json data is parsed into the corresponding entity class.
+     *
+     * @param reader - Type of JsonValue. Specify data in the json data of the animation.
+     * @return Type of Color. The parsing is encapsulated in this entity class.
+     */
     @OverflowWrapping
     public func parseColor(reader: JsonValue): Color {
         let ja: JsonArray = reader.asArray()
