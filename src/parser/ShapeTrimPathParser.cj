@@ -19,38 +19,40 @@ class ShapeTrimPathParser {
         var name: String = ""
         var types: Int64 = 0
 
-        var start: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
-        var end: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
-        var offset: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
+        let EMPTY_KFF64: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+        var start: Array<Keyframe<Float64>> = EMPTY_KFF64
+        var end: Array<Keyframe<Float64>> = EMPTY_KFF64
+        var offset: Array<Keyframe<Float64>> = EMPTY_KFF64
 
         var hidden: Bool = false
 
-        if (reader.containsKey(NAMES[0])) {  //"s"
-            start = AnimatableValueParser.parseFloat(reader[NAMES[0]])
+        if (let Some(v) <- reader.get(NAMES[0])) {  //"s"
+            start = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[1])) {  //"e"
-            end = AnimatableValueParser.parseFloat(reader[NAMES[1]])
+        if (let Some(v) <- reader.get(NAMES[1])) {  //"e"
+            end = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[2])) {  //"o"
-            offset = AnimatableValueParser.parseFloat(reader[NAMES[2]])
+        if (let Some(v) <- reader.get(NAMES[2])) {  //"o"
+            offset = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[3])) {  //"nm"
-            name = reader[NAMES[3]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[3])) {  //"nm"
+            name = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[4])) {  //"m"
-            types = reader[NAMES[4]].asInt().getValue()
+        if (let Some(v) <- reader.get(NAMES[4])) {  //"m"
+            types = v.asInt().getValue()
         }
-        if (reader.containsKey(NAMES[5])) {  //"hd"
-            hidden = reader[NAMES[5]].asBool().getValue()
+        if (let Some(v) <- reader.get(NAMES[5])) {  //"hd"
+            hidden = v.asBool().getValue()
         }
 
-        let cm: ShapeTrimPath = ShapeTrimPath()
-        cm.s = start
-        cm.e = end
-        cm.o = offset
-        cm.nm = name
-        cm.m = types
-        cm.hd = hidden
+        let cm: ShapeTrimPath = ShapeTrimPath(
+            s: start,
+            e: end,
+            o: offset,
+            nm: name,
+            m: types,
+            hd: hidden
+        )
         return cm
     }
 }

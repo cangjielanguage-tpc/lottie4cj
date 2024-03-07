@@ -14,47 +14,56 @@ public class DropShadowEffectParser {
         "ty"
     ]
 
-    func parse(reader: JsonObject): ArrayList<DropShadowEffect> {
+    func parse(reader: JsonObject): Array<Effect> {
       
-        let ef: ArrayList<DropShadowEffect> = ArrayList<DropShadowEffect>()
-        if (reader.containsKey(DROP_SHADOW_EFFECT_NAMES)) { //"layers"."ef"."ef"
-            let ja: JsonArray = reader[DROP_SHADOW_EFFECT_NAMES].asArray()
-            for (i in 0..ja.size()) {
+        var ef: Array<Effect> = Array<Effect>()
+        if (let Some(v) <- reader.get(DROP_SHADOW_EFFECT_NAMES)) { //"layers"."ef"."ef"
+            let ja: JsonArray = v.asArray()
+            let len: Int64 = ja.size()
+            let EMPTY_EFFECT: Effect = Effect()
+            ef = Array<Effect>(len, item: EMPTY_EFFECT)
+            for (i in 0..len) {
                 let jo: JsonObject = ja[i].asObject()
-                let dse: DropShadowEffect = maybeParseInnerEffect(jo)
-                ef.append(dse)
+                let dse: Effect = maybeParseInnerEffect(jo)
+                ef[i] = dse
             }
         }
         return ef
     }
 
-    private func maybeParseInnerEffect(reader: JsonObject): DropShadowEffect {
+    private func maybeParseInnerEffect(reader: JsonObject): Effect {
 
         var currentEffectName: String = ""
         var isCorrectType: Int64 = 0
-        var v: ArrayList<Keyframe<Array<Float64>>> = ArrayList<Keyframe<Array<Float64>>>()
+        var v: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
+        var isNull: Bool = true
 
-        if (reader.containsKey(INNER_EFFECT_NAMES[0])) { //"nm" //"layers"."ef"."ef"."nm"
-            currentEffectName = reader[INNER_EFFECT_NAMES[0]].asString().getValue()
+        if (let Some(k) <- reader.get(INNER_EFFECT_NAMES[0])) { //"nm" //"layers"."ef"."ef"."nm"
+            currentEffectName = k.asString().getValue()
         }
-        if (reader.containsKey(INNER_EFFECT_NAMES[1])) {//"v" //"layers"."ef"."ef"."v"
+        if (let Some(k) <- reader.get(INNER_EFFECT_NAMES[1])) {//"v" //"layers"."ef"."ef"."v"
             if (currentEffectName == "Shadow Color") {
-                v = AnimatableValueParser.parseColor(reader[INNER_EFFECT_NAMES[1]])
+                v = AnimatableValueParser.parseColor(k)
+                isNull = false
             } else if (currentEffectName == "Opacity" || currentEffectName == "Direction") {
-                v = AnimatableValueParser.parseArrayFloat(reader[INNER_EFFECT_NAMES[1]])
+                v = AnimatableValueParser.parseArrayFloat(k)
+                isNull = false
             } else if (currentEffectName == "Distance" || currentEffectName == "Softness") {
-                v = AnimatableValueParser.parseArrayFloat(reader[INNER_EFFECT_NAMES[1]])
+                v = AnimatableValueParser.parseArrayFloat(k)
+                isNull = false
             }
         }
 
-        if (reader.containsKey(INNER_EFFECT_NAMES[2])) {//"ty" //"layers"."ef"."ef"."ty"
-            isCorrectType = reader[INNER_EFFECT_NAMES[2]].asInt().getValue()
+        if (let Some(k) <- reader.get(INNER_EFFECT_NAMES[2])) {//"ty" //"layers"."ef"."ef"."ty"
+            isCorrectType = k.asInt().getValue()
         }
 
-        let dse: DropShadowEffect = DropShadowEffect()
-        dse.ty = isCorrectType
-        dse.nm = currentEffectName
-        dse.v = ContentModelPK(v)
+        let dse: Effect = Effect(
+            ty: isCorrectType,
+            nm: currentEffectName,
+            v: ContentModelPK(k: v),
+            isNull: isNull
+        )
         return dse
     }
 }

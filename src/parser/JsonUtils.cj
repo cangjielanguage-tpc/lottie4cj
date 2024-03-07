@@ -33,14 +33,19 @@ class JsonUtils {
         return color
     }
 
-    static func jsonToPoints(reader: JsonValue): ArrayList<PointF> {
-        var points: ArrayList<PointF> = ArrayList<PointF>()
+    static func jsonToPoints(reader: JsonValue): Array<PointF> {
+        var points: Array<PointF> = Array<PointF>()
         let jk: JsonKind = reader.kind()
         if (equalsJsonKind(jk, JsonKind.JsArray)) {
             let ja: JsonArray = reader.asArray()
-            for (i in 0..ja.size()) {
-                let jv: JsonValue = ja[i]
-                points.append(jsonToPoint(jv))
+            let len: Int64 = ja.size()
+            if (len > 0) {
+                let EMPTY_POINTF: PointF = PointF()
+                points = Array<PointF>(len, item: EMPTY_POINTF)
+                for (i in 0..len) {
+                    let jv: JsonValue = ja[i]
+                    points[i] = jsonToPoint(jv)
+                }
             }
         }
         return points
@@ -63,7 +68,7 @@ class JsonUtils {
         let x: Float64 = ja[0].asFloat().getValue()
         let y: Float64 = ja[1].asFloat().getValue()
 
-        return PointF(x, y)
+        return PointF(x: x, y: y)
     }
 
     private static let POINT_NAMES: Array<String> = ["x", "y"]
@@ -73,13 +78,13 @@ class JsonUtils {
         var y: Float64 = 0.0
 
         let jo: JsonObject = reader.asObject()
-        if (jo.containsKey(POINT_NAMES[0])) { // "x"
-            x = valueFromObject(jo[POINT_NAMES[0]])
+        if (let Some(v) <- jo.get(POINT_NAMES[0])) { // "x"
+            x = valueFromObject(v)
         }
-        if (jo.containsKey(POINT_NAMES[1])) { // "y"
-            y = valueFromObject(jo[POINT_NAMES[1]])
+        if (let Some(v) <- jo.get(POINT_NAMES[1])) { // "y"
+            y = valueFromObject(v)
         }
-        return PointF(x, y)
+        return PointF(x: x, y: y)
     }
 
     static func valueFromObject(reader: JsonValue): Float64 {

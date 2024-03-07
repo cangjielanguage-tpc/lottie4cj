@@ -17,33 +17,34 @@ class CircleShapeParser {
     static func parse(reader: JsonObject): CircleShape {
         var name: String = ""
         var position: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()
-        var size: ArrayList<Keyframe<PointF>> = ArrayList<Keyframe<PointF>>()
+        var size: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
         var reversed: Int64 = 0
         var hidden: Bool = false
 
-        if (reader.containsKey(NAMES[0])) { // "nm"
-            name = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
+            name = v.asString().getValue()
         }
 
-        if (reader.containsKey(NAMES[1])) {  //"p"
-            position = AnimatablePathValueParser.parseSplitPath(reader[NAMES[1]])
+        if (let Some(v) <- reader.get(NAMES[1])) {  //"p"
+            position = AnimatablePathValueParser.parseSplitPath(v)
         }
-        if (reader.containsKey(NAMES[2])) {  //"s"
-            size = AnimatableValueParser.parsePoint(reader[NAMES[2]])
+        if (let Some(v) <- reader.get(NAMES[2])) {  //"s"
+            size = AnimatableValueParser.parsePoint(v)
         }
-        if (reader.containsKey(NAMES[3])) {  //"hd"
-            hidden = reader[NAMES[3]].asBool().getValue()
+        if (let Some(v) <- reader.get(NAMES[3])) {  //"hd"
+            hidden = v.asBool().getValue()
         }
-        if (reader.containsKey(NAMES[4])) {  //"d"
-            reversed = reader[NAMES[4]].asInt().getValue()
+        if (let Some(v) <- reader.get(NAMES[4])) {  //"d"
+            reversed = v.asInt().getValue()
         }
 
-        let cm: CircleShape = CircleShape()
-        cm.nm = name
-        cm.p = position
-        cm.s = size
-        cm.hd = hidden
-        cm.d = reversed
+        let cm: CircleShape = CircleShape(
+            nm: name,
+            p: position,
+            s: size,
+            hd: hidden,
+            d: reversed
+        )
         return cm
     }
 }

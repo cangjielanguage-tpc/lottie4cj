@@ -17,34 +17,35 @@ class RepeaterParser {
     static func parse(reader: JsonObject): Repeater {
         var name: String = ""
 
-        var copies: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
-        var offset: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
-        var transform: AnimatableTransform = AnimatableTransform() //AnimatableTransform
+        var copies: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+        var offset: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+        var transform: AnimatableTransform = AnimatableTransform()
 
         var hidden: Bool = false
 
-        if (reader.containsKey(NAMES[0])) { // "nm"
-            name = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
+            name = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[1])) { // "c"
-            copies = AnimatableValueParser.parseFloat(reader[NAMES[1]])
+        if (let Some(v) <- reader.get(NAMES[1])) { // "c"
+            copies = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[2])) { // "o"
-            offset = AnimatableValueParser.parseFloat(reader[NAMES[2]])
+        if (let Some(v) <- reader.get(NAMES[2])) { // "o"
+            offset = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[3])) { // "tr"
-            transform = AnimatableTransformParser.parse(reader[NAMES[3]].asObject())
+        if (let Some(v) <- reader.get(NAMES[3])) { // "tr"
+            transform = AnimatableTransformParser.parse(v.asObject())
         }
-        if (reader.containsKey(NAMES[4])) { //"hd"
-            hidden = reader[NAMES[4]].asBool().getValue()
+        if (let Some(v) <- reader.get(NAMES[4])) { //"hd"
+            hidden = v.asBool().getValue()
         }
 
-        let cm: Repeater = Repeater()
-        cm.nm = name
-        cm.c = copies
-        cm.o = offset
-        cm.tr = transform
-        cm.hd = hidden
+        let cm: Repeater = Repeater(
+            nm: name,
+            c: copies,
+            o: offset,
+            tr: transform,
+            hd: hidden
+        )
         return cm
     }
 }

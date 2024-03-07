@@ -22,39 +22,39 @@ class MaskParser {
         var cl: Bool = false
         var inverted: Bool = false
         var maskMode: String = ""
-        var maskPath: ArrayList<Keyframe<ShapeData>> = ArrayList<Keyframe<ShapeData>>()
-        var opacity: ArrayList<Keyframe<Int64>> = ArrayList<Keyframe<Int64>>()
-        var x: ArrayList<Keyframe<Int64>> = ArrayList<Keyframe<Int64>>()
+        var maskPath: Array<Keyframe<ShapeData>> = Array<Keyframe<ShapeData>>()
+        var opacity: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>()
+        var x: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>()
         var nm: String = ""
 
-        if (jo.containsKey(NAMES[0])) { //"cl"
-            cl = jo[NAMES[0]].asBool().getValue()
+        if (let Some(v) <- jo.get(NAMES[0])) { //"cl"
+            cl = v.asBool().getValue()
         }
-        if (jo.containsKey(NAMES[1])) { //"inv"
-            inverted = jo[NAMES[1]].asBool().getValue()
+        if (let Some(v) <- jo.get(NAMES[1])) { //"inv"
+            inverted = v.asBool().getValue()
         }
-        if (jo.containsKey(NAMES[2])) { //"inv"
-            maskMode = jo[NAMES[2]].asString().getValue()
+        if (let Some(v) <- jo.get(NAMES[2])) { //"inv"
+            maskMode = v.asString().getValue()
         }
 
-        if (jo.containsKey(NAMES[3])) { //"pt"
-            let jsonObject: JsonObject = jo[NAMES[3]].asObject()
+        if (let Some(v) <- jo.get(NAMES[3])) { //"pt"
+            let jsonObject: JsonObject = v.asObject()
             maskPath = AnimatableValueParser.parseShapeData(jsonObject)
         }
 
-        if (jo.containsKey(NAMES[4])) { //"o"
-            let jsonObject: JsonObject = jo[NAMES[4]].asObject()
+        if (let Some(v) <- jo.get(NAMES[4])) { //"o"
+            let jsonObject: JsonObject = v.asObject()
             opacity = AnimatableValueParser.parseInteger(jsonObject)
         }
 
-        if (jo.containsKey(NAMES[5])) { //"x"
-            let jsonObject: JsonObject = jo[NAMES[5]].asObject()
+        if (let Some(v) <- jo.get(NAMES[5])) { //"x"
+            let jsonObject: JsonObject = v.asObject()
             x = AnimatableValueParser.parseInteger(jsonObject)
         }
 
-        if (jo.containsKey(NAMES[6])) { //"nm"
-            nm = jo[NAMES[6]].asString().getValue()
+        if (let Some(v) <- jo.get(NAMES[6])) { //"nm"
+            nm = v.asString().getValue()
         }
-        return Mask(cl, inverted, maskMode, maskPath, opacity, x, nm)
+        return Mask(cl: cl, inv: inverted, mode: maskMode, pt: maskPath, o: opacity, x: x, nm: nm)
     }
 }

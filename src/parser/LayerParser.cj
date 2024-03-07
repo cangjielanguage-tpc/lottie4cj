@@ -70,7 +70,7 @@ public class LayerParser {
         var cl: String = ""
         var hidden: Bool = false
 
-        let ef: ArrayList<LayerEF> = ArrayList<LayerEF>()
+        var ef: Array<LayerEF> = Array<LayerEF>()
 
         var autoOrient: Int64 = 0
         var matteType: Int64 = 0
@@ -80,184 +80,205 @@ public class LayerParser {
         /* "layers"."t" */
         var t: LayerT = LayerT()
 
-        var timeRemapping: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()
+        var timeRemapping: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
 
-        var masks: ArrayList<Mask> = ArrayList<Mask>()
-        var shapes: ArrayList<ContentModel> = ArrayList<ContentModel>()
+        var masks: Array<Mask> = Array<Mask>()
+        var shapes: Array<ContentModel> = Array<ContentModel>()
 
         let jo: JsonObject = reader.asObject()
 
-        if (jo.containsKey(NAMES[0])) {
-            layerName = jo[NAMES[0]].asString().getValue()
+        if(let Some(v) <- jo.get(NAMES[0])) {
+            layerName = v.asString().getValue()
         }
-        if (jo.containsKey(NAMES[1])) {
-            layerId = jo[NAMES[1]].asInt().getValue()
+        if (let Some(v) <- jo.get(NAMES[1])) {
+            layerId = v.asInt().getValue()
         }
-        if (jo.containsKey(NAMES[2])) {
-            refId = jo[NAMES[2]].asString().getValue()
+        if (let Some(v) <- jo.get(NAMES[2])) {
+            refId = v.asString().getValue()
         }
-        if (jo.containsKey(NAMES[3])) {
-            layerType = jo[NAMES[3]].asInt().getValue()
+        if (let Some(v) <- jo.get(NAMES[3])) {
+            layerType = v.asInt().getValue()
         }
-        if (jo.containsKey(NAMES[4])) {
-            parentId = jo[NAMES[4]].asInt().getValue()
+        if (let Some(v) <- jo.get(NAMES[4])) {
+            parentId = v.asInt().getValue()
         }
 
-        if (jo.containsKey(NAMES[5])) {
-            solidWidth = jo[NAMES[5]].asInt().getValue()
+        if (let Some(v) <- jo.get(NAMES[5])) {
+            solidWidth = v.asInt().getValue()
         }
-        if (jo.containsKey(NAMES[6])) {
-            solidHeight = jo[NAMES[6]].asInt().getValue()
+        if (let Some(v) <- jo.get(NAMES[6])) {
+            solidHeight = v.asInt().getValue()
         }
-        if (jo.containsKey(NAMES[7])) {
-            solidColor = jo[NAMES[7]].asString().getValue()
+        if (let Some(v) <- jo.get(NAMES[7])) {
+            solidColor = v.asString().getValue()
         }
 
         /* Layer change, animation. */
-        if (jo.containsKey(NAMES[8])) {
-            let jsonObject: JsonObject = jo[NAMES[8]].asObject()
+        if (let Some(v) <- jo.get(NAMES[8])) {
+            let jsonObject: JsonObject = v.asObject()
             transform = AnimatableTransformParser.parse(jsonObject)
         }
 
-        if (jo.containsKey(NAMES[9])) {
-            matteType = jo[NAMES[9]].asInt().getValue()
+        if (let Some(v) <- jo.get(NAMES[9])) {
+            matteType = v.asInt().getValue()
         }
 
         /* Mask analysis */
-        if (jo.containsKey(NAMES[10])) {
-            let ja: JsonArray = jo[NAMES[10]].asArray()
-            for (i in 0..ja.size()) {
-                let jsonObject: JsonObject = ja[i].asObject()
-                masks.append(MaskParser.parse(jsonObject))
+        if (let Some(v) <- jo.get(NAMES[10])) {
+            let ja: JsonArray = v.asArray()
+            let len: Int64 = ja.size()
+            if (len > 0) {
+                let EMPTY_MASK: Mask = Mask()
+                masks = Array<Mask>(len, item: EMPTY_MASK)
+                for (i in 0..len) {
+                    let jsonObject: JsonObject = ja[i].asObject()
+                    masks[i] = MaskParser.parse(jsonObject)
+                }
             }
         }
 
-        if (jo.containsKey(NAMES[11])) {
-            let ja: JsonArray = jo[NAMES[11]].asArray()
-            for (i in 0..ja.size()) {
+        if (let Some(v) <- jo.get(NAMES[11])) {
+            let ja: JsonArray = v.asArray()
+            let len: Int64 = ja.size()
+            let EMPTY_CM: ContentModel = ContentModel()
+            shapes = Array<ContentModel>(len, item: EMPTY_CM)
+            for (i in 0..len) {
                 let jsonObject: JsonObject = ja[i].asObject()
                 let shape: ContentModel = ContentModelParser.parse(jsonObject)
                 if (shape.types != -1) {
-                    shapes.append(shape)
+                    shapes[i] = shape
                 }
             }
         }
 
-        if (jo.containsKey(NAMES[12])) { //"layers"."t"
-            let jsonObject: JsonObject = jo[NAMES[12]].asObject()
-            if (jsonObject.containsKey(TEXT_NAMES[0])) { //"d"
-                let jv: JsonValue = jsonObject[TEXT_NAMES[0]]
-                let tdk: ArrayList<Keyframe<DocumentData>> = AnimatableValueParser.parseDocumentData(jv)
-                t.d = LayerTD(tdk)
+        if (let Some(v) <- jo.get(NAMES[12])) { //"layers"."t"
+            let jsonObject: JsonObject = v.asObject()
+            var td: LayerTD = LayerTD()
+            var tda: Array<AnimatableTextPropertiesA> = Array<AnimatableTextPropertiesA>()
+            if (let Some(k) <- jsonObject.get(TEXT_NAMES[0])) { //"d"
+                let tdk: Array<Keyframe<DocumentData>> = AnimatableValueParser.parseDocumentData(k)
+                td = LayerTD(k: tdk)
             }
-            if (jsonObject.containsKey(TEXT_NAMES[1])) { //"a"
-                let ja: JsonArray = jsonObject[TEXT_NAMES[1]].asArray()
-                for (i in 0..ja.size()) {
-                    let jo: JsonObject = ja[i].asObject()
-                    let textProperties: AnimatableTextProperties = AnimatableTextPropertiesParser.parse(jo)
-                    t.a.append(AnimatableTextPropertiesA(textProperties))
-                }
-            }
-        }
-
-        if (jo.containsKey(NAMES[13])) { //"layers"."ef"
-            let effectNames: ArrayList<String> = ArrayList<String>()
-            let ja: JsonArray = jo[NAMES[13]].asArray()
-            for (i in 0..ja.size()) {
-                let effect: LayerEF = LayerEF()
-                let jsonObject: JsonObject = ja[i].asObject()
-
-                if (jsonObject.containsKey(EFFECTS_NAMES[0])) { //"ty"
-                    let types: Int64 = jsonObject[EFFECTS_NAMES[0]].asInt().getValue()
-                    effect.ty = types
-                    if (types == LAYERS_EF_TY_BLUR) {
-                        let blurEffect: ArrayList<BlurEffect> = BlurEffectParser.parse(jsonObject)
-                        effect.ef = blurEffect
-                    } else if (types == LAYERS_EF_TY_DROPSHADOW) {
-                        let dropShadowEffect: ArrayList<DropShadowEffect> = DropShadowEffectParser().parse(jsonObject)
-                        effect.ef = dropShadowEffect
+            if (let Some(k) <- jsonObject.get(TEXT_NAMES[1])) { //"a"
+                let ja: JsonArray = k.asArray()
+                let len: Int64 = ja.size()
+                if (len > 0) {
+                    let EMPTY_ATPA: AnimatableTextPropertiesA = AnimatableTextPropertiesA()
+                    let a: Array<AnimatableTextPropertiesA> = Array<AnimatableTextPropertiesA>(len, item: EMPTY_ATPA)
+                    for (i in 0..len) {
+                        let jo: JsonObject = ja[i].asObject()
+                        let textProperties: AnimatableTextProperties = AnimatableTextPropertiesParser.parse(jo)
+                        a[i] = AnimatableTextPropertiesA(a: textProperties)
                     }
+                    tda = a
                 }
-                if (jsonObject.containsKey(EFFECTS_NAMES[1])) { //"nm"
-                    let effectName: String = jsonObject[EFFECTS_NAMES[1]].asString().getValue()
-                    effect.nm = effectName
-                    effectNames.append(effectName)
-                }
-                ef.append(effect)
+            }
+            t = LayerT(d: td, a: tda)
+        }
 
-                logger.log(LogLevel.INFO,"Lottie doesn't support layer effects. If you are using them for " +
-                    " fills, strokes, trim paths etc. then try adding them directly as contents " +
-                    " in your shape. Found: " + effectNames.toString())
+        if (let Some(v) <- jo.get(NAMES[13])) { //"layers"."ef"
+            let ja: JsonArray = v.asArray()
+            let len: Int64 = ja.size()
+            if (len > 0) {
+                let effectNames: Array<String> = Array<String>(len, item: "")
+                let EMPTY_ARRAY_EFFECT: Array<Effect> = Array<Effect>()
+                ef = Array<LayerEF>(len, item: LayerEF(0, "", EMPTY_ARRAY_EFFECT))
+                for (i in 0..len) {
+                    var ty: Int64 = 0
+                    var nm: String = ""
+                    var effects: Array<Effect> = EMPTY_ARRAY_EFFECT
+
+                    let jsonObject: JsonObject = ja[i].asObject()
+                    if (let Some(k) <- jsonObject.get(EFFECTS_NAMES[0])) { //"ty"
+                        let ty: Int64 = k.asInt().getValue()
+                        if (ty == LAYERS_EF_TY_BLUR) {
+                            let blurEffect: Array<Effect> = BlurEffectParser.parse(jsonObject)
+                            effects = blurEffect
+                        } else if (ty == LAYERS_EF_TY_DROPSHADOW) {
+                            let dropShadowEffect: Array<Effect> = DropShadowEffectParser().parse(jsonObject)
+                            effects = dropShadowEffect
+                        }
+                    }
+                    if (let Some(k) <- jsonObject.get(EFFECTS_NAMES[1])) { //"nm"
+                        let effectName: String = k.asString().getValue()
+                        nm = effectName
+                        effectNames[i] = effectName
+                    }
+                    ef[i] = LayerEF(ty, nm, effects)
+
+                    logger.log(LogLevel.INFO, "Lottie doesn't support layer effects. If you are using them for " +
+                        " fills, strokes, trim paths etc. then try adding them directly as contents " +
+                        " in your shape. Found: " + effectNames.toString())
+                }
             }
         }
 
-        if (jo.containsKey(NAMES[14])) {
-            timeStretch = jo[NAMES[14]].asFloat().getValue()
+        if (let Some(v) <- jo.get(NAMES[14])) {
+            timeStretch = v.asFloat().getValue()
         }
-        if (jo.containsKey(NAMES[15])) {
-            startFrame = jo[NAMES[15]].asFloat().getValue()
+        if (let Some(v) <- jo.get(NAMES[15])) {
+            startFrame = v.asFloat().getValue()
         }
-        if (jo.containsKey(NAMES[16])) {
+        if (let Some(v) <- jo.get(NAMES[16])) {
             /* preCompWidth need * Utils.dpScale()) */
-            preCompWidth = jo[NAMES[16]].asFloat().getValue()
+            preCompWidth = v.asFloat().getValue()
         }
-        if (jo.containsKey(NAMES[17])) {
+        if (let Some(v) <- jo.get(NAMES[17])) {
             /* preCompHeight need * Utils.dpScale()) */
-            preCompHeight = jo[NAMES[17]].asFloat().getValue()
+            preCompHeight = v.asFloat().getValue()
         }
-        if (jo.containsKey(NAMES[18])) {
-            inFrame = jo[NAMES[18]].asFloat().getValue()
+        if (let Some(v) <- jo.get(NAMES[18])) {
+            inFrame = v.asFloat().getValue()
         }
-        if (jo.containsKey(NAMES[19])) {
-            outFrame = jo[NAMES[19]].asFloat().getValue()
-        }
-
-        if (jo.containsKey(NAMES[20])) {
-            timeRemapping = AnimatableValueParser.parseFloat(jo[NAMES[20]])
+        if (let Some(v) <- jo.get(NAMES[19])) {
+            outFrame = v.asFloat().getValue()
         }
 
-        if (jo.containsKey(NAMES[21])) {
-            cl = jo[NAMES[21]].asString().getValue()
-        }
-        if (jo.containsKey(NAMES[22])) {
-            hidden = jo[NAMES[22]].asBool().getValue()
-        }
-        if (jo.containsKey(NAMES[23])) {
-            autoOrient = jo[NAMES[23]].asInt().getValue()
+        if (let Some(v) <- jo.get(NAMES[20])) {
+            timeRemapping = AnimatableValueParser.parseFloat(v)
         }
 
-        if (jo.containsKey(NAMES[24])) {
-            blendMode = jo[NAMES[24]].asInt().getValue()
+        if (let Some(v) <- jo.get(NAMES[21])) {
+            cl = v.asString().getValue()
+        }
+        if (let Some(v) <- jo.get(NAMES[22])) {
+            hidden = v.asBool().getValue()
+        }
+        if (let Some(v) <- jo.get(NAMES[23])) {
+            autoOrient = v.asInt().getValue()
         }
 
-        let layer: Layer = Layer()
-        layer.nm = layerName
-        layer.ind = layerId
-        layer.refId = refId
-        layer.ty = layerType
-        layer.parent = parentId
-        layer.sw = solidWidth
-        layer.sh = solidHeight
-        layer.sc = solidColor
-        layer.ks = transform
-        layer.tt = matteType
-        layer.masksProperties = masks
-        layer.shapes = shapes
-        layer.t = t
-        layer.ef = ef
-        layer.sr = timeStretch
-        layer.st = startFrame
-        layer.w = preCompWidth
-        layer.h = preCompHeight
-        layer.ip = inFrame
-        layer.op = outFrame
+        if (let Some(v) <- jo.get(NAMES[24])) {
+            blendMode = v.asInt().getValue()
+        }
 
-        layer.tm = ContentModelDK(timeRemapping)
-
-        layer.cl = cl
-        layer.hd = hidden
-        layer.ao = autoOrient
-        layer.bm = blendMode
+        let layer: Layer = Layer(
+            nm: layerName,
+            ind: layerId,
+            refId: refId,
+            ty: layerType,
+            parent: parentId,
+            sw: solidWidth,
+            sh: solidHeight,
+            sc: solidColor,
+            ks: transform,
+            tt: matteType,
+            masksProperties: masks,
+            shapes: shapes,
+            t: t,
+            ef: ef,
+            sr: timeStretch,
+            st: startFrame,
+            w: preCompWidth,
+            h: preCompHeight,
+            ip: inFrame,
+            op: outFrame,
+            tm: ContentModelDK(k: timeRemapping),
+            cl: cl,
+            hd: hidden,
+            ao: autoOrient,
+            bm: blendMode
+        )
         return layer
     }
 

@@ -25,63 +25,64 @@ class PolystarShapeParser {
         var types: Int64 = 0
         var position: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()
 
-        var points: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()  
-        var rotation: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()  
-        var outerRadius: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()  
-        var outerRoundedness: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()  
-        var innerRadius: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()  
-        var innerRoundedness: ArrayList<Keyframe<Float64>> = ArrayList<Keyframe<Float64>>()  
+        let EMPTY_KFF64: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+        var points: Array<Keyframe<Float64>> = EMPTY_KFF64
+        var rotation: Array<Keyframe<Float64>> = EMPTY_KFF64
+        var outerRadius: Array<Keyframe<Float64>> = EMPTY_KFF64
+        var outerRoundedness: Array<Keyframe<Float64>> = EMPTY_KFF64
+        var innerRadius: Array<Keyframe<Float64>> = EMPTY_KFF64
+        var innerRoundedness: Array<Keyframe<Float64>> = EMPTY_KFF64
 
         var hidden: Bool = false
         var reversed: Int64 = 0
 
-        if (reader.containsKey(NAMES[0])) { // "nm"
-            name = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
+            name = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[1])) { // "sy"
-            types = reader[NAMES[1]].asInt().getValue()
+        if (let Some(v) <- reader.get(NAMES[1])) { // "sy"
+            types = v.asInt().getValue()
         }
-        if (reader.containsKey(NAMES[2])) { // "pt"
-            points = AnimatableValueParser.parseFloat(reader[NAMES[2]])
+        if (let Some(v) <- reader.get(NAMES[2])) { // "pt"
+            points = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[3])) { // "p"
-            position = AnimatablePathValueParser.parseSplitPath(reader[NAMES[3]])
+        if (let Some(v) <- reader.get(NAMES[3])) { // "p"
+            position = AnimatablePathValueParser.parseSplitPath(v)
         }
-        if (reader.containsKey(NAMES[4])) { // "r"
-            rotation = AnimatableValueParser.parseFloat(reader[NAMES[4]])
+        if (let Some(v) <- reader.get(NAMES[4])) { // "r"
+            rotation = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[5])) { // "or"
-            outerRadius = AnimatableValueParser.parseFloat(reader[NAMES[5]])
+        if (let Some(v) <- reader.get(NAMES[5])) { // "or"
+            outerRadius = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[6])) { // "os"
-            outerRoundedness = AnimatableValueParser.parseFloat(reader[NAMES[6]])
+        if (let Some(v) <- reader.get(NAMES[6])) { // "os"
+            outerRoundedness = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[7])) { // "ir"
-            innerRadius = AnimatableValueParser.parseFloat(reader[NAMES[7]])
+        if (let Some(v) <- reader.get(NAMES[7])) { // "ir"
+            innerRadius = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[8])) { // "is"
-            innerRoundedness = AnimatableValueParser.parseFloat(reader[NAMES[8]])
+        if (let Some(v) <- reader.get(NAMES[8])) { // "is"
+            innerRoundedness = AnimatableValueParser.parseFloat(v)
         }
-        if (reader.containsKey(NAMES[9])) { // "hd"
-            hidden = reader[NAMES[9]].asBool().getValue()
+        if (let Some(v) <- reader.get(NAMES[9])) { // "hd"
+            hidden = v.asBool().getValue()
         }
-        if (reader.containsKey(NAMES[10])) { // "d"
-            reversed = reader[NAMES[10]].asInt().getValue()
+        if (let Some(v) <- reader.get(NAMES[10])) { // "d"
+            reversed = v.asInt().getValue()
         }
 
-        let cm: PolystarShape = PolystarShape()
-        cm.nm = name
-        cm.nm = name
-        cm.sy = types
-        cm.pt = points
-        cm.p = position
-        cm.r = rotation
-        cm.or = outerRadius
-        cm.os = outerRoundedness
-        cm.ir = innerRadius
-        cm.is2 = innerRoundedness
-        cm.hd = hidden
-        cm.d = reversed
+        let cm: PolystarShape = PolystarShape(
+            nm: name,
+            sy: types,
+            pt: points,
+            p: position,
+            r: rotation,
+            or: outerRadius,
+            os: outerRoundedness,
+            ir: innerRadius,
+            is2: innerRoundedness,
+            hd: hidden,
+            d: reversed
+        )
         return cm
     }
 }

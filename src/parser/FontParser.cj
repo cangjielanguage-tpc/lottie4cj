@@ -20,17 +20,17 @@ class FontParser {
         var style: String = ""
         var ascent: Float64 = 0.0
 
-        if (reader.containsKey(NAMES[0])) {  //"fFamily" 
-            family = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) { //"fFamily"
+            family = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[1])) {  //"fName"
-            name = reader[NAMES[1]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[1])) { //"fName"
+            name = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[2])) {  //"fStyle"
-            style = reader[NAMES[2]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[2])) { //"fStyle"
+            style = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[3])) {  //"ascent"
-            ascent = reader[NAMES[3]].asFloat().getValue()
+        if (let Some(v) <- reader.get(NAMES[3])) { //"ascent"
+            ascent = v.asFloat().getValue()
         }
         return Font(family, name, style, ascent)
     }

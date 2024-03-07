@@ -15,21 +15,24 @@ class ShapeGroupParser {
     static func parse(reader: JsonObject): ShapeGroup {
         var name: String = ""
         var hidden: Bool = false
-        var items: ArrayList<ContentModel> = ArrayList<ContentModel>()
+        var items: Array<ContentModel> = Array<ContentModel>()
 
-        if (reader.containsKey(NAMES[0])) {
-            name = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) {
+            name = v.asString().getValue()
         }
-        if (reader.containsKey(NAMES[1])) {
-            hidden = reader[NAMES[1]].asBool().getValue()
+        if (let Some(v) <- reader.get(NAMES[1])) {
+            hidden = v.asBool().getValue()
         }
-        if (reader.containsKey(NAMES[2])) {
-            let ja: JsonArray = reader[NAMES[2]].asArray()
-            for (i in 0..ja.size()) {
+        if (let Some(v) <- reader.get(NAMES[2])) {
+            let ja: JsonArray = v.asArray()
+            let len: Int64 = ja.size()
+            let EMPTY_CM: ContentModel = ContentModel()
+            items = Array<ContentModel>(len, item: EMPTY_CM)
+            for (i in 0..len) {
                 let jo: JsonObject = ja[i].asObject()
                 let newItem: ContentModel = ContentModelParser.parse(jo)
                 if (newItem.types != -1) {
-                    items.append(newItem)
+                    items[i] = newItem
                 }
             }
         }

@@ -24,61 +24,62 @@ class GradientFillParser {
     static func parse(reader: JsonObject): GradientFill {
         var name: String = ""
         var g: ContentModelP = ContentModelP()
-        var opacity: ArrayList<Keyframe<Int64>> = ArrayList<Keyframe<Int64>>()
+        var opacity: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>()
         var gradientType: Int64 = 0
-        var startPoint: ArrayList<Keyframe<PointF>> = ArrayList<Keyframe<PointF>>()
-        var endPoint: ArrayList<Keyframe<PointF>> = ArrayList<Keyframe<PointF>>()
+        var startPoint: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
+        var endPoint: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
         var fillType: Int64 = 0
         var hidden: Bool = false
 
-        if (reader.containsKey(NAMES[0])) { // "nm"
-            name = reader[NAMES[0]].asString().getValue()
+        if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
+            name = v.asString().getValue()
         }
 
-        if (reader.containsKey(NAMES[1])) { // "g"  //("p": points/Int64, "k": color/ArrayList<Keyframe<T>>)
+        if (let Some(v) <- reader.get(NAMES[1])) { // "g"  //("p": points/Int64, "k": color/Array<Keyframe<T>>)
             var points: Int64 = -1
-            let jo: JsonObject = reader[NAMES[1]].asObject()
-            if (jo.containsKey(GRADIENT_NAMES[0])) { // "p"
-                g.p = jo[GRADIENT_NAMES[0]].asInt().getValue()
+            let jo: JsonObject = v.asObject()
+            var gp: Int64 = 0
+            var gk: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
+            if (let Some(k) <- jo.get(GRADIENT_NAMES[0])) { // "p"
+                gp = k.asInt().getValue()
             }
-            if (jo.containsKey(GRADIENT_NAMES[1])) { // "k"
-                g.k = AnimatableValueParser.parseGradientColor(jo[GRADIENT_NAMES[1]], points)
+            if (let Some(k) <- jo.get(GRADIENT_NAMES[1])) { // "k"
+                gk = AnimatableValueParser.parseGradientColor(k, points)
             }
+            g = ContentModelP(p: gp, k: gk)
         }
 
-        if (reader.containsKey(NAMES[2])) { // "o"
-            let jv: JsonValue = reader[NAMES[2]]
-            opacity = AnimatableValueParser.parseInteger(jv)
+        if (let Some(v) <- reader.get(NAMES[2])) { // "o"
+            opacity = AnimatableValueParser.parseInteger(v)
         }
-        if (reader.containsKey(NAMES[3])) { // "t"
-            gradientType = reader[NAMES[3]].asInt().getValue()
-        }
-
-        if (reader.containsKey(NAMES[4])) { // "s"
-            let jv: JsonValue = reader[NAMES[4]]
-            startPoint = AnimatableValueParser.parsePoint(jv)
-        }
-        if (reader.containsKey(NAMES[5])) { // "e"
-            let jv: JsonValue = reader[NAMES[5]]
-            endPoint = AnimatableValueParser.parsePoint(jv)
+        if (let Some(v) <- reader.get(NAMES[3])) { // "t"
+            gradientType = v.asInt().getValue()
         }
 
-        if (reader.containsKey(NAMES[6])) { // "r"
-            fillType = reader[NAMES[6]].asInt().getValue()
+        if (let Some(v) <- reader.get(NAMES[4])) { // "s"
+            startPoint = AnimatableValueParser.parsePoint(v)
         }
-        if (reader.containsKey(NAMES[7])) { // "hd"
-            hidden = reader[NAMES[7]].asBool().getValue()
+        if (let Some(v) <- reader.get(NAMES[5])) { // "e"
+            endPoint = AnimatableValueParser.parsePoint(v)
         }
 
-        let cm: GradientFill = GradientFill()
-        cm.nm = name
-        cm.g = g
-        cm.o = opacity
-        cm.t = gradientType
-        cm.s = startPoint
-        cm.e = endPoint
-        cm.r = fillType
-        cm.hd = hidden
+        if (let Some(v) <- reader.get(NAMES[6])) { // "r"
+            fillType = v.asInt().getValue()
+        }
+        if (let Some(v) <- reader.get(NAMES[7])) { // "hd"
+            hidden = v.asBool().getValue()
+        }
+
+        let cm: GradientFill = GradientFill(
+            nm: name,
+            g: g,
+            o: opacity,
+            t: gradientType,
+            s: startPoint,
+            e: endPoint,
+            r: fillType,
+            hd: hidden
+        )
         return cm
     }
 }
