@@ -1,0 +1,11 @@
+[
+    {
+        "Name": "lottie4cj",
+        "License": "MIT license",
+        "License File": "LICENSE",
+        "Version Number": "",
+        "Owner" : ""
+        "Upstream URL": "https://gitee.com/openharmony-tpc/lottieArkTS",
+        "Description": "Cangjie version of lottie4cj library"
+    }
+]
