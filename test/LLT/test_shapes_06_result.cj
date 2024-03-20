@@ -541,7 +541,7 @@ h = 0
 to = PointF: {x='0.000000', y='0.000000'}
 ti = PointF: {x='0.000000', y='0.000000'}
 }]
-is = [Keyframe{
+is2 = [Keyframe{
 k = 0.000000
 t = 0.000000
 s = None

@@ -25,7 +25,7 @@ public class RoundedCorners <: ContentModel {
      * @param r - Type of Array<Keyframe<Float64>>, the value of r.
      * @param hd - Type of Bool, the value of hd.
      */
-    public init(nm!: String, r!: Array<Keyframe<Float64>>, hd!: Bool){
+    public init(nm!: String = "", r!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(), hd!: Bool = false){
         this.nm = nm
         this._r = r
         this.hd = hd

@@ -58,7 +58,7 @@ class JsonUtils {
         } else if (equalsJsonKind(jk, JsonKind.JsObject)) {
             return jsonObjectToPoint(reader)
         } else {
-            throw IllegalArgumentException("Unknown point starts with JsonKind.")
+            throw IllegalArgumentException("JsonValue is not a array or object type.")
         }
     }
 
@@ -96,7 +96,7 @@ class JsonUtils {
             let ja: JsonArray = reader.asArray()
             return ja[0].asFloat().getValue()
         } else {
-            throw IllegalArgumentException("Unknown value for token of type: is not number and array.")
+            throw IllegalArgumentException("JsonValue is not a number or array type.")
         }
     }
 }

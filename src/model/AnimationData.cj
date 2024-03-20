@@ -46,9 +46,20 @@ public class AnimationData <: ToString {
      * @param nm - Type of String, the value of nm.
      * @param ddd - Type of Int64, the value of ddd.
      */
-    public init(w!: Int64, h!: Int64, ip!: Float64, op!: Float64, fr!: Float64, v!: String,
-        layers!: Array<Layer>, assets!: Array<Asset>, fonts!: Fonts, chars!: Array<FontCharacter>,
-        markers!: Array<Marker>, nm!: String, ddd!: Int64
+    public init(
+        w!: Int64 = 0,
+        h!: Int64 = 0,
+        ip!: Float64 = 0.0,
+        op!: Float64 = 0.0,
+        fr!: Float64 = 0.0,
+        v!: String = "",
+        layers!: Array<Layer> = Array<Layer>(),
+        assets!: Array<Asset> = Array<Asset>(),
+        fonts!: Fonts = Fonts(),
+        chars!: Array<FontCharacter> = Array<FontCharacter>(),
+        markers!: Array<Marker> = Array<Marker>(),
+        nm!: String = "",
+        ddd!: Int64 = 0
     ){
         this.w = w
         this.h = h

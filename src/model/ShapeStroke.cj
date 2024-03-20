@@ -38,8 +38,16 @@ public class ShapeStroke <: ContentModel {
      * @param hd - Type of Bool, the value of hd.
      * @param d - Type of Array<ContentModelD>, the value of d.
      */
-    public init(nm!: String, c!: Array<Keyframe<Array<Float64>>>, w!: Array<Keyframe<Float64>>, o!: Array<Keyframe<Int64>>,
-        lc!: Int64, lj!: Int64, ml!: Float64, hd!: Bool, d!: Array<ContentModelD>
+    public init(
+        nm!: String = "",
+        c!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(),
+        w!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        o!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(),
+        lc!: Int64 = 0,
+        lj!: Int64 = 0,
+        ml!: Float64 = 0.0,
+        hd!: Bool = false,
+        d!: Array<ContentModelD> = Array<ContentModelD>()
     ){
         this.nm = nm
         this._c = c

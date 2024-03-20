@@ -31,8 +31,13 @@ public class ShapeTrimPath <: ContentModel {
      * @param m - Type of Int64, the value of m.
      * @param hd - Type of Bool, the value of hd.
      */
-    public init(s!: Array<Keyframe<Float64>>, e!: Array<Keyframe<Float64>>, o!: Array<Keyframe<Float64>>,
-        nm!: String, m!: Int64, hd!: Bool
+    public init(
+        s!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        e!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        o!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        nm!: String = "",
+        m!: Int64 = 0,
+        hd!: Bool = false
     ){
         this._s = s
         this._e = e

@@ -25,7 +25,7 @@ public class MergePaths <: ContentModel {
      * @param mm - Type of Int64, the value of mm.
      * @param hd - Type of Bool, the value of hd.
      */
-    public init(nm!: String, mm!: Int64, hd!: Bool){
+    public init(nm!: String = "", mm!: Int64 = 0, hd!: Bool = false){
         this.nm = nm
         this.mm = mm
         this.hd = hd

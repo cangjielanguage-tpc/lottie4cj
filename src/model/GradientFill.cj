@@ -38,8 +38,15 @@ public class GradientFill <: ContentModel {
      * @param r - Type of Int64, the value of r.
      * @param hd - Type of Bool, the value of hd.
      */
-    public init(nm!: String, g!: ContentModelP, o!: Array<Keyframe<Int64>>, t!: Int64,
-        s!: Array<Keyframe<PointF>>, e!: Array<Keyframe<PointF>>, r!: Int64, hd!: Bool
+    public init(
+        nm!: String = "",
+        g!: ContentModelP = ContentModelP(),
+        o!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(),
+        t!: Int64 = 0,
+        s!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
+        e!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
+        r!: Int64 = 0,
+        hd!: Bool = false
     ){
         this.nm = nm
         this.g = g
