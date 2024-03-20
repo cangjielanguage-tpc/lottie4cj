@@ -29,7 +29,13 @@ public class Repeater <: ContentModel {
      * @param tr - Type of AnimatableTransform, the value of tr.
      * @param hd - Type of Bool, the value of hd.
      */
-    public init(nm!: String, c!: Array<Keyframe<Float64>>, o!: Array<Keyframe<Float64>>, tr!: AnimatableTransform, hd!: Bool){
+    public init(
+        nm!: String = "",
+        c!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        o!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        tr!: AnimatableTransform = AnimatableTransform(),
+        hd!: Bool = false
+    ){
         this.nm = nm
         this._c = c
         this._o = o

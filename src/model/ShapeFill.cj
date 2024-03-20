@@ -31,8 +31,13 @@ public class ShapeFill <: ContentModel {
      * @param r - Type of Int64, the value of r.
      * @param hd - Type of Bool, the value of hd.
      */
-    public init(nm!: String, c!: Array<Keyframe<Array<Float64>>>, o!: Array<Keyframe<Int64>>,
-         fillEnabled!: Bool, r!: Int64, hd!: Bool
+    public init(
+        nm!: String = "",
+        c!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(),
+        o!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(),
+        fillEnabled!: Bool = false,
+        r!: Int64 = 0,
+        hd!: Bool = false
     ){
         this.nm = nm
         this._c = c

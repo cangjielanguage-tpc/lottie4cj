@@ -41,9 +41,18 @@ public class PolystarShape <: ContentModel {
      * @param hd - Type of Bool, the value of hd.
      * @param d - Type of Int64, the value of d.
      */
-    public init(nm!: String, sy!: Int64, pt!: Array<Keyframe<Float64>>, p!: AnimatableSplitDimensionPathValue,
-        r!: Array<Keyframe<Float64>>, or!: Array<Keyframe<Float64>>, os!: Array<Keyframe<Float64>>,
-        ir!: Array<Keyframe<Float64>>, is2!: Array<Keyframe<Float64>>, hd!: Bool, d!: Int64
+    public init(
+        nm!: String = "",
+        sy!: Int64 = 0,
+        pt!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        p!: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(),
+        r!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        or!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        os!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        ir!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        is2!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        hd!: Bool = false,
+        d!: Int64 = 0
     ){
         this.nm = nm
         this.sy = sy
@@ -123,7 +132,7 @@ public class PolystarShape <: ContentModel {
                "or = ${_or}\n" +
                "os = ${_os}\n" +
                "ir = ${_ir}\n" +
-               "is = ${_is}\n" +
+               "is2 = ${_is}\n" +
                "hd = ${hd}\n" +
                "d = ${d}\n}"
     }

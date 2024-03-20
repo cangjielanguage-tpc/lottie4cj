@@ -29,7 +29,13 @@ public class CircleShape <: ContentModel {
      * @param hd - Type of Bool, the value of hd.
      * @param d - Type of Int64, the value of d.
      */
-    public init(nm!: String, p!: AnimatableSplitDimensionPathValue, s!: Array<Keyframe<PointF>>, hd!: Bool, d!: Int64){
+    public init(
+        nm!: String = "",
+        p!: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(),
+        s!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
+        hd!: Bool = false,
+        d!: Int64 = 0
+    ){
         this.nm = nm
         this.p = p
         this._s = s

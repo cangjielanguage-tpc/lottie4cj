@@ -58,9 +58,21 @@ public class AnimationData <: ToString {
      * 参数 nm - nm 对应的值
      * 参数 ddd - ddd 对应的值
      */
-    public init (w: Int64, h: Int64, ip: Float64, op: Float64, fr: Float64, v: String, 
-        layers: Array<Layer>, assets: Array<Asset>, fonts: Fonts, chars: Array<FontCharacter>, 
-        markers: Array<Marker>, nm: String, ddd: Int64)
+    public init(
+        w!: Int64 = 0, 
+        h!: Int64 = 0, 
+        ip!: Float64 = 0.0, 
+        op!: Float64 = 0.0, 
+        fr!: Float64 = 0.0, 
+        v!: String = "",
+        layers!: Array<Layer> = Array<Layer>(), 
+        assets!: Array<Asset> = Array<Asset>(), 
+        fonts!: Fonts = Fonts(), 
+        chars!: Array<FontCharacter> = Array<FontCharacter>(),
+        markers!: Array<Marker> = Array<Marker>(), 
+        nm!: String = "", 
+        ddd!: Int64 = 0
+    )
    
     /**
      * 获取 AnimationData 的图层信息 layers。
@@ -115,7 +127,7 @@ public class Asset <: ToString {
      * 参数 p - p 对应的值
      * 参数 u - u 对应的值
      */
-    public init (id: String, layers: Array<Layer>, w: Int64, h: Int64, p: String, u: String)
+    public init(id: String, layers: Array<Layer>, w: Int64, h: Int64, p: String, u: String)
 
     /**
      * 获取 Asset 的layers layers。
@@ -141,7 +153,7 @@ public class Fonts <: ToString {
      * 
      * 参数 list - list 对应的值
      */
-    public init (list: Array<Font>)
+    public init(list!: Array<Font> = Array<Font>())
 
     /**
      * 获取 Fonts 的 list 数据。
@@ -175,7 +187,7 @@ public class Font <: ToString {
      * 参数 fStyle - fStyle 对应的值
      * 参数 ascent - ascent 对应的值
      */
-    public init (fFamily: String, fName: String, fStyle: String, ascent: Float64)
+    public init(fFamily: String, fName: String, fStyle: String, ascent: Float64)
     
     /**
      * 获取 fName 值。
@@ -203,7 +215,7 @@ public class CharsData <: ToString {
      * 
      * 参数 shapes - shapes 对应的值
      */
-    public init (shapes: Array<ContentModel>)
+    public init(shapes!: Array<ContentModel> = Array<ContentModel>())
 
     /**
      * 获取 CharsData 的 shapes 数据。
@@ -244,7 +256,7 @@ public class FontCharacter <: Hashable&ToString {
      * 参数 style - style 对应的值
      * 参数 fFamily - fFamily 对应的值
      */
-    public init (data: CharsData, ch: String, size: Float64, w: Float64, style: String, fFamily: String)
+    public init(data: CharsData, ch: String, size: Float64, w: Float64, style: String, fFamily: String)
     
     /**
      * 返回 FontCharacter hashCode 值。
@@ -288,7 +300,7 @@ public class Marker <: ToString {
      * 参数 tm - tm 对应的值
      * 参数 dr - dr 对应的值
      */
-    public init (cm: String, tm: Float64, dr: Float64)
+    public init(cm: String, tm: Float64, dr: Float64)
     
     /**
      * 将实例转换为字符串并返回。
@@ -358,7 +370,33 @@ public class Layer <: ToString {
      * 参数 ao - ao 对应的值
      * 参数 bm - bm 对应的值
      */
-    public init (nm: String, ind: Int64, refId: String, ty: Int64, parent: Int64, sw: Int64, sh: Int64, sc: String, ks: AnimatableTransform, tt: Int64, masksProperties: Array<Mask>, shapes: Array<ContentModel>, t: LayerT, ef: Array<LayerEF>, sr: Float64, st: Float64, w: Float64, h: Float64, ip: Float64, op: Float64, tm: ContentModelDK, cl: String, hd: Bool, ao: Int64, bm: Int64)
+    public init(
+        nm!: String = "",
+        ind!: Int64 = 0,
+        refId!: String = "",
+        ty!: Int64 = 0,
+        parent!: Int64 = -1,
+        sw!: Int64 = 0,
+        sh!: Int64 = 0,
+        sc!: String = "",
+        ks!: AnimatableTransform = AnimatableTransform(),
+        tt!: Int64 = 0,
+        masksProperties!: Array<Mask> = Array<Mask>(),
+        shapes!: Array<ContentModel> = Array<ContentModel>(),
+        t!: LayerT = LayerT(),
+        ef!: Array<LayerEF> = Array<LayerEF>(),
+        sr!: Float64 = 0.0,
+        st!: Float64 = 0.0,
+        w!: Float64 = 0.0,
+        h!: Float64 = 0.0,
+        ip!: Float64 = 0.0,
+        op!: Float64 = 0.0,
+        tm!: ContentModelDK = ContentModelDK(),
+        cl!: String = "",
+        hd!: Bool = false,
+        ao!: Int64 = 0,
+        bm!: Int64 = 0
+    )
 
     /**
      * 获取 Layer 的mask列表 masksProperties 数据。
@@ -408,10 +446,18 @@ public class AnimatableTransform <: ContentModel {
      * 参数 sa - sa 对应的值
      * 参数 ty - ty 对应的值
      */
-    public init (a: Array<Keyframe<PointF>>, p: AnimatableSplitDimensionPathValue, s: Array<Keyframe<Array<Float64>>>, 
-        r: ArrayKeyframeFloat64, o: Array<Keyframe<Int64>>, so: Array<Keyframe<Float64>>, 
-        eo: Array<Keyframe<Float64>>, sk: Array<Keyframe<Float64>>, sa: Array<Keyframe<Float64>>, ty: String)
-
+    public init(
+        a!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
+        p!: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(),
+        s!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(),
+        r!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64(),
+        o!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(),
+        so!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        eo!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        sk!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        sa!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        ty!: String = ""
+    )
 
     /**
      * 获取 AnimatableTransform 的类型值。
@@ -484,7 +530,15 @@ public class Mask <: ToString {
      * 参数 x - x 对应的值
      * 参数 nm - nm 对应的值
      */
-    public init (cl: Bool, inv: Bool, mode: String, pt: Array<Keyframe<ShapeData>>, o: Array<Keyframe<Int64>>, x: Array<Keyframe<Int64>>, nm: String)
+    public init(
+        cl!: Bool = false,
+        inv!: Bool= false,
+        mode!: String = "",
+        pt!: Array<Keyframe<ShapeData>> = Array<Keyframe<ShapeData>>(),
+        o!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(),
+        x!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(),
+        nm!: String = ""
+    )
 
     /**
      * 获取 Mask 的 pt 的值。
@@ -528,7 +582,7 @@ public class Effect <: ToString {
      * 参数 v - v 对应的值
      * 参数 isNull - 是否是空实例
      */
-    public init (ty: Int64, nm: String, v: ContentModelPK, isNull: Bool)
+    public init(ty!: Int64 = 0, nm!: String = "", v!: ContentModelPK = ContentModelPK(), isNull!: Bool = true)
     
     /**
      * 将实例转换为字符串并返回。
@@ -549,7 +603,7 @@ public class LayerTD <: ToString {
      * 
      * 参数 k - k 对应的值
      */
-    public init (k: Array<Keyframe<DocumentData>>)
+    public init(k!: Array<Keyframe<DocumentData>> = Array<Keyframe<DocumentData>>())
 
     /**
      * 获得 LayerTD 的 k 的值。
@@ -578,7 +632,7 @@ public class LayerT <: ToString {
      * 参数 d - d 对应的值
      * 参数 a - a 对应的值
      */
-    public init (d: LayerTD, a: Array<AnimatableTextPropertiesA>)
+    public init(d!: LayerTD = LayerTD(), a!: Array<AnimatableTextPropertiesA> = Array<AnimatableTextPropertiesA>())
 
     /**
      * 获得 LayerT 的 a 的值。
@@ -609,7 +663,7 @@ public class LayerEF <: ToString {
      * 参数 nm - nm 对应的值
      * 参数 ef - ef 对应的值
      */
-    public init (ty: Int64, nm: String, ef: Array<Effect>)
+    public init(ty: Int64, nm: String, ef: Array<Effect>)
 
     /**
      * 获得 LayerEF 的 ef 的值。
@@ -666,7 +720,13 @@ public class CircleShape <: ContentModel {
      * 参数 hd - hd 对应的值
      * 参数 d - d 对应的值
      */
-    public init (nm: String, p: AnimatableSplitDimensionPathValue, s: Array<Keyframe<PointF>>, hd: Bool, d: Int64)
+    public init(
+        nm!: String = "", 
+        p!: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(), 
+        s!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(), 
+        hd!: Bool = false, 
+        d!: Int64 = 0
+    )
 
     /**
      * 获得 CircleShape 的 type 的值。
@@ -711,8 +771,16 @@ public class GradientFill <: ContentModel {
      * 参数 r - r 对应的值
      * 参数 hd - hd 对应的值
      */
-    public init (nm: String, g: ContentModelP, o: Array<Keyframe<Int64>>, t: Int64, s: Array<Keyframe<PointF>>, 
-            e: Array<Keyframe<PointF>>, r: Int64, hd: Bool)
+    public init(
+        nm!: String = "", 
+        g!: ContentModelP = ContentModelP(), 
+        o!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(), 
+        t!: Int64 = 0,
+        s!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(), 
+        e!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(), 
+        r!: Int64 = 0, 
+        hd!: Bool = false
+    )
 
     /**
      * 获得 GradientFill 的 type 的值。
@@ -773,9 +841,20 @@ public class GradientStroke <: ContentModel {
      * 参数 hd - hd 对应的值
      * 参数 d - d 对应的值
      */
-    public init (nm: String, g: ContentModelP, o: Array<Keyframe<Int64>>, t: Int64, s: Array<Keyframe<PointF>>, 
-        e: Array<Keyframe<PointF>>, w: Array<Keyframe<Float64>>, lc: Int64, lj: Int64, ml: Float64, 
-        hd: Bool, d: Array<ContentModelD>)
+    public init(
+        nm!: String = "", 
+        g!: ContentModelP = ContentModelP(), 
+        o!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(), 
+        t!: Int64 = 0,
+        s!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(), 
+        e!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(), 
+        w!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        lc!: Int64 = 0, 
+        lj!: Int64 = 0, 
+        ml!: Float64 = 0.0, 
+        hd!: Bool = false, 
+        d!: Array<ContentModelD> = Array<ContentModelD>()
+    )
 
     /**
      * 获得 GradientStroke 的 type 的值。
@@ -833,7 +912,7 @@ public class MergePaths <: ContentModel {
      * 参数 mm - mm 对应的值
      * 参数 hd - hd 对应的值
      */
-    public init (nm: String, mm: Int64, hd: Bool)
+    public init(nm!: String = "", mm!: Int64 = 0, hd!: Bool = false)
 
     /**
      * 获得 MergePaths 的 type 的值。
@@ -876,9 +955,19 @@ public class PolystarShape <: ContentModel {
      * 参数 hd - hd 对应的值
      * 参数 d - d 对应的值
      */
-    public init (nm: String, sy: Int64, pt: Array<Keyframe<Float64>>, p: AnimatableSplitDimensionPathValue, 
-        r: Array<Keyframe<Float64>>, or: Array<Keyframe<Float64>>, os: Array<Keyframe<Float64>>, 
-        ir: Array<Keyframe<Float64>>, is2: Array<Keyframe<Float64>>, hd: Bool, d: Int64)
+    public init(
+        nm!: String = "",
+        sy!: Int64 = 0,
+        pt!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        p!: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(),
+        r!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        or!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        os!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        ir!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        is2!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        hd!: Bool = false,
+        d!: Int64 = 0
+    )
 
     /**
      * 获取 PolystarShape 的类型 type 的值。
@@ -943,8 +1032,13 @@ public class RectangleShape <: ContentModel {
      * 参数 r - r 对应的值
      * 参数 hd - hd 对应的值
      */
-    public init (nm: String, p: AnimatableSplitDimensionPathValue, s: Array<Keyframe<PointF>>, 
-        r: Array<Keyframe<Float64>>, hd: Bool)
+    public init(
+        nm!: String = "",
+        p!: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(),
+        s!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
+        r!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        hd!: Bool = false
+    )
 
     /**
      * 获得 RectangleShape 的 type 的值。
@@ -989,7 +1083,13 @@ public class Repeater <: ContentModel {
      * 参数 tr - tr 对应的值
      * 参数 hd - hd 对应的值
      */
-    public init (nm: String, c: Array<Keyframe<Float64>>, o: Array<Keyframe<Float64>>, tr: AnimatableTransform, hd: Bool)
+    public init(
+        nm!: String = "",
+        c!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        o!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        tr!: AnimatableTransform = AnimatableTransform(),
+        hd!: Bool = false
+    )
 
     /**
      * 获得 Repeater 的 type 的值。
@@ -1031,7 +1131,7 @@ public class RoundedCorners <: ContentModel {
      * 参数 r - r 对应的值
      * 参数 hd - hd 对应的值
      */
-    public init (nm: String, r: Array<Keyframe<Float64>>, hd: Bool)
+    public init(nm!: String = "", r!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(), hd!: Bool = false)
 
     /**
      * 获得 RoundedCorners 的 type 的值。
@@ -1073,8 +1173,14 @@ public class ShapeFill <: ContentModel {
      * 参数 r - r 对应的值
      * 参数 hd - hd 对应的值
      */
-    public init (nm: String, c: Array<Keyframe<Array<Float64>>>, o: Array<Keyframe<Int64>>, 
-            fillEnabled: Bool, r: Int64, hd: Bool)
+    public init(
+        nm!: String = "", 
+        c!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(), 
+        o!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(),
+        fillEnabled!: Bool = false, 
+        r!: Int64 = 0, 
+        hd!: Bool = false
+    )
 
     /**
      * 获得 ShapeFill 的 type 的值。
@@ -1116,7 +1222,7 @@ public class ShapeGroup <: ContentModel {
      * 参数 it - it 对应的值
      * 参数 hd - hd 对应的值
      */
-    public init (nm: String, it: Array<ContentModel>, hd: Bool)
+    public init(nm: String, it: Array<ContentModel>, hd: Bool)
 
     /**
      * 获得 ShapeGroup 的 type 的值。
@@ -1155,7 +1261,12 @@ public class ShapePath <: ContentModel {
      * 参数 ks - ks 对应的值
      * 参数 hd - hd 对应的值
      */
-    public init (nm: String, ind: Int64, ks: Array<Keyframe<ShapeData>>, hd: Bool)
+    public init(
+        nm!: String = "", 
+        ind!: Int64 = 0, 
+        ks!: Array<Keyframe<ShapeData>> = Array<Keyframe<ShapeData>>(), 
+        hd!: Bool = false
+    )
 
     /**
      * 获得 ShapePath 的 type 的值。
@@ -1201,8 +1312,17 @@ public class ShapeStroke <: ContentModel {
      * 参数 hd - hd 对应的值
      * 参数 d - d 对应的值
      */
-    public init (nm: String, c: Array<Keyframe<Array<Float64>>>, w: Array<Keyframe<Float64>>, 
-            o: Array<Keyframe<Int64>>, lc: Int64, lj: Int64, ml: Float64, hd: Bool, d: Array<ContentModelD>)
+    public init(
+        nm!: String = "", 
+        c!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(), 
+        w!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(), 
+        o!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(),
+        lc!: Int64 = 0, 
+        lj!: Int64 = 0, 
+        ml!: Float64 = 0.0, 
+        hd!: Bool = false, 
+        d!: Array<ContentModelD> = Array<ContentModelD>()
+    )
 
     /**
      * 获得 ShapeStroke 的 type 的值。
@@ -1258,8 +1378,14 @@ public class ShapeTrimPath <: ContentModel {
      * 参数 m - m 对应的值
      * 参数 hd - hd 对应的值
      */
-    public init (s: Array<Keyframe<Float64>>, e: Array<Keyframe<Float64>>, o: Array<Keyframe<Float64>>, 
-            nm: String, m: Int64, hd: Bool)
+    public init(
+        s!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(), 
+        e!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(), 
+        o!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        nm!: String = "", 
+        m!: Int64 = 0, 
+        hd!: Bool = false
+    )
 
     /**
      * 获得 ShapeTrimPath 的 type 的值。
@@ -1304,7 +1430,11 @@ public class AnimatableSplitDimensionPathValue <: ToString {
      * 参数 x - x对应的值
      * 参数 y - y对应的值
      */
-    public init (k: Array<Keyframe<PointF>>, x: Array<Keyframe<Float64>>, y: Array<Keyframe<Float64>>)
+    public init(
+        k!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
+        x!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        y!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+    )
     
     /**
      * 获取 AnimatableSplitDimensionPathValue 的 k 值。
@@ -1343,7 +1473,7 @@ public class AnimatableTextPropertiesA <: ToString {
      * 
      * 参数 a - a对应的值
      */
-    public init (a: AnimatableTextProperties)
+    public init(a!: AnimatableTextProperties = AnimatableTextProperties())
     
     /*
      * 将实例转换为字符串并返回。 
@@ -1372,7 +1502,12 @@ public class AnimatableTextProperties <: ToString {
      * 参数 sw - sw对应的值
      * 参数 t - t对应的值
      */
-    public init (fc: ArrayKeyframeArrayFloat64, sc: Array<Keyframe<Array<Float64>>>, sw: Array<Keyframe<Float64>>, t: ArrayKeyframeFloat64)
+    public init(
+        fc!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64(),
+        sc!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(),
+        sw!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        t!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+    )
 
     /**
      * 获取 AnimatableTextProperties 的 sc 的值。
@@ -1403,7 +1538,7 @@ public class ArrayKeyframeArrayFloat64 <: ToString {
      * 
      * 参数 k - k 对应的值
      */
-    public init (k: Array<Keyframe<Array<Float64>>>)
+    public init(k!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>())
 
     /**
      * 获取 ArrayKeyframeArrayFloat64 的 k 值。
@@ -1429,7 +1564,7 @@ public class ArrayKeyframeFloat64 <: ToString {
      * 
      * 参数 k - k 对应的值
      */
-    public init (k: Array<Keyframe<Float64>>)
+    public init(k!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>())
 
     /**
      * 获取 ArrayKeyframeFloat64 的 k 值。
@@ -1458,7 +1593,7 @@ public open class ContentModelP <: ToString {
      * 参数 p - p 对应的值
      * 参数 k - k 对应的值
      */
-    public init (p: Int64, k: Array<Keyframe<Array<Float64>>>)
+    public init(p!: Int64 = 0, k!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>())
 
     /**
      * 获取 ContentModelP 的 k 值。
@@ -1484,7 +1619,7 @@ public open class ContentModelPK <: ToString {
      * 
      * 参数 k - k 对应的值
      */
-    public init (k: Array<Keyframe<Array<Float64>>>)
+    public init(k!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>())
 
     /**
      * 获取 ContentModelPK 的 k 值。
@@ -1514,7 +1649,7 @@ public open class ContentModelD <: ToString {
      * 参数 n - n 对应的值
      * 参数 v - v 对应的值
      */
-    public init (n: String, v: ContentModelDK)
+    public init(n!: String = "", v!: ContentModelDK = ContentModelDK())
     
     /**
      * 将实例转换为字符串并返回。
@@ -1535,7 +1670,7 @@ public open class ContentModelDK <: ToString {
      * 
      * 参数 k - k 对应的值
      */
-    public init (k: Array<Keyframe<Float64>>)
+    public init(k!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>())
 
     /**
      * 获取 ContentModelDK 的 k 值。
@@ -1569,7 +1704,7 @@ public class Color <: ToString {
      * 参数 g - g 对应的值
      * 参数 b - b 对应的值
      */
-    public init (a: Int64, r: Int64, g: Int64, b: Int64)
+    public init(a: Int64, r: Int64, g: Int64, b: Int64)
     
     /**
      * 将实例转换为字符串并返回。
@@ -1614,7 +1749,21 @@ public class DocumentData <: ToString {
      * 参数 ps - ps 对应的值
      * 参数 sz - sz 对应的值
      */
-    public init (t: String, f: String, s: Float64, j: Int64, tr: Int64, lh: Float64, ls: Float64, fc: Array<Float64>, sc: Array<Float64>, sw: Float64, of: Bool, ps: PointF, sz: PointF)
+    public init(
+        t!: String = "", 
+        f!: String = "",
+        s!: Float64 = 0.0,
+        j!: Int64 = 0, 
+        tr!: Int64 = 0,
+        lh!: Float64 = 0.0, 
+        ls!: Float64 = 0.0,
+        fc!: Array<Float64> = Array<Float64>(), 
+        sc!: Array<Float64> = Array<Float64>(),
+        sw!: Float64 = 0.0,
+        of!: Bool = false,
+        ps!: PointF = PointF(), 
+        sz!: PointF = PointF()
+    )
 
     /**
      * 获得 DocumentData 的 fc 的值。
@@ -1638,7 +1787,7 @@ public class DocumentData <: ToString {
 ###### 1.1.1.4.12 Keyframe
 
 ```cangjie
-public class Keyframe<T>  <: ToString {
+public class Keyframe<T> <: ToString {
 
     public let k: Option<T>     /* 封装 k  对应的数据 */
     public let t: Float64       /* 封装 t  对应的数据 */
@@ -1663,8 +1812,17 @@ public class Keyframe<T>  <: ToString {
      * 参数 to - to 对应的值
      * 参数 ti - ti 对应的值
      */
-    public init (k: Option<T>, t: Float64, s: Option<T>, e: Option<T>, o: PointF, i: PointF, 
-            h: Int64, to: PointF, ti: PointF)
+    public init(
+        k!: Option<T> = Option<T>.None,
+        t!: Float64 = 0.0,
+        s!: Option<T> = Option<T>.None,
+        e!: Option<T> = Option<T>.None,
+        o!: PointF = PointF(),
+        i!: PointF = PointF(),
+        h!: Int64 = 0,
+        to!: PointF = PointF(),
+        ti!: PointF = PointF()
+    )
     
     /**
      * 将实例转换为字符串并返回。
@@ -1689,7 +1847,7 @@ public class PointF <: ToString {
      * 参数 x - x 对应的值
      * 参数 y - y 对应的值
      */
-    public init (x: Float64, y: Float64)
+    public init(x!: Float64 = 0.0, y!: Float64 = 0.0)
     
     /**
      * 将实例转换为字符串并返回。
@@ -1715,7 +1873,12 @@ public class ShapeData <: ToString {
      * 参数 i - i 对应的值
      * 参数 o - o 对应的值
      */
-    public init (c: Bool, v: Array<PointF>, i: Array<PointF>, o: Array<PointF>)
+    public init(
+        c!: Bool = false,
+        v!: Array<PointF> = Array<PointF>(),
+        i!: Array<PointF> = Array<PointF>(),
+        o!: Array<PointF> = Array<PointF>()
+    )
 
     /**
      * 获得 ShapeData 的 v 的值。

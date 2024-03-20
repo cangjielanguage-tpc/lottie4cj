@@ -27,7 +27,12 @@ public class ShapePath <: ContentModel {
      * @param ks - Type of Array<Keyframe<ShapeData>>, the value of ks.
      * @param hd - Type of Bool, the value of hd.
      */
-    public init(nm!: String, ind!: Int64, ks!: Array<Keyframe<ShapeData>>, hd!: Bool){
+    public init(
+        nm!: String = "",
+        ind!: Int64 = 0,
+        ks!: Array<Keyframe<ShapeData>> = Array<Keyframe<ShapeData>>(),
+        hd!: Bool = false
+    ){
         this.nm = nm
         this.ind = ind
         this._ks = ks

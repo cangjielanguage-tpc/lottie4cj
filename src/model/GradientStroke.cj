@@ -48,9 +48,19 @@ public class GradientStroke <: ContentModel {
      * @param hd - Type of Bool, the value of hd.
      * @param d  - Type of Array<ContentModelD>, the value of d.
      */
-    public init(nm!: String, g!: ContentModelP, o!: Array<Keyframe<Int64>>, t!: Int64,
-        s!: Array<Keyframe<PointF>>, e!: Array<Keyframe<PointF>>, w!: Array<Keyframe<Float64>>,
-        lc!: Int64, lj!: Int64, ml!: Float64, hd!: Bool, d!: Array<ContentModelD>
+    public init(
+        nm!: String = "",
+        g!: ContentModelP = ContentModelP(),
+        o!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(),
+        t!: Int64 = 0,
+        s!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
+        e!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
+        w!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        lc!: Int64 = 0,
+        lj!: Int64 = 0,
+        ml!: Float64 = 0.0,
+        hd!: Bool = false,
+        d!: Array<ContentModelD> = Array<ContentModelD>()
     ){
         this.nm = nm
         this.g = g

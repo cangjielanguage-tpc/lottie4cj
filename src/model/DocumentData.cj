@@ -41,8 +41,20 @@ public class DocumentData <: ToString {
      * @param ps - Type of PointF, the value of ps.
      * @param sz - Type of PointF, the value of sz.
      */
-    public init(t!: String, f!: String, s!: Float64, j!: Int64, tr!: Int64, lh!: Float64, ls!: Float64,
-        fc!: Array<Float64>, sc!: Array<Float64>, sw!: Float64, of!: Bool, ps!: PointF, sz!: PointF
+    public init(
+        t!: String = "",
+        f!: String = "",
+        s!: Float64 = 0.0,
+        j!: Int64 = 0,
+        tr!: Int64 = 0,
+        lh!: Float64 = 0.0,
+        ls!: Float64 = 0.0,
+        fc!: Array<Float64> = Array<Float64>(),
+        sc!: Array<Float64> = Array<Float64>(),
+        sw!: Float64 = 0.0,
+        of!: Bool = false,
+        ps!: PointF = PointF(),
+        sz!: PointF = PointF()
     ){
         this.t = t
         this.f = f

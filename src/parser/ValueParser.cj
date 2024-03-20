@@ -395,23 +395,23 @@ public class ColorParser <: ValueParser<Array<Float64>> {
     public func parseColor(reader: JsonValue): Color {
         let ja: JsonArray = reader.asArray()
 
-        var r: Int64 = Int64(ja[0].asFloat().getValue())
-        var g: Int64 = Int64(ja[1].asFloat().getValue())
-        var b: Int64 = Int64(ja[2].asFloat().getValue())
-        var a: Int64 = 1
+        var r: Float64 = ja[0].asFloat().getValue()
+        var g: Float64 = ja[1].asFloat().getValue()
+        var b: Float64 = ja[2].asFloat().getValue()
+        var a: Float64 = 1.0
 
         if (ja.size() >= 4) {
-            a = Int64(ja[3].asFloat().getValue())
+            a = ja[3].asFloat().getValue()
         }
 
-        if (r <= 1 && g <= 1 && b <= 1) {
-            r *= Int64(255)
-            g *= Int64(255)
-            b *= Int64(255)
-            if (a <= 1) {
-                a *= Int64(255)
+        if (r <= 1.0 && g <= 1.0 && b <= 1.0) {
+            r *= 255.0
+            g *= 255.0
+            b *= 255.0
+            if (a <= 1.0) {
+                a *= 255.0
             }
         }
-        return Color(a, r, g, b)
+        return Color(Int64(a), Int64(r), Int64(g), Int64(b))
     }
 }
