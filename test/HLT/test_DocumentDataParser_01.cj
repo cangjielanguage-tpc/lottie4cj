@@ -1,0 +1,86 @@
+// 3rd_party_lib:lottie4cj/build/lottie4cj
+// 3rd_party_lib_ohos:lottie4cj/build/aarch64-linux-ohos/lottie4cj
+
+from lottie4cj import parser.*
+from lottie4cj import model.*
+from std import math.*
+from encoding import json.*
+from std import collection.*
+@Test
+public class TestLottie4cjDocumentDataParser{
+    @TestCase
+    func test_DocumentDataParser_01():Unit {
+        var dd=DocumentDataParser.INSTANCE
+        var flag=1
+        var illeagal=Array<JsonValue>([JsonNull(),JsonBool(true),JsonString("JsonString"),JsonInt(128),JsonFloat(Float64(22)),JsonArray()])
+        for (iv in 0..illeagal.size){
+            flag=1
+            try{
+                dd.parse(illeagal[iv])
+            }catch(e:JsonException){
+                if(e.toString().contains("Fail to convert to JsonObject")){
+                    flag=0
+                }
+            }
+            @Assert(flag,0)
+        }
+    }
+    @TestCase
+    func test_DocumentDataParser_02():Unit {
+        var dd=DocumentDataParser.INSTANCE
+        var maps=HashMap<String,JsonValue>([("t",JsonString("123")),
+                                            ("f",JsonString("134")),
+                                            ("s",JsonFloat(135)),
+                                            ("j",JsonInt(134)),
+                                            ("tr",JsonInt(134)),
+                                            ("lh",JsonFloat(135)),
+                                            ("ls",JsonFloat(135)),
+                                            ("fc",JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)]))),
+                                            ("sc",JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)]))),
+                                            ("sw",JsonFloat(135)),
+                                            ("of",JsonBool(true)),
+                                            ("ps",JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)]))),
+                                            ("sz",JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)])))
+                                           ])
+        var jo=JsonObject(maps)
+        var re=dd.parse(jo)
+        var exp_re=DocumentData(
+                   t: "123",
+                   f: "134",
+                   s: Float64(135),
+                   j: 134,
+                   tr: 134,
+                   lh: Float64(135),
+                   ls: Float64(135),
+                   fc: Array<Float64>([Float64(128),Float64(228)]),
+                   sc: Array<Float64>([Float64(128),Float64(228)]),
+                   sw: Float64(135),
+                   of: true,
+                   ps: PointF(x:Float64(128),y:Float64(228)),
+                   sz: PointF(x:Float64(128),y:Float64(228))
+               )
+        @Assert(re.toString(),exp_re.toString())
+    }
+    @TestCase
+    func test_DocumentDataParser_03():Unit {
+        var dd=DocumentDataParser.INSTANCE
+        var jo=JsonObject()
+        var re=dd.parse(jo)
+        var exp_re=DocumentData(
+                   t: "",
+                   f: "",
+                   s: Float64(0),
+                   j: 0,
+                   tr: 0,
+                   lh: Float64(0),
+                   ls: Float64(0),
+                   fc: Array<Float64>(),
+                   sc: Array<Float64>(),
+                   sw: Float64(0),
+                   of: false,
+                   ps: PointF(),
+                   sz: PointF()
+               )
+        @Assert(re.toString(),exp_re.toString())
+    }
+}

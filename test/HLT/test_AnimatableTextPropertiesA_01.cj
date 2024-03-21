@@ -1,0 +1,27 @@
+// 3rd_party_lib:lottie4cj/build/lottie4cj
+// 3rd_party_lib_ohos:lottie4cj/build/aarch64-linux-ohos/lottie4cj
+
+from lottie4cj import parser.*
+from lottie4cj import model.*
+
+@Test
+public class TestLottie4cjAnimatableTextPropertiesA{
+    @TestCase
+    func test_AnimatableTextPropertiesA_toString_01():Unit {
+        var kaf=Keyframe<Array<Float64>>()
+        var akaf=Array<Keyframe<Array<Float64>>>(100,item:kaf)
+        var fc=ArrayKeyframeArrayFloat64(k:akaf)
+        var sc=Array<Keyframe<Array<Float64>>>(101,item:kaf)
+        var sw=Array<Keyframe<Float64>>(102,item:Keyframe<Float64>())
+        var t=ArrayKeyframeFloat64()
+        var atp=AnimatableTextProperties(fc:fc,sc:sc,sw:sw,t:t)
+        var atpa=AnimatableTextPropertiesA(a:atp)
+        @Assert(atpa.toString(),"AnimatableTextPropertiesA: {a = ${atp}}")
+    }
+    @TestCase
+    func test_AnimatableTextPropertiesA_toString_02():Unit {
+        var atp=AnimatableTextProperties()
+        var atpa=AnimatableTextPropertiesA()
+        @Assert(atpa.toString(),"AnimatableTextPropertiesA: {a = ${atp}}")
+    }
+}
