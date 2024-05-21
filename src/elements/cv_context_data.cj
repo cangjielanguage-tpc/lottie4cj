@@ -1,0 +1,91 @@
+package elements
+
+import third_party.*
+
+public class CvContextData {
+
+    private var saved: ArrayList<Array<Float32>>
+    private var cArrPos: Int64
+    private var cTr: Matrix
+    private var cO: Int64
+    private var _length: Int64
+    private var savedOp: Array<Float32>
+
+    public init() {
+        this.saved = ArrayList<Array<Float32>>()
+        this.cArrPos = 0
+        this.cTr = Matrix()
+        this.cO = 1
+        var len: Int64 = 15
+        this.savedOp = Array<Float32>(len,item: 0.0)
+        for (i in 0..len) {
+            this.saved[i] = Array<Float32>(16,item: 0.0)
+        }
+        this._length = len
+    }
+
+    public func duplicate() {
+        var newLength = this._length * 2
+        this.savedOp = Array<Float32>(newLength,item: 0.0)
+        for (i in this._length..newLength) {
+            this.saved[i] = Array<Float32>(16,item: 0.0)
+        }
+        this._length = newLength
+    }
+
+    public func reset() {
+        this.cArrPos = 0
+        this.cTr.reset()
+        this.cO = 1
+    }
+
+    public func popTransform(): Array<Float32> {
+        var popped = this.saved[this.cArrPos]
+        var arr = this.cTr.props
+        for (i in 0..16) {
+            arr[i] = popped[i]
+        }
+        return popped
+    }
+
+    public func popOpacity(): Int64 {
+        var popped = this.savedOp[this.cArrPos]
+        this.cO = Int64(popped)
+        return Int64(popped)
+    }
+
+    public func pop(): (Array<Float32>,Int64) {
+        this.cArrPos -= 1
+        var transform = this.popTransform()
+        var opacity = this.popOpacity()
+        return (transform,opacity)
+    }
+
+    public func push() {
+        var props = this.cTr.props
+        if (this._length <= this.cArrPos) {
+            this.duplicate()
+        }
+        var arr = this.saved[this.cArrPos]
+        for (i in 0..16) {
+            arr[i] = props[i]
+        }
+        this.savedOp[this.cArrPos] = Float32(this.cO)
+        this.cArrPos += 1
+    }
+
+    public func getTransform(): Matrix {
+        return this.cTr
+    }
+
+    public func getOpacity(): Int64 {
+        return this.cO
+    }
+
+    public func setOpacity(value: Int64) {
+        this.cO = value
+    }
+
+}
+
+
