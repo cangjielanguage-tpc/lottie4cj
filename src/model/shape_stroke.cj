@@ -23,7 +23,10 @@ public class ShapeStroke <: ContentModel {
     private let _d: Array<ContentModelD>               // 8 = lineDashPattern
     //"d": [{"n": "String "v": Array<Keyframe<T>>}]
 
-    let ty: String = "st"
+    let _ty: String = "st"
+    public open prop ty: String {
+        get() { _ty }
+    }
 
     /**
      * Create a ShapeStroke instance based on parameters.

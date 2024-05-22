@@ -30,6 +30,7 @@ public class TestLottie4cjAnimatablePathValueParser{
         var re=AnimatablePathValueParser.parse(ja)
         @Assert(re.toString(),"[]")
     }
+
     @TestCase
     func test_AnimatablePathValueParser_03():Unit {
         var ja=JsonArray(Array<JsonValue>([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))]))
@@ -42,11 +43,12 @@ e = None
 o = PointF: {x='0.000000', y='0.000000'}
 i = PointF: {x='0.000000', y='0.000000'}
 h = 0
-to = PointF: {x='0.000000', y='0.000000'}
-ti = PointF: {x='0.000000', y='0.000000'}
+to = []
+ti = []
 }]"###
         @Assert(re.toString(),exp_re)
     }
+
     @TestCase
     func test_AnimatablePathValueParser_04():Unit {
         var ja=JsonArray(Array<JsonValue>([JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))]))
@@ -59,8 +61,8 @@ e = None
 o = PointF: {x='0.000000', y='0.000000'}
 i = PointF: {x='0.000000', y='0.000000'}
 h = 0
-to = PointF: {x='0.000000', y='0.000000'}
-ti = PointF: {x='0.000000', y='0.000000'}
+to = []
+ti = []
 }]"###
         @Assert(re.toString(),exp_re)
     }

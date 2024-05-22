@@ -21,16 +21,21 @@ public class TestLottie4cjLayerT{
         var atp=AnimatableTextProperties(fc:fc,sc:sc,sw:sw,t:t)
         var atpa=AnimatableTextPropertiesA(a:atp)
         var aatpa=Array<AnimatableTextPropertiesA>(105,item:atpa)
-        var lt=LayerT(d:ltd,a:aatpa)
-        @Assert(lt.toString(),"LayerT: {\n" +"d = ${ltd},\n" +"a = ${aatpa}\n}")
+
+        var m: LayerTM = LayerTM()
+
+        var lt=LayerT(d:ltd,a:aatpa, m: m)
+        @Assert(lt.toString(),"LayerT-t: {\n" + "d = ${ltd},\n" + "a = ${aatpa},\n" + "m = ${m}\n}")
+
         @Assert(lt.a.toString(),aatpa.toString())
     }
     @TestCase
     func test_LayerT_toString_02():Unit {
         var d=LayerTD()
         var a=Array<AnimatableTextPropertiesA>()
+        var m: LayerTM = LayerTM()
         var lt=LayerT()
-        @Assert(lt.toString(),"LayerT: {\n" +"d = ${d},\n" +"a = ${a}\n}")
+        @Assert(lt.toString(),"LayerT-t: {\n" + "d = ${d},\n" + "a = ${a},\n" + "m = ${m}\n}")
         @Assert(lt.a.toString(),a.toString())
     }
 }

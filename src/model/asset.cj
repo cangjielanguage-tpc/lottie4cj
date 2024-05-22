@@ -20,6 +20,8 @@ public class Asset <: ToString {
     public let p: String                     // 4 = imageFileName   // Picture name
     public let u: String                     // 5 = relativeFolder  // Picture path
 
+    public let e: Int64
+
     /**
      * Create a Asset instance based on parameters.
      *
@@ -30,13 +32,14 @@ public class Asset <: ToString {
      * @param p - Type of String, the value of p.
      * @param u - Type of String, the value of u.
      */
-    public init(id: String, layers: Array<Layer>, w: Int64, h: Int64, p: String, u: String){
+    public init(id: String, layers: Array<Layer>, w: Int64, h: Int64, p: String, u: String, e: Int64){
         this.id = id
         this._layers = layers
         this.w = w
         this.h = h
         this.p = p
         this.u = u
+        this.e = e
     }
 
     /**
@@ -58,6 +61,7 @@ public class Asset <: ToString {
         "w = ${w}\n" +
         "h = ${h}\n" +
         "p = ${p}\n" +
-        "u = ${u}\n}"
+        "u = ${u}\n" +
+        "e = ${e}\n}"
     }
 }

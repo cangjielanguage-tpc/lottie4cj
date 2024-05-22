@@ -14,7 +14,8 @@ class GradientFillParser {
         "s",      //4
         "e",      //5
         "r",      //6
-        "hd"      //7
+        "hd",     //7
+        "mn"      //8
     ]
     private static let GRADIENT_NAMES: Array<String> = [
         "p",
@@ -26,10 +27,14 @@ class GradientFillParser {
         var g: ContentModelP = ContentModelP()
         var opacity: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>()
         var gradientType: Int64 = 0
-        var startPoint: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
-        var endPoint: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
+
+        var startPoint: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
+        var endPoint: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
+
         var fillType: Int64 = 0
         var hidden: Bool = false
+
+        var mn: String = ""
 
         if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
             name = v.asString().getValue()
@@ -57,10 +62,10 @@ class GradientFillParser {
         }
 
         if (let Some(v) <- reader.get(NAMES[4])) { // "s"
-            startPoint = AnimatableValueParser.parsePoint(v)
+            startPoint = AnimatableValueParser.parseArrayFloat(v)
         }
         if (let Some(v) <- reader.get(NAMES[5])) { // "e"
-            endPoint = AnimatableValueParser.parsePoint(v)
+            endPoint = AnimatableValueParser.parseArrayFloat(v)
         }
 
         if (let Some(v) <- reader.get(NAMES[6])) { // "r"
@@ -68,6 +73,9 @@ class GradientFillParser {
         }
         if (let Some(v) <- reader.get(NAMES[7])) { // "hd"
             hidden = v.asBool().getValue()
+        }
+        if (let Some(v) <- reader.get(NAMES[8])) { // "mn"
+            mn = v.asString().getValue()
         }
 
         let cm: GradientFill = GradientFill(
@@ -78,7 +86,8 @@ class GradientFillParser {
             s: startPoint,
             e: endPoint,
             r: fillType,
-            hd: hidden
+            hd: hidden,
+            mn: mn
         )
         return cm
     }

@@ -8,6 +8,7 @@ from encoding import json.*
 
 @Test
 public class TestLottie4cjAnimatableTransformParser{
+
     @TestCase
     func test_AnimatableTransformParser_01():Unit {
         var jv_AnimatableTransformParser_str=###"{
@@ -65,8 +66,8 @@ e = None
 o = PointF: {x='0.000000', y='0.000000'}
 i = PointF: {x='0.000000', y='0.000000'}
 h = 0
-to = PointF: {x='0.000000', y='0.000000'}
-ti = PointF: {x='0.000000', y='0.000000'}
+to = []
+ti = []
 }],
 p = AnimatableSplitDimensionPathValue: {
 k = [Keyframe{
@@ -77,8 +78,8 @@ e = None
 o = PointF: {x='0.000000', y='0.000000'}
 i = PointF: {x='0.000000', y='0.000000'}
 h = 0
-to = PointF: {x='0.000000', y='0.000000'}
-ti = PointF: {x='0.000000', y='0.000000'}
+to = []
+ti = []
 }]
 x = []
 y = []
@@ -91,8 +92,8 @@ e = None
 o = PointF: {x='0.000000', y='0.000000'}
 i = PointF: {x='0.000000', y='0.000000'}
 h = 0
-to = PointF: {x='0.000000', y='0.000000'}
-ti = PointF: {x='0.000000', y='0.000000'}
+to = []
+ti = []
 }],
 r = ArrayKeyframeFloat64: { k = [Keyframe{
 k = 0.000000
@@ -102,8 +103,8 @@ e = None
 o = PointF: {x='0.000000', y='0.000000'}
 i = PointF: {x='0.000000', y='0.000000'}
 h = 0
-to = PointF: {x='0.000000', y='0.000000'}
-ti = PointF: {x='0.000000', y='0.000000'}
+to = []
+ti = []
 }] },
 o = [Keyframe{
 k = 100
@@ -113,14 +114,16 @@ e = None
 o = PointF: {x='0.000000', y='0.000000'}
 i = PointF: {x='0.000000', y='0.000000'}
 h = 0
-to = PointF: {x='0.000000', y='0.000000'}
-ti = PointF: {x='0.000000', y='0.000000'}
+to = []
+ti = []
 }],
 so = [],
 eo = [],
 sk = [],
 sa = []
 }"###
+        
+        //println(re.toString())
         @Assert(re.toString(),exp_re)
 
     }

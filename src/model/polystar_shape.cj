@@ -24,7 +24,10 @@ public class PolystarShape <: ContentModel {
     public let hd: Bool                                   // 9  = hidden
     public let d: Int64                                   // 10 = reversed
 
-    let ty: String = "sr"
+    let _ty: String = "sr"
+    public open prop ty: String {
+        get() { _ty }
+    }
 
     /**
      * Create a PolystarShape instance based on parameters.

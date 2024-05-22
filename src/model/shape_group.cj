@@ -16,7 +16,10 @@ public class ShapeGroup <: ContentModel {
     public let hd: Bool                      // 1 = hidden
     private let _it: Array<ContentModel>     // 2 = items
 
-    let ty: String = "gr"
+    let _ty: String = "gr"
+    public open prop ty: String {
+        get() { _ty }
+    }
 
     /**
      * Create a ShapeGroup instance based on parameters.

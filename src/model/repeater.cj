@@ -18,7 +18,10 @@ public class Repeater <: ContentModel {
     public let tr: AnimatableTransform             // 3 = transform
     public let hd: Bool                            // 4 = hidden
 
-    let ty: String = "rp"
+    let _ty: String = "rp"
+    public open prop ty: String {
+        get() { _ty }
+    }
 
     /**
      * Create a Repeater instance based on parameters.

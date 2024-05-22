@@ -13,8 +13,8 @@ public class TestLottie4cjGradientFill{
         let g=ContentModelP()
         let o=Array<Keyframe<Int64>>(100,item:Keyframe<Int64>())
         let t=Int64.Max
-        let s=Array<Keyframe<PointF>>(100,item:Keyframe<PointF>())
-        let e=Array<Keyframe<PointF>>(100,item:Keyframe<PointF>())
+        let s=Array<Keyframe<Array<Float64>>>(100,item:Keyframe<Array<Float64>>())
+        let e=Array<Keyframe<Array<Float64>>>(100,item:Keyframe<Array<Float64>>())
         let r=Int64.Max
         let hd=true
         var gf=GradientFill(nm:nm, g: g, o: o, t: t,s:s,e:e,r:r,hd:hd)
@@ -39,8 +39,8 @@ public class TestLottie4cjGradientFill{
         let g=ContentModelP()
         let o=Array<Keyframe<Int64>>()
         let t=Int64.Min
-        let s=Array<Keyframe<PointF>>()
-        let e=Array<Keyframe<PointF>>()
+        let s=Array<Keyframe<Array<Float64>>>()
+        let e=Array<Keyframe<Array<Float64>>>()
         let r=Int64.Min
         let hd=false
         var gf=GradientFill(nm:nm, g: g, o: o, t: t,s:s,e:e,r:r,hd:hd)

@@ -3,58 +3,68 @@
  */
 
 /**
- * @file This file is a CircleShape structure.
+ * @file This file is a RectangleShape structure.
  */
 package model
 
-public class CircleShape <: ContentModel {
+public class RectangleShape <: ContentModel {
 
     /**
-     * 7. "layers"."shapes".{"ty": "el"} = CircleShapeParser
+     * 8. "layers"."shapes".{"ty": "rc"} = RectangleShapeParser
      */
     public let nm: String                                // 0 = name
     public let p: AnimatableSplitDimensionPathValue      // 1 = position
     private let _s: Array<Keyframe<PointF>>              // 2 = size
-    public let hd: Bool                                  // 3 = hidden
-    public let d: Int64                                  // 4 = reversed
-    
-    let ty: String = "el"
+    private let _r: Array<Keyframe<Float64>>             // 3 = roundedness
+    public let hd: Bool                                  // 4 = hidden
+
+    let _ty: String = "rc"
+    public open prop ty: String {
+        get() { _ty }
+    }
 
     /**
-     * Create a CircleShape instance based on parameters.
+     * Create a RectangleShape instance based on parameters.
      *
      * @param nm - Type of String, the value of nm.
      * @param p - Type of AnimatableSplitDimensionPathValue, the value of p.
      * @param s - Type of Array<Keyframe<PointF>>, the value of s.
+     * @param r - Type of Array<Keyframe<Float64>>, the value of r.
      * @param hd - Type of Bool, the value of hd.
-     * @param d - Type of Int64, the value of d.
      */
     public init(
         nm!: String = "",
         p!: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(),
         s!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
-        hd!: Bool = false,
-        d!: Int64 = 0
+        r!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        hd!: Bool = false
     ){
         this.nm = nm
         this.p = p
         this._s = s
+        this._r = r
         this.hd = hd
-        this.d = d
     }
 
     /**
-     * Obtain the type of CircleShape.
+     * Obtain the type of RectangleShape.
      */
     public override prop types: Int8 {
-        get() { 7 }
+        get() { 8 }
     }
 
     /**
-     * Obtain the s of CircleShape.
+     * Obtain the s of RectangleShape.
      */
     public prop s: Array<Keyframe<PointF>> {
         get() { this._s.clone() }
+    }
+
+    /**
+     * Obtain the r of RectangleShape.
+     */
+    public prop r: Array<Keyframe<Float64>> {
+        get() { this._r.clone() }
     }
 
     /**
@@ -63,12 +73,12 @@ public class CircleShape <: ContentModel {
      * @return Type of String, converted String.
      */
     public func toString(): String {
-        return "CircleShape[el]: {\n" +
-               "ty = ${ty},\n" +
-               "nm = ${nm},\n" +
-               "p = ${p},\n" +
-               "s = ${_s},\n" +
-               "hd = ${hd},\n" +
-               "d = ${d}\n}"
+        return "RectangleShape[rc]: {\n" +
+               "ty = ${ty}\n" +
+               "nm = ${nm}\n" +
+               "p = ${p}\n" +
+               "s = ${_s}\n" +
+               "r = ${_r}\n" +
+               "hd = ${hd}\n}"
     }
 }

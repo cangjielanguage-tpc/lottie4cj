@@ -19,7 +19,10 @@ public class ShapeFill <: ContentModel {
     public let r: Int64                                 // 4 = fillTypeInt
     public let hd: Bool                                 // 5 = hidden
 
-    let ty: String = "fl"
+    let _ty: String = "fl"
+    public open prop ty: String {
+        get() { _ty }
+    }
 
     /**
      * Create a ShapeFill instance based on parameters.

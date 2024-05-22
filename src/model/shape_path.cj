@@ -17,7 +17,12 @@ public class ShapePath <: ContentModel {
     private let _ks: Array<Keyframe<ShapeData>>    //2 = shape
     public let hd: Bool                            //3 = hidden
 
-    let ty: String = "sh"
+    let _ty: String = "sh"
+    public open prop ty: String {
+        get() { _ty }
+    }
+
+    var ix: Int64 = 0
 
     /**
      * Create a ShapePath instance based on parameters.

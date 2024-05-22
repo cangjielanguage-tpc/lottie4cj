@@ -22,7 +22,10 @@ public class AnimatableTransform <: ContentModel {
     private let _sk: Array<Keyframe<Float64>>            // 8 = skew
     private let _sa: Array<Keyframe<Float64>>            // 9 = skewAngle
 
-    public let ty: String
+    private let _ty: String
+    public open prop ty: String {
+        get() { _ty }
+    }
 
     /**
      * Create a AnimatableTransform instance based on parameters.
@@ -59,7 +62,7 @@ public class AnimatableTransform <: ContentModel {
         this._eo = eo
         this._sk = sk
         this._sa = sa
-        this.ty = ty
+        this._ty = ty
     }
 
     /**
@@ -125,7 +128,7 @@ public class AnimatableTransform <: ContentModel {
      */
     public func toString(): String {
         return "AnimatableTransform[tr]: {\n" +
-               "ty = ${ty},\n" +
+               "ty = ${_ty},\n" +
                "a = ${_a},\n" +
                "p = ${p},\n" +
                "s = ${_s},\n" +

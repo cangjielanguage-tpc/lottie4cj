@@ -8,6 +8,7 @@ from encoding import json.*
 from std import fs.*
 @Test
 public class TestLottie4cjAnimationDataParser{
+
     @TestCase
     func test_AnimationDataParser_01():Unit {
         let file: File = File("./data.json", OpenOption.Open(true, true))
@@ -35,6 +36,11 @@ fName   = Helvetica
 fFamily = Helvetica
 fStyle  = Regular
 ascent  = 72.899414
+fOrigin = 
+origin  = -1
+fPath   = 
+fClass  = 
+fWeight = 
 }]
  }
 chars.size = 9

@@ -143,6 +143,7 @@ func test_02(gr: ShapeGroup): Int64 {
 func test_03(gr: ShapeGroup): Int64 {
     //println("------------------------------------------------------------------1-3-[fl]")
     //println(gr.it[2].toString().toArray())
+    //println(gr.it[2].toString())
     //println(shapes_06_str3 == gr.it[2].toString())
 
     if(shapes_06_str3 != gr.it[2].toString()) {

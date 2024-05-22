@@ -7,6 +7,7 @@
  */
 package model
 
+from std import collection.*
 
 /**
  * After Effects/Bodymovin composite model. This is the serialization model that the animation will create from.

@@ -44,6 +44,18 @@ public class Font <: ToString {
     public let fStyle: String            // 2 = style
     public let ascent: Float64           // 3 = ascent
 
+    public let fOrigin: String           // 4 = "fOrigin"
+    public let origin: Int64             // 5 = "origin"
+    public let fPath: String             // 6 = "fPath"
+    public let fClass: String            // 7 = "fClass"
+    public let fWeight: String           // 8 = "fWeight"
+
+    public var cache: Array<Int64> = Array<Int64>()
+
+    public var loaded: Bool = false
+    // TODO: helper/public var monoCase: FontManagerNode/public var sansCase: FontManagerNode
+
+
     /**
      * Create a Font instance based on parameters.
      *
@@ -52,11 +64,19 @@ public class Font <: ToString {
      * @param fStyle - Type of String, the value of fStyle.
      * @param ascent - Type of Float64, the value of ascent.
      */
-    public init(fFamily: String, fName: String, fStyle: String, ascent: Float64){
+    public init(fFamily: String, fName: String, fStyle: String, ascent: Float64,
+                fOrigin: String, origin: Int64, fPath: String, fClass: String, fWeight: String
+    ){
         this.fFamily = fFamily
         this.fName = fName
         this.fStyle = fStyle
         this.ascent = ascent
+
+        this.fOrigin = fOrigin
+        this.origin = origin
+        this.fPath = fPath
+        this.fClass = fClass
+        this.fWeight = fWeight
     }
 
     /**
@@ -78,6 +98,12 @@ public class Font <: ToString {
         "fName   = ${fName}\n" +
         "fFamily = ${fFamily}\n" +
         "fStyle  = ${fStyle}\n" +
-        "ascent  = ${ascent}\n}"
+        "ascent  = ${ascent}\n" +
+
+        "fOrigin = ${fOrigin}\n" +
+        "origin  = ${origin}\n" +
+        "fPath   = ${fPath}\n" +
+        "fClass  = ${fClass}\n" +
+        "fWeight = ${fWeight}\n}"
     }
 }
