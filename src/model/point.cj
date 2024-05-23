@@ -31,4 +31,8 @@ public class PointF <: ToString {
     public func toString(): String {
         return "PointF: {x='${x}', y='${y}'}"
     }
+
+    public func isNull(): Bool {
+        return x == 0.0 && y == 0.0
+    }
 }

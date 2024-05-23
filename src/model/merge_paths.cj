@@ -16,7 +16,10 @@ public class MergePaths <: ContentModel {
     public let mm: Int64          // 1 = mode
     public let hd: Bool           // 2 = hidden
 
-    let ty: String = "mm"
+    let _ty: String = "mm"
+    public open prop ty: String {
+        get() { _ty }
+    }
 
     /**
      * Create a MergePaths instance based on parameters.

@@ -10,13 +10,20 @@ public class TestLottie4cjFonts{
     var fName=""
     var fStyle=""
     var ascent=Float64(1.0)
+
+    var fOrigin = "fOrigin"
+    var origin = 5
+    var fPath = "fPath"
+    var fClass = "fClass"
+    var fWeight = "fWeight"
+
     @TestCase
     func test_Fonts_toString_01():Unit {
         fFamily="fFamily"
         fName="fName"
         fStyle="fStyle"
         ascent=Float64(1.0)
-        var ft=Font(fFamily,fName,fStyle,ascent)
+        var ft=Font(fFamily,fName,fStyle,ascent, fOrigin, origin, fPath, fClass, fWeight)
         var listCur=Array<Font>(10,item:ft)
         var fts=Fonts(list:listCur)
         @Assert(fts.toString(), "Fonts: {\n list = ${listCur}\n }")
@@ -28,7 +35,7 @@ public class TestLottie4cjFonts{
         fName=""
         fStyle=""
         ascent=Float64(-1.0)
-        var ft=Font(fFamily,fName,fStyle,ascent)
+        var ft=Font(fFamily,fName,fStyle,ascent, fOrigin, origin, fPath, fClass, fWeight)
         var listCur=Array<Font>(10,item:ft)
         var fts=Fonts(list:listCur)
         @Assert(fts.toString(), "Fonts: {\n list = ${listCur}\n }")

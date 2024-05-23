@@ -35,6 +35,8 @@ public class Layer <: ToString {
     public let ao: Int64                             // 23 = autoOrient
     public let bm: Int64                             // 24 = blendMode
 
+    var hasMask: Bool = false
+
     /**
      * Create a Layer instance based on parameters.
      *
@@ -204,10 +206,43 @@ public class LayerTD <: ToString {
     }
 }
 
+public class LayerTMA <: ToString {
+    public let a: Int64
+    public let k: Array<Int64>
+    public let ix: Int64
+    public init(a!: Int64 = 0, k!: Array<Int64> = Array<Int64>(), ix!: Int64 = 0){
+        this.a = a
+        this.k = k
+        this.ix = ix
+    }
+    public func toString(): String {
+        return "LayerTMA-a: {\n" +
+               "a = ${a},\n" +
+               "k = ${k},\n" +
+               "ix = ${ix}\n}"
+    }
+}
+
+public class LayerTM <: ToString {
+    public let g: Int64
+    public let a: LayerTMA
+    public init(g!: Int64 = 0, a!: LayerTMA = LayerTMA()){
+        this.g = g
+        this.a = a
+    }
+    public func toString(): String {
+        return "LayerTM-m: {\n" +
+               "g = ${g},\n" +
+               "a = ${a}\n}"
+    }
+}
+
 public class LayerT <: ToString {
 
     public let d: LayerTD
     private let _a: Array<AnimatableTextPropertiesA>
+
+    public let m: LayerTM
 
     /**
      * Create a LayerT instance based on parameters.
@@ -215,9 +250,12 @@ public class LayerT <: ToString {
      * @param d - Type of LayerTD, the value of d.
      * @param a - Type of Array<AnimatableTextPropertiesA>, the value of a.
      */
-    public init(d!: LayerTD = LayerTD(), a!: Array<AnimatableTextPropertiesA> = Array<AnimatableTextPropertiesA>()){
+    public init(d!: LayerTD = LayerTD(), a!: Array<AnimatableTextPropertiesA> = Array<AnimatableTextPropertiesA>(),
+                m!: LayerTM = LayerTM()
+    ){
         this.d = d
         this._a = a
+        this.m = m
     }
 
     /**
@@ -233,9 +271,10 @@ public class LayerT <: ToString {
      * @return Type of String, converted String.
      */
     public func toString(): String {
-        return "LayerT: {\n" +
+        return "LayerT-t: {\n" +
                "d = ${d},\n" +
-               "a = ${_a}\n}"
+               "a = ${_a},\n" +
+               "m = ${m}\n}"
     }
 }
 

@@ -30,7 +30,10 @@ public class GradientStroke <: ContentModel {
     //"d": [{"n": "String", "v": Array<Keyframe<Float64>>}]  =>  Array<ContentModelD>
     private let _d: Array<ContentModelD>        //11 = lineDashPattern
 
-    let ty: String = "gs"
+    let _ty: String = "gs"
+    public open prop ty: String {
+        get() { _ty }
+    }
 
     /**
      * Create a GradientStroke instance based on parameters.

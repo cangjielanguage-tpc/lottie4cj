@@ -9,6 +9,10 @@ package model
 
 public open class ContentModel <: ToString {
 
+    public open prop ty: String {
+        get() { "ContentModel" }
+    }
+
     /**
      * Obtain the type of ContentModel.
      */

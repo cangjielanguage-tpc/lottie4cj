@@ -4,7 +4,7 @@ from std import math.*
 
 
 public class Matrix {
-    public var props: Array<Float32> = Array<Float32>(16, item: 0.0)
+    public var props: Array<Float64> = Array<Float64>(16, item: 0.0)
 
     var _identity: Bool = true
     var _identityCalculated: Bool = false
@@ -29,7 +29,7 @@ public class Matrix {
         this.props[15] = 1.0
     }
 
-    func rotate(angle: Float32) {
+    func rotate(angle: Float64) {
         if (angle == 0.0) {
             return this
         }
@@ -38,7 +38,7 @@ public class Matrix {
         return transform(mCos, -mSin, 0.0, 0.0, mSin, mCos, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0)
     }
 
-    func rotateX(angle: Float32) {
+    func rotateX(angle: Float64) {
         if (angle == 0.0) {
             return this
         }
@@ -47,7 +47,7 @@ public class Matrix {
         return transform(1.0, 0.0, 0.0, 0.0, 0.0, mCos, -mSin, 0.0, 0.0, mSin, mCos, 0.0, 0.0, 0.0, 0.0, 1.0)
     }
 
-    func rotateY(angle: Float32) {
+    func rotateY(angle: Float64) {
         if (angle == 0.0) {
             return this
         }
@@ -56,7 +56,7 @@ public class Matrix {
         return transform(mCos, 0.0, mSin, 0.0, 0.0, 1.0, 0.0, 0.0, -mSin, 0.0, mCos, 0.0, 0.0, 0.0, 0.0, 1.0)
     }
 
-    func rotateZ(angle: Float32) {
+    func rotateZ(angle: Float64) {
         if (angle == 0.0) {
             return this;
         }
@@ -65,15 +65,15 @@ public class Matrix {
         return transform(mCos, -mSin, 0.0, 0.0, mSin, mCos, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0)
     }
 
-    func shear(sx: Float32, sy: Float32) {
+    func shear(sx: Float64, sy: Float64) {
         //return transform(1.0, sy, sx, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
     }
 
-    func skew(ax: Float32, ay: Float32) {
+    func skew(ax: Float64, ay: Float64) {
         return this.shear(tan(ax), tan(ay))
     }
 
-    func skewFromAxis(ax: Float32, angle: Float32) {
+    func skewFromAxis(ax: Float64, angle: Float64) {
         var mCos = cos(angle)
         var mSin = sin(angle)
         return this.transform(mCos, mSin, 0.0, 0.0, -mSin, mCos, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0).
@@ -82,15 +82,15 @@ public class Matrix {
         
     }
 
-    func scale(sx: Float32, sy: Float32, sz!: Float32 = 1.0) {
+    func scale(sx: Float64, sy: Float64, sz!: Float64 = 1.0) {
         if (sx == 1.0 && sy == 1.0 && sz == 1.0) {
             return this
         }
         return this.transform(sx, 0.0, 0.0, 0.0, 0.0, sy, 0.0, 0.0, 0.0, 0.0, sz, 0.0, 0.0, 0.0, 0.0, 1.0)
     }
 
-    func setTransform(a: Float32, b: Float32, c: Float32, d: Float32, e: Float32, f: Float32, g: Float32, h: Float32,
-        i: Float32, j: Float32, k: Float32, l: Float32, m: Float32, n: Float32, o: Float32, p: Float32) {
+    func setTransform(a: Float64, b: Float64, c: Float64, d: Float64, e: Float64, f: Float64, g: Float64, h: Float64,
+        i: Float64, j: Float64, k: Float64, l: Float64, m: Float64, n: Float64, o: Float64, p: Float64) {
         this.props[0] = a
         this.props[1] = b
         this.props[2] = c
@@ -110,16 +110,16 @@ public class Matrix {
         return this
     }
 
-    func translate(tx: Float32, ty: Float32, tz!: Float32 = 0.0) {
+    public func translate(tx: Float64, ty: Float64, tz!: Float64 = 0.0) {
         if (tx != 0.0 || ty != 0.0 || tz != 0.0) {
             return this.transform(1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, tx, ty, tz, 1.0)
         }
         return this
     }
 
-    public func transform(a2: Float32, b2: Float32, c2: Float32, d2: Float32, e2: Float32, f2: Float32, g2: Float32,
-        h2: Float32, i2: Float32, j2: Float32, k2: Float32, l2: Float32, m2: Float32, n2: Float32, o2: Float32,
-        p2: Float32) {
+    public func transform(a2: Float64, b2: Float64, c2: Float64, d2: Float64, e2: Float64, f2: Float64, g2: Float64,
+        h2: Float64, i2: Float64, j2: Float64, k2: Float64, l2: Float64, m2: Float64, n2: Float64, o2: Float64,
+        p2: Float64) {
         var _p = this.props
 
         if (a2 == 1.0 && b2 == 0.0 && c2 == 0.0 && d2 == 0.0 && e2 == 0.0 && f2 == 1.0 && g2 == 0.0 && h2 == 0.0 &&
@@ -211,13 +211,13 @@ public class Matrix {
         return matr
     }
 
-    func cloneFromProps(props: Array<Float32>) {
+    func cloneFromProps(props: Array<Float64>) {
         for (i in 0..16) {
         this.props[i] = props[i]
         }
     }
 
-    func applyToPoint(x: Float32, y: Float32, z: Float32) {
+    func applyToPoint(x: Float64, y: Float64, z: Float64) {
         return (
             x * this.props[0] + y * this.props[4] + z * this.props[8] + this.props[12],
             x * this.props[1] + y * this.props[5] + z * this.props[9] + this.props[13],
@@ -229,15 +229,15 @@ public class Matrix {
             }; */
     }
 
-    func applyToX(x: Float32, y: Float32, z: Float32) {
+    func applyToX(x: Float64, y: Float64, z: Float64) {
         return x * this.props[0] + y * this.props[4] + z * this.props[8] + this.props[12]
     }
 
-    func applyToY(x: Float32, y: Float32, z: Float32) {
+    func applyToY(x: Float64, y: Float64, z: Float64) {
         return x * this.props[1] + y * this.props[5] + z * this.props[9] + this.props[13]
     }
 
-    func applyToZ(x: Float32, y: Float32, z: Float32) {
+    func applyToZ(x: Float64, y: Float64, z: Float64) {
         return x * this.props[2] + y * this.props[6] + z * this.props[10] + this.props[14]
     }
 
@@ -259,7 +259,7 @@ public class Matrix {
         return inverseMatrix;
     }
 
-    func inversePoint(pt: Array<Float32>) {
+    func inversePoint(pt: Array<Float64>) {
         var inverseMatrix = this.getInverseMatrix()
         if (pt.size > 2) {
             return inverseMatrix.applyToPointArray(pt[0], pt[1], pt[2])
@@ -268,17 +268,17 @@ public class Matrix {
         }
     }
 
-    func inversePoints(pts: Array<Array<Float32>>) {
+    func inversePoints(pts: Array<Array<Float64>>) {
         var len = pts.size
-        var retPts: Array<(Float32,Float32,Float32)> = Array<(Float32,Float32,Float32)>(len, item: (0.0,0.0,0.0))
+        var retPts: Array<(Float64,Float64,Float64)> = Array<(Float64,Float64,Float64)>(len, item: (0.0,0.0,0.0))
         for (i in 0..len) {
             retPts[i] = inversePoint(pts[i])
         }
         return retPts
     }
 
-    func applyToTriplePoints(pt1: Array<Float32>, pt2: Array<Float32>, pt3: Array<Float32>) {
-        var arr = Array<Float32>(6, item: 0.0)
+    func applyToTriplePoints(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>) {
+        var arr = Array<Float64>(6, item: 0.0)
         if (this.isIdentity()) {
             arr[0] = pt1[0]
             arr[1] = pt1[1]
@@ -303,7 +303,7 @@ public class Matrix {
         return arr
     }
 
-    func applyToPointArray(x: Float32, y: Float32, z: Float32) {
+    func applyToPointArray(x: Float64, y: Float64, z: Float64) {
         if (this.isIdentity()) {
             return (x, y, z)
         } else {
@@ -315,7 +315,7 @@ public class Matrix {
         }
     }
 
-    func applyToPointStringified(x: Float32, y: Float32) {
+    public func applyToPointStringified(x: Float64, y: Float64) {
         if (this.isIdentity()) {
             return "${x}" + "," + "${y}"
         }
@@ -331,7 +331,7 @@ public class Matrix {
         var i = 0
         var props = this.props
         var cssValue = "matrix3d("
-        var v: Float32 = 10000.0
+        var v: Float64 = 10000.0
         while (i < 16) {
             cssValue += "${round(props[i] * v) / v}"
             if (i == 15) {
@@ -344,8 +344,8 @@ public class Matrix {
         return cssValue
     }
 
-    func roundMatrixProperty(val: Float32) { 
-        var v: Float32 = 10000.0
+    func roundMatrixProperty(val: Float64) {
+        var v: Float64 = 10000.0
         if ((val < 0.000001 && val > 0.0) || (val > -0.000001 && val < 0.0)) {
             return round(val * v) / v
         }

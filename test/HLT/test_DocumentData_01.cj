@@ -19,8 +19,8 @@ public class TestLottie4cjDocumentData{
         var scValue=Array<Float64>(100,item:Float64(1.00000))
         var swValue=Float64(2.00000)
         var ofValue=true
-        var psValue=PointF(x:Float64(25),y:Float64(25))
-        var szValue=PointF(x:Float64(55),y:Float64(55))
+        var psValue: Array<Float64> = [Float64(25),Float64(25)]
+        var szValue: Array<Float64> = [Float64(55),Float64(55)]
         var dd=DocumentData(t:tValue, f:fValue,s: sValue, j:jValue, tr:trValue, lh:lhValue, ls:lsValue, fc:fcValue,
                             sc:scValue, sw:swValue, of: ofValue, ps: psValue, sz: szValue)
         @Assert(dd.fc,fcValue)
@@ -53,8 +53,8 @@ public class TestLottie4cjDocumentData{
         var scValue=Array<Float64>()
         var swValue=Float64(-2.00000)
         var ofValue=false
-        var psValue=PointF(x:Float64(-25),y:Float64(-25))
-        var szValue=PointF(x:Float64(-55),y:Float64(-55))
+        var psValue: Array<Float64> = [Float64(-25),Float64(-25)]
+        var szValue: Array<Float64> = [Float64(-55),Float64(-55)]
         var dd=DocumentData(t:tValue, f:fValue,s: sValue, j:jValue, tr:trValue, lh:lhValue, ls:lsValue, fc:fcValue,
                             sc:scValue, sw:swValue, of: ofValue, ps: psValue, sz: szValue)
         @Assert(dd.fc,fcValue)
@@ -86,9 +86,10 @@ public class TestLottie4cjDocumentData{
         var fcValue=Array<Float64>()
         var scValue=Array<Float64>()
         var swValue=Float64(0.00000)
-        var ofValue=false
-        var psValue=PointF(x:Float64(0),y:Float64(0))
-        var szValue=PointF(x:Float64(0),y:Float64(0))
+        var ofValue=false  
+        var psValue: Array<Float64> = Array<Float64>()
+        var szValue: Array<Float64> = Array<Float64>()
+        
         var dd=DocumentData()
         @Assert(dd.fc,fcValue)
         @Assert(dd.sc,scValue)

@@ -18,8 +18,8 @@ public class TestLottie4cjShapeFill{
         var o_kef=PointF(x:Float64(104),y:Float64(105))
         var i=PointF(x:Float64(106),y:Float64(107))
         var h=Int64(108)
-        var to=PointF(x:Float64(109),y:Float64(110))
-        var ti=PointF(x:Float64(111),y:Float64(112))
+        var to: Array<Float64> = [109.0,110.0]
+        var ti: Array<Float64> = [111.0,112.0]
         var kf=Keyframe(k:k,t:t,s:s,e:e,o:o_kef,i:i,h:h,to:to,ti:ti)
 
         var c=Array<Keyframe<Array<Float64>>>(100,item:kf)

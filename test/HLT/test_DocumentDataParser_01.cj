@@ -56,8 +56,8 @@ public class TestLottie4cjDocumentDataParser{
                    sc: Array<Float64>([Float64(128),Float64(228)]),
                    sw: Float64(135),
                    of: true,
-                   ps: PointF(x:Float64(128),y:Float64(228)),
-                   sz: PointF(x:Float64(128),y:Float64(228))
+                   ps: Array<Float64>([Float64(128),Float64(228)]),
+                   sz: Array<Float64>([Float64(128),Float64(228)])
                )
         @Assert(re.toString(),exp_re.toString())
     }
@@ -78,8 +78,8 @@ public class TestLottie4cjDocumentDataParser{
                    sc: Array<Float64>(),
                    sw: Float64(0),
                    of: false,
-                   ps: PointF(),
-                   sz: PointF()
+                   ps: Array<Float64>(),
+                   sz: Array<Float64>()
                )
         @Assert(re.toString(),exp_re.toString())
     }

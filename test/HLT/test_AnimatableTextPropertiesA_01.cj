@@ -6,6 +6,7 @@ from lottie4cj import model.*
 
 @Test
 public class TestLottie4cjAnimatableTextPropertiesA{
+
     @TestCase
     func test_AnimatableTextPropertiesA_toString_01():Unit {
         var kaf=Keyframe<Array<Float64>>()
@@ -15,13 +16,17 @@ public class TestLottie4cjAnimatableTextPropertiesA{
         var sw=Array<Keyframe<Float64>>(102,item:Keyframe<Float64>())
         var t=ArrayKeyframeFloat64()
         var atp=AnimatableTextProperties(fc:fc,sc:sc,sw:sw,t:t)
+        
+        var s: AnimatableTextPropertiesS = AnimatableTextPropertiesS()
         var atpa=AnimatableTextPropertiesA(a:atp)
-        @Assert(atpa.toString(),"AnimatableTextPropertiesA: {a = ${atp}}")
+        @Assert(atpa.toString(),"AnimatableTextPropertiesA: {a = ${atp}, s = ${s}}")
     }
+
     @TestCase
     func test_AnimatableTextPropertiesA_toString_02():Unit {
         var atp=AnimatableTextProperties()
+        var s: AnimatableTextPropertiesS = AnimatableTextPropertiesS()
         var atpa=AnimatableTextPropertiesA()
-        @Assert(atpa.toString(),"AnimatableTextPropertiesA: {a = ${atp}}")
+        @Assert(atpa.toString(),"AnimatableTextPropertiesA: {a = ${atp}, s = ${s}}")
     }
 }

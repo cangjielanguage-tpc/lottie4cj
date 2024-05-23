@@ -165,8 +165,9 @@ public class DocumentDataParser <: ValueParser<DocumentData> {
 
         var strokeWidth: Float64 = 0.0
         var strokeOverFill: Bool = false
-        var boxPosition: PointF = PointF()
-        var boxSize: PointF = PointF()
+
+        var boxPosition: Array<Float64> = Array<Float64>()
+        var boxSize: Array<Float64> = Array<Float64>()
 
         let reader: JsonObject = jv.asObject()
         if (let Some(v) <- reader.get(NAMES[0])) { // "t"
@@ -204,15 +205,19 @@ public class DocumentDataParser <: ValueParser<DocumentData> {
         }
         if (let Some(v) <- reader.get(NAMES[11])) { // "ps"
             let ja: JsonArray = v.asArray()
-            var x: Float64 = ja[0].asFloat().getValue()
-            var y: Float64 = ja[1].asFloat().getValue()
-            boxPosition = PointF(x: x, y: y)
+            let len: Int64 = ja.size()
+            boxPosition = Array<Float64>(len, item: 0.0)
+            for(i in 0..len) {
+                boxPosition[i] = ja[i].asFloat().getValue()
+            }
         }
         if (let Some(v) <- reader.get(NAMES[12])) { // "sz"
             let ja: JsonArray = v.asArray()
-            var x: Float64 = ja[0].asFloat().getValue()
-            var y: Float64 = ja[1].asFloat().getValue()
-            boxSize = PointF(x: x, y: y)
+            let len: Int64 = ja.size()
+            boxSize = Array<Float64>(len, item: 0.0)
+            for(i in 0..len) {
+                boxSize[i] = ja[i].asFloat().getValue()
+            }
         }
 
         let dd: DocumentData = DocumentData(

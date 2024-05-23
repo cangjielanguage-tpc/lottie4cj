@@ -45,7 +45,8 @@ public class LayerParser {
 
     private static let TEXT_NAMES: Array<String> = [
         "d",
-        "a"
+        "a",
+        "m"
     ]
 
     private static let EFFECTS_NAMES: Array<String> = [
@@ -164,6 +165,7 @@ public class LayerParser {
             let jsonObject: JsonObject = v.asObject()
             var td: LayerTD = LayerTD()
             var tda: Array<AnimatableTextPropertiesA> = Array<AnimatableTextPropertiesA>()
+            var tm: LayerTM = LayerTM()
             if (let Some(k) <- jsonObject.get(TEXT_NAMES[0])) { //"d"
                 let tdk: Array<Keyframe<DocumentData>> = AnimatableValueParser.parseDocumentData(k)
                 td = LayerTD(k: tdk)
@@ -176,13 +178,18 @@ public class LayerParser {
                     let a: Array<AnimatableTextPropertiesA> = Array<AnimatableTextPropertiesA>(len, item: EMPTY_ATPA)
                     for (i in 0..len) {
                         let jo: JsonObject = ja[i].asObject()
-                        let textProperties: AnimatableTextProperties = AnimatableTextPropertiesParser.parse(jo)
-                        a[i] = AnimatableTextPropertiesA(a: textProperties)
+                        a[i] = AnimatableTextPropertiesParser.parse(jo)
                     }
                     tda = a
                 }
             }
-            t = LayerT(d: td, a: tda)
+
+            if (let Some(k) <- jsonObject.get(TEXT_NAMES[2])) { //"m"
+                let jsonObject: JsonObject = k.asObject()
+                tm = handleLayerTMA(jsonObject)
+            }
+
+            t = LayerT(d: td, a: tda, m: tm)
         }
 
         if (let Some(v) <- jo.get(NAMES[13])) { //"layers"."ef"
@@ -289,6 +296,50 @@ public class LayerParser {
             bm: blendMode
         )
         return layer
+    }
+
+    private static let TEXT_TM_NAMES: Array<String> = [
+        "g",
+        "a"
+    ]
+
+    private static let TEXT_TM_A_NAMES: Array<String> = [
+        "a",
+        "k",
+        "ix"
+    ]
+
+    //layer.t.m
+    private static func handleLayerTMA(reader: JsonObject): LayerTM {
+        var g: Int64 = 0
+        if (let Some(v) <- reader.get(TEXT_TM_NAMES[0])) { //"g"
+            g = v.asInt().getValue()
+        }
+        var a: Int64 = 0
+        var k: Array<Int64> = Array<Int64>()
+        var ix: Int64 = 0
+        if (let Some(v) <- reader.get(TEXT_TM_NAMES[1])) { //"a"
+            let jo: JsonObject = v.asObject()
+            if (let Some(val) <- jo.get(TEXT_TM_A_NAMES[0])) { //"a"
+                a = val.asInt().getValue()
+            }
+            if (let Some(val) <- jo.get(TEXT_TM_A_NAMES[1])) { //"k"
+                let ja: JsonArray = val.asArray()
+                let len: Int64 = ja.size()
+                if (len > 0) {
+                    k = Array<Int64>(len, item: 0)
+                    for (i in 0..len) {
+                        k[i] = ja[i].asInt().getValue()
+                    }
+                }
+            }
+            if (let Some(k) <- jo.get(TEXT_TM_A_NAMES[2])) { //"ix"
+                ix = k.asInt().getValue()
+            }
+        }
+        let tma: LayerTMA = LayerTMA(a: a, k: k, ix: ix)
+        let m: LayerTM = LayerTM(g: g, a: tma)
+        return m
     }
 
 }

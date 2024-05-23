@@ -24,7 +24,7 @@ public class TestLottie4cjAnimationData{
         var h_Asset=765
         var p="Asset_P"
         var u="Asset_U"
-        var at=Asset(id,lrs,w_Asset,h_Asset,p,u)
+        var at=Asset(id,lrs,w_Asset,h_Asset,p,u, 0)
 
         var assets=Array<Asset>(110,item:at)
         var fonts=Fonts()

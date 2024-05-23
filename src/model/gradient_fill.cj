@@ -19,12 +19,20 @@ public class GradientFill <: ContentModel {
 
     private let _o: Array<Keyframe<Int64>>       //2 = opacity
     public let t: Int64                          //3 = gradientType
-    private let _s: Array<Keyframe<PointF>>      //4 = startPoint
-    private let _e: Array<Keyframe<PointF>>      //5 = endPoint
+
+    private let _s: Array<Keyframe<Array<Float64>>>      //4 = startPoint
+    private let _e: Array<Keyframe<Array<Float64>>>      //5 = endPoint
+
     public let r: Int64                          //6 = fillTypeInt
     public let hd: Bool                          //7 = hidden
 
-    let ty: String = "gf"
+    public let mn: String                         //8 = mn
+
+    let _ty: String = "gf"
+    public open prop ty: String {
+        get() { _ty }
+    }
+
 
     /**
      * Create a GradientFill instance based on parameters.
@@ -43,10 +51,11 @@ public class GradientFill <: ContentModel {
         g!: ContentModelP = ContentModelP(),
         o!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(),
         t!: Int64 = 0,
-        s!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
-        e!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
+        s!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(),
+        e!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(),
         r!: Int64 = 0,
-        hd!: Bool = false
+        hd!: Bool = false,
+        mn!: String = ""
     ){
         this.nm = nm
         this.g = g
@@ -56,6 +65,7 @@ public class GradientFill <: ContentModel {
         this._e = e
         this.r = r
         this.hd = hd
+        this.mn = mn
     }
 
     /**
@@ -75,14 +85,14 @@ public class GradientFill <: ContentModel {
     /**
      * Obtain the s of GradientFill.
      */
-    public prop s: Array<Keyframe<PointF>> {
+    public prop s: Array<Keyframe<Array<Float64>>> {
         get() { this._s.clone() }
     }
 
     /**
      * Obtain the e of GradientFill.
      */
-    public prop e: Array<Keyframe<PointF>> {
+    public prop e: Array<Keyframe<Array<Float64>>> {
         get() { this._e.clone() }
     }
 

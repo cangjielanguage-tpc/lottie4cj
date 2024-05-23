@@ -173,7 +173,8 @@ public class AnimationDataParser {
         "w",      // 2  // Picture width
         "h",      // 3  // Picture height
         "p",      // 4  // Picture name
-        "u"       // 5  // Picture path
+        "u",      // 5  // Picture path
+        "e"       // 6
     ]
 
     private static func parseAssets(reader: JsonArray): Array<Asset> {
@@ -182,7 +183,7 @@ public class AnimationDataParser {
             return Array<Asset>()
         }
         let EMPTY_ARRAY_LAYER: Array<Layer> = Array<Layer>()
-        let EMPTY_ASSET: Asset = Asset("", Array<Layer>(), 0, 0, "", "")
+        let EMPTY_ASSET: Asset = Asset("", Array<Layer>(), 0, 0, "", "", 0)
         let assets: Array<Asset> = Array<Asset>(len, item: EMPTY_ASSET)
         for (i in 0..len) {
             var id: String = ""
@@ -194,6 +195,7 @@ public class AnimationDataParser {
             var height: Int64 = 0
             var imageFileName: String = ""
             var relativeFolder: String = ""
+            var e: Int64 = 0
 
             let jo: JsonObject = reader[i].asObject()
 
@@ -224,8 +226,11 @@ public class AnimationDataParser {
             if (let Some(v) <- jo.get(ASSETS_NAMES[5])) {
                 relativeFolder = v.asString().getValue()
             }
+            if (let Some(v) <- jo.get(ASSETS_NAMES[6])) {
+                e = v.asInt().getValue()
+            }
 
-            let asset: Asset = Asset(id, layers, width, height, imageFileName, relativeFolder)
+            let asset: Asset = Asset(id, layers, width, height, imageFileName, relativeFolder, e)
             assets[i] = asset
         }
         return assets
@@ -241,7 +246,7 @@ public class AnimationDataParser {
             let ja: JsonArray = v.asArray()
             let len: Int64 = ja.size()
             if (len > 0) {
-                let EMPTY_FONT: Font = Font("", "", "", 0.0)
+                let EMPTY_FONT: Font = Font("", "", "", 0.0, "", 0, "", "", "")
                 list = Array<Font>(len, item: EMPTY_FONT)
                 for (i in 0..len) {
                     let jo: JsonObject = ja[i].asObject()

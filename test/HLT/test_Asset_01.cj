@@ -15,14 +15,16 @@ public class TestLottie4cjAsset{
         var h=765
         var p="Asset_P"
         var u="Asset_U"
-        var at=Asset(id,lrs,w,h,p,u)
+        var e: Int64 = 0
+        var at=Asset(id,lrs,w,h,p,u, e)
         @Assert(at.toString(),"Asset: {\n" +
                               "id = ${id}\n" +
                               "layers.size = ${lrs.size}\n" +
                               "w = ${w}\n" +
                               "h = ${h}\n" +
                               "p = ${p}\n" +
-                              "u = ${u}\n}")
+                              "u = ${u}\n" +
+                              "e = ${e}\n}")
         @Assert(at.layers.toString(),lrs.toString())
     }
     @TestCase
@@ -33,14 +35,16 @@ public class TestLottie4cjAsset{
         var h=-765
         var p=""
         var u=""
-        var at=Asset(id,lrs,w,h,p,u)
+        var e: Int64 = 0
+        var at=Asset(id,lrs,w,h,p,u, e)
         @Assert(at.toString(),"Asset: {\n" +
                               "id = ${id}\n" +
                               "layers.size = ${lrs.size}\n" +
                               "w = ${w}\n" +
                               "h = ${h}\n" +
                               "p = ${p}\n" +
-                              "u = ${u}\n}")
+                              "u = ${u}\n" +
+                              "e = ${e}\n}")
         @Assert(at.layers.toString(),lrs.toString())
     }
 }

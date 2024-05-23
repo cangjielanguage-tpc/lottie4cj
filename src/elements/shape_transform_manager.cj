@@ -42,7 +42,7 @@ public class ShapeTransformManager {
             i += 1
         }
         if (_mdf) {
-            var props: Array<Float32>
+            var props: Array<Float64>
             sequence.finalTransform.reset()
             var i = len - 1
             while (i >= 0) {
@@ -101,6 +101,6 @@ public class MProp {
 }
 
 public class MPropv {
-    public var props: Array<Float32> = Array<Float32>()
+    public var props: Array<Float64> = Array<Float64>()
 }
 

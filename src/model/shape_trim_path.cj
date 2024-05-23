@@ -19,7 +19,10 @@ public class ShapeTrimPath <: ContentModel {
     public let m: Int64                         // 4 = type
     public let hd: Bool                         // 5 = hidden
 
-    let ty: String = "tm"
+    let _ty: String = "tm"
+    public open prop ty: String {
+        get() { _ty }
+    }
 
     /**
      * Create a ShapeTrimPath instance based on parameters.

@@ -16,7 +16,10 @@ public class RoundedCorners <: ContentModel {
     private let _r: Array<Keyframe<Float64>>       // 1
     public let hd: Bool                            // 2
 
-    let ty: String = "rd"
+    let _ty: String = "rd"
+    public open prop ty: String {
+        get() { _ty }
+    }
 
     /**
      * Create a RoundedCorners instance based on parameters.

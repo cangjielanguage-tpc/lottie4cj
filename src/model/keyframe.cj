@@ -16,14 +16,15 @@ public class Keyframe<T> <: ToString where T <: ToString {
     public let t: Float64       // 0
 
     //s/e => Color     // 1/2
-    public let s: Option<T>     // 1
+    public var s: Option<T>     // 1
     public let e: Option<T>     // 2
 
     public let o: PointF        // 3
     public let i: PointF        // 4
     public let h: Int64         // 5
-    public let to: PointF       // 6
-    public let ti: PointF       // 7
+
+    public let to: Array<Float64>       // 6
+    public let ti: Array<Float64>       // 7
 
     /**
      * Create a Keyframe instance based on parameters.
@@ -35,8 +36,8 @@ public class Keyframe<T> <: ToString where T <: ToString {
      * @param o - Type of PointF, the value of o.
      * @param i - Type of PointF, the value of i.
      * @param h - Type of Int64, the value of h.
-     * @param to - Type of PointF, the value of to.
-     * @param ti - Type of PointF, the value of ti.
+     * @param to - Type of Array<Float64>, the value of to.
+     * @param ti - Type of Array<Float64>, the value of ti.
      */
     public init(
         k!: Option<T> = Option<T>.None,
@@ -46,8 +47,8 @@ public class Keyframe<T> <: ToString where T <: ToString {
         o!: PointF = PointF(),
         i!: PointF = PointF(),
         h!: Int64 = 0,
-        to!: PointF = PointF(),
-        ti!: PointF = PointF()
+        to!: Array<Float64> = Array<Float64>(),
+        ti!: Array<Float64> = Array<Float64>()
     ){
         this.k = k
         this.t = t

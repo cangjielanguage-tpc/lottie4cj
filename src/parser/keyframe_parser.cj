@@ -45,8 +45,8 @@ class KeyframeParser {
         var hold: Int64 = 0
 
         // Only used by PathKeyframe
-        var pathCp1: PointF = PointF()
-        var pathCp2: PointF = PointF()
+        var pathCp1: Array<Float64> = Array<Float64>()
+        var pathCp2: Array<Float64> = Array<Float64>()
 
 
         let jo: JsonObject = reader.asObject()
@@ -102,10 +102,10 @@ class KeyframeParser {
             hold = v.asInt().getValue()
         }
         if (let Some(v) <- jo.get(NAMES[6])) { // to
-            pathCp1 = JsonUtils.jsonToPoint(v)
+            pathCp1 = JsonUtils.jsonToColor(v)
         }
         if (let Some(v) <- jo.get(NAMES[7])) { // ti
-            pathCp2 = JsonUtils.jsonToPoint(v)
+            pathCp2 = JsonUtils.jsonToColor(v)
         }
 
         let keyframe: Keyframe<T> = Keyframe<T>(
