@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
+ */
+
+/**
+ * @file This file is handle ShapeData.
+ */
+package utils.shapes
+
+import model.*
+import third_party.*
+
+public func buildShapeString(pathNodes: ShapeData, length: Int64, closed: Bool, mat: Matrix): String {
+    if (length == 0) {
+        return ""
+    }
+    let _o: Array<PointF> = pathNodes.o
+    let _i: Array<PointF> = pathNodes.i
+    let _v: Array<PointF> = pathNodes.v
+    var i: Int64 = 1
+    var shapeString = " M" + mat.applyToPointStringified(_v[0].x, _v[0].y)
+    while (i < length) {
+        shapeString += " C" + mat.applyToPointStringified(_o[i - 1].x, _o[i - 1].y) + " " + mat.applyToPointStringified(_i[i].x, _i[i].y) + " " + mat.applyToPointStringified(_v[i].x, _v[i].y)
+        i++
+    }
+    if (closed && length != 0) {
+        shapeString += " C" + mat.applyToPointStringified(_o[i - 1].x, _o[i - 1].y) + " " + mat.applyToPointStringified(_i[0].x, _i[0].y) + " " + mat.applyToPointStringified(_v[0].x, _v[0].y)
+        shapeString += "z"
+    }
+    return shapeString
+}

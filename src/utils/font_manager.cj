@@ -1,0 +1,85 @@
+/*
+ * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
+ */
+
+/**
+ * @file This file is FontManager.
+ */
+package utils
+
+import model.*
+
+from std import format.*
+from std import collection.*
+
+public class FontManager {
+
+    var maxWaitingTime: Int32 = 5000
+    //json中的"chars"部分
+    var emptyChar: FontCharacter = FontCharacter(CharsData(), "", 0.0, 0.0, "", "")
+
+    // Hindi characters
+    public static let combinedCharacters: Array<UInt32> = [2304, 2305, 2306, 2307, 2362, 2363, 2364, 2364, 2366,
+      2367, 2368, 2369, 2370, 2371, 2372, 2373, 2374, 2375, 2376, 2377, 2378, 2379,
+      2380, 2381, 2382, 2383, 2387, 2388, 2389, 2390, 2391, 2402, 2403]
+
+    public static let surrogateModifiers: Array<String> = [
+      "d83cdffb",
+      "d83cdffc",
+      "d83cdffd",
+      "d83cdffe",
+      "d83cdfff"
+    ]
+
+    public static let zeroWidthJoiner: Array<UInt32> = [65039, 8205]
+
+
+    var fonts: Array<Font> = Array<Font>()
+    public var chars: ArrayList<FontCharacter> = ArrayList<FontCharacter>()
+    var typekitLoaded: Int64 = 0
+    var isLoaded: Bool = false
+    var _warned: Bool = false
+    var initTime: Int64 = 0
+
+    public init() { }
+
+    public func getFontByName(name: String): Font {
+        let len: Int64 = this.fonts.size
+        for (i in 0..len) {
+            if (this.fonts[i].fName == name) {
+                return this.fonts[i]
+            }
+        }
+        return this.fonts[0]
+    }
+
+    public func getCharData(char: String, style: String, font: String): FontCharacter {
+        let len: Int64 = this.chars.size
+        for (i in 0..len) {
+            if (this.chars[i].ch == char && this.chars[i].style == style && this.chars[i].fFamily == font) {
+                return this.chars[i]
+            }
+        }
+        if (char[0] != 13 && !this._warned) {
+            this._warned = true
+        }
+        return emptyChar
+    }
+
+    public static func isModifier(firstCharCode: UInt32, secondCharCode: UInt32): Bool {
+        let sum: String = firstCharCode.format("x") + secondCharCode.format("x")
+        return surrogateModifiers.contains(sum)
+    }
+
+    public static func isZeroWidthJoiner(firstCharCode: UInt32, secondCharCode: UInt32): Bool {
+        if (secondCharCode == 0) {
+            return firstCharCode == zeroWidthJoiner[1]
+        }
+        return firstCharCode == zeroWidthJoiner[0] && secondCharCode == zeroWidthJoiner[1]
+    }
+
+    public static func isCombinedCharacter(char: UInt32): Bool {
+        return combinedCharacters.contains(char)
+    }
+
+}
