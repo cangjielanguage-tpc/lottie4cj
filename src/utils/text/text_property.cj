@@ -38,7 +38,7 @@ public class TextProperty {
     //TODO: 为了兼容，增加 2 个不用的参数
     var effectsSequence: ArrayList<(DocumentData, String) -> DocumentData> = ArrayList<(DocumentData, String) -> DocumentData>()
 
-    var currentData: DocumentData = DocumentData()
+    public var currentData: DocumentData = DocumentData()
 
     let defaultBoxWidth: Array<Float64> = [0.0, 0.0]
 

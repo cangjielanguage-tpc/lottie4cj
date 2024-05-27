@@ -1,13 +1,21 @@
+/*
+ * Copyright (c) Cangjie Library Team 2024-2024. All rights resvered.
+ */
+
+/**
+ * @file This file is ProcessedElement.
+ */
 package elements
 
-from std import collection.*
+public open class ProcessedElement {
 
-public class ProcessedElement {
+    //TODO: 未确认数据类型，暂定BaseElement
+    public var elem: BaseElement
+    public var pos: Int64 = 0
 
-    protected var elem: Object
-    protected var pos: Object
-    public init(element: Object, position: Object) {
-        this.elem = element
-        this.pos = position
+    public init(elem: BaseElement, pos: Int64){
+        this.elem = elem
+        this.pos = pos
     }
+
 }

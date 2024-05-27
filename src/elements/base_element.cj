@@ -102,6 +102,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         //TODO: 未找到数据类型   //return this.types
     }
 
-    public open func sourceRectAtTime() {}
+    //TODO: 返回值类型，需要和子类中的核对
+    public open func sourceRectAtTime(): Any {}
 
 }

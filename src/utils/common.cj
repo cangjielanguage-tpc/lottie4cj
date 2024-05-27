@@ -10,7 +10,7 @@ from std import math.*
 
 
 var idPrefix: String = ""
-public let defaultCurveSegments = 150
+public var defaultCurveSegments = 150
 public let degToRads: Float64 = Float64.PI / 180.0
 public let roundCorner: Float64 = 0.5519
 
@@ -26,4 +26,8 @@ public class CreateElementID {
         return idPrefix + "__lottie4cj_element_" + _count.toString()
     }
 
+}
+
+public func getDefaultCurveSegments(): Int64 {
+     defaultCurveSegments
 }

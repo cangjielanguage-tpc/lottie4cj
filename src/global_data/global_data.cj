@@ -11,10 +11,10 @@ import model.*
 import utils.*
 
 public class CompSize {
-    public let w: Int64                          // 0 = width       // View width
-    public let h: Int64                          // 1 = height      // View height
+    public let w: Float64                          // 0 = width       // View width
+    public let h: Float64                          // 1 = height      // View height
 
-    public init(w!: Int64 = 0, h!: Int64 = 0){
+    public init(w!: Float64 = 0.0, h!: Float64 = 0.0){
         this.w = w
         this.h = h
     }
@@ -61,6 +61,8 @@ public class GlobalData {
     public var frameRate: Float64 = 0.0
     public var nm: String = ""
     public var compSize: CompSize = CompSize()
+    
+    public var progressiveLoad: Bool = false
 
     public var fontManager: FontManager = FontManager()
 
