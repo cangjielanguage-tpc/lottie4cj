@@ -259,7 +259,7 @@ public class Matrix {
         return inverseMatrix;
     }
 
-    func inversePoint(pt: Array<Float64>) {
+    public func inversePoint(pt: Array<Float64>) {
         var inverseMatrix = this.getInverseMatrix()
         if (pt.size > 2) {
             return inverseMatrix.applyToPointArray(pt[0], pt[1], pt[2])
@@ -303,7 +303,7 @@ public class Matrix {
         return arr
     }
 
-    func applyToPointArray(x: Float64, y: Float64, z: Float64) {
+    public func applyToPointArray(x: Float64, y: Float64, z: Float64) {
         if (this.isIdentity()) {
             return (x, y, z)
         } else {

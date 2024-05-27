@@ -81,20 +81,6 @@ public class EffectsManager {
 
 }
 
-public class CanvasContext {
-
-    public var globalCompositeOperation: String = ""
-
-    public var filter: String = ""
-
-    public func clearRect(x: Int64, y: Int64, w: Int64, h: Int64) {
-        //TODO
-    }
-
-    public func restoreLayer() {
-        //TODO
-    }
-}
 
 public class ElementData {
 

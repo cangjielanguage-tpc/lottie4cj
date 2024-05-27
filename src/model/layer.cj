@@ -9,6 +9,10 @@ package model
 
 public class Layer <: ToString {
 
+    public var hasMask: Bool = false
+
+    //TODO: this.layers[j].id 是 Layer.ind ？？？
+
     public let nm: String                            // 0 = layerName
     public let ind: Int64                            // 1 = layerId
     public let refId: String                         // 2 = refId
@@ -23,7 +27,7 @@ public class Layer <: ToString {
     private let _shapes: Array<ContentModel>         // 11 = shapes
     public let t: LayerT                             // 12 = t
     private let _ef: Array<LayerEF>                  // 13 = ef
-    public let sr: Float64                           // 14 = timeStretch
+    public var sr: Float64                           // 14 = timeStretch
     public let st: Float64                           // 15 = startFrame
     public let w: Float64                            // 16 = preCompWidth
     public let h: Float64                            // 17 = preCompHeight
@@ -34,8 +38,6 @@ public class Layer <: ToString {
     public let hd: Bool                              // 22 = hidden
     public let ao: Int64                             // 23 = autoOrient
     public let bm: Int64                             // 24 = blendMode
-
-    var hasMask: Bool = false
 
     /**
      * Create a Layer instance based on parameters.

@@ -5,7 +5,10 @@
 /**
  * @file This file is a GlobalData structure.
  */
-package utils
+package global_data
+
+import model.*
+import utils.*
 
 public class CompSize {
     public let w: Int64                          // 0 = width       // View width
@@ -17,9 +20,43 @@ public class CompSize {
     }
 }
 
+public class TransformCanvas {
+    public var tx: Int64 = 0
+
+    public var ty: Int64 = 0
+
+    public var w: Int64 = 0
+
+    public var h: Int64 = 0
+
+    public var sx: Int64 = 0
+
+    public var sy: Int64 = 0
+}
+
+
+public class CanvasContext {
+
+    public var globalCompositeOperation: String = ""
+
+    public var filter: String = ""
+
+    public func clearRect(x: Int64, y: Int64, w: Int64, h: Int64) {
+        //TODO
+    }
+
+    public func restoreLayer() {
+        //TODO
+    }
+}
+
 //TODO: 未完全实现
 public class GlobalData {
 
+    public var blendMode: Int64 = 0
+    public var canvasContext: CanvasContext = CanvasContext()
+    public var transformCanvas: TransformCanvas = TransformCanvas()
+    
     public var frameId: Int64 = 0
     public var frameRate: Float64 = 0.0
     public var nm: String = ""

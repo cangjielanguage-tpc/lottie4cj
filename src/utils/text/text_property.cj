@@ -8,11 +8,14 @@
 package utils.text
 
 import model.*
-import elements.*
 import utils.*
+import global_data.*
 
 from std import random.*
 from std import collection.*
+from std import math.*
+
+func default_addDynamicProperty(tp: TextProperty): Unit {}
 
 public class TextProperty {
 
@@ -26,12 +29,8 @@ public class TextProperty {
     var v: DocumentData = DocumentData()
 
     var kf: Bool = false
-    var _isFirstFrame: Bool = true
-    var _mdf: Bool = false
-
-    var data: LayerT
-    var elem: ITextElement
-    //TODO: 未完全实现 RendererBase
+    public var _isFirstFrame: Bool = true
+    public var _mdf: Bool = false
 
     var keysIndex: Int64 = 0
     var canResize: Bool = false
@@ -43,11 +42,19 @@ public class TextProperty {
 
     let defaultBoxWidth: Array<Float64> = [0.0, 0.0]
 
+    var data: LayerT
+    //TODO: 未完全实现 RendererBase / CanvasRendererBase        //public var comp: RendererBase
+
+    let globalData: GlobalData
+    public var addDynamicProperty: (TextProperty) -> Unit = default_addDynamicProperty
+
     //data => layer.t
-    public TextProperty(elem: ITextElement, data: LayerT) {
+    //TODO: 需要解构 ITextElement 和 TextProperty 互调用。
+    //TODO: 改成 TextProperty 中只传入 ITextElement 中部分函数和值
+    public TextProperty(globalData: GlobalData, data: LayerT) {
         this.data = data
-        this.elem = elem
-        //TODO: 未完全实现 RendererBase //this.comp = this.elem.comp
+        //TODO: 未完全实现 RendererBase / CanvasRendererBase       //this.comp = comp
+        this.globalData = globalData
 
         this.currentData.boxWidth = this.defaultBoxWidth
 
@@ -112,7 +119,8 @@ public class TextProperty {
     //TODO: 为了兼容，增加 2 个不用的参数
     public func addEffect(effectFunction: (DocumentData, String) -> DocumentData) {
         this.effectsSequence.append(effectFunction)
-        //TODO: 未实现 elem.addDynamicProperty  //this.elem.addDynamicProperty(this)
+        //TODO: 未实现 elem.addDynamicProperty
+        this.addDynamicProperty(this)
     }
 
     public func getValue(): Unit {
@@ -120,7 +128,7 @@ public class TextProperty {
     }
 
     public func getValue(_finalValue: Option<DocumentData>): Unit {
-        if (this.elem.globalData.frameId == this.frameId || this.effectsSequence.size == 0) {
+        if (this.globalData.frameId == this.frameId || this.effectsSequence.size == 0) {
             match(_finalValue) {
                 case Some(v) => ()
                 case None => return
@@ -165,7 +173,7 @@ public class TextProperty {
         this.v = this.currentData
         this.pv = this.v
         this.lock = false
-        this.frameId = this.elem.globalData.frameId
+        this.frameId = this.globalData.frameId
     }
 
     //TODO: 为了兼容，增加 2 个不用的参数
@@ -241,7 +249,7 @@ public class TextProperty {
     public func completeTextData(documentData: DocumentData) {
         documentData.__complete = true
         //TODO: 未完全实现 FontManager
-        var fontManager: FontManager = this.elem.globalData.fontManager
+        var fontManager: FontManager = this.globalData.fontManager
         var data: LayerT = this.data
         var letters: ArrayList<Letter> = ArrayList<Letter>()
 
@@ -544,7 +552,8 @@ public class TextProperty {
         let dData: Option<DocumentData> = this.copyData(dd, newData)
         this.data.d.k[index].s = dData
         this.recalculate(index)
-        //TODO: 未实现 ITextElement.addDynamicProperty   //this.elem.addDynamicProperty(this)
+        //TODO: 未实现 ITextElement.addDynamicProperty
+        this.addDynamicProperty(this)
     }
 
     public func recalculate(index: Int64): Unit {
@@ -562,7 +571,8 @@ public class TextProperty {
     public func canResizeFont(_canResize: Bool): Unit {
         this.canResize = _canResize
         this.recalculate(this.keysIndex)
-        //TODO: 未实现 ITextElement.addDynamicProperty  //this.elem.addDynamicProperty(this)
+        //TODO: 未实现 ITextElement.addDynamicProperty
+        this.addDynamicProperty(this)
     }
 
     public func setMinimumFontSize(_fontValue: Option<Float64>): Unit {
@@ -572,7 +582,8 @@ public class TextProperty {
             this.minimumFontSize = 1.0
         }
         this.recalculate(this.keysIndex)
-        //TODO: 未实现 ITextElement.addDynamicProperty  //this.elem.addDynamicProperty(this)
+        //TODO: 未实现 ITextElement.addDynamicProperty
+        this.addDynamicProperty(this)
     }
 
 }
