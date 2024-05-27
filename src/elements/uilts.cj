@@ -48,25 +48,4 @@ public class Data {
     public var layers: ArrayList<Object> = ArrayList<Object>()
 }
 
-public class TransformCanvas {
-    public var tx: Int64 = 0
 
-    public var ty: Int64 = 0
-
-    public var w: Int64 = 0
-
-    public var h: Int64 = 0
-
-    public var sx: Int64 = 0
-
-    public var sy: Int64 = 0
-}
-
-
-public class GlobalData {
-    public var canvasContext: CanvasContext = CanvasContext()
-
-    public var transformCanvas: TransformCanvas = TransformCanvas()
-
-    public var blendMode: Int64 = 0
-}

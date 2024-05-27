@@ -1,6 +1,7 @@
 package elements
 
 import model.*
+import global_data.*
 
 var operationsMap: HashMap<Int64, String> = HashMap<Int64, String>([
     (1, "source-in"),

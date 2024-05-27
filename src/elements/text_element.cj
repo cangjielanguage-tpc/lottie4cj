@@ -5,49 +5,57 @@
 /**
  * @file This file is ITextElement.
  */
-package utils.text
+package elements
 
 import third_party.*
 import utils.shapes.*
+
+import utils.text.*
 
 from std import math.*
 
 public class ITextElement <: BaseElement {
 
     public var lettersChangedFlag: Bool = true
-    public var textProperty: Option<TextProperty> = None
+    
+    //TODO:需要解构 ITextElement 和 TextProperty 互调用。
+    //TODO: 改成 TextProperty 中只传入 ITextElement 中部分函数和值
+    public var textProperty: TextProperty
+    
     //TODO: 未实现 TextAnimatorProperty    //public var textAnimator: TextAnimatorProperty
 
+    //public var data: Layer
+    //public var globalData: GlobalData
+    //TODO: 未完全实现 RendererBase / CanvasRendererBase        //public var comp: RendererBase
 
-    public var data: Layer
-    public var globalData: utils.GlobalData
-    //TODO: 未完全实现 RendererBase        //public var comp: RendererBase
-
-    //TODO: 未完全实现CanvasRendererBase
-
-    public init(data: Layer, globalData: utils.GlobalData) {
+    public init(data: Layer, globalData: GlobalData) {
         //此调用 this.initBaseData(data, globalData, comp) 等同于 BaseElement.init
-        this.data = data
-        this.globalData = globalData
+        
+        super(data, globalData)
+        //this.data = data
+        //this.globalData = globalData
         this.lettersChangedFlag = true
+        
+        //TODO:需要解构 ITextElement 和 TextProperty 互调用。
+        //TODO: 改成 TextProperty 中只传入 ITextElement 中部分函数和值
+        this.textProperty = TextProperty(this.globalData, data.t)
     }
 
+    //TODO: 未实现
+    public func addDynamicProperty(tp: TextProperty): Unit {}
+    //TODO: 未完全实现
     public func initElement() {
-        this.textProperty = TextProperty(this, data.t)
+        this.textProperty.addDynamicProperty = this.addDynamicProperty
     }
 
-    //TODO: initElement
-    
     public func prepareFrame(num: Float64): Unit {
         this._mdf = false
         //TODO: (问题点)仓颉的calss是单继承，调不到 RenderableElement.prepareRenderableFrame  //this.prepareRenderableFrame(num)
         //TODO: (问题点)仓颉的calss是单继承，调不到 FrameElement.prepareProperties  //this.prepareProperties(num, this.isInRange)
-        if (let Some(v) <- this.textProperty) {
-            if (v._mdf || v._isFirstFrame) {
-                //TODO: buildNewText => 陈文龙开发的CVTextElement.buildNewText  //this.buildNewText()
-                v._isFirstFrame = false
-                v._mdf = false
-            }
+        if (this.textProperty._mdf || this.textProperty._isFirstFrame) {
+            //TODO: buildNewText => 陈文龙开发的CVTextElement.buildNewText  //this.buildNewText()
+            this.textProperty._isFirstFrame = false
+            this.textProperty._mdf = false
         }
     }
 
@@ -69,21 +77,15 @@ public class ITextElement <: BaseElement {
     }
     
     public func updateDocumentData(newData: Option<DocumentData>, index: Option<Int64>) {
-        if (let Some(v) <- this.textProperty) {
-            v.updateDocumentData(newData, index)
-        }
+        this.textProperty.updateDocumentData(newData, index)
     }
     
     public func canResizeFont(_canResize: Bool) {
-        if (let Some(v) <- this.textProperty) {
-            v.canResizeFont(_canResize)
-        }
+        this.textProperty.canResizeFont(_canResize)
     }
     
     public func setMinimumFontSize(_fontSize: Option<Float64>) {
-        if (let Some(v) <- this.textProperty) {
-            v.setMinimumFontSize(_fontSize)
-        }
+        this.textProperty.setMinimumFontSize(_fontSize)
     }
 
     //lineNumber => documentData.l[i].line
@@ -115,4 +117,3 @@ public class ITextElement <: BaseElement {
     public func destroy() { }
 
 }
-

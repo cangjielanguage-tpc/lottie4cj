@@ -7,6 +7,16 @@
  */
 package model
 
+
+//TODO: 未完全实现，编译用
+public class ViewData {
+    //public var elem: path,
+    //public var lastPath: '',
+    //public var op: PropertyFactory.getProp(this.element, properties[i].o, 0, 0.01, this.element),
+    //public var prop: ShapePropertyFactory.getShapeProp(this.element, properties[i], 3),
+    //public var invRect: rect
+}
+
 public class Mask <: ToString {
 
     public let cl: Bool                             // 0 = cl
@@ -16,6 +26,8 @@ public class Mask <: ToString {
     private let _o: Array<Keyframe<Int64>>          // 4 = opacity
     private let _x: Array<Keyframe<Int64>>          // 5 = x
     public let nm: String                           // 6 = nm
+    
+    public var viewData: Array<ViewData> = Array<ViewData>()
 
     /**
      * Create a Mask instance based on parameters.
