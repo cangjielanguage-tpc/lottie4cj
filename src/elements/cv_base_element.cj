@@ -47,8 +47,8 @@ public class CvBaseElement {
 
     public func setBlendMode() {
         var globalData = this.globalData
-        if (globalData.getOrThrow().blendMode != this.data.getOrThrow().bm) {
-            globalData.getOrThrow().blendMode = this.data.getOrThrow().bm
+        if (globalData.getOrThrow().blendMode != this.data.getOrThrow().bm.toString()) {
+            globalData.getOrThrow().blendMode = this.data.getOrThrow().bm.toString()
             var blendModeValue = getBlendMode(this.data.getOrThrow().bm)
             globalData.getOrThrow().canvasContext.globalCompositeOperation = blendModeValue
         }
