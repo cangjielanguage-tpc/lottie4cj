@@ -161,7 +161,7 @@ public class ThisLayerFunction {
     var sampleImage: () -> Array<Float64>
 
     //TODO: element各个子类型中，sourceRectAtTime 函数返回值类型是不一样的 //var sourceRectAtTime: () -> (可变类型) = elem.sourceRectAtTime
-    var sourceRectAtTime: () -> Unit
+    var sourceRectAtTime: () -> Any
 
     var startTime: Float64 = 0.0
     var index: Int64 = 0

@@ -1,6 +1,8 @@
 package elements
 public class CvSolidElement {
 
+    public init(data:Data, globalData: GlobalData) {}
+
     public init(data:Data, globalData: GlobalData, comp: Object) {
 
     }

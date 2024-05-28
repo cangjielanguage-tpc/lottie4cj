@@ -22,6 +22,9 @@ public class Asset <: ToString {
 
     public let e: Int64
 
+    //TODO: 不确定来源和数据类型
+    public var xt: Bool = false
+
     /**
      * Create a Asset instance based on parameters.
      *
