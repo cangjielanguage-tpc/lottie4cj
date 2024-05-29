@@ -66,8 +66,9 @@ public open class BaseElement <: Equatable<BaseElement> {
     public operator func !=(that: BaseElement): Bool { return !(this == that) }
     public open func prepareFrame(num: Float64): Unit {}
     public open func renderFrame(): Unit {}
-    public open func changeColor(color: Array<Int64>, endColor: Array<Int64>): Unit {}
     public open func changeColor(color: Array<Int64>): Unit {}
+    public open func changeColor(color: Array<Int64>, endColor: Array<Int64>): Unit {}
+    public open func changeColor(color: Array<Int64>, endColor: Array<Int64>, index: Int64): Unit {}
     public open func destroy(): Unit {}
 
     public func checkMasks(): Bool {
