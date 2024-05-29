@@ -2327,3 +2327,1232 @@ func readFile(path: String): String {
 ```shell
 0
 ```
+
+
+## 2. elements 包
+
+### 2.1 BaseElement 类
+
+```cangjie
+public open class BaseElement<: Equatable<BaseElement> {
+    
+    /**
+     * 基于参数创建 BaseElement 实例。
+     * 
+     * 参数 data - Layer 数据类型，封装动画的“层”数据的实例。
+     * 参数 globalData - GlobalData 数据类型，封装globalData数据的实例。
+     */
+    public init (data: Layer, globalData: GlobalData)
+
+    /**
+     * 检查 masks 数据。
+     * 
+     * 返回值 Bool - 返回检查 masks 数据的结果。
+     */
+    public func checkMasks (): Bool
+    
+    /**
+     * 设置混合模式。 
+     */
+    public func setBlendMode (): Unit
+
+}
+```
+
+### 2.2 ITextElement 类
+
+```cangjie
+public class ITextElement<: BaseElement {
+    
+    /**
+     * 基于参数创建 ITextElement 实例。
+     * 
+     * 参数 data - Layer 数据类型，封装动画的“层”数据的实例。
+     * 参数 globalData - GlobalData 数据类型，封装globalData数据的实例。
+     */
+    public init (data: Layer, globalData: GlobalData)
+    
+    /**
+     * 准备 Frame。
+     * 
+     * 参数 num - Float64 数据类型。
+     */
+    public func prepareFrame (num: Float64): Unit
+    
+    /**
+     * 创建路径形状。
+     * 
+     * 参数 matrixHelper - Matrix 数据类型。
+     * 参数 shapes - Array<ContentModel> 数据类型，shapes 的值。
+     * 返回值 String - 路径形状。
+     */
+    public func createPathShape (matrixHelper: Matrix, shapes: Array<ContentModel>): String
+    
+    /**
+     * 更新文档数据。
+     * 
+     * 参数 newData - Option<DocumentData> 数据类型，新的文档数据。
+     * 参数 index - Option<Int64> 数据类型。
+     */
+    public func updateDocumentData (newData: Option<DocumentData>, index: Option<Int64>)
+
+    /**
+     * 可以调整字体大小
+     * 
+     * 参数 canResize - Bool 数据类型，设置是否可以调整字体大小。
+     */
+    public func canResizeFont (canResize: Bool)
+
+    /**
+     * 设置最小字体大小
+     * 
+     * 参数 fontValue - Option<Float64> 数据类型，要设置最小字体大小。
+     */
+    public func setMinimumFontSize (fontSize: Option<Float64>)
+    
+    /**
+     * 将文本属性应用于矩阵。
+     * 
+     * 参数 documentData - DocumentData 数据类型。
+     * 参数 matrixHelper - Matrix 数据类型。
+     * 参数 lineNumber - Int64 数据类型。
+     * 参数 xPos - Float64 数据类型。
+     * 参数 yPos - Float64 数据类型。
+     */
+    public func applyTextPropertiesToMatrix (documentData: DocumentData, matrixHelper: Matrix, lineNumber: Int64, xPos: Float64, yPos: Float64)
+    
+    /**
+     * 构建颜色。
+     * 
+     * 参数 colorData - Array<Float64> 数据类型，颜色数据值。
+     * 返回值 String - 
+     */
+    public func buildColor (colorData: Array<Float64>): String
+    
+    /**
+     * 获取一个空的 LetterProps。
+     * 
+     * 返回值 LetterProps - 空的 LetterProps。
+     */
+    public func emptyProp (): LetterProps
+
+}
+```
+
+### 2.3 IShapeElement 类
+
+```cangjie
+public class IShapeElement<: BaseElement {
+    
+    /**
+     * 基于参数创建 IShapeElement 实例。
+     * 
+     * 参数 data - Layer 数据类型，封装动画的“层”数据的实例。
+     * 参数 globalData - GlobalData 数据类型，封装globalData数据的实例。
+     */
+    public init (data: Layer, globalData: GlobalData)
+    
+    /**
+     * 将形状添加到修改器。
+     * 
+     * 参数 data - Layer 数据类型，封装动画的“层”数据的实例。
+     */
+    public func addShapeToModifiers (data: Layer): Unit
+    
+    /**
+     * 确定它是否是动画修改器中的形状。
+     * 
+     * 参数 data - Layer 数据类型，封装动画的“层”数据的实例。
+     * 返回值 Bool - 是否是动画修改器中的形状。
+     */
+    public func isShapeInAnimatedModifiers (data: Layer): Bool
+    
+    /**
+     * 渲染修改器。
+     */
+    public func renderModifiers (): Unit
+    
+    /**
+     * 搜索已处理的元素。
+     * 
+     * 参数 elem - BaseElement 数据类型，已处理的元素。
+     * 返回值 Int64 - 返回已处理元素的 pos。
+     */
+    public func searchProcessedElement (elem: BaseElement): Int64
+    
+    /**
+     * 添加已处理的元素。
+     * 
+     * 参数 elem - BaseElement 数据类型，已处理的元素。
+     * 参数 pos - BaseElement 数据类型，已处理元素的 pos。
+     */
+    public func addProcessedElement (elem: BaseElement, pos: Int64): Unit
+
+}
+```
+
+### 2.4 ICompElement 类
+
+```cangjie
+public class ICompElement<: BaseElement {
+    
+    /**
+     * 基于参数创建 ICompElement 实例。
+     * 
+     * 参数 data - Layer 数据类型，封装动画的“层”数据的实例。
+     * 参数 globalData - GlobalData 数据类型，封装globalData数据的实例。
+     */
+    public init (data: Layer, globalData: GlobalData)
+    
+    /**
+     * 准备 Frame。
+     * 
+     * 参数 num - Float64 数据类型。
+     */
+    public func prepareFrame (num: Float64): Unit
+    
+    /**
+     * 渲染内部内容。
+     */
+    public func renderInnerContent (): Unit
+    
+    /**
+     * 渲染形状颜色。
+     * 
+     * 参数 color - Array<Int64> 数据类型，启动颜色数组RGBA。
+     * 参数 endColor - Array<Int64> 数据类型，结束颜色数组RGBA。
+     * 参数 index - Int64 数据类型，相应层次结构中元素的下标值。
+     */
+    public func renderShapeColor (color: Array<Int64>, endColor: Array<Int64>, index: Int64)
+    
+    /**
+     * 渲染形状颜色。
+     * 
+     * 参数 color - Array<Int64> 数据类型，启动颜色数组RGBA。
+     * 参数 endColor - Int64 数据类型。
+     * 参数 index - Int64 数据类型，相应层次结构中元素的下标值。
+     */
+    public func renderShapeColor (color: Array<Int64>, endColor: Int64, index: Int64)
+    
+    /**
+     * 渲染形状颜色。
+     * 
+     * 参数 color - Array<Int64> 数据类型，启动颜色数组RGBA。
+     * 参数 index - Int64 数据类型，相应层次结构中元素的下标值。
+     */
+    public func renderShapeColor (color: Array<Int64>, index: Int64)
+    
+    /**
+     * 设置元素值。
+     * 
+     * 参数 elems - Array<BaseElement> 数据类型，要设置的元素值。
+     */
+    public func setElements (elems: Array<BaseElement>): Unit
+    
+    /**
+     * 获取元素值。
+     * 
+     * 返回值 Array<BaseElement> - Array<BaseElement> 数据类型，获取的元素值。
+     */
+    public func getElements (): Array<BaseElement>
+    
+    /**
+     * 摧毁元素。
+     */
+    public func destroyElements (): Unit
+    
+    /**
+     * 摧毁。
+     */
+    public func destroy (): Unit
+}
+```
+
+### 2.5 SourceRect 类
+
+```cangjie
+public class SourceRect {
+    
+    /**
+     * 基于参数创建 SourceRect 实例。
+     * 
+     * 参数 top - Int64 数据类型。
+     * 参数 left - Int64 数据类型。
+     * 参数 width - Int64 数据类型。
+     * 参数 height - Int64 数据类型。
+     */
+    public init (top: Int64, left: Int64, width: Int64, height: Int64)
+}
+```
+
+### 2.6 IImageElement 类
+
+```cangjie
+public class IImageElement<: BaseElement {
+    
+    /**
+     * 基于参数创建 IImageElement 实例。
+     * 
+     * 参数 data - Layer 数据类型，封装动画的“层”数据的实例。
+     * 参数 globalData - GlobalData 数据类型，封装globalData数据的实例。
+     */
+    public init (data: Layer, globalData: GlobalData)
+    
+    /**
+     * 创建内容。
+     */
+    public func createContent (): Unit
+    
+    /**
+     * 返回 sourceRect 值。
+     * 
+     * 返回值 SourceRect - sourceRect值。
+     */
+    public func sourceRectAtTime (): SourceRect
+}
+```
+
+### 2.7 NullElement 类
+
+```cangjie
+public class NullElement<: BaseElement {
+    
+    /**
+     * 基于参数创建 NullElement 实例。
+     * 
+     * 参数 data - Layer 数据类型，封装动画的“层”数据的实例。
+     * 参数 globalData - GlobalData 数据类型，封装globalData数据的实例。
+     */
+    public init (data: Layer, globalData: GlobalData)
+}
+```
+
+### 2.8 ISolidElement 类
+
+```cangjie
+public class ISolidElement<: BaseElement {
+    
+    /**
+     * 基于参数创建 ISolidElement 实例。
+     * 
+     * 参数 data - Layer 数据类型，封装动画的“层”数据的实例。
+     * 参数 globalData - GlobalData 数据类型，封装globalData数据的实例。
+     */
+    public init (data: Layer, globalData: GlobalData)
+    
+    /**
+     * 创建内容。
+     */
+    public func createContent (): Unit
+}
+```
+
+
+## 3. renderers 包
+
+### 3.1 BaseRenderer 类
+
+```cangjie
+public abstract class BaseRenderer {
+    
+    /**
+     * 检查图层。
+     * 
+     * 参数 num - Float64 数据类型。
+     */
+    public func checkLayers (num: Float64): Unit
+    
+    /**
+     * 处理图层数据并创建相应的元素。
+     * 
+     * 参数 layer - Layer 数据类型，封装动画的 “layers” 数据的实例。
+     * 返回值 BaseElement - 处理图层数据并创建相应的元素实例。
+     */
+    public func createItem (layer: Layer): BaseElement
+    
+    /**
+     * 处理图层数据并创建Camera Element。
+     * 
+     * 参数 data - Layer 数据类型，封装动画的 “layers” 数据的实例。
+     * 返回值 BaseElement - 处理图层数据并创建相应的 Camera 元素实例。
+     * 备注：不支持，调用直接抛出异常。
+     */
+    public func createCamera (data: Layer): BaseElement
+    
+    /**
+     * 生成所有元素。
+     */
+    public func buildAllItems (): Unit
+    
+    /**
+     * 包括图层。
+     * 
+     * 参数 newLayers - Array<Layer> 数据类型，封装动画的 “layers” 数据的实例。
+     */
+    public func includeLayers (newLayers: Array<Layer>)
+    
+    /**
+     * 初始化所有元素。
+     */
+    public func initItems (): Unit
+    
+    /**
+     * 生成元素父级。
+     * 
+     * 参数 element - BaseElement 数据类型。
+     * 参数 parentName - Int64 数据类型。
+     * 参数 hierarchy - ArrayList<BaseElement> 数据类型。
+     */
+    public func buildElementParenting (element: BaseElement, parentName: Int64, hierarchy: ArrayList<BaseElement>): Unit
+    
+    /**
+     * 添加挂起的元素。
+     * 
+     * 参数 element - BaseElement 数据类型。
+     */
+    public func addPendingElement (element: BaseElement)
+    
+    /**
+     * 搜索额外的 assets。
+     * 
+     * 参数 assets - Array<Asset> 数据类型。
+     */
+    public func searchExtraCompositions (assets: Array<Asset>)
+    
+    /**
+     * 按 id 获取元素。
+     * 
+     * 参数 ind - Int64 数据类型，元素 id。
+     * 返回值 Option<BaseElement> - 获取的元素
+     */
+    public func getElementById (ind: Int64): Option<BaseElement>
+    
+    /**
+     * 按 path 获取元素。
+     * 
+     * 参数 paths - Array<Int64> 数据类型，path 值。
+     * 返回值 Option<BaseElement> - 获取的元素
+     */
+    public func getElementByPath (paths: Array<Int64>): Option<BaseElement>
+    
+    /**
+     * 按 path 获取元素。
+     * 
+     * 参数 paths - Array<Int64> 数据类型，path 值。
+     * 返回值 Option<BaseElement> - 获取的元素
+     */
+    public func getElementByPath (paths: Array<String>): Option<BaseElement>
+    
+    /**
+     * 设置全局数据。
+     * 
+     * 参数 animData - AnimationData 数据类型，封装动画的 json 数据的实例。
+     * 参数 fontsContainer - CreateTag 数据类型。
+     */
+    public func setupGlobalData (animData: AnimationData, fontsContainer: CreateTag): Unit
+}
+```
+
+### 3.2 CanvasRenderer 类
+
+```cangjie
+public class CanvasRenderer<: CanvasRendererBase {
+    
+    /**
+     * 基于参数创建 CanvasRenderer 实例。 
+     * 
+     * 参数 animationItem - AnimationItem 数据类型。
+     * 参数 config - Option<RenderConfig> 数据类型。
+     */
+    public init (animationItem: AnimationItem, config: Option<RenderConfig>)
+    
+    /**
+     * 创建 Comp 元素。
+     * 
+     * 参数 data - Layer 数据类型。
+     * 返回值 BaseElement - BaseElement 数据类型。
+     */
+    public func createComp (data: Layer): BaseElement
+}
+```
+
+### 3.3 CanvasRendererBase 类
+
+```cangjie
+public abstract class CanvasRendererBase<: BaseRenderer {
+    
+    /**
+     * 基于参数创建 CanvasRendererBase 实例。
+     * 
+     * 参数 animationItem - AnimationItem 数据类型。
+     * 参数 config - Option<RenderConfig> 数据类型。
+     */
+    public init (animationItem: AnimationItem, config: Option<RenderConfig>)
+
+    /**
+     * 创建 Null 元素。
+     * 
+     * 参数 data - Layer 数据类型，封装动画的“层”数据的实例。
+     * 返回值 NullElement - Null 元素。
+     */
+    public func createNull (data: Layer): NullElement
+    
+    /**
+     * ctx 变换。
+     * 
+     * 参数 props - Array<Float64> 数据类型。
+     */
+    public func ctxTransform (props: Array<Float64>): Unit
+    
+    /**
+     * ctx 不透明度
+     * 
+     * 参数 op - Int64 数据类型。
+     */
+    public func ctxOpacity (op: Int64): Unit
+    
+    /**
+     * 重置。
+     */
+    public func reset (): Unit
+    
+    /**
+     * 保存。
+     * 
+     * 参数 actionFlag - Bool 数据类型。
+     */
+    public func save (actionFlag: Bool): Unit
+    
+    /**
+     * 恢复。
+     * 
+     * 参数 actionFlag - Bool 数据类型。
+     */
+    public func restore (actionFlag: Bool): Unit
+    
+    /**
+     * 动画配置。
+     * 
+     * 参数 animData - AnimationData 数据类型，封装动画的json数据的实例。
+     */
+    public func configAnimation (animData: AnimationData): Unit
+    
+    /**
+     * 更新内容模式。
+     * 
+     * 参数 contentMode - String 数据类型，内容模式。
+     */
+    public func updateContentMode (contentMode: String): Unit
+    
+    /**
+     * 更新容器大小
+     * 
+     * 参数 width - Int64 数据类型。
+     * 参数 height - Int64 数据类型。
+     */
+    public func updateContainerSize (width: Int64, height: Int64): Unit
+    
+    /**
+     * 摧毁。
+     */
+    public func destroy (): Unit
+    
+    /**
+     * 修改动画颜色。
+     * 
+     * 参数 color - Array<Int64> 数据类型，启动颜色数组 RGBA。
+     * 参数 endColor - Array<Int64> 数据类型，结束颜色数组 RGBA。
+     * 参数 layer - Int64 数据类型，层次的下标值。
+     * 参数 index - Int64 数据类型，对应层次里面的 elements 的下标值。
+     */
+    public func changeColor (color: Array<Int64>, endColor: Array<Int64>, layer: Int64, index: Int64): Unit
+    
+    /**
+     * 修改动画颜色。
+     * 
+     * 参数 color - Array<Int64> 数据类型，启动颜色数组 RGBA。
+     * 参数 endColor - Int64 数据类型。
+     * 参数 layer - Int64 数据类型，层次的下标值。
+     * 参数 index - Int64 数据类型，对应层次里面的 elements 的下标值。
+     */
+    public func changeColor (color: Array<Int64>, endColor: Int64, layer: Int64, index: Int64): Unit
+    
+    /**
+     * 修改动画颜色。
+     * 
+     * 参数 color - Array<Int64> 数据类型，启动颜色数组 RGBA。
+     * 参数 layer - Int64 数据类型，层次的下标值。
+     * 参数 index - Int64 数据类型，对应层次里面的 elements 的下标值。
+     */
+    public func changeColor (color: Array<Int64>, layer: Int64, index: Int64): Unit
+    
+    /**
+     * 渲染帧。
+     * 
+     * 参数 num - Int64 数据类型。
+     * 参数 forceRender - Bool 数据类型，是否强制渲染。
+     */
+    public func renderFrame (num: Int64, forceRender: Bool): Unit
+    
+    /**
+     * 构建元素。
+     * 
+     * 参数 pos - Int64 数据类型。
+     */
+    public func buildItem (pos: Int64): Unit
+    
+    /**
+     * 检查挂起的元素。
+     */
+    public func checkPendingElements (): Unit
+
+}
+```
+
+
+## 4. utils 包
+
+### 4.1 
+
+#### 4.1.1 FontProps 类
+
+```cangjie
+public class FontProps {
+    
+    /**
+     * 基于参数创建FontProps实例。
+     * 
+     * 参数 style - String 数据类型。
+     * 参数 weight - String 数据类型。
+     */
+    public init (style: String, weight: String)
+}
+```
+
+####  4.1.2 getFontProperties 函数
+
+```cangjie
+/**
+ * 获取字体属性。
+ * 
+ * 参数 style - String 数据类型。
+ * 参数 weight - String 数据类型。
+ */
+public func getFontProperties(fontData: Font): FontProps
+```
+
+#### 4.1.3 common 文件
+
+```cangjie
+public class CreateElementID {
+    
+    /**
+     * 创建元素ID
+     * 
+     * 返回值 String - 元素ID。
+     */
+    public static func createID (): String
+}
+```
+
+```cangjie
+/**
+ * 获取默认曲线分段值。
+ * 
+ * 返回值 Int64 - 默认曲线分段值。
+ */
+public func getDefaultCurveSegments(): Int64
+```
+
+#### 4.1.4 FontManager 类
+
+```cangjie
+public class FontManager {
+    
+    /**
+     * 创建 FontManager 实例。 
+     * 
+     */
+    public init ()
+    
+    /**
+     * 根据名称获取 Font。
+     * 
+     * 参数 name - String 数据类型，封装globalData数据的实例。
+     * 返回值 Font - Font 数据类型，根据名称获取 Font。
+     */
+    public func getFontByName (name: String): Font
+    
+    /**
+     * 获取字符数据。
+     * 
+     * 参数 char - String 数据类型。
+     * 参数 style - String 数据类型。
+     * 参数 font - String 数据类型。
+     * 返回值 FontCharacter - 获取的字符数据。
+     */
+    public func getCharData (char: String, style: String, font: String): FontCharacter
+    
+    /**
+     * 判断是否是修饰符。
+     * 
+     * 参数 firstCharCode - UInt32 数据类型，第一个字符代码。
+     * 参数 secondCharCode - UInt32 数据类型，第二个字符代码。
+     * 返回值 Bool - 是否是修饰符。
+     */
+    public static func isModifier (firstCharCode: UInt32, secondCharCode: UInt32): Bool
+    
+    /**
+     * 判断是否是零宽度 Joiner。
+     * 
+     * 参数 firstCharCode - UInt32 数据类型，第一个字符代码。
+     * 参数 secondCharCode - UInt32 数据类型，第二个字符代码。
+     * 返回值 Bool - 是否是零宽度 Joiner。
+     */
+    public static func isZeroWidthJoiner (firstCharCode: UInt32, secondCharCode: UInt32): Bool
+    
+    /**
+     * 判断是否是组合字符
+     * 
+     * 参数 char - UInt32 数据类型，判断char是否是组合字符。
+     * 返回值 Bool - 判断是否是组合字符。
+     */
+    public static func isCombinedCharacter (char: UInt32): Bool
+}
+```
+
+#### 4.1.5 BezierData 类
+
+```cangjie
+public class BezierData {
+    
+    /**
+     * 创建 BezierData 实例。
+     */
+    public init ()
+    
+    /**
+     * 基于参数创建 BezierData 实例。
+     * 
+     * 参数 len - Int64 数据类型，points 数组的长度。
+     * 参数 empty - PointData 数据类型，points 数组类型。
+     */
+    public init (len: Int64, empty: PointData)
+    
+    /**
+     * 基于参数创建 BezierData 实例。
+     * 
+     * 参数 segmentLength - Int64 数据类型，segmentLength 的值。
+     * 参数 points - Array<PointData> 数据类型，points 的值。
+     */
+    public init (segmentLength: Int64, points: Array<PointData>)
+    
+    /**
+     * 判断当前 BezierData 是否是 Null。
+     * 
+     * 返回值 Bool - 当前 BezierData 是否是 Null。
+     */
+    public func isNull (): Bool
+}
+```
+
+#### 4.1.6 PointData 类
+
+```cangjie
+public class PointData {
+    
+    /**
+     * 创建 PointData 实例。
+     */
+    public init ()
+    
+    /**
+     * 基于参数创建 PointData 实例。
+     * 
+     * 参数 partialLength - Int64 数据类型。
+     * 参数 point - Array<Float64> 数据类型。
+     */
+    public init (partialLength: Int64, point: Array<Float64>)
+}
+```
+
+#### 4.1.7 Bez 类
+
+```cangjie
+public class Bez {
+    
+    /**
+     * 判断点是否在 2D 线上。
+     * 
+     * 参数 x1 - Float64 数据类型，x1 的值。
+     * 参数 y1 - Float64 数据类型，y1 的值。
+     * 参数 x2 - Float64 数据类型，x2 的值。
+     * 参数 y2 - Float64 数据类型，y2 的值。
+     * 参数 x3 - Float64 数据类型，x3 的值。
+     * 参数 y3 - Float64 数据类型，y3 的值。
+     * 返回值 Bool - Bool 数据类型，结果值。
+     */
+    public static func pointOnLine2D (x1: Float64, y1: Float64, x2: Float64, y2: Float64, x3: Float64, y3: Float64): Bool
+    
+    /**
+     * 判断点是否在 3D 线上。
+     * 
+     * 参数 x1 - Float64 数据类型，x1 的值。
+     * 参数 y1 - Float64 数据类型，y1 的值。
+     * 参数 z1 - Float64 数据类型，z1 的值。
+     * 参数 x2 - Float64 数据类型，x2 的值。
+     * 参数 y2 - Float64 数据类型，y2 的值。
+     * 参数 z2 - Float64 数据类型，z2 的值。
+     * 参数 x3 - Float64 数据类型，x3 的值。
+     * 参数 y3 - Float64 数据类型，y3 的值。
+     * 参数 z3 - Float64 数据类型，z3 的值。
+     * 返回值 Bool - Bool 数据类型，结果值。
+     */
+    public static func pointOnLine3D (x1: Float64, y1: Float64, z1: Float64, x2: Float64, y2: Float64, z2: Float64, x3: Float64, y3: Float64, z3: Float64): Bool
+    
+    /**
+     * 构建Bezier数据。
+     * 
+     * 返回值 (Array<Float64>,Array<Float64>,Array<Float64>,Array<Float64>)->BezierData - 函数类型。
+     */
+    public func buildBezierData (): (Array<Float64>,Array<Float64>,Array<Float64>,Array<Float64>)->BezierData
+}
+```
+
+
+### 4.2 utils.helpers 包
+
+#### 4.2.1 CreateTag 类
+
+```cangjie
+public open class CreateTag {
+    
+    /**
+     * 基于参数创建 CreateTag 实例。 
+     * 
+     * 参数 types - String 数据类型。
+     */
+    public init (types: String)
+}
+```
+
+#### 4.2.2 CreateNS 类
+
+```cangjie
+public class CreateNS<: Equatable<CreateNS> {
+    
+    /**
+     * 基于参数创建 CreateNS 实例。 
+     * 
+     * 参数 types - String 数据类型。
+     */
+    public init (types: String)
+    
+    /**
+     * 基于参数创建 CreateNS 实例。 
+     * 
+     * 参数 types - String 数据类型。
+     * 参数 svg - String 数据类型。
+     */
+    public init (types: String, svg: String)
+    
+    /**
+     * 设置 CreateNS 实例中属性。
+     * 
+     * 参数 n - String 数据类型。
+     * 参数 k - String 数据类型。
+     * 参数 v - String 数据类型。
+     */
+    public func setAttributeNS (n: String, k: String, v: String): Unit
+    
+    /**
+     * 设置 CreateNS 实例中属性。
+     * 
+     * 参数 k - String 数据类型。
+     * 参数 v - String 数据类型。
+     */
+    public func setAttribute (k: String, v: String): Unit
+    
+    /**
+     * 将子项附加到 CreateNS 实例。
+     * 
+     * 参数 element - Option<CreateNS> 数据类型，将子项附加到 CreateNS 实例。
+     */
+    public func appendChild (element: Option<CreateNS>): Unit
+    
+    /**
+     * 当前 CreateNS 实例的 childs 数组中，插入 newNode，在 referenceNode 之前。
+     * 
+     * 参数 newNode - CreateNS 数据类型，要插入到 childs 数组中的 CreateNS 实例。
+     * 参数 referenceNode - CreateNS 数据类型，在 referenceNode 之前插入 newNode。
+     */
+    public func insertBefore (newNode: CreateNS, referenceNode: CreateNS): Unit
+    
+    /**
+     * 检查当前 CreatNS 是否等于目标。
+     * 
+     * 参数 that - CreateNS 数据类型，和当前实例比较的对象。
+     * 返回值 Bool - 比较结果。
+     */
+    public operator func == (that: CreateNS): Bool
+    
+    /**
+     * 检查当前 CreatNS 是否不等于目标。
+     * 
+     * 参数 that - CreateNS 数据类型，和当前实例比较的对象。
+     * 返回值 Bool - 比较结果。
+     */
+    public operator func != (that: CreateNS): Bool
+}
+```
+
+#### 4.2.3 BlendModes 类
+
+```cangjie
+public class BlendModes {
+    
+    /**
+     * 获取混合模式值。
+     * 
+     * 参数 mode - Int64 数据类型，获取混合模式的下标。
+     * 返回值 String - 混合模式值。
+     */
+    public static func getBlendMode (mode: Int64): String
+}
+```
+
+
+### 4.3 utils.expressions 包
+
+#### 4.3.1 TextExpressionInterface 类
+
+```cangjie
+public class TextExpressionInterface {
+    
+    /**
+     * 实现内部自调用函数。
+     * 
+     * 参数 elem - ITextElement 数据类型，文本层元素实例。
+     * 返回值 ThisLayerFunctionText - TextExpressionInterface 实际封装的逻辑。
+     */
+    public func selfCalling (elem: ITextElement): ThisLayerFunctionText
+}
+```
+
+#### 4.3.2 SourceText 类
+
+```cangjie
+public class SourceText {
+    /**
+     * 创建 SourceText 实例。
+     */
+    public init(){}
+}
+```
+
+#### 4.3.3 ThisLayerFunctionText 类
+
+```cangjie
+public class ThisLayerFunctionText {
+
+    /**
+     * 实现内部自调用函数。
+     * 
+     * 参数 name - String 数据类型。
+     * 返回值 Option<SourceText> - sourceText 值。
+     */
+    public func selfCalling (name: String): Option<SourceText>
+    
+    /**
+     * 获取 ThisLayerFunctionText 的 sourceText 值。
+     */
+    public prop sourceText: SourceText
+}
+```
+
+#### 4.3.4 LayerExpressionInterface 类
+
+```cangjie
+public class LayerExpressionInterface {
+    
+    /**
+     * 基于参数创建一个 LayerExpressionInterface 实例。
+     * 
+     * 参数 elem - BaseElement 数据类型。
+     */
+    public init (elem: BaseElement)
+    
+    /**
+     * 实现内部自调用函数。
+     * 
+     * 参数 elem - BaseElement 数据类型。
+     * 返回值 ThisLayerFunction - LayerExpressionInterface 实际封装的逻辑。
+     */
+    public func selfCalling (elem: BaseElement): ThisLayerFunction
+}
+```
+
+#### 4.3.5 ThisLayerFunction 类
+
+```cangjie
+public class ThisLayerFunction {
+    
+    /**
+     * 基于参数创建 ThisLayerFunction 实例。
+     * 
+     * 参数 elem - BaseElement 数据类型。
+     * 参数 layerExpression - LayerExpressionInterface 数据类型。
+     */
+    public init (elem: BaseElement, layerExpression: LayerExpressionInterface)
+    
+    /**
+     * 实现内部自调用函数。
+     * 
+     * 参数 name - String 数据类型。
+     * 参数 num - Int64 数据类型。
+     * 返回值 Option<ExpressionInterface> - 对应的 ExpressionInterface 实例。
+     */
+    public func selfCalling (name: String, num: Int64): Option<ExpressionInterface>
+    
+    /**
+     * 获取 BaseElement 中 Layer 的 isInRange 值。
+     */
+    public prop active: Bool
+}
+```
+
+#### 4.3.6 MaskManagerInterface 类
+
+```cangjie
+public class MaskManagerInterface {
+    
+    /**
+     * 基于参数创建一个 MaskManagerInterface 实例。
+     * 
+     * 参数 data - BaseElement 数据类型。
+     */
+    public init (data: BaseElement)
+    
+    /**
+     * 基于参数创建一个 MaskManagerInterface 实例。
+     * 
+     * 参数 mask - ViewData 数据类型。
+     * 参数 data - BaseElement 数据类型。
+     */
+    public init (mask: ViewData, data: BaseElement)
+}
+```
+
+#### 4.3.7 CompExpressionInterface 类
+
+```cangjie
+public class CompExpressionInterface {
+    
+    /**
+     * 实现内部自调用函数。
+     * 
+     * 参数 comp - ICompElement 数据类型，合成层元素实例。
+     * 返回值 ThisLayerFunctionComp - CompExpressionInterface 实际封装的逻辑。
+     */
+    public func selfCalling (comp: ICompElement): ThisLayerFunctionComp
+}
+```
+
+#### 4.3.8 ThisLayerFunctionComp 类
+
+```cangjie
+public class ThisLayerFunctionComp {
+    
+    /**
+     * 实现内部自调用函数。
+     * 
+     * 参数 name - String 数据类型。
+     * 返回值 Option<LayerExpressionInterface> - 对应的 LayerExpressionInterface 实例。
+     */
+    public func selfCalling (name: String): Option<LayerExpressionInterface>
+    
+    /**
+     * 获取 ICompElement 中 Layer 的 nm 的值。
+     */
+    public prop _name: String
+}
+```
+
+
+### 4.4 utils.shapes 包
+
+#### 4.4.1 buildShapeString 函数
+
+```cangjie
+/**
+ * 生成形状字符串。
+ *
+ * 参数 pathNodes - ShapeData 数据类型。
+ * 参数 length - Int64 数据类型。
+ * 参数 closed - Bool 数据类型。
+ * 参数 mat - Matrix 数据类型。
+ * 返回值 String - 转换后的字符串。
+ */
+public func buildShapeString(pathNodes: ShapeData, length: Int64, closed: Bool, mat: Matrix): String
+```
+
+
+### 4.5 utils.text 包
+
+#### 4.5.1 TextProperty 类
+
+```cangjie
+public class TextProperty {
+    
+    /**
+     * 基于参数创建一个TextProperty实例。
+     *
+     * 参数 globalData - GlobalData 数据类型，封装globalData数据的实例。
+     * 参数 data - LayerT 数据类型，封装动画的“layers.t”数据的实例。
+     */
+    public TextProperty(globalData: GlobalData, data: LayerT)
+    
+    /**
+     * 复制数据。
+     * 
+     * 参数 obj - DocumentData 数据类型，复制数据到此实例。
+     * 参数 data - Option<DocumentData> 数据类型，要复制的数据。
+     * 返回值 DocumentData - DocumentData 数据类型，返回复制后的数据。
+     */
+    public func copyData (obj: DocumentData, data: Option<DocumentData>): DocumentData
+    
+    /**
+     * 设置当前数据。
+     * 
+     * 参数 data - Option<DocumentData> 数据类型，文本数据。
+     */
+    public func setCurrentData (data: DocumentData): Unit
+    
+    /**
+     * 搜索属性
+     * 
+     * 返回值 Bool - Option<DocumentData> 数据类型，文本数据。
+     */
+    public func searchProperty (): Bool
+    
+    /**
+     * 搜索关键帧。
+     * 
+     * 返回值 Bool - Bool 数据类型。
+     */
+    public func searchKeyframes (): Bool
+    
+    /**
+     * 添加效果。
+     * 
+     * 参数 effectFunction - (DocumentData, String) -> DocumentData 函数数据类型。
+     */
+    public func addEffect (effectFunction: (DocumentData, String) -> DocumentData)
+    
+    /**
+     * 获取数据。
+     */
+    public func getValue (): Unit
+    
+    /**
+     * 获取文本数据。
+     * 
+     * 参数 finalValue - Option<DocumentData> 数据类型，文本数据。
+     */
+    public func getValue (finalValue: Option<DocumentData>): Unit
+    
+    /**
+     * 获取关键帧值。
+     * 
+     * 参数 data - DocumentData 数据类型，文本数据。
+     * 参数 t - String 数据类型。
+     * 返回值 DocumentData - DocumentData 数据类型，关键帧值。
+     */
+    public func getKeyframeValue (data: DocumentData, t: String): DocumentData
+    
+    /**
+     * 生成最终文本。
+     * 
+     * 参数 text - String 数据类型。
+     * 返回值 ArrayList<String> - ArrayList<String> 数据类型。
+     */
+    public func buildFinalText (text: String): ArrayList<String>
+    
+    /**
+     * 完整的文本数据。
+     * 
+     * 参数 documentData - DocumentData 数据类型，文本数据。
+     */
+    public func completeTextData (documentData: DocumentData)
+    
+    /**
+     * 更新文档数据
+     * 
+     * 参数 newData - Option<DocumentData> 数据类型，新的文档数据。
+     * 参数 indexs - Option<Int64> 数据类型。
+     */
+    public func updateDocumentData (newData: Option<DocumentData>, indexs: Option<Int64>): Unit
+    
+    /**
+     * 重新计算
+     * 
+     * 参数 index - Int64 数据类型。
+     */
+    public func recalculate (index: Int64): Unit
+    
+    /**
+     * 可以调整字体大小
+     * 
+     * 参数 canResize - Bool 数据类型，设置是否可以调整字体大小。
+     */
+    public func canResizeFont (canResize: Bool): Unit
+    
+    /**
+     * 设置最小字体大小
+     * 
+     * 参数 fontValue - Option<Float64> 数据类型，要设置最小字体大小。
+     */
+    public func setMinimumFontSize (fontValue: Option<Float64>): Unit
+}
+```
+
+#### 4.5.2 LetterProps 类
+
+```cangjie
+public class LetterProps {
+    
+    /**
+     * 创建LetterProps实例。
+     */
+    public init ()
+    
+    /**
+     * 基于参数创建LetterProps实例。
+     * 
+     * 参数 o - Int64 数据类型。
+     * 参数 sw - Int64 数据类型。
+     * 参数 sc - String 数据类型。
+     * 参数 fc - String 数据类型。
+     * 参数 m - String 数据类型。
+     * 参数 p - Array<Float64> 数据类型。
+     */
+    public init (o: Int64, sw: Int64, sc: String, fc: String, m: String, p: Array<Float64>)
+    
+    /**
+     * Update the LetterProps instance.
+     *
+     * 参数 o - Int64 数据类型。
+     * 参数 sw - Int64 数据类型。
+     * 参数 sc - String 数据类型。
+     * 参数 fc - String 数据类型。
+     * 参数 m - String 数据类型。
+     * 参数 p - Array<Float64> 数据类型。
+     * 返回值 Bool - 更新LetterProps实例的结果。
+     */
+    public func update(o: Int64, sw: Int64, sc: String, fc: String, m: String, p: Array<Float64>): Bool
+}
+```
+
+
+
+

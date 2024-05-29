@@ -7,17 +7,22 @@
  */
 package utils.expressions
 
-
+/**
+ * lottieArkTS原理：
+ * 1. LayerExpressionInterface初始化自动，返回，函数 [inside-1]。     (inside-1 的函数类型为 (elem) -> (name) -> Option<>)
+ * 2. 执行函数 inside-1，自动返回，函数 [inside-2]。                  (inside-2 的函数类型为 (name) -> Option<>)
+ *
+ * cangjie原理：
+ * 1. TextExpressionInterface初始化，再返回该实例的selfCalling函数（即函数 inside-1）
+ * 2. 执行 TextExpressionInterface.selfCalling 函数（即函数 inside-1），返回 ThisLayerFunctionText 类（即函数 inside-2 的类结构，具体执行时调用其selfCalling函数）
+ */
 public class TextExpressionInterface {
 
     /**
-     * lottieArkTS原理：
-     * 1. LayerExpressionInterface初始化自动，返回，函数 [inside-1]。     (inside-1 的函数类型为 (elem) -> (name) -> Option<>)
-     * 2. 执行函数 inside-1，自动返回，函数 [inside-2]。                  (inside-2 的函数类型为 (name) -> Option<>)
+     * Internal self calling function.
      *
-     * cangjie原理：
-     * 1. TextExpressionInterface初始化，再返回该实例的selfCalling函数（即函数 inside-1）
-     * 2. 执行 TextExpressionInterface.selfCalling 函数（即函数 inside-1），返回 ThisLayerFunctionText 类（即函数 inside-2 的类结构，具体执行时调用其selfCalling函数）
+     * @param comp - Type of ITextElement, text layer element instance.
+     * @return Type of ThisLayerFunctionText.
      */
     public func selfCalling(elem: ITextElement): ThisLayerFunctionText {  //此行函数名称 inside-1，函数类型为 (elem) -> (name) -> Option<>
         let _thisLayerFunction = ThisLayerFunctionText(elem, this)
@@ -42,7 +47,11 @@ class SourceTextStyle {
 public class SourceText {
     var value: String = ""
     var style: SourceTextStyle = SourceTextStyle()
-    init(){}
+
+    /**
+     * Create a SourceText instance.
+     */
+    public init(){}
 }
 
 public class ThisLayerFunctionText {
@@ -58,6 +67,9 @@ public class ThisLayerFunctionText {
         this.textExpressionInterface = textExpressionInterface
     }
 
+    /**
+     * Obtain the sourceText value of ThisLayerFunctionText.
+     */
     public prop sourceText: SourceText {
         get() {
             elem.textProperty.getValue()
@@ -74,6 +86,12 @@ public class ThisLayerFunctionText {
         }
     }
 
+    /**
+     * Internal self calling function.
+     *
+     * @param name - Type of String.
+     * @return Type of Option<SourceText>.
+     */
     public func selfCalling(name: String): Option<SourceText> {
         if (name == "ADBE Text Document") {
             return this.sourceText

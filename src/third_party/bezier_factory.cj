@@ -24,6 +24,16 @@ public class BezierFactory {
 
     var beziers: HashMap<String, BezierEasing> = HashMap<String, BezierEasing>(24)
 
+    /**
+     * Get the BezierEasing instance based on parameters.
+     *
+     * @param a - Type of Float64.
+     * @param b - Type of Float64.
+     * @param c - Type of Float64.
+     * @param d - Type of Float64.
+     * @param nm - Type of String.
+     * @return Type of BezierEasing.
+     */
     public func getBezierEasing(a: Float64, b: Float64, c: Float64, d: Float64, nm: String): BezierEasing {
         var str: String = nm
         if (nm.isEmpty()) {

@@ -10,12 +10,25 @@ package utils
 public class FontProps {
     public let style: String
     public let weight: String
+    
+    /**
+     * Create a FontProps instance based on parameters.
+     *
+     * @param style - Type of String, the style value.
+     * @param weight - Type of String, the style value.
+     */
     public init(style!: String, weight!: String) {
         this.style = style
         this.weight = weight
     }
 }
 
+/**
+ * Get font properties.
+ *
+ * @param fontData - Type of Font.
+ * @return Type of FontProps.
+ */
 public func getFontProperties(fontData: Font): FontProps {
     var styles: Array<String> = Array<String>()
     if (!fontData.fStyle.isEmpty()) {

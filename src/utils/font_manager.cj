@@ -12,6 +12,8 @@ import model.*
 from std import format.*
 from std import collection.*
 
+
+//TODO: 未完全开发完成
 public class FontManager {
 
     var maxWaitingTime: Int32 = 5000
@@ -41,8 +43,17 @@ public class FontManager {
     var _warned: Bool = false
     var initTime: Int64 = 0
 
+    /**
+     * Create a FontManager instance.
+     */
     public init() { }
 
+    /**
+     * Get Font by name.
+     *
+     * @param name - Type of String.
+     * @return Type of Font, result value.
+     */
     public func getFontByName(name: String): Font {
         let len: Int64 = this.fonts.size
         for (i in 0..len) {
@@ -53,6 +64,14 @@ public class FontManager {
         return this.fonts[0]
     }
 
+    /**
+     * Get char data.
+     *
+     * @param char - Type of String.
+     * @param style - Type of String.
+     * @param font - Type of String.
+     * @return Type of FontCharacter, result value.
+     */
     public func getCharData(char: String, style: String, font: String): FontCharacter {
         let len: Int64 = this.chars.size
         for (i in 0..len) {
@@ -66,11 +85,25 @@ public class FontManager {
         return emptyChar
     }
 
+    /**
+     * Determine if it is a modifier.
+     *
+     * @param firstCharCode - Type of UInt32, the first char code.
+     * @param secondCharCode - Type of UInt32, the second char code.
+     * @return Type of Bool, result value.
+     */
     public static func isModifier(firstCharCode: UInt32, secondCharCode: UInt32): Bool {
         let sum: String = firstCharCode.format("x") + secondCharCode.format("x")
         return surrogateModifiers.contains(sum)
     }
 
+    /**
+     * Determine if it is a zero width Joiner.
+     *
+     * @param firstCharCode - Type of UInt32, the first char code.
+     * @param secondCharCode - Type of UInt32, the second char code.
+     * @return Type of Bool, result value.
+     */
     public static func isZeroWidthJoiner(firstCharCode: UInt32, secondCharCode: UInt32): Bool {
         if (secondCharCode == 0) {
             return firstCharCode == zeroWidthJoiner[1]
@@ -78,6 +111,12 @@ public class FontManager {
         return firstCharCode == zeroWidthJoiner[0] && secondCharCode == zeroWidthJoiner[1]
     }
 
+    /**
+     * Determine if it is a combination character.
+     *
+     * @param char - Type of UInt32, determine if the char is a combination character.
+     * @return Type of Bool, result value.
+     */
     public static func isCombinedCharacter(char: UInt32): Bool {
         return combinedCharacters.contains(char)
     }

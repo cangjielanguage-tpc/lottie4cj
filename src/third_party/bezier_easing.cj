@@ -85,6 +85,12 @@ public class BezierEasing {
     
     //------------------------------------------------------------------------------------
 
+    /**
+     * Get the value by bezier easing.
+     *
+     * @param x - Type of Float64.
+     * @return Type of Float64.
+     */
     public func getOfBezierEasing(x: Float64): Float64 {
         let mX1: Float64 = this._p[0]
         let mY1: Float64 = this._p[1]
@@ -102,7 +108,7 @@ public class BezierEasing {
         return calcBezier(this._getTForX(x), mY1, mY2)
     }
 
-    private func _precompute() {
+    func _precompute(): Unit {
         let mX1: Float64 = this._p[0]
         let mY1: Float64 = this._p[1]
         let mX2: Float64 = this._p[2]

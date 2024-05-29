@@ -33,6 +33,12 @@ public abstract class CanvasRendererBase <: BaseRenderer {
     public var renderConfig: RenderConfig
     //TODO：是否将 GlobalDataCanvas 和 GlobalData 进行合并
 
+    /**
+     * Create a CanvasRendererBase instance based on parameters.
+     *
+     * @param animationItem - Type of AnimationItem.
+     * @param config - Type of Option<RenderConfig>.
+     */
     public init(animationItem: AnimationItem, config: Option<RenderConfig>) {
         this.animationItem = animationItem
     
@@ -81,11 +87,22 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         return BaseElement(data, globalData)
     }
 
+    /**
+     * Create Null Element.
+     *
+     * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.
+     * @return Type of NullElement.
+     */
     public func createNull(data: Layer): NullElement {
         //TODO: 需要解构互调用  //return NullElement(data, this.globalData, this)
         return NullElement(data, this.globalData)
     }
 
+    /**
+     * ctx transform.
+     *
+     * @param props - Type of Array<Float64>.
+     */
     public func ctxTransform(props: Array<Float64>): Unit {
         if (props[0] == 1.0 && props[1] == 0.0 && props[4] == 0.0 && props[5] == 1.0 && props[12] == 0.0 && props[13] == 0.0) {
             return
@@ -113,6 +130,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         //this.canvasContext.setTransform(trProps[0], trProps[1], trProps[4], trProps[5], trProps[12], trProps[13])
     }
 
+    /**
+     * ctx opacity.
+     *
+     * @param op - Type of Int64.
+     */
     public func ctxOpacity(op: Int64): Unit {
         var currentOpacity = this.contextData.getOpacity()
         if (!this.renderConfig.clearCanvas) {
@@ -142,6 +164,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         }
     }
 
+    /**
+     * reset.
+     */
     public func reset(): Unit {
         if (!this.renderConfig.clearCanvas) {
             //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
@@ -151,6 +176,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.contextData.reset()
     }
 
+    /**
+     * save.
+     *
+     * @param actionFlag - Type of Bool.
+     */
     public func save(actionFlag: Bool): Unit {
         if (!this.renderConfig.clearCanvas) {
             //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.canvasContext.save()
@@ -162,6 +192,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.contextData.push()
     }
 
+    /**
+     * restore.
+     *
+     * @param actionFlag - Type of Bool.
+     */
     public func restore(actionFlag: Bool): Unit {
         if (!this.renderConfig.clearCanvas) {
             //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.canvasContext.restore()
@@ -188,6 +223,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         */
     }
 
+    /**
+     * Animation configuration.
+     *
+     * @param animData - Type of AnimationData, an instance of the json data that encapsulates the animation.
+     */
     public func configAnimation(animData: AnimationData): Unit {
         //TODO：未开发 animationItem.wrapper
         /*
@@ -234,6 +274,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.updateContainerSize(0, 0)
     }
 
+    /**
+     * Update content mode.
+     *
+     * @param contentMode - Type of String.
+     */
     public func updateContentMode(contentMode: String): Unit {
         if (contentMode.isEmpty()){
             return
@@ -253,6 +298,12 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.updateContainerSize(0, 0)
     }
 
+    /**
+     * Update container size.
+     *
+     * @param width - Type of Int64.
+     * @param height - Type of Int64.
+     */
     public func updateContainerSize(width: Int64, height: Int64): Unit {
         //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
         /*
@@ -348,6 +399,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.renderFrame(this.renderedFrame, true)
     }
 
+    /**
+     * Destroy the CanvasRendererBase.
+     */
     public func destroy(): Unit {
         //TODO： animationItem 未开发
         /*
@@ -370,6 +424,14 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.destroyed = true
     }
 
+    /**
+     * Modify animation colors.
+     *
+     * @param color - Type of Array<Int64>, Start color array RGBA.
+     * @param endColor - Type of Array<Int64>, End color array RGBA.
+     * @param layer - Type of Int64, Index value of hierarchy.
+     * @param index - Type of Int64, The subscript value of elements in the corresponding hierarchy.
+     */
     public func changeColor(color: Array<Int64>, endColor: Array<Int64>, layer: Int64, index: Int64): Unit {
         if (layer == 0) {
             let len: Int64 = this.layers.size
@@ -385,6 +447,14 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         }
     }
 
+    /**
+     * Modify animation colors.
+     *
+     * @param color - Type of Array<Int64>, Start color array RGBA.
+     * @param endColor - Type of Int64.
+     * @param layer - Type of Int64, Index value of hierarchy.
+     * @param index - Type of Int64, The subscript value of elements in the corresponding hierarchy.
+     */
     public func changeColor(color: Array<Int64>, endColor: Int64, layer: Int64, index: Int64): Unit {
         if (endColor == 0) {
             let len: Int64 = this.layers.size
@@ -401,6 +471,13 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         }
     }
 
+    /**
+     * Modify animation colors.
+     *
+     * @param color - Type of Array<Int64>, Start color array RGBA.
+     * @param layer - Type of Int64, Index value of hierarchy.
+     * @param index - Type of Int64, The subscript value of elements in the corresponding hierarchy.
+     */
     public func changeColor(color: Array<Int64>, layer: Int64, index: Int64): Unit {
         let len: Int64 = this.layers.size
         for (i in 0..len) {
@@ -411,6 +488,12 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         }
     }
 
+    /**
+     * Render Frame.
+     *
+     * @param num - Type of Int64.
+     * @param forceRender - Type of Bool, whether to force rendering..
+     */
     public func renderFrame(num: Int64, forceRender: Bool): Unit {
         if ((this.renderedFrame == num && this.renderConfig.clearCanvas == true && !forceRender) || this.destroyed || num == -1) {
             return
@@ -451,6 +534,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         }
     }
 
+    /**
+     * Build Element.
+     *
+     * @param pos - Type of Int64.
+     */
     public func buildItem(pos: Int64): Unit {
         var elements = this.elements
         if (elements.size > pos || this.layers[pos].ty == 99) {
@@ -462,6 +550,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         element.initExpressions()
     }
 
+    /**
+     * Check pending Elements.
+     */
     public func checkPendingElements(): Unit {
         while (this.pendingElements.size != 0) {
             var element = this.pendingElements.remove(this.pendingElements.size - 1)

@@ -17,7 +17,12 @@ public class LayerExpressionInterface {
 
     //TODO：未实现 ShapeExpressionInterface  //var shapeInterface: ShapeExpressionInterface
     //TODO：未实现 TextExpressionInterface   //var textInterface: TextExpressionInterface
-    
+
+    /**
+     * Create a LayerExpressionInterface instance based on the parameter.
+     *
+     * @param elem - Type of BaseElement, the elem value.
+     */
     public init(elem: BaseElement) {
         this._elem = elem
     }
@@ -120,7 +125,14 @@ public class LayerExpressionInterface {
      *
      * 备注：因为 inside-2 函数的参数 name, 可以是 String 或者 Int64，适配修改为2个参数(name, num)
      */
-    public func selfCalling(elem: BaseElement): (String, Int64) -> Option<ExpressionInterface> {
+     
+    /**
+     * Internal self calling function.
+     *
+     * @param elem - Type of BaseElement, layer element instance.
+     * @return Type of ThisLayerFunctionComp.
+     */
+    public func selfCalling(elem: BaseElement): ThisLayerFunction {
         let _thisLayerFunction = ThisLayerFunction(elem, this)
         /**
          * 1.返回的_thisLayerFunction是函数，但同时具备对象功能。
@@ -128,7 +140,7 @@ public class LayerExpressionInterface {
          *
          * _thisLayerFunction.selfCalling 函数，就是对应的 inside-2 函数，其函数类型为 (name:String, num:Int64) -> Option<compInterface>
          */
-        return _thisLayerFunction.selfCalling
+        return _thisLayerFunction
     }
 
 }
@@ -174,6 +186,12 @@ public class ThisLayerFunction {
 
     //TODO: 未实现 registerMaskInterface/registerEffectsInterface
 
+    /**
+     * Create a ThisLayerFunction instance based on parameters.
+     *
+     * @param elem - Type of BaseElement.
+     * @param layerExpression - Type of LayerExpressionInterface.
+     */
     public init(elem: BaseElement, layerExpression: LayerExpressionInterface) {
         this.elem = elem
         this.layerExpression = layerExpression
@@ -215,6 +233,9 @@ public class ThisLayerFunction {
     
     //TODO：未实现 TransformExpressionInterface //public prop transform: TransformExpressionInterface { get() { transformInterface } }
     
+    /**
+     * Obtain the isInRange value of Layer in BaseElement.
+     */
     public prop active: Bool {
         get() { elem.isInRange }
     }
@@ -225,6 +246,13 @@ public class ThisLayerFunction {
 
     //TODO: 未实现 EffectsExpressionInterface //func registerEffectsInterface(effects: EffectsExpressionInterface): Unit { this.effect = effects }
 
+    /**
+     * Internal self calling function.
+     *
+     * @param name - Type of String.
+     * @param num - Type of Int64.
+     * @return Type of Option<ExpressionInterface>.
+     */
     //TODO: 返回值类型需要再确认 - 此行函数名称 inside-2，函数类型为 (name) -> Option<>
     public func selfCalling(name: String, num: Int64): Option<ExpressionInterface> {
         if (name == "ADBE Root Vectors Group" || name == "Contents" || num == 2) {

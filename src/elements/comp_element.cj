@@ -27,6 +27,12 @@ public class ICompElement <: BaseElement {
 
     //TODO: 未完全实现 RendererBase/CanvasRendererBase  //var comp: RendererBase
 
+    /**
+     * Create a ICompElement instance based on parameters.
+     *
+     * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.
+     * @param globalData - Type of GlobalData, encapsulate instances of GlobalData data.
+     */
     public init(data: Layer, globalData: GlobalData) {
         super(data, globalData)
     }
@@ -34,6 +40,11 @@ public class ICompElement <: BaseElement {
     //TODO: 未完全实现 BaseRenderer
     //TODO: 未实现 initElement
     
+    /**
+     * Prepare frame.
+     *
+     * @param num - Type of Float64.
+     */
     public func prepareFrame(num: Float64): Unit {
         this._mdf = false
         //TODO: (问题点)仓颉的calss是单继承，调不到 RenderableElement.prepareRenderableFrame  //this.prepareRenderableFrame(num)
@@ -66,6 +77,9 @@ public class ICompElement <: BaseElement {
         }
     }
     
+    /**
+     * Render inner content.
+     */
     public func renderInnerContent(): Unit {
         let len: Int64 = this.layers.size
         for (i in 0..len) {
@@ -75,7 +89,14 @@ public class ICompElement <: BaseElement {
         }
     }
     
-    public func renderShapeColor(color: Array<Int64>, endColor: Array<Int64>, index: Int64) {
+    /**
+     * Render shape color.
+     *
+     * @param color - Type of Array<Int64>, Start color array RGBA.
+     * @param endColor - Type of Array<Int64>, End color array RGBA.
+     * @param index - Type of Int64, the subscript value of elements in the corresponding hierarchy.
+     */
+    public func renderShapeColor(color: Array<Int64>, endColor: Array<Int64>, index: Int64): Unit {
         if (index == 0) {
             let len: Int64 = this.layers.size
             for (i in 0..len) {
@@ -90,6 +111,13 @@ public class ICompElement <: BaseElement {
         }
     }
 
+    /**
+     * Render shape color.
+     *
+     * @param color - Type of Array<Int64>, Start color array RGBA.
+     * @param endColor - Type of Int64, Index value of hierarchy.
+     * @param index - Type of Int64, the subscript value of elements in the corresponding hierarchy.
+     */
     public func renderShapeColor(color: Array<Int64>, endColor: Int64, index: Int64) {
         if (endColor == 0) {
             let len: Int64 = this.layers.size
@@ -105,6 +133,12 @@ public class ICompElement <: BaseElement {
         }
     }
 
+    /**
+     * Render shape color.
+     *
+     * @param color - Type of Array<Int64>, Start color array RGBA.
+     * @param index - Type of Int64, the subscript value of elements in the corresponding hierarchy.
+     */
     public func renderShapeColor(color: Array<Int64>, index: Int64) {
         let len: Int64 = this.layers.size
         for (i in 0..len) {
@@ -114,14 +148,27 @@ public class ICompElement <: BaseElement {
         }
     }
 
+    /**
+     * Set elements value.
+     *
+     * @param color - Type of Array<BaseElement>.
+     */
     public func setElements(elems: Array<BaseElement>): Unit {
         this.elements = elems
     }
     
+    /**
+     * Return the elements value.
+     *
+     * @return Type of Array<BaseElement>, the elements value.
+     */
     public func getElements(): Array<BaseElement> {
         return this.elements
     }
-    
+
+    /**
+     * Destroy the Element.
+     */
     public func destroyElements(): Unit {
         let len: Int64 = this.layers.size
         for (i in 0..len) {
@@ -130,7 +177,10 @@ public class ICompElement <: BaseElement {
             }
         }
     }
-    
+
+    /**
+     * Destroy the ICompElement.
+     */
     public func destroy(): Unit {
         this.destroyElements()
         //TODO: 未实现  //this.destroyBaseElement()

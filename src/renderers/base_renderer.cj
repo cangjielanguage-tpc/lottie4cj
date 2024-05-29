@@ -33,6 +33,11 @@ public abstract class BaseRenderer {
     public open func buildItem(pos: Int64): Unit {}
     public open func checkPendingElements(): Unit {}
 
+    /**
+     * Check layers.
+     *
+     * @param num - Type of Float64.
+     */
     public func checkLayers(num: Float64): Unit {
         var len: Int64 = this.layers.size
         var data: Layer = Layer()
@@ -75,7 +80,13 @@ public abstract class BaseRenderer {
     public func createNull(data: Layer): BaseElement
     public func createShape(data: Layer): BaseElement
     public func createText(data: Layer): BaseElement
-    
+
+    /**
+     * Process layer data and create corresponding Element.
+     *
+     * @param layer - Type of Layer, an instance of the "layers" data that encapsulates the animation.
+     * @return Type of BaseElement, the element instance.
+     */
     public func createItem(layer: Layer): BaseElement {
         if (layer.ty == 2) {
             return this.createImage(layer)
@@ -102,6 +113,12 @@ public abstract class BaseRenderer {
         }
     }
 
+    /**
+     * Process layer data and create Camera Element.
+     *
+     * @param layer - Type of Layer, an instance of the "layers" data that encapsulates the animation.
+     * @return Type of BaseElement, the element instance.
+     */
     public func createCamera(data: Layer): BaseElement {
         throw Exception("You\'re using a 3d camera. Try the html renderer.")
     }
@@ -110,6 +127,9 @@ public abstract class BaseRenderer {
 
     //TODO: 暂不实现  //public func createFootage(data: Layer): BaseElement { return new FootageElement(data, this.globalData, this) }
 
+    /**
+     * Build all Element.
+     */
     public func buildAllItems(): Unit {
         let len: Int64 = this.layers.size
         for (i in 0..len) {
@@ -120,7 +140,12 @@ public abstract class BaseRenderer {
         this.checkPendingElements()
     }
 
-    public func includeLayers(newLayers: Array<Layer>) {
+    /**
+     * Include layers.
+     *
+     * @param newLayers - Type of Array<Layer>, an instance of the "layers" data that encapsulates the animation.
+     */
+    public func includeLayers(newLayers: Array<Layer>): Unit {
         this.completeLayers = false
         let len: Int64 = newLayers.size
         var j: Int64 = 0
@@ -140,12 +165,22 @@ public abstract class BaseRenderer {
 
     //TODO: 未实现 ProjectInterface  //public func setProjectInterface(pInterface: ProjectInterface) { this.globalData.projectInterface = pInterface }
 
-    public func initItems() {
+    /**
+     * Initialize all elements.
+     */
+    public func initItems(): Unit {
         if (!this.globalData.progressiveLoad) {
             this.buildAllItems()
         }
     }
 
+    /**
+     * Generate Element Parent.
+     *
+     * @param element - Type of BaseElement.
+     * @param parentName - Type of Int64.
+     * @param hierarchy - Type of ArrayList<BaseElement>.
+     */
     //TODO： element 数据类型未确认，暂定 BaseElement
     public func buildElementParenting(element: BaseElement, parentName: Int64, hierarchy: ArrayList<BaseElement>): Unit {
         let elements: Array<BaseElement> = this.elements
@@ -171,12 +206,22 @@ public abstract class BaseRenderer {
         }
     }
 
+    /**
+     * Add pending element.
+     *
+     * @param element - Type of BaseElement.
+     */
     //TODO： element 数据类型未确认，暂定 BaseElement
-    public func addPendingElement(element: BaseElement) {
+    public func addPendingElement(element: BaseElement): Unit {
         this.pendingElements.append(element)
     }
 
-    public func searchExtraCompositions(assets: Array<Asset>) {
+    /**
+     * Search extra compositions.
+     *
+     * @param assets - Type of Array<Asset>.
+     */
+    public func searchExtraCompositions(assets: Array<Asset>): Unit {
         let len: Int64 = assets.size
         for (i in 0..len) {
             if (assets[i].xt) {
@@ -190,6 +235,12 @@ public abstract class BaseRenderer {
         }
     }
 
+    /**
+     * Get Element by id.
+     *
+     * @param ind - Type of Int64.
+     * @return Type of Option<BaseElement>.
+     */
     public func getElementById(ind: Int64): Option<BaseElement> {
         let len: Int64 = this.elements.size
         for (i in 0..len) {
@@ -200,6 +251,12 @@ public abstract class BaseRenderer {
         return None
     }
 
+    /**
+     * Get Element by path.
+     *
+     * @param paths - Type of Array<Int64>.
+     * @return Type of Option<BaseElement>.
+     */
     //TODO: 返回值类型是 element，数据类型未确认，暂定是 BaseElement
     public func getElementByPath(paths: Array<Int64>): Option<BaseElement> {
         if (paths.size <= 0) { throw Exception("[BaseRenderer.getElementByPath] the param is empty.") }
@@ -213,6 +270,12 @@ public abstract class BaseRenderer {
         return None
     }
 
+    /**
+     * Get Element by path.
+     *
+     * @param paths - Type of Array<String>.
+     * @return Type of Option<BaseElement>.
+     */
     //TODO: 返回值类型是 element，数据类型未确认，暂定是 BaseElement
     public func getElementByPath(paths: Array<String>): Option<BaseElement> {
         if (paths.size <= 0) { throw Exception("[BaseRenderer.getElementByPath] the param is empty.") }
@@ -235,6 +298,12 @@ public abstract class BaseRenderer {
         return None
     }
 
+    /**
+     * Set global data.
+     *
+     * @param animData - Type of AnimationData, an instance of the json data that encapsulates the animation.
+     * @param fontsContainer - Type of CreateTag.
+     */
     public func setupGlobalData(animData: AnimationData, fontsContainer: CreateTag): Unit {
         this.globalData.fontManager = FontManager()
         //TODO: 未实现 fontManager.addChars/addFonts

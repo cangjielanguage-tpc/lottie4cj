@@ -17,6 +17,11 @@ public open class CreateTag {
     var style: TagStyle = TagStyle()
     var innerText: String = ""
 
+    /**
+     * Create a CreateTag instance based on the parameter.
+     *
+     * @param types - Type of String.
+     */
     public init(types: String) {
         this.types = types
     }

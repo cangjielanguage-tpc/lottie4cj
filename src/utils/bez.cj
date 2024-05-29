@@ -24,14 +24,38 @@ class KeyframeMetadata {
 public class BezierData {
     var segmentLength: Int64 = 0
     var points: Array<PointData> = Array<PointData>()
+
+    /**
+     * Create a BezierData instance.
+     */
     public init(){}
+
+    /**
+     * Create a BezierData instance based on parameters.
+     *
+     * @param len - Type of Int64, the points array length.
+     * @param empty - Type of PointData, the points array type.
+     */
     public init(len: Int64, empty: PointData){
         this.points = Array<PointData>(len, item: empty)
     }
+
+    /**
+     * Create a BezierData instance based on parameters.
+     *
+     * @param segmentLength - Type of Int64, the segmentLength value.
+     * @param points - Type of Array<PointData>, the points value.
+     */
     public init(segmentLength: Int64, points: Array<PointData>){
         this.segmentLength = segmentLength
         this.points = points
     }
+
+    /**
+     * Determine if the current BezierData is null.
+     *
+     * @return Type of Bool, returns the result of determine if the current BezierData is null.
+     */
     public func isNull(): Bool {
         return segmentLength <= 0 && points.size == 0
     }
@@ -40,22 +64,59 @@ public class BezierData {
 public class PointData {
     var partialLength: Int64 = 0
     var point: Array<Float64> = Array<Float64>()
+
+    /**
+     * Create a PointData instance.
+     */
     public init(){}
+    
+    /**
+     * Create a PointData instance based on parameters.
+     *
+     * @param partialLength - Type of Int64, the partialLength value.
+     * @param point - Type of Array<Float64>, the point value.
+     */
     public init(partialLength: Int64, point: Array<Float64>){
         this.partialLength = partialLength
         this.point = point
     }
 }
 
+//TODO: 未完全开发
 public class Bez {
 
     static let defaultCurveSegments: Int64 = 150
 
+    /**
+     * Check if the points is on the 2D line.
+     *
+     * @param x1 - Type of Float64.
+     * @param y1 - Type of Float64.
+     * @param x2 - Type of Float64.
+     * @param y2 - Type of Float64.
+     * @param x3 - Type of Float64.
+     * @param y3 - Type of Float64.
+     * @return Type of Bool, result value.
+     */
     public static func pointOnLine2D(x1: Float64, y1: Float64, x2: Float64, y2: Float64, x3: Float64, y3: Float64): Bool {
         let det1: Float64 = (x1 * y2) + (y1 * x3) + (x2 * y3) - (x3 * y2) - (y3 * x1) - (x2 * y1)
         return det1 > -0.001 && det1 < 0.001
     }
 
+    /**
+     * Check if the points is on the 3D line.
+     *
+     * @param x1 - Type of Float64.
+     * @param y1 - Type of Float64.
+     * @param z1 - Type of Float64.
+     * @param x2 - Type of Float64.
+     * @param y2 - Type of Float64.
+     * @param z2 - Type of Float64.
+     * @param x3 - Type of Float64.
+     * @param y3 - Type of Float64.
+     * @param z3 - Type of Float64.
+     * @return Type of Bool, result value.
+     */
     public static func pointOnLine3D(x1: Float64, y1: Float64, z1: Float64, x2: Float64, y2: Float64, z2: Float64, x3: Float64, y3: Float64, z3: Float64): Bool {
         if (z1 == 0.0 && z2 == 0.0 && z3 == 0.0) {
             return pointOnLine2D(x1, y1, x2, y2, x3, y3)
@@ -84,8 +145,12 @@ public class Bez {
     //TODO: 未开发 BezierData
     //TODO: 未开发 PointData
     
-
-    public func buildBezierData(): (Array<Float64>, Array<Float64>, Array<Float64>, Array<Float64>) -> BezierData {
+    /**
+     * Building Bezier data.
+     *
+     * @return Type of (Array<Float64>, Array<Float64>, Array<Float64>, Array<Float64>) -> BezierData.
+     */
+    public static func buildBezierData(): (Array<Float64>, Array<Float64>, Array<Float64>, Array<Float64>) -> BezierData {
 
         let storedData: HashMap<String, BezierData> = HashMap<String, BezierData>(24)
 

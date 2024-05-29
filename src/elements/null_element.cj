@@ -9,6 +9,12 @@ package elements
 
 public class NullElement <: BaseElement {
 
+    /**
+     * Create a NullElement instance based on parameters.
+     *
+     * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.
+     * @param globalData - Type of GlobalData, encapsulate instances of GlobalData data.
+     */
     public init(data: Layer, globalData: GlobalData) {
         super(data, globalData)
     }

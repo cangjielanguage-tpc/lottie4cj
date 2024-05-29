@@ -20,11 +20,22 @@ public class IShapeElement <: BaseElement {
     var shapes: Array<CVShapeData> = Array<CVShapeData>()
 
     var _isFirstFrame: Bool = false
-    
+
+    /**
+     * Create a IShapeElement instance based on parameters.
+     *
+     * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.
+     * @param globalData - Type of GlobalData, encapsulate instances of GlobalData data.
+     */
     public init(data: Layer, globalData: GlobalData) {
         super(data, globalData)
     }
 
+    /**
+     * Add shape to modifiers.
+     *
+     * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.
+     */
     public func addShapeToModifiers(data: Layer): Unit {
         let len: Int64 = this.shapeModifiers.size
         for (i in 0..len) {
@@ -33,6 +44,12 @@ public class IShapeElement <: BaseElement {
         }
     }
 
+    /**
+     * Determine if it is a shape in the animation modifier.
+     *
+     * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.
+     * @return Type of Bool.
+     */
     public func isShapeInAnimatedModifiers(data: Layer): Bool {
         var i: Int64 = 0
         let len: Int64 = this.shapeModifiers.size
@@ -45,6 +62,9 @@ public class IShapeElement <: BaseElement {
         return false
     }
 
+    /**
+     * Render modifiers.
+     */
     public func renderModifiers(): Unit {
         if (this.shapeModifiers.size == 0) {
             return
@@ -68,6 +88,12 @@ public class IShapeElement <: BaseElement {
         }
     }
 
+    /**
+     * Search for processed elements.
+     *
+     * @param elem - Type of BaseElement, search the processed elements.
+     * @return Type of Int64, return the pos of the processed element.
+     */
     public func searchProcessedElement(elem: BaseElement): Int64 {
         let elements: ArrayList<ProcessedElement> = this.processedElements
         let len: Int64 = elements.size
@@ -80,6 +106,12 @@ public class IShapeElement <: BaseElement {
         return 0
     }
 
+    /**
+     * Add processed elements.
+     *
+     * @param elem - Type of BaseElement, add processed elements.
+     * @param elem - Type of Int64, processed element's pos..
+     */
     public func addProcessedElement(elem: BaseElement, pos: Int64): Unit {
         let elements: ArrayList<ProcessedElement> = this.processedElements
         var i: Int64 = elements.size
