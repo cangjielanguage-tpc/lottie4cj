@@ -6,8 +6,6 @@ package utils
 
 from std import math.*
 
-//const getExpressionInterfaces: () ->  = () => expressionsInterfaces
-
 
 var idPrefix: String = ""
 public var defaultCurveSegments = 150
@@ -21,6 +19,11 @@ public class CreateElementID {
 
     static var _count: Int64 = 0
 
+    /**
+     * Create Element ID.
+     *
+     * @return Type of String, Element ID.
+     */
     public static func createID(): String {
         _count += 1
         return idPrefix + "__lottie4cj_element_" + _count.toString()
@@ -28,6 +31,12 @@ public class CreateElementID {
 
 }
 
+
+/**
+ * Obtain default curve segmentation values.
+ *
+ * @return Type of Int64, default curve segmentation values.
+ */ //const getExpressionInterfaces: () ->  = () => expressionsInterfaces
 public func getDefaultCurveSegments(): Int64 {
      defaultCurveSegments
 }

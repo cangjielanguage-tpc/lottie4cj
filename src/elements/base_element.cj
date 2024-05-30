@@ -47,6 +47,12 @@ public open class BaseElement <: Equatable<BaseElement> {
     public var globalData: GlobalData
     //TODO: 未完全实现 RendererBase / CanvasRendererBase        //public var comp: RendererBase
 
+    /**
+     * Create a BaseElement instance based on parameters.
+     *
+     * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.
+     * @param globalData - Type of GlobalData, encapsulate instances of GlobalData data.
+     */
     public init(data: Layer, globalData: GlobalData) {
         this.globalData = globalData
         this.data = data
@@ -71,6 +77,11 @@ public open class BaseElement <: Equatable<BaseElement> {
     public open func changeColor(color: Array<Int64>, endColor: Array<Int64>, index: Int64): Unit {}
     public open func destroy(): Unit {}
 
+    /**
+     * Check mask data.
+     *
+     * @return Type of Bool, return the result of check mask data.
+     */
     public func checkMasks(): Bool {
         if (!this.data.hasMask) {
             return false
@@ -87,6 +98,9 @@ public open class BaseElement <: Equatable<BaseElement> {
     //TODO: 未实现 initExpressions
     public func initExpressions(): Unit { }
 
+    /**
+     * set blend mode.
+     */
     public func setBlendMode(): Unit {
         let blendModeValue: String = BlendModes.getBlendMode(this.data.bm)
 

@@ -10,6 +10,15 @@ package utils.shapes
 import model.*
 import third_party.*
 
+/**
+ * Build shape string.
+ *
+ * @param pathNodes - Type of ShapeData.
+ * @param length - Type of Int64.
+ * @param closed - Type of Bool.
+ * @param mat - Type of Matrix, the value of mat.
+ * @return Type of String, converted String.
+ */
 public func buildShapeString(pathNodes: ShapeData, length: Int64, closed: Bool, mat: Matrix): String {
     if (length == 0) {
         return ""

@@ -2,6 +2,7 @@
 
 package animation
 
+//TODO: 未实现，编译用
 public class AnimationItem {
 
     public var isLoaded: Bool = false

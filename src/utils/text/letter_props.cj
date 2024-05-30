@@ -36,8 +36,21 @@ public class LetterProps {
     var p: Array<Float64> = Array<Float64>()
     var _mdf: MDF = MDF()
 
+    /**
+     * Create a LetterProps.
+     */
     public init(){}
 
+    /**
+     * Create a LetterProps instance based on parameters.
+     *
+     * @param o - Type of Int64, the value of o.
+     * @param sw - Type of Int64, the value of sw.
+     * @param sc - Type of String, the value of sc.
+     * @param fc - Type of String, the value of fc.
+     * @param m - Type of String, the value of m.
+     * @param p - Type of Array<Float64>, the value of p.
+     */
     /* p => this.props => createTypedArray('float32', 16) */
     public init(o: Int64, sw: Int64, sc: String, fc: String, m: String, p: Array<Float64>) {
         this.o = o
@@ -56,7 +69,18 @@ public class LetterProps {
         )
     }
 
-    func update(o: Int64, sw: Int64, sc: String, fc: String, m: String, p: Array<Float64>) {
+    /**
+     * Update the LetterProps instance.
+     *
+     * @param o - Type of Int64, the value of o.
+     * @param sw - Type of Int64, the value of sw.
+     * @param sc - Type of String, the value of sc.
+     * @param fc - Type of String, the value of fc.
+     * @param m - Type of String, the value of m.
+     * @param p - Type of Array<Float64>, the value of p.
+     * @return Type of Bool, the result of update the LetterProps instance.
+     */
+    public func update(o: Int64, sw: Int64, sc: String, fc: String, m: String, p: Array<Float64>): Bool {
         this._mdf.o = false
         this._mdf.sw = false
         this._mdf.sc = false

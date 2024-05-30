@@ -12,6 +12,15 @@ public class SourceRect {
     var left: Int64 = 0
     var width: Int64 = 0
     var height: Int64 = 0
+    
+    /**
+     * Create a SourceRect instance based on parameters.
+     *
+     * @param top - Type of Int64.
+     * @param left - Type of Int64.
+     * @param width - Type of Int64.
+     * @param height - Type of Int64.
+     */
     public init(top!: Int64, left!: Int64, width!: Int64, height!: Int64){
         this.top = top
         this.left = left
@@ -33,6 +42,12 @@ public class IImageElement <: BaseElement {
 
     var sourceRect: SourceRect
 
+    /**
+     * Create a IImageElement instance based on parameters.
+     *
+     * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.
+     * @param globalData - Type of GlobalData, encapsulate instances of GlobalData data.
+     */
     public init(data: Layer, globalData: GlobalData) {
         //TODO: 未实现this.globalData.getAssetData = this.animationItem.getAssetData.bind(this.animationItem)  //this.assetData = globalData.getAssetData(data.refId)
         //TODO: 未实现 initElement  //this.initElement(data, globalData, comp)
@@ -43,8 +58,10 @@ public class IImageElement <: BaseElement {
         this.sourceRect = SourceRect(top: 0, left: 0, width: this.assetData.w, height: this.assetData.h)
     }
 
-    //TODO：拆分多继承问题 -- extendPrototype([BaseElement, TransformElement, SVGBaseElement, HierarchyElement, FrameElement, RenderableDOMElement], IImageElement)
-    
+
+    /**
+     * Create content.
+     */
     public func createContent(): Unit {
         //TODO: 未实现this.globalData.getAssetsPath = this.animationItem.getAssetsPath.bind(this.animationItem)  //var assetPath: String = this.globalData.getAssetsPath(this.assetData)
         var assetPath: String = ""
@@ -58,7 +75,12 @@ public class IImageElement <: BaseElement {
     
         this.layerElement.appendChild(this.innerElem)
     }
-    
+
+    /**
+     * Return the sourceRect value.
+     *
+     * @return Type of SourceRect, the sourceRect value.
+     */
     public func sourceRectAtTime(): SourceRect {
         return this.sourceRect
     }

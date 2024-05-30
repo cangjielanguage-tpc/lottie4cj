@@ -23,15 +23,23 @@ public class CreateNS <: Equatable<CreateNS> {
     
     public let isNull: Bool
 
+    /**
+     * Create a CreateNS instance based on the parameter.
+     *
+     * @param types - Type of String.
+     */
     public init(types: String){
         this(types, svgNS)
     }
 
+    /**
+     * Create a CreateNS instance based on parameters.
+     *
+     * @param types - Type of String.
+     * @param svg - Type of String.
+     */
     public init(types: String, svg: String) {
         this.label = types
-        //this.ks = {}
-        //this.childs = Array<>()
-        //this.style = {}
         
         if (types == "") {
             this.isNull = true
@@ -44,21 +52,45 @@ public class CreateNS <: Equatable<CreateNS> {
         }
     }
 
+    /**
+     * Set properties in the Create NS instance.
+     *
+     * @param n - Type of String.
+     * @param k - Type of String.
+     * @param v - Type of String.
+     */
     public func setAttributeNS(n: String, k: String, v: String): Unit {
         this.setAttribute("xmlns", n)
         this.ks.put(k, v)
     }
-    
+
+    /**
+     * Set attribute to the CreateNS instance.
+     *
+     * @param k - Type of String.
+     * @param v - Type of String.
+     */
     public func setAttribute(k: String, v: String): Unit {
         this.ks.put(k, v)
     }
-    
+
+    /**
+     * append child to the CreateNS instance.
+     *
+     * @param element - Type of Option<CreateNS>.
+     */
     public func appendChild(element: Option<CreateNS>): Unit {
         if (let Some(v) <- element) {
             this.childs.append(v)
         }
     }
-    
+
+    /**
+     * Insert newNode in the children array of the current Create NS instance, before referenceNode.
+     *
+     * @param element - Type of CreateNS, create NS instance to be inserted into the children array..
+     * @param referenceNode - Type of CreateNS, insert newNode before referenceNode.
+     */
     public func insertBefore(newNode: CreateNS, referenceNode: CreateNS): Unit {
         let addindex: Int64 = this.indexOf(referenceNode, this.childs)
         this.childs.insert(addindex, newNode)
@@ -75,6 +107,12 @@ public class CreateNS <: Equatable<CreateNS> {
         return -1
     }
 
+    /**
+     * Check if the current CreatNS is equal to the target that.
+     *
+     * @param that - Type of CreateNS.
+     * @return Type of Bool.
+     */
     public operator func ==(that: CreateNS): Bool {
         if (refEq(this, that)) {
             return true
@@ -104,6 +142,12 @@ public class CreateNS <: Equatable<CreateNS> {
         return true
     }
 
+    /**
+     * Check if the current CreatNS is not equal to the target that.
+     *
+     * @param that - Type of CreateNS.
+     * @return Type of Bool.
+     */
     public operator func !=(that: CreateNS): Bool {
         return !(this == that)
     }
