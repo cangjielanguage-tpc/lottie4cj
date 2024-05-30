@@ -1,14 +1,14 @@
 package elements
 
-
+import utils.helpers.*
 public class ShapeGroupData {
 
     protected var  it: ArrayList<Object>
     protected var  prevViewData: ArrayList<Object>
-    //protected var  gr: createNs
+    protected var  gr: CreateNS
     public init() {
         this.it = ArrayList<Object>()
         this.prevViewData = ArrayList<Object>()
-        //this.gr = createNS('g')
+        this.gr = CreateNS("g")
     }
 }

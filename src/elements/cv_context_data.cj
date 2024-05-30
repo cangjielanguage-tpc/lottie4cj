@@ -12,14 +12,14 @@ public class CvContextData {
     private var savedOp: Array<Float64>
 
     public init() {
-        this.saved = ArrayList<Array<Float64>>()
+        this.saved = ArrayList<Array<Float64>>(15)
         this.cArrPos = 0
         this.cTr = Matrix()
         this.cO = 1
         var len: Int64 = 15
         this.savedOp = Array<Float64>(len,item: 0.0)
         for (i in 0..len) {
-            this.saved[i] = Array<Float64>(16,item: 0.0)
+            this.saved.append(Array<Float64>(16,item: 0.0))
         }
         this._length = len
     }
@@ -28,7 +28,7 @@ public class CvContextData {
         var newLength = this._length * 2
         this.savedOp = Array<Float64>(newLength,item: 0.0)
         for (i in this._length..newLength) {
-            this.saved[i] = Array<Float64>(16,item: 0.0)
+            this.saved.append(Array<Float64>(16,item: 0.0))
         }
         this._length = newLength
     }
