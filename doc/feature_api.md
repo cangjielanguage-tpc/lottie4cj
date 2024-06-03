@@ -2647,6 +2647,364 @@ public class ISolidElement<: BaseElement {
 }
 ```
 
+### 2.9 CvContextData 类
+
+```cangjie
+public class CvContextData{
+
+    /*
+     * CvContextData 构造器
+     */
+    public init() 
+
+    /**
+     * 复制保存的操作
+     * 
+     */
+    public func duplicate(): Unit
+
+    /**
+     * 重置数据
+     * 
+     */
+    public func reset(): Unit
+
+    /**
+     * 根据保存的数据设置矩阵参数
+     * 
+     * 返回值 Array<Float64> - 保存的数据
+     */
+    public func popTransform(): Array<Float64>
+
+    /**
+     * pop不透明度
+     * 
+     * 返回值 Int64 - pop不透明度
+     */
+    public func popOpacity(): Int64
+
+    /**
+     * pop对象
+     * 
+     * 返回值 (Array<Float64>,Int64) - pop对象
+     */
+    public func pop(): (Array<Float64>,Int64)
+
+    /**
+     * 推送数据
+     * 
+     */
+    public func push(): Unit
+
+    /**
+     * 获取矩阵对象
+     * 
+     * 返回值 Matrix - 矩阵对象
+     */
+    public func getTransform(): Matrix
+
+    /**
+     * 获取不透明度
+     * 
+     * 返回值 Int64 - 不透明度
+     */
+    public func getOpacity(): Int64
+
+    /**
+     * 设置不透明度
+     * 参数 value - 不透明度
+     */
+    public func setOpacity(value: Int64): Unit
+
+}
+```
+
+### 2.10 ShapeGroupData 类
+
+```cangjie
+public class ShapeGroupData{
+
+    /*
+     * ShapeGroupData 构造器
+     */
+    public init()
+}
+```
+
+### 2.11 Matrix 类
+
+```cangjie
+public class Matrix {
+
+    /*
+     * Matrix 构造器
+     */
+    public init()
+
+    /**
+     * 当前坐标轴进行顺时针旋转
+     * 参数 id - 添加的对象
+     *
+     * 返回值 Matrix - 当前对象
+     */
+    public func rotate(angle: Float64): Matrix
+
+    /**
+     * 当前围绕X轴进行顺时针旋转
+     * 参数 angle - 旋转角度值
+     *
+     * 返回值 Matrix - 当前对象
+     */
+    public func rotateX(angle: Float64): Matrix
+
+    /**
+     * 当前围绕Y轴进行顺时针旋转
+     * 参数 angle - 旋转角度值
+     *
+     * 返回值 Matrix - 当前对象
+     */
+    public func rotateY(angle: Float64): Matrix
+
+    /**
+     * 当前围绕Z轴进行顺时针旋转
+     * 参数 angle - 旋转角度值
+     *
+     * 返回值 Matrix - 当前对象
+     */
+    public func rotateZ(angle: Float64): Matrix
+
+    /**
+     * 当前X轴和Y轴行顺时针方向倾斜
+     * 参数 ax - X轴倾斜的角度
+     * 参数 ay - Y轴倾斜的角度
+     *
+     * 返回值 Matrix - 当前对象
+     */
+    public func skew(ax: Float64, ay: Float64): Matrix
+
+    /**
+     * 当前X轴顺时针方向倾斜
+     * 参数 ax - X轴倾斜的角度
+     * 参数 angle - 旋转角度值
+     *
+     * 返回值 Matrix - 当前对象
+     */
+    public func skewFromAxis(ax: Float64, angle: Float64): Matrix
+    
+    /**
+     * 按照缩放比例进行缩放
+     * 参数 sx - 设置水平方向的缩放值
+     * 参数 sy - 设置垂直方向的缩放值
+     * 参数 sz - 设置z轴方向的缩放值
+     *
+     * 返回值 Matrix - 当前对象
+     */
+    public func scale(sx: Float64, sy: Float64, sz!: Float64 = 1.0): Matrix
+
+    /**
+     * 重置现有的变换矩阵并创建新的变换矩阵
+     * 参数 a - 设置props数据
+     * 参数 b - 设置props数据
+     * 参数 c - 设置props数据
+     * 参数 d - 设置props数据
+     * 参数 e - 设置props数据
+     * 参数 f - 设置props数据
+     * 参数 g - 设置props数据
+     * 参数 f - 设置props数据
+     * 参数 i - 设置props数据
+     * 参数 j - 设置props数据
+     * 参数 k - 设置props数据
+     * 参数 l - 设置props数据
+     * 参数 m - 设置props数据
+     * 参数 n - 设置props数据
+     * 参数 o - 设置props数据
+     * 参数 p - 设置props数据
+     *
+     * 返回值 Matrix - 当前对象
+     */
+    public func setTransform(a: Float64, b: Float64, c: Float64, d: Float64, e: Float64, f: Float64, g: Float64, h: Float64,i: Float64, j: Float64, k: Float64, l: Float64, m: Float64, n: Float64, o: Float64, p: Float64): Matrix
+
+    /**
+     * 移动当前坐标系的原点
+     * 参数 sx - 设置X轴平移量
+     * 参数 sy - 设置Y轴平移量
+     * 参数 sz - 设置Z轴方向的缩放值
+     *
+     * 返回值 Matrix - 当前对象
+     */
+    public func translate(tx: Float64, ty: Float64, tz!: Float64 = 0.0): Matrix
+
+    /**
+     * 设置变换矩阵
+     * 参数 a2 - 设置props数据
+     * 参数 b2 - 设置props数据
+     * 参数 c2 - 设置props数据
+     * 参数 d2 - 设置props数据
+     * 参数 e2 - 设置props数据
+     * 参数 f2 - 设置props数据
+     * 参数 g2 - 设置props数据
+     * 参数 f2 - 设置props数据
+     * 参数 i2 - 设置props数据
+     * 参数 j2 - 设置props数据
+     * 参数 k2 - 设置props数据
+     * 参数 l2 - 设置props数据
+     * 参数 m2 - 设置props数据
+     * 参数 n2 - 设置props数据
+     * 参数 o2 - 设置props数据
+     * 参数 p2 - 设置props数据
+     *
+     * 返回值 Matrix - 当前对象
+     */
+    public func transform(a2: Float64, b2: Float64, c2: Float64, d2: Float64, e2: Float64, f2: Float64, g2: Float64,
+        h2: Float64, i2: Float64, j2: Float64, k2: Float64, l2: Float64, m2: Float64, n2: Float64, o2: Float64,
+        p2: Float64): Matrix
+
+    /**
+     * 判断是否是单位矩阵
+     * 
+     * 返回值 Bool - 是否是单位矩阵
+     */
+    public func isIdentity(): Bool
+
+    /**
+     * 判断是否相等
+     * 参数 matr - Matrix对象
+     *
+     * 返回值 Bool - 判断矩阵是否相等
+     */
+    public func equals(matr: Matrix): Bool
+
+    /**
+     * 复制矩阵的内容
+     * 参数 matr - Matrix对象
+     *
+     * 返回值 Matrix - 复制矩阵
+     */
+    public func clone(matr: Matrix): Matrix
+
+    /**
+     * 设置Props属性内容
+     * 参数 props - props属性数据
+     *
+     */
+    public func cloneFromProps(props: Array<Float64>): Unit
+
+    /**
+     * 位置点的数据
+     * 参数 x - x点的位置
+     * 参数 y - y点的位置
+     * 参数 z - z点的位置
+     *
+     * 返回值 (Float64,Float64,Float64) - 位置点的数据
+     */
+    public func applyToPoint(x: Float64, y: Float64, z: Float64): (Float64,Float64,Float64)
+
+    /**
+     * 应用点的数据
+     * 参数 x - x点的位置
+     *
+     * 返回值 Float64 - 位置点的数据
+     */
+    public func applyToX(x: Float64, y: Float64, z: Float64): Float64
+
+    /**
+     * 应用点的数据
+     * 参数 y - y点的位置
+     *
+     * 返回值 Float64 - 位置点的数据
+     */
+    public func applyToY(x: Float64, y: Float64, z: Float64): Float64
+
+    /**
+     * 应用点的数据
+     * 参数 z - z点的位置
+     *
+     * 返回值 Float64 - 位置点的数据
+     */
+    public func applyToZ(x: Float64, y: Float64, z: Float64): Float64
+
+    /**
+     * 获取逆矩阵
+     *
+     * 返回值 Matrix - Matrix
+     */
+    public func getInverseMatrix(): Matrix
+
+    /**
+     * 获取单个反转点
+     * 参数 pt - 数据点内容
+     *
+     * 返回值 (Float64,Float64,Float64) - 数据点内容
+     */
+    public func inversePoint(pt: Array<Float64>): (Float64,Float64,Float64)
+
+    /**
+     * 获取所有反转点
+     * 参数 pt - 数据点内容
+     *
+     * 返回值 Array<(Float64,Float64,Float64)> - 数据点内容
+     */
+    public func inversePoints(pts: Array<Array<Float64>>): Array<(Float64,Float64,Float64)>
+
+    /**
+     * 获取三相点
+     * 参数 pt1 - 数据点内容
+     * 参数 pt2 - 数据点内容
+     * 参数 pt3 - 数据点内容
+     *
+     * 返回值 Array<Float64> - 数据点内容
+     */
+    public func applyToTriplePoints(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>): Array<Float64>
+
+    /**
+     * 获取点阵列
+     * 参数 x - x点内容
+     * 参数 y - y点内容
+     * 参数 z - z点内容
+     *
+     * 返回值  (Float64,Float64,Float64) - 数据点内容
+     */
+    public func applyToPointArray(x: Float64, y: Float64, z: Float64): (Float64,Float64,Float64)
+
+    /**
+     * 获取点字符串化
+     * 参数 x - x点内容
+     * 参数 y - y点内容
+     *
+     * 返回值 String - 字符串内容
+     */
+    public func applyToPointStringified(x: Float64, y: Float64): String
+
+    /**
+     * CSS矩阵转换
+     *
+     * 返回值 String - 字符串内容
+     */
+    public func toCSS(): String
+
+    /**
+     * 圆形矩阵处理
+     * 参数 Float64 - 点内容
+     *
+     * 返回值 Float64 - 数据内容
+     */
+    public func roundMatrixProperty(val: Float64): Float64
+
+    /**
+     * CSS2d矩阵转换
+     *
+     * 返回值 String - 字符串内容
+     */
+    public func to2dCSS(): String
+
+    /**
+     * 重置矩阵
+     *
+     */
+    public func reset(): Unit
+
+}
+```
 
 ## 3. renderers 包
 
