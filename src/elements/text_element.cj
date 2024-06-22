@@ -14,7 +14,7 @@ import utils.text.*
 
 from std import math.*
 
-public class ITextElement <: BaseElement {
+public open class ITextElement <: BaseElement {
 
     public var lettersChangedFlag: Bool = true
     

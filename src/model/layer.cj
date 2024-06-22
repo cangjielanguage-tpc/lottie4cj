@@ -11,6 +11,8 @@ public class Layer <: ToString {
 
     public var hasMask: Bool = false
 
+    public let td: Int64   
+
     //TODO: this.layers[j].id 是 Layer.ind ？？？
 
     public let nm: String                            // 0 = layerName
@@ -69,6 +71,7 @@ public class Layer <: ToString {
      * @param bm - Type of Int64, the value of bm.
      */
     public init(
+        td!: Int64 = 0,
         nm!: String = "",
         ind!: Int64 = 0,
         refId!: String = "",
@@ -97,6 +100,7 @@ public class Layer <: ToString {
     ){
         this.nm              = nm
         this.ind             = ind
+        this.td              = td 
         this.refId           = refId
         this.ty              = ty
         this.parent          = parent

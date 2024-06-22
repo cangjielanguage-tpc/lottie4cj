@@ -9,6 +9,8 @@ package global_data
 
 import model.*
 import utils.*
+import utils.helpers.*
+import third_party.*
 
 public class CompSize {
     public let w: Float64                          // 0 = width       // View width
@@ -124,6 +126,8 @@ public class GlobalData {
 
     public var fontManager: FontManager = FontManager()
 
+    public var defs: CreateNS = CreateNS("")
+
     public init(){}
     
     public init(frameNum!: Int64, _mdf!: Bool, renderConfig!: RenderConfig, currentGlobalAlpha!: Int64) {
@@ -135,4 +139,20 @@ public class GlobalData {
 
     public func getAssetsPath(assetData: Asset): String { return "" }
 
+}
+
+
+public class FinalTransform {
+
+    public var mProp: Object
+    public var _matMdf: Bool
+    public var _opMdf: Bool
+    public var mat: Matrix
+
+    public init(mProp: Object, _matMdf: Bool, _opMdf: Bool, mat: Matrix) {
+        this.mProp = mProp
+        this._matMdf = _matMdf
+        this._opMdf = _opMdf
+        this.mat = mat
+    }
 }
