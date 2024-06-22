@@ -37,6 +37,9 @@ public class BezierData {
      * @param empty - Type of PointData, the points array type.
      */
     public init(len: Int64, empty: PointData){
+        if (len < 0) {
+            throw IllegalArgumentException("The length of points cannot be negative.")
+        }
         this.points = Array<PointData>(len, item: empty)
     }
 
