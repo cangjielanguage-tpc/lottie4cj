@@ -35,7 +35,7 @@ public class BlendModes {
      * @return Type of String.
      */
     public static func getBlendMode(mode: Int64): String {
-        if (mode < 0 || mode >= 15) {
+        if (mode < 0 || mode > 15) {
             return ""
         }
         return blendModeEnums[mode]

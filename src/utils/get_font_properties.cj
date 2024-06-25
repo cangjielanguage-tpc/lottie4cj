@@ -17,7 +17,7 @@ public class FontProps {
      * @param style - Type of String, the style value.
      * @param weight - Type of String, the style value.
      */
-    public init(style!: String, weight!: String) {
+    public init(style: String, weight: String) {
         this.style = style
         this.weight = weight
     }
@@ -32,7 +32,7 @@ public class FontProps {
 public func getFontProperties(fontData: Font): FontProps {
     var styles: Array<String> = Array<String>()
     if (!fontData.fStyle.isEmpty()) {
-        fontData.fStyle.split(" ")
+        styles = fontData.fStyle.split(" ")
     }
 
     var fWeight: String = "normal"
@@ -61,7 +61,7 @@ public func getFontProperties(fontData: Font): FontProps {
     if (fWeightNow.isEmpty()) {
         fWeightNow = fWeight
     }
-    return FontProps(style: fStyle, weight: fWeightNow)
+    return FontProps(fStyle, fWeightNow)
 }
 
 

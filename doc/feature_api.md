@@ -2719,19 +2719,7 @@ public class CvContextData{
 }
 ```
 
-### 2.10 ShapeGroupData 类
-
-```cangjie
-public class ShapeGroupData{
-
-    /*
-     * ShapeGroupData 构造器
-     */
-    public init()
-}
-```
-
-### 2.11 Matrix 类
+### 2.10 Matrix 类
 
 ```cangjie
 public class Matrix {
@@ -2772,15 +2760,6 @@ public class Matrix {
      * 返回值 Matrix - 当前对象
      */
     public func rotateZ(angle: Float64): Matrix
-
-    /**
-     * 当前X轴和Y轴行顺时针方向倾斜
-     * 参数 ax - X轴倾斜的角度
-     * 参数 ay - Y轴倾斜的角度
-     *
-     * 返回值 Matrix - 当前对象
-     */
-    public func skew(ax: Float64, ay: Float64): Matrix
 
     /**
      * 当前X轴顺时针方向倾斜
