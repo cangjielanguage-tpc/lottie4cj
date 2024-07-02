@@ -3373,6 +3373,8 @@ public class BezierData {
      * 
      * 参数 len - Int64 数据类型，points 数组的长度。
      * 参数 empty - PointData 数据类型，points 数组类型。
+     * 
+     * 异常 IllegalArgumentException：如果 len 小于 0，抛出异常
      */
     public init (len: Int64, empty: PointData)
     
