@@ -1,3 +1,6 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ */
 package elements
 
 //TODO: 未完全实现
