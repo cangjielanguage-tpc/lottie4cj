@@ -3,9 +3,9 @@
         "Name": "lottie4cj",
         "License": "MIT license",
         "License File": "LICENSE",
-        "Version Number": "",
-        "Owner" : ""
-        "Upstream URL": "https://gitee.com/openharmony-tpc/lottieArkTS",
+        "Version Number": "v5.10.2",
+        "Owner": "airbnb"
+        "Upstream URL": "https://github.com/airbnb/lottie-web/releases/tag/v5.10.2",
         "Description": "Cangjie version of lottie4cj library"
     }
 ]
