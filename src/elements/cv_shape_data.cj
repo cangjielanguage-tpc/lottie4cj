@@ -1,15 +1,15 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
-package elements
+package lottie4cj.elements
 
-from std import collection.*
+internal import std.collection.*
 public class CvShapeData {
 
     protected var styledShapes: ArrayList<Object>
     protected var tr: Array<Int64>
 
-    public init(element: Object, data: ShapeData, styles: ArrayList<Object>, transformsManager: Object) {
+    public init(element: Object, data: ShapeDataInCV, styles: ArrayList<Object>, transformsManager: Object) {
         this.styledShapes = ArrayList<Object>()
         this.tr = Array<Int64>([0, 0, 0, 0, 0, 0])
         var ty: Int64 = 4
@@ -29,7 +29,7 @@ public class CvShapeData {
 }
 
 
-public class ShapeData {
+public class ShapeDataInCV {
     public var ty: String = ""
     public var fillEnabled: Bool = false
     public var c: ShapeDatac = ShapeDatac()

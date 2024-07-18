@@ -5,7 +5,7 @@
 /**
  * @file This file is a Keyframe structure.
  */
-package model
+package lottie4cj.model
 
 public class Keyframe<T> <: ToString where T <: ToString {
 

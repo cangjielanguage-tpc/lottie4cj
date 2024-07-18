@@ -5,7 +5,7 @@
 /**
  * @file This file is a GradientColorParser structure.
  */
-package parser
+package lottie4cj.parser
 
 public class GradientColorParser <: ValueParser<Array<Float64>> {
     private var colorPoints: Int64 = 0

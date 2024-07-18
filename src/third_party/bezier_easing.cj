@@ -5,7 +5,7 @@
 /**
  * @file This file is BezierEasing.
  */
-package third_party
+package lottie4cj.third_party
 
 
 public class BezierEasing {
@@ -66,7 +66,7 @@ public class BezierEasing {
                 aa = currentT
             }
             i++
-        } while (math.abs(currentX) > SUBDIVISION_PRECISION && i < SUBDIVISION_MAX_ITERATIONS)
+        } while (abs(currentX) > SUBDIVISION_PRECISION && i < SUBDIVISION_MAX_ITERATIONS)
         return currentT
     }
 

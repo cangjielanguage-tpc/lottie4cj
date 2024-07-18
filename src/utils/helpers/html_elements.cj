@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
 
-package utils.helpers
+package lottie4cj.utils.helpers
 
 /**
  * 合计18个

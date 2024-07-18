@@ -5,7 +5,7 @@
 /**
  * @file This file is handle Font.
  */
-package utils
+package lottie4cj.utils
 
 public class FontProps {
     public let style: String

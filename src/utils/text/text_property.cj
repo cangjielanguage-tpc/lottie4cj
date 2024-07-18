@@ -5,15 +5,15 @@
 /**
  * @file This file is TextProperty.
  */
-package utils.text
+package lottie4cj.utils.text
 
-import model.*
-import utils.*
-import global_data.*
+internal import lottie4cj.model.*
+internal import lottie4cj.utils.*
+internal import lottie4cj.global_data.*
 
-from std import random.*
-from std import collection.*
-from std import math.*
+internal import std.random.*
+internal import std.collection.*
+internal import std.math.*
 
 func default_addDynamicProperty(tp: TextProperty): Unit {}
 
@@ -581,7 +581,7 @@ public class TextProperty {
                         let m: Random = Random()
                         m.seed = 3
                         let num: Float64 = m.nextFloat64()
-                        newInd = indexes.remove(Int64(math.floor(num * Float64(indexes.size))))
+                        newInd = indexes.remove(Int64(floor(num * Float64(indexes.size))))
                     }
                     letterData.anIndexes[j] = newInd
                 }
@@ -656,7 +656,7 @@ public class TextProperty {
      */
     public func setMinimumFontSize(fontValue: Option<Float64>): Unit {
         if (let Some(v) <- fontValue) {
-            this.minimumFontSize = math.floor(v)
+            this.minimumFontSize = floor(v)
         } else {
             this.minimumFontSize = 1.0
         }

@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
-package utils
+package lottie4cj.utils
 
 //TODO: 未完全实现
 public class FeatureSupport {

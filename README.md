@@ -5,7 +5,7 @@
 <p align="center">
 <img alt="" src="https://img.shields.io/badge/release-v0.0.1-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/build-pass-brightgreen" style="display: inline-block;" />
-<img alt="" src="https://img.shields.io/badge/cjc-v0.51.4-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/cjc-v0.53.4-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/cjcov-91.9%25-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/project-open-brightgreen" style="display: inline-block;" />
 </p>
@@ -71,11 +71,11 @@ cjpm build
 示例代码如下：
 
 ```cangjie
-from std import fs.*
-from std import sync.*
+public import std.fs.*
+public import std.sync.*
 
-from lottie4cj import parser.*
-from lottie4cj import model.*
+public import lottie4cj.parser.*
+public import lottie4cj.model.*
 
 main (){
 
@@ -134,7 +134,7 @@ func readFile(path: String): String {
 暂无
 
 ## 开源协议
-MIT
+本项目基于 [The MIT License](./LICENSE)，请自由的享受和参与开源。
 
 ## 参与贡献
 

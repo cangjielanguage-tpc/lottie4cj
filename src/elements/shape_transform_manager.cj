@@ -1,10 +1,10 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
-package elements
+package lottie4cj.elements
 
-from std import collection.*
-import third_party.*
+internal import std.collection.*
+internal import lottie4cj.third_party.*
 public class ShapeTransformManager {
 
     protected var sequences: HashMap<String, Sequence>

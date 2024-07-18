@@ -5,7 +5,7 @@
 /**
  * @file This file is a AnimatableValueParser structure.
  */
-package parser
+package lottie4cj.parser
 
 public class AnimatableValueParser {
 

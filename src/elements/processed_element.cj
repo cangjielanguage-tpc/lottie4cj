@@ -5,7 +5,7 @@
 /**
  * @file This file is ProcessedElement.
  */
-package elements
+package lottie4cj.elements
 
 public open class ProcessedElement {
 

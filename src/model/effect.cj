@@ -5,7 +5,7 @@
 /**
  * @file This file is a Effect structure.
  */
-package model
+package lottie4cj.model
 
 public class Effect <: ToString {
      public let ty: Int64

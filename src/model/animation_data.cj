@@ -5,9 +5,9 @@
 /**
  * @file This file is a AnimationData structure.
  */
-package model
+package lottie4cj.model
 
-from std import collection.*
+internal import std.collection.*
 
 /**
  * After Effects/Bodymovin composite model. This is the serialization model that the animation will create from.

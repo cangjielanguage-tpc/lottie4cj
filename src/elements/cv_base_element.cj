@@ -1,10 +1,10 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
-package elements
+package lottie4cj.elements
 
-import model.*
-import global_data.*
+internal import lottie4cj.model.*
+internal import lottie4cj.global_data.*
 
 var operationsMap: HashMap<Int64, String> = HashMap<Int64, String>([
     (1, "source-in"),

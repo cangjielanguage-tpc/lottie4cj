@@ -2,9 +2,9 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
 
-package utils
+package lottie4cj.utils
 
-from std import math.*
+internal import std.math.*
 
 
 var idPrefix: String = ""

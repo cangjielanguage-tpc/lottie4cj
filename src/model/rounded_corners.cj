@@ -5,7 +5,7 @@
 /**
  * @file This file is a RoundedCorners structure.
  */
-package model
+package lottie4cj.model
 
 public class RoundedCorners <: ContentModel {
 

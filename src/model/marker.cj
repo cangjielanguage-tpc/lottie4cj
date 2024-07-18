@@ -5,7 +5,7 @@
 /**
  * @file This file is a Marker structure.
  */
-package model
+package lottie4cj.model
 
 public class Marker <: ToString {
 

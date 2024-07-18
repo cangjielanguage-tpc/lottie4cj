@@ -2,13 +2,13 @@
 // EXEC: cjc %import-path %L %l %f
 // EXEC: ./main
 
-from std import fs.*
-from std import sync.*
-from std import unittest.*
-from std import unittest.testmacro.*
+public import std.fs.*
+public import std.sync.*
+public import std.unittest.*
+import std.unittest.testmacro.*
 
-from lottie4cj import elements.*
-from lottie4cj import third_party.*
+public import lottie4cj.elements.*
+public import lottie4cj.third_party.*
 
 main (){
     let testsMatrix = TestsMatrix()

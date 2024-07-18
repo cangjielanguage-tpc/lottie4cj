@@ -1,10 +1,10 @@
 // EXEC: cjc %import-path %L %l %f
 // EXEC: ./main
 
-from std import fs.*
-from std import sync.*
+public import std.fs.*
+public import std.sync.*
 
-from lottie4cj import utils.*
+public import lottie4cj.utils.*
 
 main (){
     var returnTag: String = ""

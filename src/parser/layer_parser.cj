@@ -5,7 +5,7 @@
 /**
  * @file This file is a LayerParser structure.
  */
-package parser
+package lottie4cj.parser
 
 /**
  * The layers in json are parsed into Layer objects by LayerParser.

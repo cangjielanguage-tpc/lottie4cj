@@ -5,7 +5,7 @@
 /**
  * @file This file is BaseElement.
  */
-package elements
+package lottie4cj.elements
 
 public class NullElement <: BaseElement {
 

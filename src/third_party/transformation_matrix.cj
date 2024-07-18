@@ -1,9 +1,9 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
-package third_party
+package lottie4cj.third_party
 
-from std import math.*
+internal import std.math.*
 
 
 public class Matrix {

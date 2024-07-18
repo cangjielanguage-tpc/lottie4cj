@@ -5,12 +5,12 @@
 /**
  * @file This file is FontManager.
  */
-package utils
+package lottie4cj.utils
 
-import model.*
+internal import lottie4cj.model.*
 
-from std import format.*
-from std import collection.*
+internal import std.format.*
+internal import std.collection.*
 
 
 //TODO: 未完全开发完成

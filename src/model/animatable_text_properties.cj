@@ -5,7 +5,7 @@
 /**
  * @file This file is a AnimatableTextProperties structure.
  */
-package model
+package lottie4cj.model
 
 public class AK <: ToString {
     public let a: Int64

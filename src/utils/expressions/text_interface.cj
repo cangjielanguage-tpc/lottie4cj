@@ -5,7 +5,7 @@
 /**
  * @file This file is TextExpressionInterface.
  */
-package utils.expressions
+package lottie4cj.utils.expressions
 
 /**
  * lottieArkTS原理：

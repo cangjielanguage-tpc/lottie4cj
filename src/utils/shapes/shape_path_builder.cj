@@ -5,10 +5,10 @@
 /**
  * @file This file is handle ShapeData.
  */
-package utils.shapes
+package lottie4cj.utils.shapes
 
-import model.*
-import third_party.*
+internal import lottie4cj.model.*
+internal import lottie4cj.third_party.*
 
 /**
  * Build shape string.

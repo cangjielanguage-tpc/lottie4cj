@@ -5,14 +5,14 @@
 /**
  * @file This file is ITextElement.
  */
-package elements
+package lottie4cj.elements
 
-import third_party.*
-import utils.shapes.*
+internal import lottie4cj.third_party.*
+internal import lottie4cj.utils.shapes.*
 
-import utils.text.*
+internal import lottie4cj.utils.text.*
 
-from std import math.*
+internal import std.math.*
 
 public open class ITextElement <: BaseElement {
 
@@ -79,7 +79,7 @@ public open class ITextElement <: BaseElement {
      */
     public func createPathShape(matrixHelper: Matrix, shapes: Array<ContentModel>): String {
         let jLen: Int64 = shapes.size
-        var pathNodes: model.ShapeData = model.ShapeData()
+        var pathNodes: ShapeData = ShapeData()
         var shapeStr: String = ""
         var sp: ShapePath = ShapePath()
         for (j in 0..jLen) {
@@ -154,9 +154,9 @@ public open class ITextElement <: BaseElement {
      */
     //colorData => documentData.fc
     public func buildColor(colorData: Array<Float64>): String {
-        return "rgb(" + math.round(colorData[0] * 255.0).toString() +
-        "," + math.round(colorData[1] * 255.0).toString() +
-        "," + math.round(colorData[2] * 255.0).toString() + ")"
+        return "rgb(" + round(colorData[0] * 255.0).toString() +
+        "," + round(colorData[1] * 255.0).toString() +
+        "," + round(colorData[2] * 255.0).toString() + ")"
     }
 
     /**

@@ -5,7 +5,7 @@
 /**
  * @file This file is BlendModes.
  */
-package utils.helpers
+package lottie4cj.utils.helpers
 
 public class BlendModes {
 

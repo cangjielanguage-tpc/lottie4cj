@@ -5,7 +5,7 @@
 /**
  * @file This file is ICompElement.
  */
-package elements
+package lottie4cj.elements
 
 //TODO: 未实现，编译用
 class TM {

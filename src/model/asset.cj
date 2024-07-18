@@ -5,7 +5,7 @@
 /**
  * @file This file is a Asset structure.
  */
-package model
+package lottie4cj.model
 
 /**
  * A data class that describes an image asset embedded in a Lottie json file.

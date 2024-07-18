@@ -5,7 +5,7 @@
 /**
  * @file This file is ShapeModifiers.
  */
-package utils.shapes
+package lottie4cj.utils.shapes
 
 //TODO: 未实现，编译用
 public class ShapeModifiers {

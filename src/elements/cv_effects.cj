@@ -1,9 +1,9 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
-package elements
+package lottie4cj.elements
 
-from std import collection.*
+internal import std.collection.*
 
 var registeredEffects: HashMap<Int64,RegisteredEffectes> = HashMap<Int64,RegisteredEffectes>()
 
