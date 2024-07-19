@@ -5,9 +5,9 @@
 /**
  * @file This file is BezierFactory.
  */
-package third_party
+package lottie4cj.third_party
 
-from std import collection.*
+internal import std.collection.*
 
 public class BezierFactory {
 

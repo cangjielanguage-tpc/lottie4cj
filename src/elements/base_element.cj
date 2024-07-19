@@ -5,10 +5,10 @@
 /**
  * @file This file is BaseElement.
  */
-package elements
+package lottie4cj.elements
 
-import utils.*
-import utils.helpers.*
+internal import lottie4cj.utils.*
+internal import lottie4cj.utils.helpers.*
 
 //TODO: 未完全实现
 public open class BaseElement <: Equatable<BaseElement> {

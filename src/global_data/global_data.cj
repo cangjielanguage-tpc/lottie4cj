@@ -5,12 +5,12 @@
 /**
  * @file This file is a GlobalData structure.
  */
-package global_data
+package lottie4cj.global_data
 
-import model.*
-import utils.*
-import utils.helpers.*
-import third_party.*
+internal import lottie4cj.model.*
+internal import lottie4cj.utils.*
+internal import lottie4cj.utils.helpers.*
+internal import lottie4cj.third_party.*
 
 public class CompSize {
     public let w: Float64                          // 0 = width       // View width

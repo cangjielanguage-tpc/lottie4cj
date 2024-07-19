@@ -5,9 +5,9 @@
 /**
  * @file This file is IShapeElement.
  */
-package elements
+package lottie4cj.elements
 
-import elements.helpers.shapes.*
+internal import lottie4cj.elements.helpers.shapes.*
 
 public class IShapeElement <: BaseElement {
 

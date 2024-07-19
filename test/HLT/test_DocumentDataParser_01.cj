@@ -1,11 +1,11 @@
 // 3rd_party_lib:lottie4cj/build/lottie4cj
 // 3rd_party_lib_ohos:lottie4cj/build/aarch64-linux-ohos/lottie4cj
 
-from lottie4cj import parser.*
-from lottie4cj import model.*
-from std import math.*
-from encoding import json.*
-from std import collection.*
+public import lottie4cj.parser.*
+public import lottie4cj.model.*
+public import std.math.*
+public import encoding.json.*
+public import std.collection.*
 @Test
 public class TestLottie4cjDocumentDataParser{
     @TestCase

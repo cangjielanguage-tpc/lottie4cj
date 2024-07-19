@@ -5,7 +5,7 @@
 /**
  * @file This file is a AnimatableTextPropertiesParser structure.
  */
-package parser
+package lottie4cj.parser
 
 public class AnimatableTextPropertiesParser {
 

@@ -1,9 +1,9 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
-package elements
+package lottie4cj.elements
 
-import third_party.*
+internal import lottie4cj.third_party.*
 
 public class CvContextData {
 

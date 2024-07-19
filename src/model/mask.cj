@@ -5,7 +5,7 @@
 /**
  * @file This file is a Mask structure.
  */
-package model
+package lottie4cj.model
 
 
 //TODO: 未完全实现，编译用

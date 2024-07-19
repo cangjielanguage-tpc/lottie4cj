@@ -5,7 +5,7 @@
 /**
  * @file This file is a ShapeData structure.
  */
-package model
+package lottie4cj.model
 
 public class ShapeData <: ToString {
 

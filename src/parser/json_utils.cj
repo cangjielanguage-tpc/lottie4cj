@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
 
-package parser
+package lottie4cj.parser
 
 func equalsJsonKind(left: JsonKind, right: JsonKind): Bool {
     return match ((left, right)) {

@@ -5,7 +5,7 @@
 /**
  * @file This file is a ArrayKeyframeArrayFloat64 structure.
  */
-package model
+package lottie4cj.model
 
 
 public class ArrayKeyframeArrayFloat64 <: ToString {

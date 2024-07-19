@@ -5,7 +5,7 @@
 /**
  * @file This file is a ShapePath structure.
  */
-package model
+package lottie4cj.model
 
 public class ShapePath <: ContentModel {
 

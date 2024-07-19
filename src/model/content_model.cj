@@ -5,7 +5,7 @@
 /**
  * @file This file is a ContentModel structure.
  */
-package model
+package lottie4cj.model
 
 public open class ContentModel <: ToString {
 

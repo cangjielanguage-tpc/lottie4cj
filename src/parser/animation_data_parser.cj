@@ -5,15 +5,15 @@
 /**
  * @file This file is a AnimationDataParser structure.
  */
-package parser
+package lottie4cj.parser
 
-from std import math.*
-from encoding import json.*
-from std import collection.*
-from std import convert.*
-from std import log.*
+internal import std.math.*
+internal import encoding.json.*
+internal import std.collection.*
+internal import std.convert.*
+internal import std.log.*
 
-import model.*
+internal import lottie4cj.model.*
 
 public let logger: SimpleLogger = SimpleLogger()
 

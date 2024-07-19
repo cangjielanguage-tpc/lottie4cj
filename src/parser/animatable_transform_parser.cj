@@ -5,7 +5,7 @@
 /**
  * @file This file is a AnimatableTransformParser structure.
  */
-package parser
+package lottie4cj.parser
 
 public class AnimatableTransformParser {
 

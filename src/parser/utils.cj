@@ -5,7 +5,7 @@
 /**
  * @file This file is a Utils structure for paring the animated json.
  */
-package parser
+package lottie4cj.parser
 
 class Utils {
 

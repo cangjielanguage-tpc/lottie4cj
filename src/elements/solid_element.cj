@@ -5,9 +5,9 @@
 /**
  * @file This file is ISolidElement.
  */
-package elements
+package lottie4cj.elements
 
-import model.*
+internal import lottie4cj.model.*
 
 public class ISolidElement <: BaseElement {
 

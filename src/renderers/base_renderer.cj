@@ -5,17 +5,17 @@
 /**
  * @file This file is a BaseRenderer.
  */
-package renderers
+package lottie4cj.renderers
 
-import model.*
-import elements.*
-import animation.*
-import global_data.*
-import third_party.*
-import utils.*
-import utils.helpers.*
+internal import lottie4cj.model.*
+internal import lottie4cj.elements.*
+internal import lottie4cj.animation.*
+internal import lottie4cj.global_data.*
+internal import lottie4cj.third_party.*
+internal import lottie4cj.utils.*
+internal import lottie4cj.utils.helpers.*
 
-from std import collection.*
+internal import std.collection.*
 
 public abstract class BaseRenderer {
 

@@ -5,7 +5,7 @@
 /**
  * @file This file is a GradientStroke structure.
  */
-package model
+package lottie4cj.model
 
 public class GradientStroke <: ContentModel {
 

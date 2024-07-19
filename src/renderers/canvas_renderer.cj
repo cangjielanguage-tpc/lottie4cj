@@ -5,7 +5,7 @@
 /**
  * @file This file is CanvasRenderer.
  */
-package renderers
+package lottie4cj.renderers
 
 public class CanvasRenderer <: CanvasRendererBase {
 

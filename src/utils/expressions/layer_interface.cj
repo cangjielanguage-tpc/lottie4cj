@@ -5,11 +5,11 @@
 /**
  * @file This file is BaseElement.
  */
-package utils.expressions
+package lottie4cj.utils.expressions
 
-import model.*
-import elements.*
-import third_party.*
+internal import lottie4cj.model.*
+internal import lottie4cj.elements.*
+internal import lottie4cj.third_party.*
 
 public class LayerExpressionInterface {
 

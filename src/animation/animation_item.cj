@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
 
-package animation
+package lottie4cj.animation
 
 //TODO: 未实现，编译用
 public class AnimationItem {

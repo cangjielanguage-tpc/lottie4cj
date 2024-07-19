@@ -5,7 +5,7 @@
 /**
  * @file This file is MaskManagerInterface.
  */
-package utils.expressions
+package lottie4cj.utils.expressions
 
 //TODO: 未实现，编译用
 public class MaskManagerInterface {

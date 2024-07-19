@@ -5,7 +5,7 @@
 /**
  * @file This file is a RectangleShape structure.
  */
-package model
+package lottie4cj.model
 
 public class RectangleShape <: ContentModel {
 

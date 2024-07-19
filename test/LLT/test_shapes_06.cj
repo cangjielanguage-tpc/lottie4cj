@@ -3,12 +3,12 @@
 // EXEC: cjc %import-path %L %l %f ./test_shapes_06_result.cj
 // EXEC: ./main
 
-from std import fs.*
-from std import sync.*
-//from lottie4cj import lottie4cj.*
+public import std.fs.*
+public import std.sync.*
+//public import lottie4cj.lottie4cj.*
 
-from lottie4cj import parser.*
-from lottie4cj import model.*
+public import lottie4cj.parser.*
+public import lottie4cj.model.*
 
 
 

@@ -5,7 +5,7 @@
 /**
  * @file This file is BaseElement.
  */
-package utils.text
+package lottie4cj.utils.text
 
 public class MDF {
     var o: Bool = false

@@ -5,7 +5,7 @@
 /**
  * @file This file is IImageElement.
  */
-package elements
+package lottie4cj.elements
 
 public class SourceRect {
     var top: Int64 = 0

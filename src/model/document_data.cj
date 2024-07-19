@@ -5,7 +5,7 @@
 /**
  * @file This file is a DocumentData structure.
  */
-package model
+package lottie4cj.model
 
 
 public class Letter <: Equatable<Letter> {

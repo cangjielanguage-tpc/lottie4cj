@@ -5,7 +5,7 @@
 /**
  * @file This file is a FontCharacter structure.
  */
-package model
+package lottie4cj.model
 
 public class CharsData <: ToString {
     private let _shapes: Array<ContentModel>

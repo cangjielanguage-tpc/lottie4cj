@@ -5,7 +5,7 @@
 /**
  * @file This file is CVShapeData.
  */
-package elements.helpers.shapes
+package lottie4cj.elements.helpers.shapes
 
 //TODO: 未实现，编译用
 public class CVShapeData {

@@ -5,9 +5,9 @@
 /**
  * @file This file is CreateNS.
  */
-package utils.helpers
+package lottie4cj.utils.helpers
 
-from std import collection.*
+internal import std.collection.*
 
 let svgNS: String = "http://www.w3.org/2000/svg"
 

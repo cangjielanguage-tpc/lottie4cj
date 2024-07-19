@@ -5,7 +5,7 @@
 /**
  * @file This file is a ValueParser structure.
  */
-package parser
+package lottie4cj.parser
 
 public interface ValueParser<T> {
     func parse(reader: JsonValue): T

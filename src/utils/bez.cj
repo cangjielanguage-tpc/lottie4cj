@@ -5,7 +5,7 @@
 /**
  * @file This file is bez.
  */
-package utils
+package lottie4cj.utils
 
 func defaultFnct(num: Float64): Int64 {
     return 0
@@ -124,9 +124,9 @@ public class Bez {
         if (z1 == 0.0 && z2 == 0.0 && z3 == 0.0) {
             return pointOnLine2D(x1, y1, x2, y2, x3, y3)
         }
-        let dist1: Float64 = math.sqrt(math.pow(x2 - x1, 2) + math.pow(y2 - y1, 2) + math.pow(z2 - z1, 2))
-        let dist2: Float64 = math.sqrt(math.pow(x3 - x1, 2) + math.pow(y3 - y1, 2) + math.pow(z3 - z1, 2))
-        let dist3: Float64 = math.sqrt(math.pow(x3 - x2, 2) + math.pow(y3 - y2, 2) + math.pow(z3 - z2, 2))
+        let dist1: Float64 = sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2) + pow(z2 - z1, 2))
+        let dist2: Float64 = sqrt(pow(x3 - x1, 2) + pow(y3 - y1, 2) + pow(z3 - z1, 2))
+        let dist3: Float64 = sqrt(pow(x3 - x2, 2) + pow(y3 - y2, 2) + pow(z3 - z2, 2))
         var diffDist: Float64 = 0.0
         if (dist1 > dist2) {
             if (dist1 > dist3) {
@@ -187,14 +187,14 @@ public class Bez {
                     perc = Float64(k / (curveSegments - 1))
                     ptDistance = 0.0
                     for (i in 0..len) {
-                        ptCoord = math.pow(1.0 - perc, 3) * pt1[i] + 3.0 * math.pow(1.0 - perc, 2) * perc * (pt1[i] + pt3[i]) +
-                            3.0 * (1.0 - perc) * math.pow(perc, 2) * (pt2[i] + pt4[i]) + math.pow(perc, 3) * pt2[i]
+                        ptCoord = pow(1.0 - perc, 3) * pt1[i] + 3.0 * pow(1.0 - perc, 2) * perc * (pt1[i] + pt3[i]) +
+                            3.0 * (1.0 - perc) * pow(perc, 2) * (pt2[i] + pt4[i]) + pow(perc, 3) * pt2[i]
                         point[i] = ptCoord
                         if (lastPoint.size > 0) {
-                            ptDistance += math.pow(point[i] - lastPoint[i], 2)
+                            ptDistance += pow(point[i] - lastPoint[i], 2)
                         }
                     }
-                    ptDistance = math.sqrt(ptDistance)
+                    ptDistance = sqrt(ptDistance)
                     addedLength += ptDistance
                     bezierData.points[k] = PointData(Int64(ptDistance), point)
                     lastPoint = point

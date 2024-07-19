@@ -3,11 +3,11 @@
 // EXEC: cjc %import-path %L %l %f ./test_layer_01_result.cj
 // EXEC: ./main
 
-from std import fs.*
-from std import sync.*
+public import std.fs.*
+public import std.sync.*
 
-from lottie4cj import parser.*
-from lottie4cj import model.*
+public import lottie4cj.parser.*
+public import lottie4cj.model.*
 
 main (){
 
