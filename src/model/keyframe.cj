@@ -13,7 +13,7 @@ public class Keyframe<T> <: ToString where T <: ToString {
     public let k: Option<T>
 
     //"layers"."shapes"."c"."k"  <==  "layers"."shapes".{"ty": "st"}
-    public let t: Float64       // 0
+    public var t: Float64       // 0
 
     //s/e => Color     // 1/2
     public var s: Option<T>     // 1
@@ -25,6 +25,10 @@ public class Keyframe<T> <: ToString where T <: ToString {
 
     public let to: Array<Float64>       // 6
     public let ti: Array<Float64>       // 7
+    
+    // 是否执行过，判断 k 是不是 None 的动作
+    var handleKIsNone: Bool = false
+    var isNoneK: Bool = false
 
     /**
      * Create a Keyframe instance based on parameters.
@@ -90,5 +94,23 @@ public class Keyframe<T> <: ToString where T <: ToString {
                "h = ${h}\n" +
                "to = ${to}\n" +
                "ti = ${ti}\n}"
+    }
+
+    /**
+     * The k in the instance is empty.
+     *
+     * @return Type of Bool, if the k in the instance is empty, return true.
+     */
+    public func kIsNone(): Bool {
+        if (this.handleKIsNone) {
+            return this.isNoneK
+        }
+        this.handleKIsNone = true
+        if (let Some(v) <- k) {  //"k"
+            this.isNoneK = false
+            return false
+        }
+        this.isNoneK = true
+        return true
     }
 }

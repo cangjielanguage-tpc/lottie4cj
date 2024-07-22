@@ -9,8 +9,8 @@ package lottie4cj.model
 
 public class PointF <: ToString {
 
-    public let x: Float64
-    public let y: Float64
+    public var x: Float64
+    public var y: Float64
 
     /**
      * Create a PointF instance based on parameters.
@@ -32,6 +32,11 @@ public class PointF <: ToString {
         return "PointF: {x='${x}', y='${y}'}"
     }
 
+    /**
+     * The instance is empty.
+     *
+     * @return Type of Bool, if the instance is empty, return true.
+     */
     public func isNull(): Bool {
         return x == 0.0 && y == 0.0
     }

@@ -10,10 +10,16 @@ package lottie4cj.model
 public class Layer <: ToString {
 
     public var hasMask: Bool = false
-
-    public let td: Int64   
-
+    public var td: Int64 = 0
+    
     //TODO: this.layers[j].id 是 Layer.ind ？？？
+    
+    public var singleShape: Bool = false
+    public var completed: Bool = false
+    
+    //从 animationData.assets 中找到符合条件的 Asset，条件：this.Layer.refId == Asset.id。
+    //从找到符合条件的 Asset 中拿到 Asset.layers，赋值到成员变量 layers 中。
+    public var layers: Array<Layer> = Array<Layer>()
 
     public let nm: String                            // 0 = layerName
     public let ind: Int64                            // 1 = layerId
@@ -71,7 +77,6 @@ public class Layer <: ToString {
      * @param bm - Type of Int64, the value of bm.
      */
     public init(
-        td!: Int64 = 0,
         nm!: String = "",
         ind!: Int64 = 0,
         refId!: String = "",
@@ -96,11 +101,11 @@ public class Layer <: ToString {
         cl!: String = "",
         hd!: Bool = false,
         ao!: Int64 = 0,
-        bm!: Int64 = 0
+        bm!: Int64 = 0,
+        hasMask!: Bool = false
     ){
         this.nm              = nm
         this.ind             = ind
-        this.td              = td 
         this.refId           = refId
         this.ty              = ty
         this.parent          = parent
@@ -124,6 +129,7 @@ public class Layer <: ToString {
         this.hd              = hd
         this.ao              = ao
         this.bm              = bm
+        this.hasMask         = hasMask
     }
 
     /**
@@ -244,6 +250,9 @@ public class LayerTM <: ToString {
 }
 
 public class LayerT <: ToString {
+
+    //TODO: 编译用，暂时在 json 中找不到 layer.t.p。
+    public var p: String = ""
 
     public let d: LayerTD
     private let _a: Array<AnimatableTextPropertiesA>

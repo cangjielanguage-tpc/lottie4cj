@@ -65,4 +65,13 @@ public class ArrayKeyframeFloat64 <: ToString {
     public func toString(): String {
         return "ArrayKeyframeFloat64: { k = ${_k} }"
     }
+
+    /**
+     * The instance is empty.
+     *
+     * @return Type of Bool, if the instance is empty, return true.
+     */
+    public func isNull(): Bool {
+        return _k.size == 0
+    }
 }

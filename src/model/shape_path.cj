@@ -9,6 +9,8 @@ package lottie4cj.model
 
 public class ShapePath <: ContentModel {
 
+    public var closed: Bool = false
+    
     /**
      * 6. "layers"."shapes".{"ty": "sh"} = ShapePathParser
      */

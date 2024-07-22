@@ -63,4 +63,12 @@ public class AnimatableSplitDimensionPathValue <: ToString {
                "y = ${_y}\n}"
     }
 
+    /**
+     * The instance is empty.
+     *
+     * @return Type of Bool, if the instance is empty, return true.
+     */
+    public func isNull(): Bool {
+        return _k.size == 0 && _x.size == 0 && _y.size == 0
+    }
 }

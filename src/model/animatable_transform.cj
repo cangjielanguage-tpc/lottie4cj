@@ -139,4 +139,22 @@ public class AnimatableTransform <: ContentModel {
                "sk = ${_sk},\n" +
                "sa = ${_sa}\n}"
     }
+
+    /**
+     * The instance is empty.
+     *
+     * @return Type of Bool, if the instance is empty, return true.
+     */
+    public func isNull(): Bool {
+        return _a.size == 0 &&
+                p.isNull() &&
+                _s.size == 0 &&
+                r.isNull() &&
+                _o.size == 0 &&
+                _so.size == 0 &&
+                _eo.size == 0 &&
+                _sk.size == 0 &&
+                _sa.size == 0 &&
+                _ty == ""
+    }
 }

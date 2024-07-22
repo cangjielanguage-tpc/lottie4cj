@@ -16,6 +16,8 @@ internal import std.collection.*
  */
 public class AnimationData <: ToString {
 
+    public var __complete: Bool = false
+
     public let w: Int64                          // 0 = width       // View width
     public let h: Int64                          // 1 = height      // View height
     public let ip: Float64                       // 2 = startFrame  // Start key frame
