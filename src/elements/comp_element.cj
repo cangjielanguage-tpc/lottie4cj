@@ -8,9 +8,14 @@
 package lottie4cj.elements
 
 //TODO: 未实现，编译用
-class TM {
+public class TM {
     var _placeholder: Bool = false
     var v: Float64 = 0.0
+    public init() {}
+    public init(_placeholder: Bool, v: Float64) {
+        this._placeholder = _placeholder
+        this.v = v
+    }
 }
 
 public class ICompElement <: BaseElement {
@@ -18,7 +23,7 @@ public class ICompElement <: BaseElement {
     //TODO：拆分多继承问题 -- extendPrototype([BaseElement, TransformElement, HierarchyElement, FrameElement, RenderableDOMElement], ICompElement)
 
     //TODO: 未实现,初拟定了一个数据类型TM
-    var tm: TM = TM()
+    public var tm: TM = TM()
     var renderedFrame: Float64 = 0.0
     var completeLayers: Bool = false
     public var layers: Array<Layer> = Array<Layer>()

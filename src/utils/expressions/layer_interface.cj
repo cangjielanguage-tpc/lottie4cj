@@ -161,28 +161,28 @@ public class ThisLayerFunction {
     //TODO: 未实现 rotation/scale/positionopacity
     //TODO: 未实现 anchorPoint/anchor_point
 
-    var getMatrix: (Option<Float64>) -> Matrix
-    var invertPoint: (Matrix, Array<Float64>) -> (Float64, Float64, Float64)
-    var applyPoint: (Matrix, Array<Float64>) -> (Float64, Float64, Float64)
-    var toWorld: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
-    var toWorldVec: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
-    var fromWorld: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
-    var fromWorldVec: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
-    var toComp: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
-    var fromComp: (Array<Float64>) -> (Float64, Float64, Float64)
-    var sampleImage: () -> Array<Float64>
+    public var getMatrix: (Option<Float64>) -> Matrix
+    public var invertPoint: (Matrix, Array<Float64>) -> (Float64, Float64, Float64)
+    public var applyPoint: (Matrix, Array<Float64>) -> (Float64, Float64, Float64)
+    public var toWorld: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
+    public var toWorldVec: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
+    public var fromWorld: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
+    public var fromWorldVec: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
+    public var toComp: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
+    public var fromComp: (Array<Float64>) -> (Float64, Float64, Float64)
+    public var sampleImage: () -> Array<Float64>
 
     //TODO: element各个子类型中，sourceRectAtTime 函数返回值类型是不一样的 //var sourceRectAtTime: () -> (可变类型) = elem.sourceRectAtTime
-    var sourceRectAtTime: () -> Any
+    public var sourceRectAtTime: () -> Any
 
-    var startTime: Float64 = 0.0
-    var index: Int64 = 0
-    var source: String = ""
-    var height: Float64 = 0.0
-    var width: Float64 = 0.0
-    var inPoint: String = ""
-    var outPoint: String = ""
-    var _name: String = ""
+    public var startTime: Float64 = 0.0
+    public var index: Int64 = 0
+    public var source: String = ""
+    public var height: Float64 = 0.0
+    public var width: Float64 = 0.0
+    public var inPoint: String = ""
+    public var outPoint: String = ""
+    public var _name: String = ""
 
     //TODO: 未实现 registerMaskInterface/registerEffectsInterface
 

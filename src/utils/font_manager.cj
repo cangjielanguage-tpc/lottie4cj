@@ -35,8 +35,7 @@ public class FontManager {
 
     public static let zeroWidthJoiner: Array<UInt32> = [65039, 8205]
 
-
-    var fonts: Array<Font> = Array<Font>()
+    public var fonts: Array<Font> = Array<Font>()
     public var chars: ArrayList<FontCharacter> = ArrayList<FontCharacter>()
     var typekitLoaded: Int64 = 0
     var isLoaded: Bool = false
@@ -55,6 +54,9 @@ public class FontManager {
      * @return Type of Font, result value.
      */
     public func getFontByName(name: String): Font {
+        if (this.fonts.size == 0){
+            throw IndexOutOfBoundsException("this.fonts.size = ${this.fonts.size}")
+        }
         let len: Int64 = this.fonts.size
         for (i in 0..len) {
             if (this.fonts[i].fName == name) {

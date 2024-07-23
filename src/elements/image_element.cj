@@ -7,28 +7,6 @@
  */
 package lottie4cj.elements
 
-public class SourceRect {
-    var top: Int64 = 0
-    var left: Int64 = 0
-    var width: Int64 = 0
-    var height: Int64 = 0
-    
-    /**
-     * Create a SourceRect instance based on parameters.
-     *
-     * @param top - Type of Int64.
-     * @param left - Type of Int64.
-     * @param width - Type of Int64.
-     * @param height - Type of Int64.
-     */
-    public init(top!: Int64, left!: Int64, width!: Int64, height!: Int64){
-        this.top = top
-        this.left = left
-        this.width = width
-        this.height = height
-    }
-}
-
 let EMPTY_ASSET: Asset = Asset("", Array<Layer>(), 0, 0, "", "", 0)
 
 public class IImageElement <: BaseElement {

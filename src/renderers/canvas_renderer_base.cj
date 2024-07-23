@@ -8,7 +8,7 @@
 package lottie4cj.renderers
 
 
-public abstract class CanvasRendererBase <: BaseRenderer {
+public open class CanvasRendererBase <: BaseRenderer {
 
     /**
      * 数据类型推测路线：
