@@ -9,10 +9,12 @@ package lottie4cj.model
 
 public class ShapeData <: ToString {
 
-    public let c: Bool                //0 =  closed
+    public var c: Bool                //0 =  closed
     private let _v: Array<PointF>     //1 =  pointsArray
     private let _i: Array<PointF>     //2 =  inTangents
     private let _o: Array<PointF>     //3 =  outTangents
+    
+    public var _length: Int64 = 0
 
     /**
      * Create a ShapeData instance based on parameters.

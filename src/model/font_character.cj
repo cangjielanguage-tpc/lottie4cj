@@ -8,6 +8,18 @@
 package lottie4cj.model
 
 public class CharsData <: ToString {
+
+    public var ip: Int64 = 0
+    public var op: Int64 = 0
+    public var st: Int64 = 0
+    public var sr: Int64 = 0
+    public var ks: AnimatableTransform = AnimatableTransform()
+
+    public var refId: String = ""
+    //从 animationData.assets 中找到符合条件的 Asset，条件：this.refId == Asset.id。
+    //从找到符合条件的 Asset 中拿到 Asset.layers，赋值到成员变量 layers 中。
+    public var layers: Array<Layer> = Array<Layer>()
+
     private let _shapes: Array<ContentModel>
 
     /**
@@ -38,6 +50,9 @@ public class CharsData <: ToString {
 
 //"chars" - The corresponding data type in json.
 public class FontCharacter <: Hashable & ToString {
+
+    //TODO: 编译用，暂时在 json 中找不到 chars[i].t。
+    public var t: Int64 = -1
 
     private static let CHARS_HASH_DEFAULT: Int64 = 31
 

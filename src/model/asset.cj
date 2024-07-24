@@ -10,8 +10,16 @@ package lottie4cj.model
 /**
  * A data class that describes an image asset embedded in a Lottie json file.
  */
-public class Asset <: ToString {
-  
+public class Asset <: ToString & Equatable<Asset> {
+
+    //TODO: 编译用，暂时在 json 中找不到 assets[i].t。
+    public var t: String = ""
+    //TODO: 不确定来源和数据类型
+    public var xt: Bool = false
+    
+    //确认 "assets"."layers" 是否被 从 json 处理成对象格式
+    public var __used: Bool = false
+    
     /* Corresponds to the field key name in the "assets" resource information array in json. */
     public let id: String                    // 0 = id              // Picture id
     private let _layers: Array<Layer>        // 1 = layers          // Layer information
@@ -21,9 +29,6 @@ public class Asset <: ToString {
     public let u: String                     // 5 = relativeFolder  // Picture path
 
     public let e: Int64
-
-    //TODO: 不确定来源和数据类型
-    public var xt: Bool = false
 
     /**
      * Create a Asset instance based on parameters.
@@ -66,5 +71,40 @@ public class Asset <: ToString {
         "p = ${p}\n" +
         "u = ${u}\n" +
         "e = ${e}\n}"
+    }
+    
+    /**
+     * Check if the current Asset is equal to the target that.
+     *
+     * @param that - Type of Asset.
+     * @return Type of Bool.
+     */
+    public operator func ==(that: Asset): Bool {
+        return refEq(this, that)
+    }
+
+    /**
+     * Check if the current Asset is not equal to the target that.
+     *
+     * @param that - Type of Asset.
+     * @return Type of Bool.
+     */
+    public operator func !=(that: Asset): Bool {
+        return !(this == that)
+    }
+
+    /**
+     * The instance is empty.
+     *
+     * @return Type of Bool, if the instance is empty, return true.
+     */
+    public func isNull(): Bool {
+        return this.id == "" &&
+                this._layers.size == 0 &&
+                this.w == -1 &&
+                this.h == -1 &&
+                this.p == "" &&
+                this.u == "" &&
+                this.e == -1
     }
 }

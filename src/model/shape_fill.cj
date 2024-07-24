@@ -9,6 +9,9 @@ package lottie4cj.model
 
 public class ShapeFill <: ContentModel {
 
+    //将 ShapeFill._c 的值再次加工处理，保存在 c_k 中
+    public var c_k: Array<KeyframeArrayFloat64> = Array<KeyframeArrayFloat64>()    // 1 = color
+    
     /**
      * 3. "layers"."shapes".{"ty": "fl"} = ShapeFillParser
      */

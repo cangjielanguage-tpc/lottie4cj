@@ -35,9 +35,22 @@ public class Fonts <: ToString {
     public func toString(): String {
         "Fonts: {\n list = ${_list}\n }"
     }
+
+    /**
+     * The Fonts is empty.
+     *
+     * @return Type of Bool, if the Fonts is empty, return true.
+     */
+    public func isEmpty(): Bool {
+        return this._list.size <= 0
+    }
 }
 
-public class Font <: ToString {
+public open class Font <: ToString {
+
+    public var cache: ArrayList<Int64> = ArrayList<Int64>()
+    public var loaded: Bool = false
+    // TODO: helper/public var monoCase: FontManagerNode/public var sansCase: FontManagerNode
 
     public let fFamily: String           // 0 = family
     public let fName: String             // 1 = name
@@ -49,11 +62,6 @@ public class Font <: ToString {
     public let fPath: String             // 6 = "fPath"
     public let fClass: String            // 7 = "fClass"
     public let fWeight: String           // 8 = "fWeight"
-
-    public var cache: Array<Int64> = Array<Int64>()
-
-    public var loaded: Bool = false
-    // TODO: helper/public var monoCase: FontManagerNode/public var sansCase: FontManagerNode
 
 
     /**
