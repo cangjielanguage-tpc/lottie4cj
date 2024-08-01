@@ -58,6 +58,14 @@ public class CanvasContext {
     public func restoreLayer() {
         //TODO
     }
+
+    public func beginPath() {
+        //TODO
+    }
+    
+    public func fill(r: Int64) {
+        //TODO
+    }
 }
 
 public class RenderConfig {

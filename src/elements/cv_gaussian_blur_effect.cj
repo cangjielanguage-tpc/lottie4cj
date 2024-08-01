@@ -5,15 +5,15 @@ package lottie4cj.elements
 
 internal import std.collection.*
 
-
+//TODO
 public class CvGaussianBlurEffect {
 
     private var filterManager: EffectsManager
     private var canvasContext: CanvasContext
 
-    public init(filterManager: EffectsManager, elem: ElementOptions) {
+    public init(filterManager: EffectsManager, elem: CvBaseElement) {
         this.filterManager = filterManager
-        this.canvasContext = elem.canvasContext
+        this.canvasContext = elem.canvasContext.getOrThrow()
     }
 
     public func renderFrame(_isFirstFrame: Bool) {

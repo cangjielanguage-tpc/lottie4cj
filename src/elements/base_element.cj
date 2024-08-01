@@ -102,7 +102,7 @@ public open class BaseElement <: Equatable<BaseElement> {
     /**
      * set blend mode.
      */
-    public func setBlendMode(): Unit {
+    public open func setBlendMode(): Unit {
         let blendModeValue: String = BlendModes.getBlendMode(this.data.bm)
 
         //TODO: baseElement/layerElement 数据类型不确认, CreateNS/createTag/BaseElement 或者其他。暂定是 CreateNS

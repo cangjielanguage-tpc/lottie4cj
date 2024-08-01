@@ -9,7 +9,7 @@ package lottie4cj.elements
 
 internal import lottie4cj.elements.helpers.shapes.*
 
-public class IShapeElement <: BaseElement {
+public open class IShapeElement <: BaseElement {
 
     //TODO: 未实现  ShapeModifiers
     public var shapeModifiers: Array<ShapeModifiers> = Array<ShapeModifiers>()
