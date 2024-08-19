@@ -11,13 +11,19 @@ internal import std.collection.*
 
 let svgNS: String = "http://www.w3.org/2000/svg"
 
-public class CreateNS <: Equatable<CreateNS> {
+func addEventListener(types: String, callback: () -> Unit, flag: Bool): Unit { }
+
+public class CreateNS <: ToString & Equatable<CreateNS> {
+
+    public var crossOrigin: String = ""
+    public var src: String = ""
+    public var addEventListener: (String, () -> Unit, Bool) -> Unit = addEventListener
 
     var label: String = ""
     var ks: HashMap<String, String> = HashMap<String, String>()
     var childs: ArrayList<CreateNS> = ArrayList<CreateNS>()
 
-    //TODO: 暂时无成员变量 style 的数据类型                                                            ???---lp---20240515--
+    //TODO: 暂时无成员变量 style 的数据类型
     //TODO: style 是一个对象??? 还是一个 HashMap<String, String> ???
     public var styles: HashMap<String, String> = HashMap<String, String>()
     
@@ -138,7 +144,7 @@ public class CreateNS <: Equatable<CreateNS> {
                 }
             }
         }
-        //TODO: 暂时无成员变量 style 的数据类型，顾暂时不做相同比较                                       ???---lp---20240515--
+        //TODO: 暂时无成员变量 style 的数据类型，顾暂时不做相同比较
         return true
     }
 
@@ -150,6 +156,19 @@ public class CreateNS <: Equatable<CreateNS> {
      */
     public operator func !=(that: CreateNS): Bool {
         return !(this == that)
+    }
+    
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
+    public func toString(): String {
+        return "CreateNS: {\n" +
+               "label = ${label}\n" +
+               "ks.size = ${ks.size}\n" +
+               "childs.size = ${childs.size}\n" +
+               "styles.size = ${styles.size}\n}"
     }
 
 }

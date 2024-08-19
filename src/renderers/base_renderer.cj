@@ -17,7 +17,7 @@ internal import lottie4cj.utils.helpers.*
 
 internal import std.collection.*
 
-public abstract class BaseRenderer {
+public open class BaseRenderer {
 
     public var layers: Array<Layer> = Array<Layer>()
     public var completeLayers: Bool = true
@@ -74,12 +74,12 @@ public abstract class BaseRenderer {
     */
     
     //TODO: 未实现 BaseElement 子类 CvImageElement/CvCompElement/CvSolidElement/CvShapeData/CvTextElement
-    public func createImage(data: Layer): BaseElement
-    public func createComp(data: Layer): BaseElement
-    public func createSolid(data: Layer): BaseElement
-    public func createNull(data: Layer): BaseElement
-    public func createShape(data: Layer): BaseElement
-    public func createText(data: Layer): BaseElement
+    public open func createImage(data: Layer): BaseElement { return BaseElement(Layer(), GlobalData()) }
+    public open func createComp(data: Layer): BaseElement { return BaseElement(Layer(), GlobalData()) }
+    public open func createSolid(data: Layer): BaseElement { return BaseElement(Layer(), GlobalData()) }
+    public open func createNull(data: Layer): BaseElement { return BaseElement(Layer(), GlobalData()) }
+    public open func createShape(data: Layer): BaseElement { return BaseElement(Layer(), GlobalData()) }
+    public open func createText(data: Layer): BaseElement { return BaseElement(Layer(), GlobalData()) }
 
     /**
      * Process layer data and create corresponding Element.

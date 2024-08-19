@@ -6,14 +6,18 @@ package lottie4cj.utils
 
 internal import std.math.*
 
+let subframeEnabled: Bool = true
 
 var idPrefix: String = ""
-public var defaultCurveSegments = 150
-public let degToRads: Float64 = Float64.PI / 180.0
-public let roundCorner: Float64 = 0.5519
+let isSafari: Bool = false
 
-public let initialDefaultFrame: Int64 = -999999
+let _shouldRoundValues: Bool = false
 
+public var defaultCurveSegments: Int64 = 150
+let degToRads: Float64 = Float64.PI / 180.0
+let roundCorner: Float64 = 0.5519
+
+let initialDefaultFrame: Int64 = -999999
 
 public class CreateElementID {
 
@@ -31,12 +35,6 @@ public class CreateElementID {
 
 }
 
-
-/**
- * Obtain default curve segmentation values.
- *
- * @return Type of Int64, default curve segmentation values.
- */ //const getExpressionInterfaces: () ->  = () => expressionsInterfaces
 public func getDefaultCurveSegments(): Int64 {
      defaultCurveSegments
 }

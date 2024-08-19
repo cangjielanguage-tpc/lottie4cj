@@ -12,12 +12,12 @@ internal import lottie4cj.elements.helpers.shapes.*
 public class IShapeElement <: BaseElement {
 
     //TODO: 未实现  ShapeModifiers
-    var shapeModifiers: Array<ShapeModifiers> = Array<ShapeModifiers>()
+    public var shapeModifiers: Array<ShapeModifiers> = Array<ShapeModifiers>()
 
-    var processedElements: ArrayList<ProcessedElement> = ArrayList<ProcessedElement>()
+    public var processedElements: ArrayList<ProcessedElement> = ArrayList<ProcessedElement>()
     
     //TODO: 未实现 CVShapeData
-    var shapes: Array<CVShapeData> = Array<CVShapeData>()
+    public var shapes: Array<CVShapeData> = Array<CVShapeData>()
 
     var _isFirstFrame: Bool = false
 

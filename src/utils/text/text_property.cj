@@ -68,7 +68,9 @@ public class TextProperty {
          * 数据类型对应：this.data.d.k[0].s => layer.t.d.k[0].s
          * => Layer.t(LayerT).d(LayerTD).k[i](Array<Keyframe<DocumentData>>[i]).s(Option<DocumentData>)
          */
-        this.copyData(this.currentData, this.data.d.k[0].s)
+        if (this.data.d.k.size > 0) {
+            this.copyData(this.currentData, this.data.d.k[0].s)
+        }
     
         if (!this.searchProperty()) {
             this.completeTextData(this.currentData)
@@ -244,6 +246,9 @@ public class TextProperty {
         if (this.keysIndex != i) {
             this.keysIndex = i
         }
+        if (len == 0){
+            throw IndexOutOfBoundsException("this.data.d.k.size = ${this.data.d.k.size}")
+        }
         return this.data.d.k[this.keysIndex].s ?? DocumentData()
     }
 
@@ -256,12 +261,12 @@ public class TextProperty {
     public func buildFinalText(text: String): ArrayList<String> {
         var charactersArray: ArrayList<String> = ArrayList<String>(24)
         var i: Int64 = 0
-        var len = text.size
         var charCode: UInt32 = 0
         var secondCharCode: UInt32 = 0
         var shouldCombine: Bool = false
 
         let chars: Array<Rune> = text.toRuneArray()
+        var len = chars.size
 
         while (i < len) {
             charCode = UInt32(chars[i])
