@@ -2,9 +2,10 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
 
-package lottie4cj.utils
+package lottie4cj.inner
 
 internal import std.math.*
+internal import std.collection.*
 
 public class PolynomialBezier {
 

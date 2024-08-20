@@ -9,7 +9,7 @@ package lottie4cj.utils.expressions
 
 internal import lottie4cj.model.*
 internal import lottie4cj.elements.*
-internal import lottie4cj.third_party.*
+internal import lottie4cj.bezier.*
 
 public class LayerExpressionInterface {
 

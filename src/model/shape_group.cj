@@ -33,6 +33,10 @@ public class ShapeGroup <: ContentModel {
         this._it = it
         this.hd = hd
     }
+    
+    public func clone(): ShapeGroup {
+        return ShapeGroup(this.nm, this.it.clone(), this.hd)
+    }
 
     /**
      * Obtain the type of ShapeGroup.

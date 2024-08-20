@@ -5,7 +5,7 @@
 /**
  * @file This file is shapePool.
  */
-package lottie4cj.utils
+package lottie4cj.pool
 
 /**
  * The shape pool.

@@ -2,7 +2,10 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
 
-package lottie4cj.utils
+package lottie4cj.pool
+
+internal import lottie4cj.model.*
+internal import lottie4cj.inner.*
 
 public open class SegmentsLengthElement <: ToString {
 

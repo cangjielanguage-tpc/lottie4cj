@@ -17,6 +17,8 @@ public class RectangleShape <: ContentModel {
     private let _s: Array<Keyframe<PointF>>              // 2 = size
     private let _r: Array<Keyframe<Float64>>             // 3 = roundedness
     public let hd: Bool                                  // 4 = hidden
+    
+    public let d: Int64
 
     let _ty: String = "rc"
     public open prop ty: String {
@@ -37,13 +39,15 @@ public class RectangleShape <: ContentModel {
         p!: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(),
         s!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
         r!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
-        hd!: Bool = false
+        hd!: Bool = false,
+        d!: Int64 = -1
     ){
         this.nm = nm
         this.p = p
         this._s = s
         this._r = r
         this.hd = hd
+        this.d = d
     }
 
     /**

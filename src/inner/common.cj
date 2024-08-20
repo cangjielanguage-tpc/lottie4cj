@@ -2,20 +2,20 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
 
-package lottie4cj.utils
+package lottie4cj.inner
 
 internal import std.math.*
 
 let subframeEnabled: Bool = true
 
 var idPrefix: String = ""
-let isSafari: Bool = false
+public let isSafari: Bool = false
 
 let _shouldRoundValues: Bool = false
 
 public var defaultCurveSegments: Int64 = 150
-let degToRads: Float64 = Float64.PI / 180.0
-let roundCorner: Float64 = 0.5519
+public let degToRads: Float64 = Float64.PI / 180.0
+public let roundCorner: Float64 = 0.5519
 
 let initialDefaultFrame: Int64 = -999999
 

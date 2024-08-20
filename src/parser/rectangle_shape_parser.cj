@@ -11,7 +11,8 @@ class RectangleShapeParser {
         "p",     // 1
         "s",     // 2
         "r",     // 3
-        "hd"     // 4
+        "hd",    // 4
+        "d"      // 5
     ]
 
     static func parse(reader: JsonObject): RectangleShape {
@@ -22,6 +23,7 @@ class RectangleShapeParser {
 
         var roundedness: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
         var hidden: Bool = false
+        var d: Int64 = -1
 
         if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
             name = v.asString().getValue()
@@ -40,13 +42,17 @@ class RectangleShapeParser {
         if (let Some(v) <- reader.get(NAMES[4])) {  //"hd"
             hidden = v.asBool().getValue()
         }
+        if (let Some(v) <- reader.get(NAMES[5])) {  //"d"
+            d = v.asInt().getValue()
+        }
 
         let cm: RectangleShape = RectangleShape(
             nm: name,
             p: position,
             s: size,
             r: roundedness,
-            hd: hidden
+            hd: hidden,
+            d: d
         )
         return cm
     }

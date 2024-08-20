@@ -17,7 +17,8 @@ public class ViewData {
     //public var invRect: rect
 }
 
-public class Mask <: ToString {
+//Mask 不是 layer.shapes 中的类型，但是处理 layer.shapes 部分逻辑会涉及 Mask，所以空继承 ContentModel。
+public class Mask <: ContentModel {
 
     public let cl: Bool                             // 0 = cl
     public let inv: Bool                            // 1 = inverted
@@ -28,6 +29,18 @@ public class Mask <: ToString {
     public let nm: String                           // 6 = nm
     
     public var viewData: Array<ViewData> = Array<ViewData>()
+
+    public open prop ty: String {
+        get() { "Mask" }
+    }
+    
+    /**
+     * Obtain the type of Mask.
+     */
+    public override prop types: Int8 {
+        // -1 到 13，已被应用，为了防止出现错误，空定义为 20.
+        get() { 20 }
+    }
 
     /**
      * Create a Mask instance based on parameters.

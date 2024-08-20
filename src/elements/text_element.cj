@@ -7,8 +7,7 @@
  */
 package lottie4cj.elements
 
-internal import lottie4cj.third_party.*
-internal import lottie4cj.utils.shapes.*
+internal import lottie4cj.bezier.*
 
 internal import lottie4cj.utils.text.*
 

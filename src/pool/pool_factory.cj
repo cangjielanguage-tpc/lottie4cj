@@ -5,7 +5,7 @@
 /**
  * @file This file is PoolFactory.
  */
-package lottie4cj.utils
+package lottie4cj.pool
 
 
 public class PoolFactory<T> where T <: ToString {
