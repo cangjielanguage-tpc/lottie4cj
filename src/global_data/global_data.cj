@@ -10,7 +10,7 @@ package lottie4cj.global_data
 internal import lottie4cj.model.*
 internal import lottie4cj.utils.*
 internal import lottie4cj.utils.helpers.*
-internal import lottie4cj.third_party.*
+internal import lottie4cj.bezier.*
 
 public class CompSize {
     public let w: Float64                          // 0 = width       // View width

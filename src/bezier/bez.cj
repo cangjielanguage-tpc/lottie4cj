@@ -5,25 +5,26 @@
 /**
  * @file This file is bez.
  */
-package lottie4cj.utils
+package lottie4cj.bezier
+
 
 func defaultFnct(num: Float64): Int64 {
     return 0
 }
 
-class KeyframeMetadata {
-    var bezierData: BezierData = BezierData()
+public class KeyframeMetadata {
+    public var bezierData: BezierData = BezierData()
 
-    var __fnct: Option<(Int64) -> Int64> = None
-    init(){}
-    func isNull(): Bool {
+    public var __fnct: Option<(Float64) -> Float64> = None
+    public init(){}
+    public func isNull(): Bool {
         return bezierData.isNull()
     }
 }
 
 public class BezierData {
-    var segmentLength: Int64 = 0
-    var points: Array<PointData> = Array<PointData>()
+    public var segmentLength: Int64 = 0
+    public var points: Array<PointData> = Array<PointData>()
 
     /**
      * Create a BezierData instance.
@@ -65,8 +66,8 @@ public class BezierData {
 }
 
 public class PointData {
-    var partialLength: Int64 = 0
-    var point: Array<Float64> = Array<Float64>()
+    public var partialLength: Int64 = 0
+    public var point: Array<Float64> = Array<Float64>()
 
     /**
      * Create a PointData instance.

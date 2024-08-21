@@ -1,7 +1,7 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
-package lottie4cj.third_party
+package lottie4cj.bezier
 
 internal import std.math.*
 

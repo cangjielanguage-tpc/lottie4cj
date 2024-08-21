@@ -4,7 +4,7 @@
 package lottie4cj.elements
 
 internal import std.collection.*
-internal import lottie4cj.third_party.*
+internal import lottie4cj.bezier.*
 public class ShapeTransformManager {
 
     protected var sequences: HashMap<String, Sequence>

@@ -8,7 +8,10 @@
 package lottie4cj.model
 
 public class AnimatableSplitDimensionPathValue <: ToString {
-
+    
+    public var a: Int64 = 0
+    public var ix: Int64 = 0
+    
     private let _k: Array<Keyframe<PointF>>
     private let _x: Array<Keyframe<Float64>>
     private let _y: Array<Keyframe<Float64>>
@@ -16,15 +19,19 @@ public class AnimatableSplitDimensionPathValue <: ToString {
     /**
      * Create a AnimatableSplitDimensionPathValue instance based on parameters.
      *
+     * @param a - Type of Int64, the value of a.
+     * @param ix - Type of Int64, the value of ix.
      * @param k - Type of Array<Keyframe<PointF>>, the value of k.
      * @param x - Type of Array<Keyframe<Float64>>, the value of x.
      * @param y - Type of Array<Keyframe<Float64>>, the value of y.
      */
-    public init(
+    public init(a!: Int64 = 0, ix!: Int64 = 0,
         k!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
         x!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
         y!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
     ) {
+        this.a = a
+        this.ix = ix
         this._k = k
         this._x = x
         this._y = y

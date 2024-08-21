@@ -5,7 +5,7 @@
 /**
  * @file This file is BezierFactory.
  */
-package lottie4cj.third_party
+package lottie4cj.bezier
 
 internal import std.collection.*
 
@@ -22,7 +22,7 @@ public class BezierFactory {
      *
      */
 
-    var beziers: HashMap<String, BezierEasing> = HashMap<String, BezierEasing>(24)
+    static var beziers: HashMap<String, BezierEasing> = HashMap<String, BezierEasing>(24)
 
     /**
      * Get the BezierEasing instance based on parameters.
@@ -34,7 +34,7 @@ public class BezierFactory {
      * @param nm - Type of String.
      * @return Type of BezierEasing.
      */
-    public func getBezierEasing(a: Float64, b: Float64, c: Float64, d: Float64, nm: String): BezierEasing {
+    public static func getBezierEasing(a: Float64, b: Float64, c: Float64, d: Float64, nm: String): BezierEasing {
         var str: String = nm
         if (nm.isEmpty()) {
             str = "bez_" + a.toString() + "_" + b.toString() + "_" + c.toString() + "_" + d.toString()

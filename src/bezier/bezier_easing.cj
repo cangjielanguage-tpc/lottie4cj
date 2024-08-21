@@ -5,7 +5,7 @@
 /**
  * @file This file is BezierEasing.
  */
-package lottie4cj.third_party
+package lottie4cj.bezier
 
 
 public class BezierEasing {

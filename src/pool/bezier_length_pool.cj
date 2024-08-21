@@ -5,7 +5,7 @@
 /**
  * @file This file is bezierLengthPool.
  */
-package lottie4cj.utils
+package lottie4cj.pool
 
 /**
  * The bezier length pool.

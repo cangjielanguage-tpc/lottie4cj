@@ -7,7 +7,12 @@
  */
 package lottie4cj.model
 
+//TODO: 是否考虑把 Keyframe 中的 k/s/e 从 Option<T> 改为 Array<T>？？？
 public class Keyframe<T> <: ToString where T <: ToString {
+
+    //TODO: PropertyFactory 中调用到此参数，暂未确认数据获取来源是从json中获取还是后续处理时赋值。
+    public var n: String = ""
+    public var keyframeMetadata: (Float64) -> Float64 = {n => return n}
 
     //"layers"."shapes"."c"."k" == parseColor
     public let k: Option<T>

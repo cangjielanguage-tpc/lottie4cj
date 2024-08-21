@@ -11,7 +11,7 @@ internal import lottie4cj.model.*
 internal import lottie4cj.elements.*
 internal import lottie4cj.animation.*
 internal import lottie4cj.global_data.*
-internal import lottie4cj.third_party.*
+internal import lottie4cj.bezier.*
 internal import lottie4cj.utils.*
 internal import lottie4cj.utils.helpers.*
 

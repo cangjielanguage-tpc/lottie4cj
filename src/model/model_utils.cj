@@ -39,14 +39,23 @@ public class ArrayKeyframeArrayFloat64 <: ToString {
 }
 
 public class ArrayKeyframeFloat64 <: ToString {
+    
+    public var a: Int64 = 0
+    public var ix: Int64 = 0
+    
     private let _k: Array<Keyframe<Float64>>
 
     /**
      * Create a ArrayKeyframeFloat64 instance based on parameters.
      *
+     * @param a - Type of Int64, the value of a.
+     * @param ix - Type of Int64, the value of ix.
      * @param k - Type of Array<Keyframe<Float64>>, the value of k.
      */
-    public init(k!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()){
+    public init(a!: Int64 = 0, ix!: Int64 = 0, k!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+    ){
+        this.a = a
+        this.ix = ix
         this._k = k
     }
 

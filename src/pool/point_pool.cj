@@ -5,7 +5,7 @@
 /**
  * @file This file is pointPool.
  */
-package lottie4cj.utils
+package lottie4cj.pool
 
 /**
  * The point pool.

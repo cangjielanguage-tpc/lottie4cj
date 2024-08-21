@@ -7,6 +7,7 @@ package lottie4cj.utils
 internal import std.sync.*
 internal import std.time.*
 
+internal import lottie4cj.inner.*
 
 //TODO：image 是系统 api，暂时不联合编译   //import ohos.image.*
 

@@ -9,6 +9,8 @@ package lottie4cj.model
 
 public class AnimatableTransform <: ContentModel {
 
+    public var nm: String = "Transform"
+    
     /**
      * 5. "layers"."shapes".{"ty": "tr"} = AnimatableTransformParser
      */
@@ -40,6 +42,7 @@ public class AnimatableTransform <: ContentModel {
      * @param sk - Type of Array<Keyframe<Float64>>, the value of sk.
      * @param sa - Type of Array<Keyframe<Float64>>, the value of sa.
      * @param ty - Type of String, the value of ty.
+     * @param nm - Type of String, the value of nm.
      */
     public init(
         a!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
@@ -51,7 +54,8 @@ public class AnimatableTransform <: ContentModel {
         eo!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
         sk!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
         sa!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
-        ty!: String = ""
+        ty!: String = "",
+        nm!: String = "Transform"
     ){
         this._a = a
         this.p = p
@@ -63,6 +67,7 @@ public class AnimatableTransform <: ContentModel {
         this._sk = sk
         this._sa = sa
         this._ty = ty
+        this.nm = nm
     }
 
     /**

@@ -8,7 +8,7 @@ public import std.unittest.*
 import std.unittest.testmacro.*
 
 public import lottie4cj.elements.*
-public import lottie4cj.third_party.*
+public import lottie4cj.bezier.*
 
 main (){
     let testsCvContextData = TestsCvContextData()

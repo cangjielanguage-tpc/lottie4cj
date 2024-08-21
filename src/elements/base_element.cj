@@ -7,6 +7,7 @@
  */
 package lottie4cj.elements
 
+internal import lottie4cj.inner.*
 internal import lottie4cj.utils.*
 internal import lottie4cj.utils.helpers.*
 

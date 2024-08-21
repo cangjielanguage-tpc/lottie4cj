@@ -5,7 +5,7 @@
 /**
  * @file This file is segmentsLengthPool.
  */
-package lottie4cj.utils
+package lottie4cj.pool
 
 func createSegmentsLength(): SegmentsLengthElement {
     return SegmentsLengthElement(

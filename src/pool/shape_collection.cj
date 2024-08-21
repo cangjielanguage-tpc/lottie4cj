@@ -5,7 +5,7 @@
 /**
  * @file This file is BaseElement.
  */
-package lottie4cj.utils
+package lottie4cj.pool
 
 public class ShapeCollection {
 

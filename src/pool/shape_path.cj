@@ -5,7 +5,7 @@
 /**
  * @file This file is ShapePathForShapePool.
  */
-package lottie4cj.utils
+package lottie4cj.pool
 
 internal import std.collection.*
 
