@@ -3458,6 +3458,393 @@ public class Bez {
 }
 ```
 
+#### 4.1.8 DataManager 类(2024.07.25)
+
+```cangjie
+public class DataManager {
+    
+    /**
+     * 加载动画数据。
+     * 
+     * 参数 path - String 数据类型，动画数据文件路径。
+     * 参数 onComplete - String 数据类型，加载成功回调函数。
+     * 参数 onError - String 数据类型，加载失败回调函数。
+     */
+    public func loadAnimation (path: String, onComplete: (AnimationData)->Unit, onError: ()->Unit)
+    
+    /**
+     * 加载数据。
+     * 
+     * 参数 path - String 数据类型，动画数据文件路径。
+     * 参数 onComplete - String 数据类型，加载成功回调函数。
+     * 参数 onError - String 数据类型，加载失败回调函数。
+     */
+    public func loadData (path: String, onComplete: (AnimationData)->Unit, onError: ()->Unit)
+    
+    /**
+     * 完成动画数据加载。
+     * 
+     * 参数 anim - AnimationData 数据类型，已经从json格式解析封装好的动画数据。
+     * 参数 onComplete - String 数据类型，加载成功回调函数。
+     * 参数 onError - String 数据类型，加载失败回调函数。
+     */
+    public func completeAnimation (anim: AnimationData, onComplete: (AnimationData)->Unit, onError: ()->Unit)
+}
+```
+
+
+#### 4.1.9 OB 类(2024.07.25)
+
+```cangjie
+public class OB<T> <: ToString {
+    
+    /**
+     * 基于参数创建OB<T>实例。
+     * 
+     * 参数 img - 泛型数据类型。
+     * 参数 assetData - Asset 数据类型。
+     */
+    public init (img: T, assetData: Asset)
+    
+    /**
+     * 返回实例的字符串表示。 
+     * 
+     * 返回值 String - 返回实例的字符串表示。
+     */
+    public func toString (): String
+}
+```
+
+#### 4.1.10 ImagePreloader 类(2024.07.25)
+
+```cangjie
+public class ImagePreloader<T>  {
+    
+    /**
+     * 创建ImagePreloader<T>实例。
+     */
+    public init ()
+    
+    /**
+     * 图像已加载。
+     */
+    public func imageLoaded (): Unit
+    
+    /**
+     * 录像已加载。
+     */
+    public func footageLoaded (): Unit
+    
+    /**
+     * 创建图像数据。
+     * 应用于SVG环境。
+     * 
+     * 参数 assetData - Asset 数据类型。
+     * 返回值 OB<CreateNS> - OB<CreateNS> 数据类型，图像数据。
+     */
+    public func createImageData (assetData: Asset): OB<CreateNS>
+    
+    /**
+     * 创建图像数据。
+     * 适用于非SVG环境。
+     * 
+     * 参数 assetData - Asset 数据类型。
+     * 返回值 OB<CreateNS> - OB<CreateNS> 数据类型，图像数据。
+     */
+    public func createImgData (assetData: Asset): OB<CreateNS>
+    
+    /**
+     * 加载资源。
+     * 
+     * 参数 assets - Array<Asset> 数据类型。
+     * 参数 cb - 函数数据类型，()->Unit。
+     */
+    public func loadAssets (assets: Array<Asset>, cb: ()->Unit): Unit
+    
+    /**
+     * 设置原始路径。
+     * 
+     * 参数 path - String 数据类型，原始路径。
+     */
+    public func setPath (path: String): Unit
+    
+    /**
+     * 设置资源路径。
+     * 
+     * 参数 path - String 数据类型，资源路径。
+     */
+    public func setAssetsPath (path: String): Unit
+    
+    /**
+     * 获取资源。
+     * 
+     * 参数 assetData - Asset 数据类型。
+     * 返回值 Option<T> - Option<T> 数据类型。
+     */
+    public func getAsset (assetData: Asset): Option<T>
+    
+    /**
+     * 销毁 ImagePreloader。
+     */
+    public func destroy (): Unit
+    
+    /**
+     * 判断图像已加载并完成。
+     * 
+     * 返回值 Bool - Bool 数据类型。
+     */
+    public func loadedImages (): Bool
+    
+    /**
+     * 判断录像已加载并完成。
+     * 
+     * 返回值 Bool - Bool 数据类型。
+     */
+    public func loadedFootages (): Bool
+    
+    /**
+     * 设置缓存类型。
+     * 
+     * 参数 types - String 数据类型。
+     * 参数 elementHelper - CreateNS 数据类型。
+     */
+    public func setCacheType (types: String, elementHelper: CreateNS): Unit
+}
+```
+
+#### 4.1.11 PolynomialBezier 类(2024.07.25)
+
+```cangjie
+public class PolynomialBezier {
+    
+    /**
+     * 基于参数创建 PolynomialBezier 实例。
+     * 
+     * 参数 p0 - Array<Float64> 数据类型。
+     * 参数 p1a - Array<Float64> 数据类型。
+     * 参数 p2a - Array<Float64> 数据类型。
+     * 参数 p3 - Array<Float64> 数据类型。
+     * 参数 linearize - Bool 数据类型。
+     */
+    public init (p0: Array<Float64>, p1a: Array<Float64>, p2a: Array<Float64>, p3: Array<Float64>, linearize: Bool)
+    
+    /**
+     * 获取 point。
+     * 
+     * 参数 t - Float64 数据类型。
+     * 返回值 Array<Float64> - Array<Float64> 数据类型。
+     */
+    public func point (t: Float64): Array<Float64>
+    
+    /**
+     * 获取导数。
+     * 
+     * 参数 t - Float64 数据类型。
+     * 返回值 Array<Float64> - Array<Float64> 数据类型。
+     */
+    public func derivative (t: Float64): Array<Float64>
+    
+    /**
+     * 获取切线角度。
+     * 
+     * 参数 t - Float64 数据类型。
+     * 返回值 Float64 - Float64 数据类型。
+     */
+    public func tangentAngle (t: Float64): Float64
+    
+    /**
+     * 获取正常角度。
+     * 
+     * 参数 t - Float64 数据类型。
+     * 返回值 Float64 - Float64 数据类型。
+     */
+    public func normalAngle (t: Float64): Float64
+    
+    /**
+     * 找到拐点。
+     * 
+     * 返回值 Array<Float64> - Array<Float64> 数据类型。
+     */
+    public func inflectionPoints (): Array<Float64>
+    
+    /**
+     * 分割多项式贝塞尔曲线。
+     * 
+     * 参数 t - Float64 数据类型。
+     * 返回值 Array<PolynomialBezier> - Array<PolynomialBezier> 数据类型。
+     */
+    public func split (t: Float64): Array<PolynomialBezier>
+    
+    /**
+     * 获取界限。
+     * 
+     * 返回值 PointArray - PointArray 数据类型。
+     */
+    public func bounds (): PointArray
+    
+    /**
+     * 获取边界框。
+     * 
+     * 返回值 BoundingBoxObject - BoundingBoxObject 数据类型。
+     */
+    public func boundingBox (): BoundingBoxObject
+    
+    /**
+     * 获取交点。
+     * 
+     * 参数 other - PolynomialBezier 数据类型。
+     * 参数 tolerance1 - Float64 数据类型。
+     * 参数 maxRecursion1 - Int64 数据类型。
+     * 返回值 ArrayList<Int64> - ArrayList<Int64> 数据类型。
+     */
+    public func intersections (other: PolynomialBezier, tolerance1: Float64, maxRecursion1: Int64): ArrayList<Int64>
+    
+    /**
+     * 形状段。
+     * 
+     * 参数 shapePath - ShapeData 数据类型。
+     * 参数 index - Int64 数据类型。
+     * 返回值 PolynomialBezier - PolynomialBezier 数据类型。
+     */
+    public static func shapeSegment (shapePath: ShapeData, index: Int64): PolynomialBezier
+    
+    /**
+     * 形状段倒置。
+     * 
+     * 参数 shapePath - ShapeData 数据类型。
+     * 参数 index - Int64 数据类型。
+     * 返回值 PolynomialBezier - PolynomialBezier 数据类型。
+     */
+    public static func shapeSegmentInverted (shapePath: ShapeData, index: Int64): PolynomialBezier
+}
+```
+
+##### 4.1.11.1 floatEqual 函数(2024.07.25)
+
+```cangjie
+/**
+ * 浮动相等。
+ * 
+ * 参数 a - Float64 数据类型。
+ * 参数 b - Float64 数据类型。
+ * 返回值 Bool - Bool 数据类型。
+ */
+public func floatEqual(a: Float64, b: Float64): Bool
+```
+
+##### 4.1.11.2 lineIntersection 函数(2024.07.25)
+
+```cangjie
+/**
+ * 计算直线交点。
+ * 
+ * 参数 start1 - Array<Float64> 数据类型。
+ * 参数 end1 - Array<Float64> 数据类型。
+ * 参数 start2 - Array<Float64> 数据类型。
+ * 参数 end2 - Array<Float64> 数据类型。
+ * 返回值 Array<Float64> - Array<Float64> 数据类型。
+ */
+public func lineIntersection(start1: Array<Float64>, end1: Array<Float64>, start2: Array<Float64>, end2: Array<Float64>): Array<Float64>
+```
+
+##### 4.1.11.3 polarOffset 函数(2024.07.25)
+
+```cangjie
+/**
+ * 计算极坐标偏移。
+ * 
+ * 参数 p - Array<Float64> 数据类型。
+ * 参数 angle - Float64 数据类型。
+ * 参数 length - Float64 数据类型。
+ * 返回值 Array<Float64> - Array<Float64> 数据类型。
+ */
+public func polarOffset(p: Array<Float64>, angle: Float64, length: Float64): Array<Float64> 
+```
+
+##### 4.1.11.4 pointDistance 函数(2024.07.25)
+
+```cangjie
+/**
+ * 计算点距离。
+ * 
+ * 参数 p1 - Array<Float64> 数据类型。
+ * 参数 p2 - Array<Float64> 数据类型。
+ * 返回值 Float64 - Float64 数据类型。
+ */
+public func pointDistance(p1: Array<Float64>, p2: Array<Float64>): Float64
+```
+
+##### 4.1.11.5 pointEqual 函数(2024.07.25)
+
+```cangjie
+/**
+ * 判断点是否相等的。
+ * 
+ * 参数 p1 - Array<Float64> 数据类型。
+ * 参数 p2 - Array<Float64> 数据类型。
+ * 返回值 Bool - Bool 数据类型。
+ */
+public func pointEqual(p1: Array<Float64>, p2: Array<Float64>): Bool
+```
+
+
+#### 4.1.12 ExtremaPoint 类(2024.07.25)
+```cangjie
+public class ExtremaPoint {
+    /**
+     * 基于参数创建 ExtremaPoint 实例。
+     *
+     * 参数 min - Float64 数据类型，min 对应的值。
+     * 参数 max - Float64 数据类型，max 对应的值。
+     */
+    public init (min!: Float64 = 0.0, max!: Float64 = 0.0)
+}
+```
+
+#### 4.1.13 PointArray 类(2024.07.25)
+
+```cangjie
+public class PointArray {
+    
+    /**
+     * 基于参数创建 PointArray 实例。
+     * 
+     * 参数 x - ExtremaPoint 数据类型.
+     * 参数 y - ExtremaPoint 数据类型.
+     */
+    public init (x: ExtremaPoint, y: ExtremaPoint)
+}
+```
+
+#### 4.1.14 BoundingBoxObject 类(2024.07.25)
+```cangjie
+public class BoundingBoxObject {
+    /**
+     * 基于参数创建 BoundingBoxObject 实例。
+     *
+     * 参数 left - Float64 数据类型， left 对应的值。
+     * 参数 right - Float64 数据类型， right 对应的值。
+     * 参数 top - Float64 数据类型， top 对应的值。
+     * 参数 bottom - Float64 数据类型， bottom 对应的值。
+     * 参数 width - Float64 数据类型， width 对应的值。
+     * 参数 height - Float64 数据类型， height 对应的值。
+     * 参数 cx - Float64 数据类型， cx 对应的值。
+     * 参数 cy - Float64 数据类型， cy 对应的值。
+     * 参数 bez - PolynomialBezier 数据类型, bez 对应的值。
+     * 参数 t - Int64 数据类型, t 对应的值。
+     * 参数 t1 - Int64 数据类型, t1 对应的值。
+     * 参数 t2 - Int64 数据类型, t2 对应的值。
+     */
+    public init(
+        left!: Float64 = 0.0, right!: Float64 = 0.0, top!: Float64 = 0.0, bottom!: Float64 = 0.0,
+        width!: Float64 = 0.0, height!: Float64 = 0.0, cx!: Float64 = 0.0, cy!: Float64 = 0.0,
+        bez!: PolynomialBezier = PolynomialBezier(), t!: Int64 = 0, t1!: Int64 = 0, t2!: Int64 = 0)
+}
+```
+
+
+
+
 
 ### 4.2 utils.helpers 包
 
@@ -3735,6 +4122,108 @@ public class ThisLayerFunctionComp {
 public func buildShapeString(pathNodes: ShapeData, length: Int64, closed: Bool, mat: Matrix): String
 ```
 
+#### 4.4.2 ShapeCollection 类(2024.07.25)
+
+```cangjie
+public class ShapeCollection {
+    
+    /**
+     * 创建 ShapeCollection 实例。 
+     */
+    public init ()
+    
+    /**
+     * 添加图形。
+     * 
+     * 参数 shapeData - ShapePathForShapePool 数据类型。
+     */
+    public func addShape (shapeData: ShapePathForShapePool): Unit
+    
+    /**
+     * 释放图形。
+     */
+    public func releaseShapes (): Unit
+}
+```
+
+#### 4.4.3 ShapePathForShapePool 类(2024.07.25)
+
+```cangjie
+public class ShapePathForShapePool<: ToString {
+    
+    /**
+     * 构造 ShapePathForShapePool 实例。
+     */
+    public init ()
+    
+    /**
+     * 释放。
+     */
+    public func release (): Unit
+    
+    /**
+     * 设置路线数据。
+     * 
+     * 参数 closed - Bool 数据类型。
+     * 参数 len - Int64 数据类型。
+     */
+    public func setPathData (closed: Bool, len: Int64): Unit
+    
+    /**
+     * 设置长度。
+     * 
+     * 参数 len - Int64 数据类型。
+     */
+    public func setLength (len: Int64): Unit
+    
+    /**
+     * 在指定位置pos设置x和y的值。
+     * 
+     * 参数 x - Float64 数据类型，x 的值。
+     * 参数 y - Float64 数据类型，y 的值。
+     * 参数 types - String 数据类型,为名称是types的变量的指定下标设置x和y的值。
+     * 参数 pos - Int64 数据类型，为名称是types的变量的下标pos设置x和y的值。
+     * 参数 replace - Bool 数据类型，是否生成新元素进行替换。
+     */
+    public func setXYAt (x: Float64, y: Float64, types: String, pos: Int64, replace: Bool): Unit
+    
+    /**
+     * 在指定位置pos设置x和y的值。
+     * 
+     * 参数 vX - Float64 数据类型，设置 v 中的下标 pos 处 x 的值。
+     * 参数 vY - Float64 数据类型，设置 v 中的下标 pos 处 y 的值。
+     * 参数 oX - Float64 数据类型，设置 o 中的下标 pos 处 x 的值。
+     * 参数 oY - Float64 数据类型，设置 o 中的下标 pos 处 y 的值。
+     * 参数 iX - Float64 数据类型，设置 i 中的下标 pos 处 x 的值。
+     * 参数 iY - Float64 数据类型，设置 i 中的下标 pos 处 y 的值。
+     * 参数 pos - Int64 数据类型，设置下标 pos 处 x 和 y 的值。
+     * 参数 replace - Bool 数据类型，是否生成新元素进行替换。
+     */
+    public func setTripleAt (vX: Float64, vY: Float64, oX: Float64, oY: Float64, iX: Float64, iY: Float64, pos: Int64, replace: Bool): Unit
+    
+    /**
+     * 反转
+     * 
+     * 返回值 ShapePathForShapePool - ShapePathForShapePool 数据类型。
+     */
+    public func reverse (): ShapePathForShapePool
+    
+    /**
+     * 从当前 ShapePathForShapePool 获取长度值。
+     * 
+     * 返回值 Int64 - Int64 数据类型。
+     */
+    public func length (): Int64
+    
+    /**
+     * 将实例转换为字符串并返回。
+     * 
+     * 返回值 String - 转换后的字符串。
+     */
+    public func toString (): String
+}
+```
+
 
 ### 4.5 utils.text 包
 
@@ -3892,6 +4381,155 @@ public class LetterProps {
 }
 ```
 
+### 4.6 utils.markers 包(2024.07.25)
 
+#### 4.6.1 markerParser 函数(2024.07.25)
+
+```cangjie
+/**
+ * 标记解析器。
+ *
+ * 参数 _markers - Array<Marker> 数据类型，蒙层集合。
+ * 返回值 Array<MarkerData> - 标记处理 _markers 数据。
+ */
+public func markerParser(_markers: Array<Marker>): Array<MarkerData>
+```
+
+
+### 4.7 utils.pooling 包(2024.07.25)
+
+#### 4.7.1 BezierLengthElement 类(2024.07.25)
+
+```cangjie
+public open class BezierLengthElement<: ToString {
+    
+    /**
+     * 基于参数创建 BezierLengthElement 实例。
+     * 
+     * 参数 addedLength - Int64 数据类型。
+     * 参数 percents - Array<Float64> 数据类型。
+     * 参数 lengths - Array<Float64> 数据类型。
+     */
+    public init (addedLength: Int64, percents: Array<Float64>, lengths: Array<Float64>)
+    
+    /**
+     * 将实例转换为字符串并返回。
+     * 
+     * 返回值 String - 转换后的字符串。
+     */
+    public func toString (): String
+}
+```
+
+#### 4.7.2 PoolFactory 类(2024.07.25)
+
+```cangjie
+public class PoolFactory<T>  {
+    
+    /**
+     * 根据参数创建 PoolFactory<T> 实例。
+     * 
+     * 参数 initialLength - Int64 数据类型。
+     * 参数 _create - ()->T 函数数据类型。
+     * 参数 _release - Option<(T)->Unit> 数据类型。
+     */
+    public init (initialLength: Int64, _create: ()->T, _release: Option<(T)->Unit>)
+    
+    /**
+     * 创建一个新元素。
+     * 
+     * 返回值 T - 泛型数据类型。
+     */
+    public func newElement(): T
+    
+    /*
+     * 释放元素 element。
+     * 
+     * 参数 element - 泛型数据类型，释放此 element。
+     */
+    public func release(element: T): Unit
+}
+```
+
+#### 4.7.3 SegmentsLengthElement 类(2024.07.25)
+
+```cangjie
+public open class SegmentsLengthElement<: ToString {
+    
+    /**
+     * 基于参数创建 SegmentsLengthElement 实例。
+     * 
+     * 参数 lengths - Array<BezierLengthElement> 数据类型。
+     * 参数 totalLength - Int64 数据类型。
+     */
+    public init (lengths: Array<BezierLengthElement>, totalLength: Int64)
+    
+    /**
+     * 将实例转换为字符串并返回。
+     * 
+     * 返回值 String - 转换后的字符串。
+     */
+    public func toString (): String
+}
+```
+
+#### 4.7.4 shapeCollectionPool 类(2024.07.25)
+
+```cangjie
+public class shapeCollectionPool {
+    
+    /**
+     * 创建一个新的 ShapeCollection 实例。
+     * 
+     * 返回值 ShapeCollection - 创建的新的 ShapeCollection 实例。
+     */
+    public func newShapeCollection (): ShapeCollection
+    
+    /**
+     * 释放实例
+     * 
+     * 参数 shapeCollection - ShapeCollection 数据类型，释放该实例。
+     */
+    public func release (shapeCollection: ShapeCollection): Unit
+}
+```
+
+
+
+## 5. third_party 包
+
+### 5.1 BezierEasing 类
+
+```cangjie
+public class BezierEasing {
+    
+    /**
+     * 通过 bezier 宽松获得的值。
+     * 
+     * 参数 x - Float64 数据类型。
+     * 返回值 Float64 - 通过 bezier 宽松获得的值。
+     */
+    public func getOfBezierEasing (x: Float64): Float64
+}
+```
+
+### 5.2 BezierFactory 类
+
+```cangjie
+public class BezierFactory {
+    
+    /**
+     * 基于参数获取 BezierEasing 实例。
+     * 
+     * 参数 a - Float64 数据类型。
+     * 参数 b - Float64 数据类型。
+     * 参数 c - Float64 数据类型。
+     * 参数 d - Float64 数据类型。
+     * 参数 nm - String 数据类型。
+     * 返回值 BezierEasing - BezierEasing 实例。
+     */
+    public func getBezierEasing (a: Float64, b: Float64, c: Float64, d: Float64, nm: String): BezierEasing
+}
+```
 
 
