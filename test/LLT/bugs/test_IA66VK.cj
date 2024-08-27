@@ -4,7 +4,7 @@
 public import std.fs.*
 public import std.sync.*
 
-public import lottie4cj.utils.*
+public import lottie4cj.bezier.*
 
 main (){
     var returnTag: String = ""
@@ -18,4 +18,3 @@ main (){
     }
     return 0
 }
-
