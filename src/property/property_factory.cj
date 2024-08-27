@@ -138,7 +138,7 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
         var perc: Float64 = 0.0
         var jLen: Int64 = 0
         var j: Int64 = 0
-        var fnc: (Float64) -> Float64 = defalut_fnc
+        var fnc: (Float64) -> Float64 = {n => return n}
         var nextKeyTime: Float64 = nextKeyData.t - offsetTime
         var keyTime: Float64 = keyData.t - offsetTime
         var endValue: Array<Float64> = Array<Float64>()
@@ -164,8 +164,8 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
                     newValue[k] = bezierData.points[ind].point[k]
                 }
             } else {
-                if (let Some(v) <- keyframeMetadata.__fnct) {
-                    fnc = v
+                if (let Some(val) <- keyframeMetadata.__fnct) {
+                    fnc = val
                 } else {
                     fnc = BezierFactory.getBezierEasing(keyData.o.x, keyData.o.y, keyData.i.x, keyData.i.y, keyData.n).getOfBezierEasing
                     keyframeMetadata.__fnct = fnc
@@ -249,8 +249,8 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
                         } else {
                             // ??? -- "o":{"x":[0.167],"y":[0.167]}     // Keyframe<T>.o/i = PointF
                             //TODO： 此处的 [0.167] 需要做单独处理吗？？？ if (keyData.o.x.constructor === Array) {......}
-                            if (let Some(v) <- keyframeMetadata.__fnct) {
-                                fnc = v
+                            if (let Some(val) <- keyframeMetadata.__fnct) {
+                                fnc = val
                             } else {
                                 outX = keyData.o.x
                                 outY = keyData.o.y

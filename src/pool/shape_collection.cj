@@ -9,8 +9,8 @@ package lottie4cj.pool
 
 public class ShapeCollection {
 
-    var _length: Int64 = 0
-    var shapes: ArrayList<ShapePathForShapePool> = ArrayList<ShapePathForShapePool>(4)
+    public var _length: Int64 = 0
+    public var shapes: ArrayList<ShapeData> = ArrayList<ShapeData>(4)
 
     /**
      * Create a ShapeCollection instance.
@@ -20,9 +20,9 @@ public class ShapeCollection {
     /**
      * Add shape to the ShapeCollection.
      *
-     * @param nm - Type of ShapePathForShapePool.
+     * @param nm - Type of ShapeData.
      */
-    public func addShape(shapeData: ShapePathForShapePool): Unit {
+    public func addShape(shapeData: ShapeData): Unit {
         this.shapes[this._length] = shapeData
         this._length += 1
     }

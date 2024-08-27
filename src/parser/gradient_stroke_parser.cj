@@ -7,18 +7,19 @@ package lottie4cj.parser
 class GradientStrokeParser {
 
     private static let NAMES: Array<String> = [
-        "nm",
-        "g",
-        "o",
-        "t",
-        "s",
-        "e",
-        "w",
-        "lc",
-        "lj",
-        "ml",
-        "hd",
-        "d"
+        "nm",    //0
+        "g",     //1
+        "o",     //2
+        "t",     //3
+        "s",     //4
+        "e",     //5
+        "w",     //6
+        "lc",    //7
+        "lj",    //8
+        "ml",    //9
+        "hd",    //10
+        "d",     //11
+        "a"      //12
     ]
     private static let GRADIENT_NAMES: Array<String> = [
         "p",
@@ -43,6 +44,7 @@ class GradientStrokeParser {
         var hidden: Bool = false
 
         var lineDashPattern: Array<ContentModelD> = Array<ContentModelD>()
+        var a: AK = AK()
 
         if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
             name = v.asString().getValue()
@@ -117,6 +119,11 @@ class GradientStrokeParser {
             }
         }
 
+        if (let Some(v) <- reader.get(NAMES[12])) { //"a"
+            let jo: JsonObject = v.asObject()
+            a = Utils.parseSAK(jo)
+        }
+
         let cm: GradientStroke = GradientStroke(
             nm: name,
             g: g,
@@ -129,7 +136,8 @@ class GradientStrokeParser {
             lj: joinType,
             ml: miterLimit,
             hd: hidden,
-            d: lineDashPattern
+            d: lineDashPattern,
+            a: a
         )
         return cm
     }

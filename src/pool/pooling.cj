@@ -5,7 +5,6 @@
 package lottie4cj.pool
 
 internal import lottie4cj.model.*
-internal import lottie4cj.inner.*
 
 public open class SegmentsLengthElement <: ToString {
 

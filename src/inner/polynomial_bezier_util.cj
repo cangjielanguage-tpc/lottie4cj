@@ -101,7 +101,7 @@ func extrema(bez: PolynomialBezier, comp: Int64): ExtremaPoint {
 }
 
 
-func intersectData(bez: PolynomialBezier, t1: Int64, t2: Int64): BoundingBoxObject {
+func intersectData(bez: PolynomialBezier, t1: Float64, t2: Float64): BoundingBoxObject {
     let box: BoundingBoxObject = bez.boundingBox()
     return BoundingBoxObject(
         width: box.width,
@@ -109,7 +109,7 @@ func intersectData(bez: PolynomialBezier, t1: Int64, t2: Int64): BoundingBoxObje
         cx: box.cx,
         cy: box.cy,
         bez: bez,
-        t: (t1 + t2) / 2,
+        t: (t1 + t2) / 2.0,
         t1: t1,
         t2: t2
     )
@@ -132,22 +132,21 @@ func boxIntersect(b1: BoundingBoxObject, b2: BoundingBoxObject): Bool {
 }
 
 func intersectsImpl(d1: BoundingBoxObject, d2: BoundingBoxObject, depth: Int64, tolerance: Float64, 
-                    intersections: ArrayList<Int64>, maxRecursion: Int64
+                    intersectionsArr: ArrayList<Array<Float64>>, maxRecursion: Int64
 ): Unit {
     if (!boxIntersect(d1, d2)) {
         return
     }
     if (depth >= maxRecursion || (d1.width <= tolerance && d1.height <= tolerance && d2.width <= tolerance && d2.height <= tolerance)) {
-        intersections.append(d1.t)
-        intersections.append(d2.t)
+        intersectionsArr.append([d1.t, d2.t])
         return
     }
     let d1s: Array<BoundingBoxObject> = splitData(d1)
     let d2s: Array<BoundingBoxObject> = splitData(d2)
-    intersectsImpl(d1s[0], d2s[0], depth + 1, tolerance, intersections, maxRecursion)
-    intersectsImpl(d1s[0], d2s[1], depth + 1, tolerance, intersections, maxRecursion)
-    intersectsImpl(d1s[1], d2s[0], depth + 1, tolerance, intersections, maxRecursion)
-    intersectsImpl(d1s[1], d2s[1], depth + 1, tolerance, intersections, maxRecursion)
+    intersectsImpl(d1s[0], d2s[0], depth + 1, tolerance, intersectionsArr, maxRecursion)
+    intersectsImpl(d1s[0], d2s[1], depth + 1, tolerance, intersectionsArr, maxRecursion)
+    intersectsImpl(d1s[1], d2s[0], depth + 1, tolerance, intersectionsArr, maxRecursion)
+    intersectsImpl(d1s[1], d2s[1], depth + 1, tolerance, intersectionsArr, maxRecursion)
 }
 
 
@@ -287,10 +286,10 @@ public class BoundingBoxObject {
     var cy: Float64
     
     var bez: PolynomialBezier
-    var t: Int64
-    var t1: Int64
-    var t2: Int64
-
+    var t: Float64
+    var t1: Float64
+    var t2: Float64
+    
     /**
      * Create a BoundingBoxObject instance based on parameters.
      *
@@ -303,9 +302,9 @@ public class BoundingBoxObject {
      * @param cx - Type of Float64, the value of cx.
      * @param cy - Type of Float64, the value of cy.
      * @param bez - Type of PolynomialBezier, the value of bez.
-     * @param t - Type of Int64, the value of t.
-     * @param t1 - Type of Int64, the value of t1.
-     * @param t2 - Type of Int64, the value of t2.
+     * @param t - Type of Float64, the value of t.
+     * @param t1 - Type of Float64, the value of t1.
+     * @param t2 - Type of Float64, the value of t2.
      */
     public init(
         left!: Float64 = 0.0,
@@ -317,9 +316,9 @@ public class BoundingBoxObject {
         cx!: Float64 = 0.0,
         cy!: Float64 = 0.0,
         bez!: PolynomialBezier = PolynomialBezier(),
-        t!: Int64 = 0,
-        t1!: Int64 = 0,
-        t2!: Int64 = 0
+        t!: Float64 = 0.0,
+        t1!: Float64 = 0.0,
+        t2!: Float64= 0.0
     ){
         this.left = left
         this.right = right

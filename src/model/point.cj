@@ -11,6 +11,8 @@ public class PointF <: ToString {
 
     public var x: Float64
     public var y: Float64
+    
+    public var isNull: Bool = false
 
     /**
      * Create a PointF instance based on parameters.
@@ -32,12 +34,4 @@ public class PointF <: ToString {
         return "PointF: {x='${x}', y='${y}'}"
     }
 
-    /**
-     * The instance is empty.
-     *
-     * @return Type of Bool, if the instance is empty, return true.
-     */
-    public func isNull(): Bool {
-        return x == 0.0 && y == 0.0
-    }
 }
