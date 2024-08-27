@@ -20,7 +20,7 @@ public open class ShapeDataShapeModifiers {
 
     public var totalShapeLength: Int64 = 0
 
-    init(shape!: ShapePropertyFactory, data!: BaseShapeData, localShapeCollection!: ShapeCollection = ShapeCollection()){
+    public init(shape!: ShapePropertyFactory, data!: BaseShapeData, localShapeCollection!: ShapeCollection = ShapeCollection()){
         this.shape = shape
         this.data = data
         this.localShapeCollection = localShapeCollection

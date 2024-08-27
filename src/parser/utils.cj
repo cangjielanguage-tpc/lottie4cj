@@ -26,4 +26,20 @@ class Utils {
         return patch >= minPatch
     }
 
+    public static let NAMES_A_AK: Array<String> = [
+        "a",  //0
+        "k"   //1
+    ]
+    
+    public static func parseSAK(jo: JsonObject): AK {
+        var a: Int64 = 0
+        var k: Int64 = 0
+        if (let Some(v) <- jo.get(NAMES_A_AK[0])) { //"a"
+            a = v.asInt().getValue()
+        }
+        if (let Some(v) <- jo.get(NAMES_A_AK[1])) { //"k"
+            k = v.asInt().getValue()
+        }
+        return AK(a: a, k: k)
+    }
 }

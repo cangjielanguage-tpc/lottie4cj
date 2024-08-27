@@ -4,7 +4,7 @@
 public import std.fs.*
 public import std.sync.*
 
-public import lottie4cj.bezier.*
+public import lottie4cj.pool.*
 
 main (){
     var returnTag: String = ""

@@ -15,7 +15,8 @@ class GradientFillParser {
         "e",      //5
         "r",      //6
         "hd",     //7
-        "mn"      //8
+        "mn",     //8
+        "a"       //9
     ]
     private static let GRADIENT_NAMES: Array<String> = [
         "p",
@@ -35,6 +36,7 @@ class GradientFillParser {
         var hidden: Bool = false
 
         var mn: String = ""
+        var a: AK = AK()
 
         if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
             name = v.asString().getValue()
@@ -77,6 +79,12 @@ class GradientFillParser {
         if (let Some(v) <- reader.get(NAMES[8])) { // "mn"
             mn = v.asString().getValue()
         }
+        
+        if (let Some(v) <- reader.get(NAMES[9])) { //"a"
+            let jo: JsonObject = v.asObject()
+            //TODO: AK 中的 k 值可以是 Float64 类型，也可以是 Array<Keyframe<Array<Float64>>>。其中 Array<Float64> 是 [100.0] 长度为 1 的数组。 也可以写成 Array<Keyframe<Float64>>。
+            //a = Utils.parseSAK(jo)
+        }
 
         let cm: GradientFill = GradientFill(
             nm: name,
@@ -87,7 +95,8 @@ class GradientFillParser {
             e: endPoint,
             r: fillType,
             hd: hidden,
-            mn: mn
+            mn: mn,
+            a: a
         )
         return cm
     }

@@ -26,7 +26,8 @@ public class GradientFill <: ContentModel {
     public let r: Int64                          //6 = fillTypeInt
     public let hd: Bool                          //7 = hidden
 
-    public let mn: String                         //8 = mn
+    public let mn: String                        //8 = mn
+    public let a: AK                             //9 = mn
 
     let _ty: String = "gf"
     public open prop ty: String {
@@ -45,6 +46,8 @@ public class GradientFill <: ContentModel {
      * @param e - Type of Array<Keyframe<PointF>>, the value of e.
      * @param r - Type of Int64, the value of r.
      * @param hd - Type of Bool, the value of hd.
+     * @param mn - Type of String, the value of mn.
+     * @param a - Type of AK, the value of a.
      */
     public init(
         nm!: String = "",
@@ -55,7 +58,8 @@ public class GradientFill <: ContentModel {
         e!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(),
         r!: Int64 = 0,
         hd!: Bool = false,
-        mn!: String = ""
+        mn!: String = "",
+        a!: AK = AK()
     ){
         this.nm = nm
         this.g = g
@@ -66,6 +70,7 @@ public class GradientFill <: ContentModel {
         this.r = r
         this.hd = hd
         this.mn = mn
+        this.a = a
     }
 
     /**

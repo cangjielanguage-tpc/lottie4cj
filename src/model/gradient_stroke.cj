@@ -29,6 +29,8 @@ public class GradientStroke <: ContentModel {
 
     //"d": [{"n": "String", "v": Array<Keyframe<Float64>>}]  =>  Array<ContentModelD>
     private let _d: Array<ContentModelD>        //11 = lineDashPattern
+    
+    public let a: AK                             //12 = mn
 
     let _ty: String = "gs"
     public open prop ty: String {
@@ -50,6 +52,7 @@ public class GradientStroke <: ContentModel {
      * @param ml - Type of Float64, the value of ml.
      * @param hd - Type of Bool, the value of hd.
      * @param d  - Type of Array<ContentModelD>, the value of d.
+     * @param a - Type of AK, the value of a.
      */
     public init(
         nm!: String = "",
@@ -63,7 +66,8 @@ public class GradientStroke <: ContentModel {
         lj!: Int64 = 0,
         ml!: Float64 = 0.0,
         hd!: Bool = false,
-        d!: Array<ContentModelD> = Array<ContentModelD>()
+        d!: Array<ContentModelD> = Array<ContentModelD>(),
+        a!: AK = AK()
     ){
         this.nm = nm
         this.g = g
@@ -77,6 +81,7 @@ public class GradientStroke <: ContentModel {
         this.ml = ml
         this.hd = hd
         this._d = d
+        this.a = a
     }
 
     /**

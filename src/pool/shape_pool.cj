@@ -10,13 +10,13 @@ package lottie4cj.pool
 /**
  * The shape pool.
  */
-public let shapePool = PoolFactory<ShapePathForShapePool>(4, createShapePool, _release: releaseShapePool)
+public let shapePool = PoolFactory<ShapeData>(4, createShapePool, _release: releaseShapePool)
 
-func createShapePool(): ShapePathForShapePool {
-    return ShapePathForShapePool()
+func createShapePool(): ShapeData {
+    return ShapeData()
 }
 
-func releaseShapePool(shapePath: ShapePathForShapePool): Unit {
+func releaseShapePool(shapePath: ShapeData): Unit {
     let len: Int64 = shapePath._length
     for (i in 0..len) {
         pointPool.release(shapePath.v[i])
@@ -30,8 +30,8 @@ func releaseShapePool(shapePath: ShapePathForShapePool): Unit {
 }
 
 //TODO: 怎么和 [PoolFactory]factory.clone 关联？？？
-public func clone(shape: ShapePathForShapePool): ShapePathForShapePool {
-    var cloned: ShapePathForShapePool = shapePool.newElement()
+public func clone(shape: ShapeData): ShapeData {
+    var cloned: ShapeData = shapePool.newElement()
 
     var len: Int64 = shape._length
     if (shape.v.size > shape._length) {

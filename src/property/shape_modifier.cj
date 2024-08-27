@@ -1,7 +1,6 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
-
 package lottie4cj.property
 
 func default_Bool_to_Unit(flag: Bool): Unit {}
@@ -59,7 +58,7 @@ public open class ShapeModifier <: DynamicPropertyContainer {
         }
     }
 
-    public open func processKeys(flag: Bool): Unit {
+    public open func processKeys(): Unit {
         if (this.elem.globalData.frameId == this.frameId) {
             return
         }

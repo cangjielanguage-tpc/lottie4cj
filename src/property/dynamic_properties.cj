@@ -49,7 +49,7 @@ public open class DynamicPropertyContainer {
     }
 
     /* container  =>  ITextElement */
-    func initDynamicPropertyContainer(container: BaseElement): Unit {
+    public func initDynamicPropertyContainer(container: BaseElement): Unit {
         this.container = container
         this.dynamicProperties.clear()
         this._mdf = false

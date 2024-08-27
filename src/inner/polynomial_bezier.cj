@@ -9,13 +9,17 @@ internal import std.collection.*
 
 public class PolynomialBezier {
 
+    public var isNull: Bool = false
+    
     var a: Array<Float64> = Array<Float64>()
     var b: Array<Float64> = Array<Float64>()
     var c: Array<Float64> = Array<Float64>()
     var d: Array<Float64> = Array<Float64>()
-    var points: Array<Array<Float64>> = Array<Array<Float64>>()
+    public var points: Array<Array<Float64>> = Array<Array<Float64>>()
     
-    init(){}
+    public init(){
+        this.isNull = true
+    }
 
     /**
      * Create a PolynomialBezier instance based on parameters.
@@ -84,6 +88,7 @@ public class PolynomialBezier {
         /**
          * atan2（y，x）求的是y/x的反正切，其返回值为[-pi,+pi]之间的一个数。
          * atan（x）表示求的是x的反正切，其返回值为[-pi/2,+pi/2]之间的一个数。
+         * Math.atan2(p[1], p[0]) = atan(p[1] / p[0])
          */
         return atan(p[1] / p[0])
     }
@@ -102,6 +107,7 @@ public class PolynomialBezier {
         /**
          * atan2（y，x）求的是y/x的反正切，其返回值为[-pi,+pi]之间的一个数。
          * atan（x）表示求的是x的反正切，其返回值为[-pi/2,+pi/2]之间的一个数。
+         * Math.atan2(p[1], p[0]) = atan(p[1] / p[0])
          */
         return atan(p[0] / p[1])
     }
@@ -216,7 +222,7 @@ public class PolynomialBezier {
      * @param maxRecursion1 - Type of Int64.
      * @return Type of ArrayList<Int64>.
      */
-    public func intersections(other: PolynomialBezier, tolerance1: Float64, maxRecursion1: Int64): ArrayList<Int64> {
+    public func intersections(other: PolynomialBezier, tolerance1: Float64, maxRecursion1: Int64): ArrayList<Array<Float64>> {
         var tolerance: Float64 = tolerance1
         var maxRecursion: Int64 = maxRecursion1
         if (tolerance <= 0.0) {
@@ -225,9 +231,9 @@ public class PolynomialBezier {
         if (maxRecursion <= 0) {
             maxRecursion = 7
         }
-        var intersections: ArrayList<Int64> = ArrayList<Int64>(24)
-        intersectsImpl(intersectData(this, 0, 1), intersectData(other, 0, 1), 0, tolerance, intersections, maxRecursion)
-        return intersections
+        var intersectionsArr: ArrayList<Array<Float64>> = ArrayList<Array<Float64>>(24)
+        intersectsImpl(intersectData(this, 0.0, 1.0), intersectData(other, 0.0, 1.0), 0, tolerance, intersectionsArr, maxRecursion)
+        return intersectionsArr
     }
 
     /**

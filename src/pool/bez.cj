@@ -5,8 +5,12 @@
 /**
  * @file This file is bez.
  */
-package lottie4cj.bezier
+package lottie4cj.pool
 
+internal import lottie4cj.inner.*
+
+internal import std.math.*
+internal import std.collection.*
 
 func defaultFnct(num: Float64): Int64 {
     return 0
