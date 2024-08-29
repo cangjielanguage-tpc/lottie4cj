@@ -19,6 +19,7 @@ func defaultFnct(num: Float64): Int64 {
 public class KeyframeMetadata {
     public var bezierData: BezierData = BezierData()
 
+    //TODO: 是否考虑把 __fnct 从 Option 改为 Array？？？
     public var __fnct: Option<(Float64) -> Float64> = None
     public init(){}
     public func isNull(): Bool {
@@ -90,7 +91,6 @@ public class PointData {
     }
 }
 
-//TODO: 未完全开发
 public class Bez {
 
     static let defaultCurveSegments: Int64 = 150
@@ -147,28 +147,89 @@ public class Bez {
         return diffDist > -0.0001 && diffDist < 0.0001
     }
 
-    
-    //TODO: 未开发 getBezierLength
-    //TODO: 未开发 getSegmentsLength
-    //TODO: 未开发 BezierData
-    //TODO: 未开发 PointData
-    
-    /**
-     * Building Bezier data.
-     *
-     * @return Type of (Array<Float64>, Array<Float64>, Array<Float64>, Array<Float64>) -> BezierData.
-     */
-    public static func buildBezierData(): (Array<Float64>, Array<Float64>, Array<Float64>, Array<Float64>) -> BezierData {
+    static func getBezierLength(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>, pt4: Array<Float64>): BezierLengthElement {
+        var curveSegments: Int64 = getDefaultCurveSegments()
 
+        var ptCoord: Float64 = 0.0
+        var perc: Float64 = 0.0
+        var addedLength: Float64 = 0.0
+        var ptDistance: Float64 = 0.0
+        var point: Array<Float64> = Array<Float64>()
+        var lastPoint: Array<Float64> = Array<Float64>()
+        //TODO:  数据类型  Element<Float64>  更换为  BezierLengthElement
+        let lengthData: BezierLengthElement = BezierLengthElement()
+        let len: Int64 = pt3.size
+        for (k in 0..curveSegments) {
+            perc = Float64(k / (curveSegments - 1))
+            ptDistance = 0.0
+            for (i in 0..len) {
+                ptCoord = pow(1.0 - perc, 3) * pt1[i] + 3.0 * pow(1.0 - perc, 2) * perc * pt3[i] + 
+                        3.0 * (1.0 - perc) * pow(perc, 2) * pt4[i] + pow(perc, 3) * pt2[i]
+                point[i] = ptCoord
+                if (lastPoint.size > i) {
+                    ptDistance += pow(point[i] - lastPoint[i], 2)
+                }
+                lastPoint[i] = point[i]
+            }
+            if (ptDistance != 0.0) {
+                ptDistance = sqrt(ptDistance)
+                addedLength += ptDistance
+            }
+            lengthData.percents[k] = perc
+            lengthData.lengths[k] = addedLength
+        }
+        lengthData.addedLength = Int64(addedLength)
+        return lengthData
+    }
+
+    public static func getSegmentsLength(shapeData: ShapeData): SegmentsLengthElement {
+        //TODO: 数据类型 Element<Element> 更换为 SegmentsLengthElement。
+        var segmentsLength: SegmentsLengthElement =SegmentsLengthElement()
+        
+        var closed: Bool = shapeData.c
+        var pathV: Array<PointF> = shapeData.v
+        var pathO: Array<PointF> = shapeData.o
+        var pathI: Array<PointF> = shapeData.i
+
+        var len = shapeData._length
+        
+        var lengths: Array<BezierLengthElement> = segmentsLength.lengths
+        var totalLength: Int64 = 0
+        for (i in 0..(len - 1)) {
+            lengths[i] = getBezierLength([pathV[i].x, pathV[i].y], [pathV[i + 1].x, pathV[i + 1].y], [pathO[i].x, pathO[i].y], [pathI[i + 1].x, pathI[i + 1].y])
+            totalLength += lengths[i].addedLength
+        }
+        let i: Int64 = len - 1
+        if (closed && len != 0) {
+            lengths[i] = getBezierLength([pathV[i].x, pathV[i].y], [pathV[0].x, pathV[0].y], [pathO[i].x, pathO[i].y], [pathI[0].x, pathI[0].y])
+            totalLength += lengths[i].addedLength
+        }
+        segmentsLength.totalLength = totalLength
+        return segmentsLength
+    }
+
+    static func getBezierData(length: Int64): BezierData {
+        let bd: BezierData = BezierData()
+        bd.segmentLength = 0
+        bd.points = Array<PointData>(length, item: PointData())
+        return bd
+    }
+
+    static func getPointData(partial: Int64, point: Array<Float64>): PointData {
+        return PointData(partial, point)
+    }
+
+    public static func buildBezierData(): (Array<Float64>, Array<Float64>, Array<Float64>, Array<Float64>) -> BezierData {
         let storedData: HashMap<String, BezierData> = HashMap<String, BezierData>(24)
 
         func inside(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>, pt4: Array<Float64>): BezierData {
-            //TODO: pt1/pt2/pt3/pt4 会出现数组长度小于2吗？
+            if (pt1.size < 2 || pt2.size < 2 || pt3.size < 2 || pt4.size < 2) {
+                throw IndexOutOfBoundsException("[buildBezierData]: pt1.size = ${pt1.size}, pt2.size = ${pt2.size}, pt3.size = ${pt3.size}, pt4.size = ${pt4.size}")
+            }
             let key: String = pt1[0].toString() + "_" + pt1[1].toString() + "_" +
                 pt2[0].toString() + "_" + pt2[1].toString() + "_" + pt3[0].toString() + "_" + pt3[1].toString() + "_" +
                 pt4[0].toString() + "_" + pt4[1].toString()
             let bezierName: String = key.replace(".", "p")
-            
             if (!storedData.contains(bezierName)) {
                 var curveSegments: Int64 = defaultCurveSegments
 
@@ -211,12 +272,109 @@ public class Bez {
         }
         return inside
     }
+
+    static func getDistancePerc(perc: Int64, bezierData: BezierLengthElement): Float64 {
+        let percents: Array<Float64> = bezierData.percents
+        let lengths: Array<Float64> = bezierData.lengths
+        let len: Int64 = percents.size
+        var initPos: Int64 = Int64(floor(Float64((len - 1) * perc)))
+        let lengthPos: Float64 = Float64(perc * bezierData.addedLength)
+        var lPerc: Float64 = 0.0
+        if (initPos == len - 1 || initPos == 0 || lengthPos == lengths[initPos]) {
+            return percents[initPos]
+        }
+
+        var dir: Int64 = 1
+        if (lengths[initPos] > lengthPos) {
+            dir = -1
+        }
+        
+        var flag: Bool = true
+        while (flag) {
+            if (lengths[initPos] <= lengthPos && lengths[initPos + 1] > lengthPos) {
+                lPerc = (lengthPos - lengths[initPos]) / (lengths[initPos + 1] - lengths[initPos])
+                flag = false
+            } else {
+                initPos += dir
+            }
+            if (initPos < 0 || initPos >= len - 1) {
+                //FIX用于不能以足够的精度存储浮点值的TypedArray
+                if (initPos == len - 1) {
+                    return percents[initPos]
+                }
+                flag = false
+            }
+        }
+        return percents[initPos] + (percents[initPos + 1] - percents[initPos]) * lPerc
+    }
+
+    public static func getPointInSegment(pt1: PointF, pt2: PointF, pt3: PointF, pt4: PointF, percent: Int64, bezierData: BezierLengthElement): Array<Float64> {
+        return getPointInSegment([pt1.x, pt1.y], [pt2.x, pt2.y], [pt3.x, pt3.y], [pt4.x, pt4.y], percent, bezierData)
+    }
     
-    //TODO: 未开发 getDistancePerc
-    //TODO: 未开发 getPointInSegment
-    //TODO: 未开发 bezierSegmentPoints
-    //TODO: 未开发 getNewSegment
+    public static func getPointInSegment(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>, pt4: Array<Float64>, percent: Int64, bezierData: BezierLengthElement): Array<Float64> {
+        let t1: Float64 = getDistancePerc(percent, bezierData)
+        let u1: Float64 = 1.0 - t1
+        let ptX: Float64 = round((u1 * u1 * u1 * pt1[0] + (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[0] + (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[0] + t1 * t1 * t1 * pt2[0]) * 1000.0) / 1000.0
+        let ptY: Float64 = round((u1 * u1 * u1 * pt1[1] + (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[1] + (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[1] + t1 * t1 * t1 * pt2[1]) * 1000.0) / 1000.0
+        return [ptX, ptY]
+    }
+
+    public static func getNewSegment(pt1: PointF, pt2: PointF, pt3: PointF, pt4: PointF, startPerc2: Int64, endPerc2: Int64, bezierData: BezierLengthElement): Array<Float64> {
+        return getNewSegment([pt1.x, pt1.y], [pt2.x, pt2.y], [pt3.x, pt3.y], [pt4.x, pt4.y], startPerc2, endPerc2, bezierData)
+    }
+    
+    public static func getNewSegment(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>, pt4: Array<Float64>, startPerc2: Int64, endPerc2: Int64, bezierData: BezierLengthElement): Array<Float64> {
+        var startPerc: Int64 = startPerc2
+        var endPerc: Int64 = endPerc2
+        if (startPerc < 0) {
+            startPerc = 0
+        } else if (startPerc > 1) {
+            startPerc = 1
+        }
+
+        let t0: Float64 = getDistancePerc(startPerc, bezierData)
+        if (endPerc > 1) {
+            endPerc = 1
+        } else {
+            endPerc = endPerc
+        }
+
+        let t1: Float64 = getDistancePerc(endPerc, bezierData)
+
+        
+        let u0: Float64 = 1.0 - t0
+        let u1: Float64 = 1.0 - t1
+        let u0u0u0: Float64 = u0 * u0 * u0
+        let t0u0u0_3: Float64 = t0 * u0 * u0 * 3.0 // eslint-disable-line camelcase
+        let t0t0u0_3: Float64 = t0 * t0 * u0 * 3.0 // eslint-disable-line camelcase
+        let t0t0t0: Float64 = t0 * t0 * t0
+
+        let u0u0u1: Float64 = u0 * u0 * u1
+        let t0u0u1_3: Float64 = t0 * u0 * u1 + u0 * t0 * u1 + u0 * u0 * t1 // eslint-disable-line camelcase
+        let t0t0u1_3: Float64 = t0 * t0 * u1 + u0 * t0 * t1 + t0 * u0 * t1 // eslint-disable-line camelcase
+        let t0t0t1: Float64 = t0 * t0 * t1
+
+        let u0u1u1: Float64 = u0 * u1 * u1
+        let t0u1u1_3: Float64 = t0 * u1 * u1 + u0 * t1 * u1 + u0 * u1 * t1 // eslint-disable-line camelcase
+        let t0t1u1_3: Float64 = t0 * t1 * u1 + u0 * t1 * t1 + t0 * u1 * t1 // eslint-disable-line camelcase
+        let t0t1t1: Float64 = t0 * t1 * t1
+
+        let u1u1u1: Float64 = u1 * u1 * u1
+        let t1u1u1_3: Float64 = t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1 // eslint-disable-line camelcase
+        let t1t1u1_3: Float64 = t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1 // eslint-disable-line camelcase
+        let t1t1t1: Float64 = t1 * t1 * t1
+        
+        let bezierSegmentPoints: Array<Float64> = Array<Float64>(8, item: 0.0)
+        let len: Int64 = pt1.size
+        for (i in 0..len) {
+            bezierSegmentPoints[i * 4] = round((u0u0u0 * pt1[i] + t0u0u0_3 * pt3[i] + t0t0u0_3 * pt4[i] + t0t0t0 * pt2[i]) * 1000.0) / 1000.0 // eslint-disable-line camelcase
+            bezierSegmentPoints[i * 4 + 1] = round((u0u0u1 * pt1[i] + t0u0u1_3 * pt3[i] + t0t0u1_3 * pt4[i] + t0t0t1 * pt2[i]) * 1000.0) / 1000.0 // eslint-disable-line camelcase
+            bezierSegmentPoints[i * 4 + 2] = round((u0u1u1 * pt1[i] + t0u1u1_3 * pt3[i] + t0t1u1_3 * pt4[i] + t0t1t1 * pt2[i]) * 1000.0) / 1000.0 // eslint-disable-line camelcase
+            bezierSegmentPoints[i * 4 + 3] = round((u1u1u1 * pt1[i] + t1u1u1_3 * pt3[i] + t1t1u1_3 * pt4[i] + t1t1t1 * pt2[i]) * 1000.0) / 1000.0 // eslint-disable-line camelcase
+        }
+
+        return bezierSegmentPoints
+    }
 
 }
-
-
