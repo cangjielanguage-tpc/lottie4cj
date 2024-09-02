@@ -11,7 +11,7 @@ internal import lottie4cj.model.*
 internal import lottie4cj.utils.*
 internal import lottie4cj.utils.helpers.*
 internal import lottie4cj.bezier.*
-
+import std.collection.*
 public class CompSize {
     public let w: Float64                          // 0 = width       // View width
     public let h: Float64                          // 1 = height      // View height
@@ -69,7 +69,8 @@ public class CanvasContext {
 }
 
 public class RenderConfig {
-
+    //编译使用
+    public var hideOnTransparent: Bool = false
     public var clearCanvas: Bool
     //TODO: 未确认数据类型 context  //public var context: Option<context>
     public var progressiveLoad: Bool
@@ -152,15 +153,39 @@ public class GlobalData {
 
 public class FinalTransform {
 
-    public var mProp: Object
+    public var mProp: Mprop
     public var _matMdf: Bool
     public var _opMdf: Bool
     public var mat: Matrix
 
-    public init(mProp: Object, _matMdf: Bool, _opMdf: Bool, mat: Matrix) {
+    public init(mProp: Mprop, _matMdf: Bool, _opMdf: Bool, mat: Matrix) {
         this.mProp = mProp
         this._matMdf = _matMdf
         this._opMdf = _opMdf
         this.mat = mat
     }
+}
+
+public class Mprop {
+    public var o: Mpropo = Mpropo()
+    public var v: Matrix = Matrix()
+    public var autoOriented: Bool = false
+    public var _opMdf: Bool = false
+    public var _mdf: Bool = false
+}
+public class Mpropo {
+    public var v: Int64 = 0
+    public var _opMdf: Bool = false
+    public var _mdf: Bool = false
+}
+
+public func indexOf(referenceNode: Object, arr: ArrayList<Object>): Int64 {
+    var index: Int64 = 0
+    for (createNS in arr) {
+        if (refEq(createNS, referenceNode)) {
+            return index
+        }
+        index++
+    }
+    return -1
 }
