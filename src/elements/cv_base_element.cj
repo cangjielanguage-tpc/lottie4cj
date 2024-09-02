@@ -13,22 +13,18 @@ var operationsMap: HashMap<Int64, String> = HashMap<Int64, String>([
     (4, "source-out")
 
 ])
-public class CvBaseElement {
-
-    private var data: ?Data = Data()
+public class CvBaseElement <: BaseElement {
     private var buffers: ArrayList<String> = ArrayList<String>()
-    private var canvasContext: ?CanvasContext = CanvasContext()
+    public var canvasContext: ?CanvasContext = CanvasContext()
     private var transformCanvas: TransformCanvas = TransformCanvas()
     private var renderableEffectsManager: ?CvEffects = None
-    private var globalData: ?GlobalData = GlobalData()
     private var maskManager: ?CvMaskElement = None
     private var hidden: Bool = false
-    private var isInRange: Bool = false
     private var isTransparent: Bool = false
     private var _isFirstFrame: Bool = false
 
-    public init() {
-        super()
+    public init(data: Layer, globalData: GlobalData) {
+        super(data,globalData)
     }
 
     public func createElements() {
@@ -40,8 +36,9 @@ public class CvBaseElement {
     }
 
     public func createContainerElements() {
-        this.canvasContext = this.globalData.getOrThrow().canvasContext
-        this.transformCanvas = this.globalData.getOrThrow().transformCanvas
+        this.canvasContext = this.globalData.canvasContext
+        this.transformCanvas = this.globalData.transformCanvas
+        this.renderableEffectsManager = CvEffects(this)
     }
 
     public func createContent() {
@@ -50,16 +47,16 @@ public class CvBaseElement {
 
     public func setBlendMode() {
         var globalData = this.globalData
-        if (globalData.getOrThrow().blendMode != this.data.getOrThrow().bm.toString()) {
-            globalData.getOrThrow().blendMode = this.data.getOrThrow().bm.toString()
-            var blendModeValue = getBlendMode(this.data.getOrThrow().bm)
-            globalData.getOrThrow().canvasContext.globalCompositeOperation = blendModeValue
+        if (globalData.blendMode != this.data.bm.toString()) {
+            globalData.blendMode = this.data.bm.toString()
+            var blendModeValue = getBlendMode(this.data.bm)
+            globalData.canvasContext.globalCompositeOperation = blendModeValue
         }
         
     }
 
     public func createRenderableComponents() {
-        this.maskManager = CvMaskElement(this.data.getOrThrow(), this)
+        this.maskManager = CvMaskElement(this.data, this)
     }
 
     public func hideElement() {
@@ -72,6 +69,7 @@ public class CvBaseElement {
         if (this.isInRange && !this.isTransparent) {
             this.hidden = false
             this._isFirstFrame = true
+            //this.maskManager._isFirstFrame = true
         }
     }
 
@@ -85,33 +83,39 @@ public class CvBaseElement {
     }
 
     public func prepareLayer() {
-        if (this.data.getOrThrow().tt >= 1) {
+        if (this.data.tt >= 1) {
             this.canvasContext.getOrThrow().globalCompositeOperation = "source-over"
             this.canvasContext.getOrThrow().globalCompositeOperation = "source-over"
         }
     }
 
     public func exitLayer() {
-        if (this.data.getOrThrow().tt >= 1) {
+        if (this.data.tt >= 1) {
             //恢复图层
             this.canvasContext.getOrThrow().restoreLayer()
             //将递归图层和mask动效图层进行指定混合
-            this.canvasContext.getOrThrow().globalCompositeOperation = operationsMap[this.data.getOrThrow().tt]
+            this.canvasContext.getOrThrow().globalCompositeOperation = operationsMap[this.data.tt]
+            //对之前的混合模式还原成默认模式
+            this.canvasContext.getOrThrow().globalCompositeOperation = "source-over"
+            //恢复图层
+            this.canvasContext.getOrThrow().restoreLayer()
+            this.canvasContext.getOrThrow().restoreLayer()
             this.canvasContext.getOrThrow().globalCompositeOperation = "source-over"
         }
     }
 
 
     public func renderFrame(forceRender: Bool) {
-        if (this.hidden || this.data.getOrThrow().hd) {
+        if (this.hidden || this.data.hd) {
             return
         }
-        if (this.data.getOrThrow().td == 1 && !forceRender) {
+        if (this.data.td == 1 && !forceRender) {
             return
         }
-
+        // this.renderTransform()
+        // this.renderRenderable()
         this.setBlendMode()
-        var forceRealStack = (this.data.getOrThrow().ty == 0)
+        var forceRealStack = (this.data.ty == 0)
         //开始处理mask数据：包含两层layer数据，需要创建两个离屏绘制上下文
         this.prepareLayer()
         this.exitLayer()
@@ -120,7 +124,7 @@ public class CvBaseElement {
         this.canvasContext.getOrThrow().filter = "blur(0px)"
 
         if (this.maskManager.getOrThrow().hasMasks) {
-            //TODO
+            //this.globalData.renderer.restore(true)
         }
         if (this._isFirstFrame) {
             this._isFirstFrame = false
@@ -128,14 +132,26 @@ public class CvBaseElement {
     }
 
     public func changeColor(color: Array<Int64>, endColor: Array<Int64>, index: Int64) {
-        //TODO
+        this._isFirstFrame = true
+        //this.renderShapeColor(color, endColor, index)
     }
     
     public func destroy() {
         this.canvasContext = None
-        this.data = None
-        this.globalData = None
+        this.data = Layer()
         this.maskManager.getOrThrow().destroy()
+    }
+
+    public func mHelper() {
+        return Matrix()
+    }
+
+    public func hide() {
+        this.hideElement()
+    }
+
+    public func show() {
+        this.showElement()
     }
 }
 

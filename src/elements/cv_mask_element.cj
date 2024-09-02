@@ -4,31 +4,31 @@
 package lottie4cj.elements
 
 internal import lottie4cj.model.*
+
+//TODO
 public class CvMaskElement {
 
     protected var hasMasks: Bool
-    protected var data: Data
+    protected var data: Layer
     protected var element: ?CvBaseElement
-    protected var masksProperties: ?ArrayList<Mask>
+    protected var masksProperties: Array<Mask>
     protected var viewData: Array<Object>
-    protected var list: ArrayList<ArrayList<Float64>>
-    protected var ptsds: ?Object
+    protected var list: ArrayList<Array<Float64>>
+    protected var ptsds: ?Array<Float64>
 
-    public init(data: Data, element: CvBaseElement) {
+    public init(data: Layer, element: CvBaseElement) {
         this.data = data
         this.element = element
-        if (this.data.masksProperties.isSome()) {
-            this.masksProperties = this.data.masksProperties.getOrThrow()
-        } else {
-            this.masksProperties = ArrayList<Mask>()
-        }
-        this.viewData = Array<Object>(this.masksProperties.getOrThrow().size,item: Object())
-        this.list = ArrayList<ArrayList<Float64>>()
+        this.masksProperties = this.data.masksProperties
+        this.viewData = Array<Object>(this.masksProperties.size,item: Object())
+        this.list = ArrayList<Array<Float64>>()
         this.ptsds = None
-        var len = this.masksProperties.getOrThrow().size
+        var len = this.masksProperties.size
         var hasMasks = false
         for (i in 0..len) {
-            
+            if (this.masksProperties[i].mode != "n") {
+                hasMasks = true
+            }
         }
         this.hasMasks = hasMasks
         if (hasMasks) {
@@ -42,6 +42,10 @@ public class CvMaskElement {
 
     public func destroy() {
         this.element = None
-        this.list = ArrayList<ArrayList<Float64>>()
+        this.list = ArrayList<Array<Float64>>()
+    }
+
+    public func getMaskProperty() {
+        
     }
 }

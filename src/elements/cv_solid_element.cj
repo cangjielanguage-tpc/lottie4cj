@@ -3,12 +3,10 @@
  */
 package lottie4cj.elements
 
-public class CvSolidElement {
-
-    public init(data:Data, globalData: GlobalData) {}
-
-    public init(data:Data, globalData: GlobalData, comp: Object) {
-
+//TODO
+public class CvSolidElement <: BaseElement {
+    public init(data:Layer, globalData: GlobalData) {
+        super(data, globalData)
     }
 
     public func initElement() {

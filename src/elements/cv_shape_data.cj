@@ -4,12 +4,13 @@
 package lottie4cj.elements
 
 internal import std.collection.*
+//TODO
 public class CvShapeData {
 
     protected var styledShapes: ArrayList<Object>
     protected var tr: Array<Int64>
 
-    public init(element: Object, data: ShapeDataInCV, styles: ArrayList<Object>, transformsManager: Object) {
+    public init(element: BaseElement, data: ShapeDataInCV, styles: ArrayList<StyleElem>, transformsManager: ShapeTransformManager) {
         this.styledShapes = ArrayList<Object>()
         this.tr = Array<Int64>([0, 0, 0, 0, 0, 0])
         var ty: Int64 = 4
@@ -36,6 +37,7 @@ public class ShapeDataInCV {
     public var o: ShapeDatao = ShapeDatao()
     public var nm: String = ""
     public var _shouldRender: Bool = false
+    public var it: Array<ShapeDataInCV> = Array<ShapeDataInCV>()
 }
 
 public class ShapeDatac {

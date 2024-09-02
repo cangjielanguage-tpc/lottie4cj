@@ -6,12 +6,12 @@ package lottie4cj.elements
 internal import std.collection.*
 
 var registeredEffects: HashMap<Int64,RegisteredEffectes> = HashMap<Int64,RegisteredEffectes>()
-
+//TODO
 public class CvEffects {
 
     private var filters: ArrayList<CvGaussianBlurEffect>
 
-    public init(elem: ElementOptions) {
+    public init(elem: CvBaseElement) {
         
         var len = if (!elem.data.ef.isEmpty()) {
             elem.data.ef.size
@@ -25,8 +25,8 @@ public class CvEffects {
             filterManager = None
             var types = elem.data.ef[i].ty
 
-            if (registeredEffects.contains(types)) {
-                filterManager = CvGaussianBlurEffect(elem.effectsManager.effectElements[i], elem);
+            if (registeredEffects.contains(types)) {    
+                //filterManager = CvGaussianBlurEffect(elem.effectsManager.effectElements[i], elem);
             }
             if (filterManager.isSome()) {
                 this.filters.append(filterManager.getOrThrow())
@@ -66,30 +66,10 @@ public class RegisteredEffectes {
 
 }
 
-public class ElementOptions {
-
-    public var data: ElementData = ElementData()
-
-    public var canvasContext: CanvasContext = CanvasContext()
-
-    public var effectsManager: EffectsManager = EffectsManager()
-
-}
-
 public class EffectsManager {
 
     public var effectElements: ArrayList<EffectsManager> = ArrayList<EffectsManager>()
 
     public var pv: Int64 = 0
 
-}
-
-
-public class ElementData {
-
-    public var ef: ArrayList<ElementTy> = ArrayList<ElementTy>()
-}
-
-public class ElementTy {
-    public var ty: Int64 = 0
 }
