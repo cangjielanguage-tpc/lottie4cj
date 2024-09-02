@@ -18,15 +18,15 @@ public class TestLottie4cjLayer{
         var sh= Int64.Max
         var sc= "Layer_sc"
 
-        var a=Array<Keyframe<PointF>>(232,item:Keyframe<PointF>())
+        var a=ArrayKeyframePointF(k: Array<Keyframe<PointF>>(232,item:Keyframe<PointF>()))
         var p=AnimatableSplitDimensionPathValue()
-        var s=Array<Keyframe<Array<Float64>>>(232,item:Keyframe<Array<Float64>>())
+        var s=ArrayKeyframeArrayFloat64(k: Array<Keyframe<Array<Float64>>>(232,item:Keyframe<Array<Float64>>()))
         var r= ArrayKeyframeFloat64()
-        var o= Array<Keyframe<Int64>>(232,item:Keyframe<Int64>())
-        var so=Array<Keyframe<Float64>>(232,item:Keyframe<Float64>())
-        var eo=Array<Keyframe<Float64>>(232,item:Keyframe<Float64>())
-        var sk=Array<Keyframe<Float64>>(232,item:Keyframe<Float64>())
-        var sa=Array<Keyframe<Float64>>(232,item:Keyframe<Float64>())
+        var o= ArrayKeyframeInt64(k: Array<Keyframe<Int64>>(232,item:Keyframe<Int64>()))
+        var so=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232,item:Keyframe<Float64>()))
+        var eo=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232,item:Keyframe<Float64>()))
+        var sk=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232,item:Keyframe<Float64>()))
+        var sa=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232,item:Keyframe<Float64>()))
         var ty_AnimatableTransform="AnimatableTransform_ty"
 
         var ks= AnimatableTransform(a:a,p:p,s:s,r:r,o:o,so: so,eo: eo,sk: sk,sa: sa,ty: ty_AnimatableTransform)

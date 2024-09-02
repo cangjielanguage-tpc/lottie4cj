@@ -3,7 +3,7 @@
  */
 
 /**
- * @file This file is a ShapeFill structure.
+ * @file This file is a keyframe structure related structure.
  */
 package lottie4cj.model
 

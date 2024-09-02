@@ -3,7 +3,7 @@
  */
 
 /**
- * @file This file is BaseElement.
+ * @file This file is SvgBaseElement.
  */
 package lottie4cj.elements.svg_elements
 

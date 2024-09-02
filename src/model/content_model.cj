@@ -9,6 +9,15 @@ package lottie4cj.model
 
 public open class ContentModel <: ToString {
 
+    //TODO：编译调试用，后续要再确认。
+    public var _processed: Bool = false
+    public var _render: Bool = false
+
+    //TODO: 逐级实现 clone() 函数.
+    public open func clone(): ContentModel {
+        return this
+    }
+
     public open prop ty: String {
         get() { "ContentModel" }
     }

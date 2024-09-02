@@ -19,7 +19,7 @@ class KeyframesParser {
         }
 
         let jo: JsonObject = reader.asObject()
-        if (let Some(jv) <- jo.get(NAMES)) {
+        if (let Some(jv) <- jo.get(NAMES)) { // "k"
             jk = jv.kind()
             if (equalsJsonKind(jk, JsonKind.JsArray)) {
                 let ja: JsonArray = jv.asArray()

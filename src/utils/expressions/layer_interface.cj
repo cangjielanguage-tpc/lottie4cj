@@ -3,7 +3,7 @@
  */
 
 /**
- * @file This file is BaseElement.
+ * @file This file is LayerExpressionInterface.
  */
 package lottie4cj.utils.expressions
 

@@ -11,7 +11,8 @@ public class TestLottie4cjCircleShape{
     func test_CircleShape_toString_01():Unit {
         var nm="CircleShape_nm"
         var p=AnimatableSplitDimensionPathValue()
-        var s=Array<Keyframe<PointF>>(208,item:Keyframe<PointF>())
+        var k=Array<Keyframe<PointF>>(208,item:Keyframe<PointF>())
+        var s=ArrayKeyframePointF(k: k)
         var hd=true
         var d=Int64.Max
         var cs=CircleShape(nm:nm, p:p, s:s, hd:hd, d:d)
@@ -19,7 +20,7 @@ public class TestLottie4cjCircleShape{
                                      "ty = el,\n" +
                                      "nm = ${nm},\n" +
                                      "p = ${p},\n" +
-                                     "s = ${s},\n" +
+                                     "s = ${s.k},\n" +
                                      "hd = ${hd},\n" +
                                      "d = ${d}\n}")
         @Assert(cs.types,Int8(7))
@@ -29,7 +30,8 @@ public class TestLottie4cjCircleShape{
     func test_CircleShape_toString_02():Unit {
         var nm=""
         var p=AnimatableSplitDimensionPathValue()
-        var s=Array<Keyframe<PointF>>()
+        var k=Array<Keyframe<PointF>>()
+        var s=ArrayKeyframePointF(k: k)
         var hd=false
         var d=Int64.Min
         var cs=CircleShape(nm:nm, p:p, s:s, hd:hd, d:d)
@@ -37,7 +39,7 @@ public class TestLottie4cjCircleShape{
                                      "ty = el,\n" +
                                      "nm = ${nm},\n" +
                                      "p = ${p},\n" +
-                                     "s = ${s},\n" +
+                                     "s = ${s.k},\n" +
                                      "hd = ${hd},\n" +
                                      "d = ${d}\n}")
         @Assert(cs.types,Int8(7))
@@ -47,7 +49,8 @@ public class TestLottie4cjCircleShape{
     func test_CircleShape_toString_03():Unit {
         var nm=""
         var p=AnimatableSplitDimensionPathValue()
-        var s=Array<Keyframe<PointF>>()
+        var k=Array<Keyframe<PointF>>()
+        var s=ArrayKeyframePointF(k: k)
         var hd=false
         var d=0
         var cs=CircleShape()
@@ -55,7 +58,7 @@ public class TestLottie4cjCircleShape{
                                      "ty = el,\n" +
                                      "nm = ${nm},\n" +
                                      "p = ${p},\n" +
-                                     "s = ${s},\n" +
+                                     "s = ${s.k},\n" +
                                      "hd = ${hd},\n" +
                                      "d = ${d}\n}")
         @Assert(cs.types,Int8(7))

@@ -12,8 +12,11 @@ public class ShapeTrimPath <: ContentModel {
     /**
      * 9. "layers"."shapes".{"ty": "tm"} = ShapeTrimPathParser
      */
+    //"s": {"a": 0, "k": 0, "ix": 1}
     private let _s: Array<Keyframe<Float64>>    // 0 = start
+    //"e":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":37,"s":[0],"e":[100]},{"t":58.0000023623884}],"ix":2}
     private let _e: Array<Keyframe<Float64>>    // 1 = end
+    //"o":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":37,"s":[18],"e":[0]},{"t":58.0000023623884}],"ix":3}
     private let _o: Array<Keyframe<Float64>>    // 2 = offset
     public let nm: String                       // 3 = name
     public let m: Int64                         // 4 = type

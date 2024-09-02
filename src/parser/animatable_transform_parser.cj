@@ -24,6 +24,11 @@ public class AnimatableTransformParser {
     ]
     private static let ANIMATABLE_NAMES: String = "k"
 
+    private static let NAMES_AIX: Array<String> = [
+        "a",  // 0
+        "ix"  // 1
+    ]
+
     /**
      * Animate the "ks" data in the json data, parsed into the corresponding AnimatableTransform entity class.
      *
@@ -31,23 +36,30 @@ public class AnimatableTransformParser {
      * @return Type of AnimatableTransform. An instance of the "ks" data that encapsulates the animation.
      */
     public static func parse(jsonObject: JsonObject): AnimatableTransform {
-        var anchorPoint: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
+        var anchorPoint: ArrayKeyframePointF = ArrayKeyframePointF()
         var position: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()
-        var scale: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
-        var opacity: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>()
+        var scale: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64()
+        var opacity: ArrayKeyframeInt64 = ArrayKeyframeInt64()
 
-        let EMPTY_KFF64: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
-        var rotation: Array<Keyframe<Float64>> = EMPTY_KFF64
-        var startOpacity: Array<Keyframe<Float64>> = EMPTY_KFF64
-        var endOpacity: Array<Keyframe<Float64>> = EMPTY_KFF64
-        var skew: Array<Keyframe<Float64>> = EMPTY_KFF64
-        var skewAngle: Array<Keyframe<Float64>> = EMPTY_KFF64
+        var rotation: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+        
+        var startOpacity: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+        var endOpacity: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+        var skew: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+        var skewAngle: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
         var ty: String = ""
 
         if (let Some(v) <- jsonObject.get(NAMES[0])) { // "a"
             let jo: JsonObject = v.asObject()
             if (let Some(k) <- jo.get(ANIMATABLE_NAMES)) {//"k"
-                anchorPoint = AnimatablePathValueParser.parse(k)
+                anchorPoint.k = AnimatablePathValueParser.parse(k)
+            }
+
+            if (let Some(k) <- jo.get(NAMES_AIX[0])) { // "a"
+                anchorPoint.a = k.asInt().getValue()
+            }
+            if (let Some(k) <- jo.get(NAMES_AIX[1])) { // "ix"
+                anchorPoint.ix = k.asInt().getValue()
             }
         }
         if (let Some(v) <- jsonObject.get(NAMES[1])) { // "p"
@@ -55,7 +67,15 @@ public class AnimatableTransformParser {
         }
 
         if (let Some(v) <- jsonObject.get(NAMES[2])) { //  "s"
-            scale = AnimatableValueParser.parseScale(v)
+            scale.k = AnimatableValueParser.parseScale(v)
+            
+            let jo: JsonObject = v.asObject()
+            if (let Some(k) <- jo.get(NAMES_AIX[0])) { // "a"
+                scale.a = k.asInt().getValue()
+            }
+            if (let Some(k) <- jo.get(NAMES_AIX[1])) { // "ix"
+                scale.ix = k.asInt().getValue()
+            }
         }
         
         if (jsonObject.containsKey(NAMES[3])) { // "rz"
@@ -63,22 +83,40 @@ public class AnimatableTransformParser {
         }
 
         if (let Some(v) <- jsonObject.get(NAMES[4])) { //  r
-              rotation = AnimatableValueParser.parseFloat(v)
+            rotation.k = AnimatableValueParser.parseFloat(v)
+            
+            handleAIX(v, rotation)
         }
         if (let Some(v) <- jsonObject.get(NAMES[5])) { //  o
-            opacity = AnimatableValueParser.parseInteger(v)
+            opacity.k = AnimatableValueParser.parseInteger(v)
+            
+            let jo: JsonObject = v.asObject()
+            if (let Some(k) <- jo.get(NAMES_AIX[0])) { // "a"
+                startOpacity.a = k.asInt().getValue()
+            }
+            if (let Some(k) <- jo.get(NAMES_AIX[1])) { // "ix"
+                startOpacity.ix = k.asInt().getValue()
+            }
         }
         if (let Some(v) <- jsonObject.get(NAMES[6])) { //  "so"
-            startOpacity = AnimatableValueParser.parseFloat(v)
+            startOpacity.k = AnimatableValueParser.parseFloat(v)
+            
+            handleAIX(v, startOpacity)
         }
         if (let Some(v) <- jsonObject.get(NAMES[7])) { //  "eo"
-            endOpacity = AnimatableValueParser.parseFloat(v)
+            endOpacity.k = AnimatableValueParser.parseFloat(v)
+            
+            handleAIX(v, endOpacity)
         }
         if (let Some(v) <- jsonObject.get(NAMES[8])) { //  "sk"
-            skew = AnimatableValueParser.parseFloat(v)
+            skew.k = AnimatableValueParser.parseFloat(v)
+            
+            handleAIX(v, skew)
         }
         if (let Some(v) <- jsonObject.get(NAMES[9])) { //  "sa"
-            skewAngle = AnimatableValueParser.parseFloat(v)
+            skewAngle.k = AnimatableValueParser.parseFloat(v)
+            
+            handleAIX(v, skewAngle)
         }
         if (let Some(v) <- jsonObject.get(NAMES[10])) { //  "ty"
             ty = v.asString().getValue()
@@ -88,7 +126,7 @@ public class AnimatableTransformParser {
             a: anchorPoint,
             p: position,
             s: scale,
-            r: ArrayKeyframeFloat64(k: rotation),
+            r: rotation,
             o: opacity,
             so: startOpacity,
             eo: endOpacity,
@@ -97,6 +135,16 @@ public class AnimatableTransformParser {
             ty: ty
         )
         return cm
+    }
+
+    private static func handleAIX(jv: JsonValue, keyframe: ArrayKeyframeFloat64): Unit {
+        let jo: JsonObject = jv.asObject()
+        if (let Some(k) <- jo.get(NAMES_AIX[0])) { // "a"
+            keyframe.a = k.asInt().getValue()
+        }
+        if (let Some(k) <- jo.get(NAMES_AIX[1])) { // "ix"
+            keyframe.ix = k.asInt().getValue()
+        }
     }
 
 }

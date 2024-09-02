@@ -16,9 +16,26 @@ public class ShapeGroup <: ContentModel {
     public let hd: Bool                      // 1 = hidden
     private let _it: Array<ContentModel>     // 2 = items
 
+    public var cix: Int64 = 0
+
     let _ty: String = "gr"
     public open prop ty: String {
         get() { _ty }
+    }
+    
+    /**
+     * Create a ShapeGroup instance based on parameters.
+     *
+     * @param nm - Type of String, the value of nm.
+     * @param it - Type of Array<ContentModel>, the value of it.
+     * @param hd - Type of Bool, the value of hd.
+     * @param cix - Type of Int64, the value of cix.
+     */
+    public init(nm!: String, it!: Array<ContentModel>, hd!: Bool = false, cix!: Int64 = 0) {
+        this.nm = nm
+        this._it = it
+        this.hd = hd
+        this.cix = cix
     }
 
     /**
@@ -32,10 +49,6 @@ public class ShapeGroup <: ContentModel {
         this.nm = nm
         this._it = it
         this.hd = hd
-    }
-    
-    public func clone(): ShapeGroup {
-        return ShapeGroup(this.nm, this.it.clone(), this.hd)
     }
 
     /**

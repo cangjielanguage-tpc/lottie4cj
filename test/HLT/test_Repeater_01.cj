@@ -10,8 +10,10 @@ public class TestLottie4cjRepeater{
     @TestCase
     func test_Repeater_01():Unit {
         var nm="nm_Repeater"
-        var c=Array<Keyframe<Float64>>(111,item:Keyframe<Float64>())
-        var o=Array<Keyframe<Float64>>(101,item:Keyframe<Float64>())
+        var ck=Array<Keyframe<Float64>>(111,item:Keyframe<Float64>())
+        var c = ArrayKeyframeFloat64(k: ck)
+        var ok=Array<Keyframe<Float64>>(101,item:Keyframe<Float64>())
+        var o = ArrayKeyframeFloat64(k: ok)
         var tr=AnimatableTransform()
         var hd=true
         var Repeater=Repeater(nm:nm,c:c,o:o,tr:tr,hd:hd)
@@ -21,16 +23,18 @@ public class TestLottie4cjRepeater{
         @Assert(Repeater.toString(),"Repeater[rp]: {\n" +
                                            "ty = rp\n" +
                                            "nm = ${nm}\n" +
-                                           "c = ${c}\n" +
-                                           "o = ${o}\n" +
+                                           "c = ${c.k}\n" +
+                                           "o = ${o.k}\n" +
                                            "tr = ${tr}\n" +
                                            "hd = ${hd}\n}")
     }
     @TestCase
     func test_Repeater_02():Unit {
         var nm=""
-        var c=Array<Keyframe<Float64>>()
-        var o=Array<Keyframe<Float64>>()
+        var ck=Array<Keyframe<Float64>>()
+        var c = ArrayKeyframeFloat64(k: ck)
+        var ok=Array<Keyframe<Float64>>()
+        var o = ArrayKeyframeFloat64(k: ok)
         var tr=AnimatableTransform()
         var hd=false
         var Repeater=Repeater(nm:nm,c:c,o:o,tr:tr,hd:hd)
@@ -40,16 +44,18 @@ public class TestLottie4cjRepeater{
         @Assert(Repeater.toString(),"Repeater[rp]: {\n" +
                                            "ty = rp\n" +
                                            "nm = ${nm}\n" +
-                                           "c = ${c}\n" +
-                                           "o = ${o}\n" +
+                                           "c = ${c.k}\n" +
+                                           "o = ${o.k}\n" +
                                            "tr = ${tr}\n" +
                                            "hd = ${hd}\n}")
     }
     @TestCase
     func test_Repeater_03():Unit {
         var nm=""
-        var c=Array<Keyframe<Float64>>()
-        var o=Array<Keyframe<Float64>>()
+        var ck=Array<Keyframe<Float64>>()
+        var c = ArrayKeyframeFloat64(k: ck)
+        var ok=Array<Keyframe<Float64>>()
+        var o = ArrayKeyframeFloat64(k: ok)
         var tr=AnimatableTransform()
         var hd=false
         var Repeater=Repeater()
@@ -59,8 +65,8 @@ public class TestLottie4cjRepeater{
         @Assert(Repeater.toString(),"Repeater[rp]: {\n" +
                                            "ty = rp\n" +
                                            "nm = ${nm}\n" +
-                                           "c = ${c}\n" +
-                                           "o = ${o}\n" +
+                                           "c = ${c.k}\n" +
+                                           "o = ${o.k}\n" +
                                            "tr = ${tr}\n" +
                                            "hd = ${hd}\n}")
     }
