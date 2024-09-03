@@ -3,18 +3,17 @@
  */
 package lottie4cj.elements.helpers.shapes
 
-import lottie4cj.utils.helpers.*
 //TODO data类型
 public class SVGStyleData {
 
-    var data: Datas
-    var types: String
-    var d: String
-    var lvl: Int64
-    var _mdf: Bool
-    var closed: Bool
-    var pElem: CreateNS
-    var msElem: Option<CreateNS>
+    public var data: Datas
+    public var types: String
+    public var d: String
+    public var lvl: Int64
+    public var _mdf: Bool
+    public var closed: Bool
+    public var pElem: CreateNS
+    public var msElem: Option<CreateNS>
 
     public init(data: Datas, level: Int64) {
         this.data = data

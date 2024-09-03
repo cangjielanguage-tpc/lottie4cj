@@ -3,8 +3,8 @@
  */
 package lottie4cj.elements
 
-import lottie4cj.utils.helpers.lineCapEnum
-import lottie4cj.utils.helpers.lineJoinEnum
+import lottie4cj.utils.helpers.*
+import lottie4cj.utils.helpers.*
 //TODO 未完全实现
 public class CVShapeElement <: IShapeElement {
 

@@ -4,10 +4,12 @@
 package lottie4cj.elements.helpers.shapes
 
 //TODO DynamicPropertyContainer继承
-public class SVGStrokeStyleData {
-    var _isAnimated: Bool
+public class SVGStrokeStyleData <: SVGNoStyleData {
+    public var _isAnimated: Bool
     //调用DynamicPropertyContainer类接口
-    public init(elem: Object, data: Object, styleOb: SVGStyleData) {
+    public init(elem: Object, data: Datas, styleOb: SVGStyleData) {
+        super(elem,data,styleOb)
         this._isAnimated = false
+        
     }
 }

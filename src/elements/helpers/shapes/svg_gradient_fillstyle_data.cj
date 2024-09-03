@@ -5,30 +5,19 @@ package lottie4cj.elements.helpers.shapes
 
 import std.collection.*
 
-import lottie4cj.utils.helpers.*
 import lottie4cj.utils.*
 import lottie4cj.inner.*
 //DynamicPropertyContainer类继承关系
-public var lineCapEnum: HashMap<Int64, String> = HashMap<Int64, String>([
-    (1,"butt"),(2,"round"),(3,"square")
-    ])
-public var lineJoinEnum: HashMap<Int64, String> = HashMap<Int64, String>([
-    (1,"miter"),(2,"round"),(3,"bevel")
-    ])
-public class SVGGradientFillStyleData {
+public class SVGGradientFillStyleData <: SVGNoStyleData{
 
     var g: ElementDatag = ElementDatag()
     // var style: Object
     var stops: ArrayList<CreateNS> = ArrayList<CreateNS>()
-    var ms: CreateNS = CreateNS("")
-    var gf: CreateNS = CreateNS("")
-    var of: CreateNS = CreateNS("")
     var cst: ArrayList<CreateNS> = ArrayList<CreateNS>()
     var ost: ArrayList<CreateNS> = ArrayList<CreateNS>()
-    var maskId: String = ""
     //data,styleOb类型未确定
-    public init() {
-    
+    public init(elem: Object, data: Datas, styleOb: SVGStyleData) {
+        super(elem,data,styleOb)
     }
 
     public func initGradientData(elem: Object, data: Datas, styleOb: Object) {

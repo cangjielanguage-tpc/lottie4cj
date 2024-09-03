@@ -8,7 +8,7 @@ import std.math.*
 
 import lottie4cj.global_data.*
 import lottie4cj.bezier.*
-import lottie4cj.utils.helpers.*
+internal import lottie4cj.utils.helpers.*
 import lottie4cj.model.*
 public type RenderFunction = (Datas, ElementData, Bool) -> Unit
 //TODO
@@ -268,7 +268,12 @@ public class Datas {
     public var lj: Int64 = 0
     public var lc: Int64 = 0
     public var hd: Bool = false
+    public var _render: Bool = false
     public var g: Datasg = Datasg()
+    public var ln: String = ""
+    public var cl: String = ""
+    public var bm: Int64 = 0
+    public var r: Int64 = 0
 }
 
 public class Datasg {

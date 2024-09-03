@@ -6,17 +6,17 @@ package lottie4cj.elements.helpers.shapes
 import std.collection.*
 //TODO
 public class SVGShapeData {
-    var caches: ArrayList<Object>
-    var styles: ArrayList<Object>
-    var transformers: Array<ElementData>
-    var lStr: String
-    var _isAnimated: Bool = false
-    var lvl: Int64
+    public var caches: ArrayList<Object>
+    public var styles: ArrayList<SVGStyleData>
+    public var transformers: ArrayList<ElementData>
+    public var lStr: String
+    public var _isAnimated: Bool = false
+    public var lvl: Int64
 
     //ShapePropertyFactory.getShapePro-->shape
-    public init(transformers: Array<ElementData>, level: Int64, shape: Object) {
+    public init(transformers: ArrayList<ElementData>, level: Int64, shape: Object) {
         this.caches = ArrayList<Object>()
-        this.styles = ArrayList<Object>()
+        this.styles = ArrayList<SVGStyleData>()
         this.transformers = transformers
         this.lStr = ""
         this.lvl = level
