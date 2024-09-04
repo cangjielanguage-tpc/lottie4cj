@@ -9,6 +9,7 @@ package lottie4cj.model
 
 internal import std.math.*
 
+//融合 utils.shapes.ShapePath 分割线
 public class ShapeData <: ToString {
 
     public var c: Bool                //0 =  closed
