@@ -2,14 +2,17 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is Size.
+ */
 package lottie4cj.model
 
 public class Size <: ToString {
 
-    //The width
+    /* The width */
     public var width: Int64 = 0
 
-    //The height
+    /* The height */
     public var height: Int64 = 0
 
     /**

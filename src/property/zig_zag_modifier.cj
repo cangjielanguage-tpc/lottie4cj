@@ -8,17 +8,17 @@ public open class ZigZagModifier <: ShapeModifier {
     //TODO：拆分多继承问题 -- extendPrototype([ShapeModifier], ZigZagModifier)
 
     //TODO: 暂定ZigZagModifier 对应 PolystarShape 数据类型。
-    var amplitude: PropertyFactory<Array<Keyframe<Float64>>, Float64>
-    var frequency: PropertyFactory<Array<Keyframe<Float64>>, Float64>
-    var pointsType: PropertyFactory<Array<Keyframe<Float64>>, Float64>
+    var amplitude: PropertyFactory<ArrayKeyframeFloat64, Float64>
+    var frequency: PropertyFactory<ArrayKeyframeFloat64, Float64>
+    var pointsType: PropertyFactory<ArrayKeyframeFloat64, Float64>
 
     public init(elem: IShapeElement, data: ContentModel){
         super(elem, data)
         
         let dp: DynamicPropertyContainer = DynamicPropertyContainer(elem)
-        this.amplitude = PropertyFactory<Array<Keyframe<Float64>>, Float64>(elem, Array<Keyframe<Float64>>(), 0.0, dp)
-        this.frequency = PropertyFactory<Array<Keyframe<Float64>>, Float64>(elem, Array<Keyframe<Float64>>(), 0.0, dp)
-        this.pointsType = PropertyFactory<Array<Keyframe<Float64>>, Float64>(elem, Array<Keyframe<Float64>>(), 0.0, dp)
+        this.amplitude = PropertyFactory<ArrayKeyframeFloat64, Float64>(elem, ArrayKeyframeFloat64(), 0.0, dp)
+        this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>(elem, ArrayKeyframeFloat64(), 0.0, dp)
+        this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>(elem, ArrayKeyframeFloat64(), 0.0, dp)
     }
     
     public func getValue(): Unit {
@@ -34,16 +34,16 @@ public open class ZigZagModifier <: ShapeModifier {
 
             //TODO: 暂定 ZigZagModifier 对应 PolystarShape 数据类型。暂未确认 data.s 数据类型。  //this.amplitude = PropertyFactory.getProp(elem, data.s, 0, null, this)
             
-            if (sr.r.size == 1) {//走【分支1】
-                this.frequency = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, sr.r, sr.r[0].k ?? 0.0, 0.0, this)
-            } else if (sr.r.size > 1) {//走【分支3】
-                this.frequency = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, sr.r, sr.r, 0, 0.0, this)
+            if (sr.r.k.size == 1) {//走【分支1】
+                this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, sr.r, sr.r.k[0].k ?? 0.0, 0.0, this)
+            } else if (sr.r.k.size > 1) {//走【分支3】
+                this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, sr.r, sr.r.k, 0, 0.0, this)
             }
             
-            if (sr.pt.size == 1) {//走【分支1】
-                this.pointsType = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, sr.pt, sr.pt[0].k ?? 0.0, 0.0, this)
-            } else if (sr.pt.size > 1) {//走【分支3】
-                this.pointsType = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, sr.pt, sr.pt, 0, 0.0, this)
+            if (sr.pt.k.size == 1) {//走【分支1】
+                this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, sr.pt, sr.pt.k[0].k ?? 0.0, 0.0, this)
+            } else if (sr.pt.k.size > 1) {//走【分支3】
+                this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, sr.pt, sr.pt.k, 0, 0.0, this)
             }
         }
 

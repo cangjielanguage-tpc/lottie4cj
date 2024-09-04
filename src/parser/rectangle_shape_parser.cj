@@ -15,13 +15,18 @@ class RectangleShapeParser {
         "d"      // 5
     ]
 
+    private static let NAMES_AIX: Array<String> = [
+        "a",  // 0
+        "ix"  // 1
+    ]
+
     static func parse(reader: JsonObject): RectangleShape {
         var name: String = ""
 
         var position: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()
-        var size: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
+        var size: ArrayKeyframePointF = ArrayKeyframePointF()
 
-        var roundedness: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+        var roundedness: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
         var hidden: Bool = false
         var d: Int64 = -1
 
@@ -33,10 +38,26 @@ class RectangleShapeParser {
             position = AnimatablePathValueParser.parseSplitPath(v)
         }
         if (let Some(v) <- reader.get(NAMES[2])) {  //"s"
-            size = AnimatableValueParser.parsePoint(v)
+            size.k = AnimatableValueParser.parsePoint(v)
+            
+            let jo: JsonObject = v.asObject()
+            if (let Some(k) <- jo.get(NAMES_AIX[0])) { // "a"
+                size.a = k.asInt().getValue()
+            }
+            if (let Some(k) <- jo.get(NAMES_AIX[1])) { // "ix"
+                size.ix = k.asInt().getValue()
+            }
         }
-        if (let Some(v) <- reader.get(NAMES[3])) {  //"s"
-            roundedness = AnimatableValueParser.parseFloat(v)
+        if (let Some(v) <- reader.get(NAMES[3])) {  //"r"
+            roundedness.k = AnimatableValueParser.parseFloat(v)
+            
+            let jo: JsonObject = v.asObject()
+            if (let Some(k) <- jo.get(NAMES_AIX[0])) { // "a"
+                roundedness.a = k.asInt().getValue()
+            }
+            if (let Some(k) <- jo.get(NAMES_AIX[1])) { // "ix"
+                roundedness.ix = k.asInt().getValue()
+            }
         }
 
         if (let Some(v) <- reader.get(NAMES[4])) {  //"hd"
@@ -45,7 +66,7 @@ class RectangleShapeParser {
         if (let Some(v) <- reader.get(NAMES[5])) {  //"d"
             d = v.asInt().getValue()
         }
-
+        
         let cm: RectangleShape = RectangleShape(
             nm: name,
             p: position,

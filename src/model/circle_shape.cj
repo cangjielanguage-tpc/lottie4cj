@@ -13,10 +13,15 @@ public class CircleShape <: ContentModel {
      * 7. "layers"."shapes".{"ty": "el"} = CircleShapeParser
      */
     public let nm: String                                // 0 = name
+    //"p": {"a": 0, "k": [0, 0], "ix": 3}
     public let p: AnimatableSplitDimensionPathValue      // 1 = position
-    private let _s: Array<Keyframe<PointF>>              // 2 = size
+    //"s": {"a": 0, "k": [332.711, 332.711], "ix": 2}
+    public let s: ArrayKeyframePointF                    // 2 = size
     public let hd: Bool                                  // 3 = hidden
     public let d: Int64                                  // 4 = reversed
+    
+    //TODO: 编译用，在 json 中没有找到 ix 字段。
+    public var ix: Int64 = -1
     
     let _ty: String = "el"
     public open prop ty: String {
@@ -28,20 +33,20 @@ public class CircleShape <: ContentModel {
      *
      * @param nm - Type of String, the value of nm.
      * @param p - Type of AnimatableSplitDimensionPathValue, the value of p.
-     * @param s - Type of Array<Keyframe<PointF>>, the value of s.
+     * @param s - Type of ArrayKeyframePointF, the value of s.
      * @param hd - Type of Bool, the value of hd.
      * @param d - Type of Int64, the value of d.
      */
     public init(
         nm!: String = "",
         p!: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(),
-        s!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
+        s!: ArrayKeyframePointF = ArrayKeyframePointF(),
         hd!: Bool = false,
         d!: Int64 = 0
     ){
         this.nm = nm
         this.p = p
-        this._s = s
+        this.s = s
         this.hd = hd
         this.d = d
     }
@@ -54,13 +59,6 @@ public class CircleShape <: ContentModel {
     }
 
     /**
-     * Obtain the s of CircleShape.
-     */
-    public prop s: Array<Keyframe<PointF>> {
-        get() { this._s.clone() }
-    }
-
-    /**
      * Return to convert the instance into a string and return.
      *
      * @return Type of String, converted String.
@@ -70,7 +68,7 @@ public class CircleShape <: ContentModel {
                "ty = ${ty},\n" +
                "nm = ${nm},\n" +
                "p = ${p},\n" +
-               "s = ${_s},\n" +
+               "s = ${s.k},\n" +
                "hd = ${hd},\n" +
                "d = ${d}\n}"
     }

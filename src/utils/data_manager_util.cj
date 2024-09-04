@@ -129,11 +129,11 @@ func checkChars(animationData: AnimationData, completeShapes: (Array<ContentMode
                 charData.data.sr = 1
                 let arrayKeyframePoint: Array<Keyframe<PointF>> = [Keyframe<PointF>(k: PointF())]
                 charData.data.ks = AnimatableTransform(
-                  a: arrayKeyframePoint,
-                  p: AnimatableSplitDimensionPathValue(k: arrayKeyframePoint),
-                  s: Array<Keyframe<Array<Float64>>>([Keyframe<Array<Float64>>(k: [100.0, 100.0])]),
-                  r: ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>([Keyframe<Float64>(k: 0.0)])),
-                  o: Array<Keyframe<Int64>>([Keyframe<Int64>(k: 100)])
+                      a: ArrayKeyframePointF(k: arrayKeyframePoint),
+                      p: AnimatableSplitDimensionPathValue(k: arrayKeyframePoint),
+                      s: ArrayKeyframeArrayFloat64(k: [Keyframe<Array<Float64>>(k: [100.0, 100.0])]),
+                      r: ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>([Keyframe<Float64>(k: 0.0)])),
+                      o: ArrayKeyframeInt64(k: [Keyframe<Int64>(k: 100)])
                 )
                 //TODO: 在 json 中找不到 chars[i].t
             }

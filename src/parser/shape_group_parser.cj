@@ -9,13 +9,15 @@ class ShapeGroupParser {
     private static let NAMES: Array<String> = [
         "nm",
         "hd",
-        "it"
+        "it",
+        "cix"
     ]
 
     static func parse(reader: JsonObject): ShapeGroup {
         var name: String = ""
         var hidden: Bool = false
         var items: Array<ContentModel> = Array<ContentModel>()
+        var cix: Int64 = 0
 
         if (let Some(v) <- reader.get(NAMES[0])) {
             name = v.asString().getValue()
@@ -37,6 +39,10 @@ class ShapeGroupParser {
             }
         }
 
-        return ShapeGroup(name, items, hidden)
+        if (let Some(v) <- reader.get(NAMES[3])) { //"cix"
+            cix = v.asInt().getValue()
+        }
+
+        return ShapeGroup(nm: name, it: items, hd: hidden, cix: cix)
     }
 }

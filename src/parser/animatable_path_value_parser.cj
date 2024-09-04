@@ -15,6 +15,10 @@ public class AnimatablePathValueParser {
         "x",
         "y"
     ]
+    private static let NAMES_AIX: Array<String> = [
+        "a",  // 0
+        "ix"  // 1
+    ]
 
     /**
      * Animate json data in special "p" data,
@@ -53,6 +57,9 @@ public class AnimatablePathValueParser {
 
     static func parseSplitPath(reader: JsonValue): AnimatableSplitDimensionPathValue {
 
+        var a: Int64 = 0
+        var ix: Int64 = 0
+
         var pathAnimation: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
         var xAnimation: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
         var yAnimation: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
@@ -60,6 +67,14 @@ public class AnimatablePathValueParser {
         var hasExpressions:Bool = false
 
         let jsonObject: JsonObject = reader.asObject()
+
+        if (let Some(v) <- jsonObject.get(NAMES_AIX[0])) { // "a"
+            a = v.asInt().getValue()
+        }
+        if (let Some(v) <- jsonObject.get(NAMES_AIX[1])) { // "ix"
+            ix = v.asInt().getValue()
+        }
+        
         if (let Some(v) <- jsonObject.get(NAMES[0])) { //"k"
             pathAnimation = AnimatablePathValueParser.parse(v)
         }
@@ -85,6 +100,8 @@ public class AnimatablePathValueParser {
         }
 
         let aspv: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(
+            a: a,
+            ix: ix,
             k: pathAnimation,
             x: xAnimation,
             y: yAnimation

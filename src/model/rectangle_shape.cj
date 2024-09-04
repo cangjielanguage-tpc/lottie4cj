@@ -13,9 +13,11 @@ public class RectangleShape <: ContentModel {
      * 8. "layers"."shapes".{"ty": "rc"} = RectangleShapeParser
      */
     public let nm: String                                // 0 = name
+    //TODO: 是否要改成 Array<Keyframe<Array<Float64>>>？？？
     public let p: AnimatableSplitDimensionPathValue      // 1 = position
-    private let _s: Array<Keyframe<PointF>>              // 2 = size
-    private let _r: Array<Keyframe<Float64>>             // 3 = roundedness
+    //TODO: 是否要改成 Array<Keyframe<Array<Float64>>>？？？
+    public let s: ArrayKeyframePointF                    // 2 = size
+    public let r: ArrayKeyframeFloat64                   // 3 = roundedness
     public let hd: Bool                                  // 4 = hidden
     
     public let d: Int64
@@ -30,22 +32,23 @@ public class RectangleShape <: ContentModel {
      *
      * @param nm - Type of String, the value of nm.
      * @param p - Type of AnimatableSplitDimensionPathValue, the value of p.
-     * @param s - Type of Array<Keyframe<PointF>>, the value of s.
-     * @param r - Type of Array<Keyframe<Float64>>, the value of r.
+     * @param s - Type of ArrayKeyframePointF, the value of s.
+     * @param r - Type of ArrayKeyframeFloat64, the value of r.
      * @param hd - Type of Bool, the value of hd.
+     * @param d - Type of Int64, the value of d.
      */
     public init(
         nm!: String = "",
         p!: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(),
-        s!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
-        r!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        s!: ArrayKeyframePointF = ArrayKeyframePointF(),
+        r!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64(),
         hd!: Bool = false,
         d!: Int64 = -1
     ){
         this.nm = nm
         this.p = p
-        this._s = s
-        this._r = r
+        this.s = s
+        this.r = r
         this.hd = hd
         this.d = d
     }
@@ -58,20 +61,6 @@ public class RectangleShape <: ContentModel {
     }
 
     /**
-     * Obtain the s of RectangleShape.
-     */
-    public prop s: Array<Keyframe<PointF>> {
-        get() { this._s.clone() }
-    }
-
-    /**
-     * Obtain the r of RectangleShape.
-     */
-    public prop r: Array<Keyframe<Float64>> {
-        get() { this._r.clone() }
-    }
-
-    /**
      * Return to convert the instance into a string and return.
      *
      * @return Type of String, converted String.
@@ -81,8 +70,8 @@ public class RectangleShape <: ContentModel {
                "ty = ${ty}\n" +
                "nm = ${nm}\n" +
                "p = ${p}\n" +
-               "s = ${_s}\n" +
-               "r = ${_r}\n" +
+               "s = ${s.k}\n" +
+               "r = ${r.k}\n" +
                "hd = ${hd}\n}"
     }
 }

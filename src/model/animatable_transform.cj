@@ -14,17 +14,19 @@ public class AnimatableTransform <: ContentModel {
     /**
      * 5. "layers"."shapes".{"ty": "tr"} = AnimatableTransformParser
      */
-    private let _a: Array<Keyframe<PointF>>              // 0 = anchorPoint
-    public let p: AnimatableSplitDimensionPathValue      // 1 = position
-    private let _s: Array<Keyframe<Array<Float64>>>      // 2 = scale
+    public let a: ArrayKeyframePointF                    // 0 = anchorPoint
+    public let p: AnimatableSplitDimensionPathValue      // 1 = position       // k: ArrayKeyframePointF
+    public let s: ArrayKeyframeArrayFloat64              // 2 = scale
     public let r: ArrayKeyframeFloat64                   // 4 = rotation
-    private let _o: Array<Keyframe<Int64>>               // 5 = opacity
-    private let _so: Array<Keyframe<Float64>>            // 6 = startOpacity
-    private let _eo: Array<Keyframe<Float64>>            // 7 = endOpacity
-    private let _sk: Array<Keyframe<Float64>>            // 8 = skew
-    private let _sa: Array<Keyframe<Float64>>            // 9 = skewAngle
+    public let o: ArrayKeyframeInt64                     // 5 = opacity
+    //"so": {"a": 0, "k": 100, "ix": 5}
+    public let so: ArrayKeyframeFloat64                  // 6 = startOpacity
+    //"eo": {"a": 0, "k": 100, "ix": 6}
+    public let eo: ArrayKeyframeFloat64                  // 7 = endOpacity
+    public let sk: ArrayKeyframeFloat64                  // 8 = skew
+    public let sa: ArrayKeyframeFloat64                  // 9 = skewAngle
 
-    private let _ty: String
+    public let _ty: String
     public open prop ty: String {
         get() { _ty }
     }
@@ -32,40 +34,40 @@ public class AnimatableTransform <: ContentModel {
     /**
      * Create a AnimatableTransform instance based on parameters.
      *
-     * @param a - Type of Array<Keyframe<PointF>>, the value of a.
+     * @param a - Type of ArrayKeyframePointF, the value of a.
      * @param p - Type of AnimatableSplitDimensionPathValue, the value of p.
-     * @param s - Type of Array<Keyframe<Array<Float64>>>, the value of s.
+     * @param s - Type of ArrayKeyframeArrayFloat64, the value of s.
      * @param r - Type of ArrayKeyframeFloat64, the value of r.
-     * @param o - Type of Array<Keyframe<Int64>>, the value of o.
-     * @param so - Type of Array<Keyframe<Float64>>, the value of so.
-     * @param eo - Type of Array<Keyframe<Float64>>, the value of eo.
-     * @param sk - Type of Array<Keyframe<Float64>>, the value of sk.
-     * @param sa - Type of Array<Keyframe<Float64>>, the value of sa.
+     * @param o - Type of ArrayKeyframeInt64, the value of o.
+     * @param so - Type of ArrayKeyframeFloat64, the value of so.
+     * @param eo - Type of ArrayKeyframeFloat64, the value of eo.
+     * @param sk - Type of ArrayKeyframeFloat64, the value of sk.
+     * @param sa - Type of ArrayKeyframeFloat64, the value of sa.
      * @param ty - Type of String, the value of ty.
      * @param nm - Type of String, the value of nm.
      */
     public init(
-        a!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
+        a!: ArrayKeyframePointF = ArrayKeyframePointF(),
         p!: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(),
-        s!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(),
+        s!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64(),
         r!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64(),
-        o!: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>(),
-        so!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
-        eo!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
-        sk!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
-        sa!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        o!: ArrayKeyframeInt64 = ArrayKeyframeInt64(),
+        so!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64(),
+        eo!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64(),
+        sk!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64(),
+        sa!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64(),
         ty!: String = "",
         nm!: String = "Transform"
     ){
-        this._a = a
+        this.a = a
         this.p = p
-        this._s = s
+        this.s = s
         this.r = r
-        this._o = o
-        this._so = so
-        this._eo = eo
-        this._sk = sk
-        this._sa = sa
+        this.o = o
+        this.so = so
+        this.eo = eo
+        this.sk = sk
+        this.sa = sa
         this._ty = ty
         this.nm = nm
     }
@@ -78,55 +80,6 @@ public class AnimatableTransform <: ContentModel {
     }
 
     /**
-     * Obtain the a of AnimatableTransform.
-     */
-    public prop a: Array<Keyframe<PointF>> {
-        get() { this._a.clone() }
-    }
-
-    /**
-     * Obtain the s of AnimatableTransform.
-     */
-    public prop s: Array<Keyframe<Array<Float64>>> {
-        get() { this._s.clone() }
-    }
-
-    /**
-     * Obtain the o of AnimatableTransform.
-     */
-    public prop o: Array<Keyframe<Int64>> {
-        get() { this._o.clone() }
-    }
-
-    /**
-     * Obtain the so of AnimatableTransform.
-     */
-    public prop so: Array<Keyframe<Float64>> {
-        get() { this._so.clone() }
-    }
-
-    /**
-     * Obtain the eo of AnimatableTransform.
-     */
-    public prop eo: Array<Keyframe<Float64>> {
-        get() { this._eo.clone() }
-    }
-
-    /**
-     * Obtain the sk of AnimatableTransform.
-     */
-    public prop sk: Array<Keyframe<Float64>> {
-        get() { this._sk.clone() }
-    }
-
-    /**
-     * Obtain the sa of AnimatableTransform.
-     */
-    public prop sa: Array<Keyframe<Float64>> {
-        get() { this._sa.clone() }
-    }
-
-    /**
      * Return to convert the instance into a string and return.
      *
      * @return Type of String, converted String.
@@ -134,15 +87,15 @@ public class AnimatableTransform <: ContentModel {
     public func toString(): String {
         return "AnimatableTransform[tr]: {\n" +
                "ty = ${_ty},\n" +
-               "a = ${_a},\n" +
+               "a = ${a.k},\n" +
                "p = ${p},\n" +
-               "s = ${_s},\n" +
+               "s = ${s.k},\n" +
                "r = ${r},\n" +
-               "o = ${_o},\n" +
-               "so = ${_so},\n" +
-               "eo = ${_eo},\n" +
-               "sk = ${_sk},\n" +
-               "sa = ${_sa}\n}"
+               "o = ${o.k},\n" +
+               "so = ${so.k},\n" +
+               "eo = ${eo.k},\n" +
+               "sk = ${sk.k},\n" +
+               "sa = ${sa.k}\n}"
     }
 
     /**
@@ -151,15 +104,15 @@ public class AnimatableTransform <: ContentModel {
      * @return Type of Bool, if the instance is empty, return true.
      */
     public func isNull(): Bool {
-        return _a.size == 0 &&
+        return a.k.size == 0 &&
                 p.isNull() &&
-                _s.size == 0 &&
+                s.k.size == 0 &&
                 r.isNull() &&
-                _o.size == 0 &&
-                _so.size == 0 &&
-                _eo.size == 0 &&
-                _sk.size == 0 &&
-                _sa.size == 0 &&
+                o.k.size == 0 &&
+                so.k.size == 0 &&
+                eo.k.size == 0 &&
+                sk.k.size == 0 &&
+                sa.k.size == 0 &&
                 _ty == ""
     }
 }

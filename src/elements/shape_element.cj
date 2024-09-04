@@ -132,4 +132,7 @@ public open class IShapeElement <: BaseElement {
         //TODO: (问题点)仓颉的calss是单继承，调不到 FrameElement.prepareProperties //this.prepareProperties(num, this.isInRange)
     }
 
+    //TODO: 配合 RepeaterModifier 编译用，暂未实现。
+    public open func reloadShapes(): Unit {}
+
 }

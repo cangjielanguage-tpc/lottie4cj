@@ -17,7 +17,13 @@ class PolystarShapeParser {
         "ir",   // 7
         "is",   // 8
         "hd",   // 9
-        "d"     // 10
+        "d",    // 10
+        "ix"    // 11
+    ]
+
+    private static let NAMES_AIX: Array<String> = [
+        "a",  // 0
+        "ix"  // 1
     ]
 
     static func parse(reader: JsonObject): PolystarShape {
@@ -25,16 +31,16 @@ class PolystarShapeParser {
         var types: Int64 = 0
         var position: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue()
 
-        let EMPTY_KFF64: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
-        var points: Array<Keyframe<Float64>> = EMPTY_KFF64
-        var rotation: Array<Keyframe<Float64>> = EMPTY_KFF64
-        var outerRadius: Array<Keyframe<Float64>> = EMPTY_KFF64
-        var outerRoundedness: Array<Keyframe<Float64>> = EMPTY_KFF64
-        var innerRadius: Array<Keyframe<Float64>> = EMPTY_KFF64
-        var innerRoundedness: Array<Keyframe<Float64>> = EMPTY_KFF64
+        var points: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+        var rotation: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+        var outerRadius: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+        var outerRoundedness: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+        var innerRadius: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+        var innerRoundedness: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
 
         var hidden: Bool = false
         var reversed: Int64 = 0
+        var ix: Int64 = -1
 
         if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
             name = v.asString().getValue()
@@ -43,31 +49,47 @@ class PolystarShapeParser {
             types = v.asInt().getValue()
         }
         if (let Some(v) <- reader.get(NAMES[2])) { // "pt"
-            points = AnimatableValueParser.parseFloat(v)
+            points.k = AnimatableValueParser.parseFloat(v)
+
+            handleAIX(v, points)
         }
         if (let Some(v) <- reader.get(NAMES[3])) { // "p"
             position = AnimatablePathValueParser.parseSplitPath(v)
         }
         if (let Some(v) <- reader.get(NAMES[4])) { // "r"
-            rotation = AnimatableValueParser.parseFloat(v)
+            rotation.k = AnimatableValueParser.parseFloat(v)
+
+            handleAIX(v, rotation)
         }
         if (let Some(v) <- reader.get(NAMES[5])) { // "or"
-            outerRadius = AnimatableValueParser.parseFloat(v)
+            outerRadius.k = AnimatableValueParser.parseFloat(v)
+
+            handleAIX(v, outerRadius)
         }
         if (let Some(v) <- reader.get(NAMES[6])) { // "os"
-            outerRoundedness = AnimatableValueParser.parseFloat(v)
+            outerRoundedness.k = AnimatableValueParser.parseFloat(v)
+
+            handleAIX(v, outerRoundedness)
         }
         if (let Some(v) <- reader.get(NAMES[7])) { // "ir"
-            innerRadius = AnimatableValueParser.parseFloat(v)
+            innerRadius.k = AnimatableValueParser.parseFloat(v)
+
+            handleAIX(v, innerRadius)
         }
         if (let Some(v) <- reader.get(NAMES[8])) { // "is"
-            innerRoundedness = AnimatableValueParser.parseFloat(v)
+            innerRoundedness.k = AnimatableValueParser.parseFloat(v)
+
+            handleAIX(v, innerRoundedness)
         }
         if (let Some(v) <- reader.get(NAMES[9])) { // "hd"
             hidden = v.asBool().getValue()
         }
         if (let Some(v) <- reader.get(NAMES[10])) { // "d"
             reversed = v.asInt().getValue()
+        }
+
+        if (let Some(v) <- reader.get(NAMES[11])) { // "ix"
+            ix = v.asInt().getValue()
         }
 
         let cm: PolystarShape = PolystarShape(
@@ -81,8 +103,20 @@ class PolystarShapeParser {
             ir: innerRadius,
             is2: innerRoundedness,
             hd: hidden,
-            d: reversed
+            d: reversed,
+            ix: ix
         )
         return cm
     }
+
+    private static func handleAIX(jv: JsonValue, keyframe: ArrayKeyframeFloat64): Unit {
+        let jo: JsonObject = jv.asObject()
+        if (let Some(k) <- jo.get(NAMES_AIX[0])) { // "a"
+            keyframe.a = k.asInt().getValue()
+        }
+        if (let Some(k) <- jo.get(NAMES_AIX[1])) { // "ix"
+            keyframe.ix = k.asInt().getValue()
+        }
+    }
+
 }

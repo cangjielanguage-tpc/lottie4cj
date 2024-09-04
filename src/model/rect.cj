@@ -2,6 +2,9 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
 
+/**
+ * @file This file is SourceRect.
+ */
 package lottie4cj.model
 
 public class SourceRect <: ToString {

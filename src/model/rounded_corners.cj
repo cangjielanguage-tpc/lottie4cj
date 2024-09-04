@@ -9,11 +9,14 @@ package lottie4cj.model
 
 public class RoundedCorners <: ContentModel {
 
+    public var ix: Int64 = -1
+
     /**
      * 13. "layers"."shapes".{"ty": "rd"} = RoundedCornersParser
      */
     public let nm: String                          // 0
-    private let _r: Array<Keyframe<Float64>>       // 1
+    //"r": {"a": 0, "k": 10, "ix": 1}
+    public let r: ArrayKeyframeFloat64             // 1
     public let hd: Bool                            // 2
 
     let _ty: String = "rd"
@@ -25,13 +28,15 @@ public class RoundedCorners <: ContentModel {
      * Create a RoundedCorners instance based on parameters.
      *
      * @param nm - Type of String, the value of nm.
-     * @param r - Type of Array<Keyframe<Float64>>, the value of r.
+     * @param r - Type of ArrayKeyframeFloat64, the value of r.
      * @param hd - Type of Bool, the value of hd.
+     * @param ix - Type of Int64, the value of ix.
      */
-    public init(nm!: String = "", r!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(), hd!: Bool = false){
+    public init(nm!: String = "", r!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64(), hd!: Bool = false, ix!: Int64 = -1){
         this.nm = nm
-        this._r = r
+        this.r = r
         this.hd = hd
+        this.ix = ix
     }
 
     /**
@@ -39,13 +44,6 @@ public class RoundedCorners <: ContentModel {
      */
     public override prop types: Int8 {
         get() { 13 }
-    }
-
-    /**
-     * Obtain the r of RoundedCorners.
-     */
-    public prop r: Array<Keyframe<Float64>> {
-        get() { this._r.clone() }
     }
 
     /**
@@ -57,7 +55,7 @@ public class RoundedCorners <: ContentModel {
         return "RoundedCorners[rd]: {\n" +
                "ty = ${ty}\n" +
                "nm = ${nm}\n" +
-               "r = ${_r}\n" +
+               "r = ${r.k}\n" +
                "hd = ${hd}\n}"
     }
 }

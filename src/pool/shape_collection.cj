@@ -3,7 +3,7 @@
  */
 
 /**
- * @file This file is BaseElement.
+ * @file This file is ShapeCollection.
  */
 package lottie4cj.pool
 

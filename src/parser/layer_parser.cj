@@ -40,7 +40,8 @@ public class LayerParser {
         "cl",     // 21   // Suffix, such as.png
         "hd",     // 22
         "ao",     // 23   // Automatic tracking or not
-        "bm"      // 24   // Mixed mode
+        "bm",     // 24   // Mixed mode
+        "hasMask" // 25   // has "masksProperties"
     ]
 
     private static let TEXT_NAMES: Array<String> = [
@@ -94,6 +95,8 @@ public class LayerParser {
 
         var masks: Array<Mask> = Array<Mask>()
         var shapes: Array<ContentModel> = Array<ContentModel>()
+        
+        var hasMask: Bool = false
 
         let jo: JsonObject = reader.asObject()
 
@@ -178,7 +181,8 @@ public class LayerParser {
                     let a: Array<AnimatableTextPropertiesA> = Array<AnimatableTextPropertiesA>(len, item: EMPTY_ATPA)
                     for (i in 0..len) {
                         let jo: JsonObject = ja[i].asObject()
-                        a[i] = AnimatableTextPropertiesParser.parse(jo)
+                        let textProperties: AnimatableTextPropertiesA = AnimatableTextPropertiesParser.parse(jo)
+                        a[i] = textProperties
                     }
                     tda = a
                 }
@@ -267,6 +271,9 @@ public class LayerParser {
         if (let Some(v) <- jo.get(NAMES[24])) {
             blendMode = v.asInt().getValue()
         }
+        if (let Some(v) <- jo.get(NAMES[25])) {
+            hasMask = v.asBool().getValue()
+        }
 
         let layer: Layer = Layer(
             nm: layerName,
@@ -293,7 +300,8 @@ public class LayerParser {
             cl: cl,
             hd: hidden,
             ao: autoOrient,
-            bm: blendMode
+            bm: blendMode,
+            hasMask: hasMask
         )
         return layer
     }

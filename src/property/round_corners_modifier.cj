@@ -7,13 +7,13 @@ package lottie4cj.property
 public class RoundCornersModifier <: ShapeModifier {
     //TODO：拆分多继承问题 -- extendPrototype([ShapeModifier], RoundCornersModifier)
 
-    var rd: PropertyFactory<Array<Keyframe<Float64>>, Float64>
+    var rd: PropertyFactory<ArrayKeyframeFloat64, Float64>
     
     public init(elem: IShapeElement, data: ContentModel){
         super(elem, data)
         
         let dp: DynamicPropertyContainer = DynamicPropertyContainer(elem)
-        this.rd = PropertyFactory<Array<Keyframe<Float64>>, Float64>(elem, Array<Keyframe<Float64>>(), 0.0, dp)
+        this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>(elem, ArrayKeyframeFloat64(), 0.0, dp)
     }
     
     public func getValue(): Unit {
@@ -27,10 +27,10 @@ public class RoundCornersModifier <: ShapeModifier {
             let rd: RoundedCorners = (data as RoundedCorners).getOrThrow()
             
             //"r": {"a": 0, "k": 10, "ix": 1}  //_r: Array<Keyframe<Float64>>
-            if (rd.r.size == 1) {//走【分支1】
-                this.rd = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, rd.r, rd.r[0].k ?? 0.0, 0.0, this)
-            } else if (rd.r.size > 1) {//走【分支3】
-                this.rd = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, rd.r, rd.r, 0, 0.0, this)
+            if (rd.r.k.size == 1) {//走【分支1】
+                this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, rd.r, rd.r.k[0].k ?? 0.0, 0.0, this)
+            } else if (rd.r.k.size > 1) {//走【分支3】
+                this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, rd.r, rd.r.k, 0, 0.0, this)
             }
         }
         this._isAnimated = this.rd.effectsSequence.size != 0

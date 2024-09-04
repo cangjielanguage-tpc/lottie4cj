@@ -26,7 +26,7 @@ public open class DynamicPropertyContainer {
     public open func getValue(): Unit {}
     public open func getValue(flag: Bool): Unit {}
 
-    public func addDynamicProperty(dpc: DynamicPropertyContainer): Unit {
+    public open func addDynamicProperty(dpc: DynamicPropertyContainer): Unit {
         for (i in 0..dynamicProperties.size) {
             if (refEq(dpc, dynamicProperties[i])) {
                 return

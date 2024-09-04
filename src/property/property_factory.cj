@@ -443,6 +443,16 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
      * TODO: 解析后的数据结构和 json 不太一样。实际调用哪个分支，不能按照 arkts 原来的路径直接用。需要在调用 PropertyFactory.getProp 【之前】做一下特殊处理。
      * 这块的数据解析的结构和json有些不一样，要注意对应。（或者修改之前解析封装的结构）
      */
+    //【分支1-变种】: dataK 不是数组，是数值 Int64，进入此分支。
+    public static func getProp<T>(elem: BaseElement, data: T, dataK: Int64, mult: Float64, container: DynamicPropertyContainer): PropertyFactory<T, Int64> where T <: ToString {
+        let p: PropertyFactory<T, Int64> = valueProperty(elem, data, Float64(dataK), mult, container)
+        if (p.effectsSequence.size != 0) {
+            //TODO: 未实现 TextAnimatorProperty 
+            //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？----------------------------------------------------------2024.08.17
+            //container.addDynamicProperty(p)
+        }
+        return p
+    }
     //【分支1】: dataK 不是数组，是数值/对象，进入此分支。
     public static func getProp<T>(elem: BaseElement, data: T, dataK: Float64, mult: Float64, container: DynamicPropertyContainer): PropertyFactory<T, Float64> where T <: ToString {
         let p: PropertyFactory<T, Float64> = valueProperty(elem, data, dataK, mult, container)
@@ -489,8 +499,8 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
         return p
     }
     
-    static func valueProperty<T>(elem: BaseElement, data: T, dataK: Float64, mult: Option<Float64>, container: DynamicPropertyContainer): PropertyFactory<T, Float64> where T <: ToString {
-        let p: PropertyFactory<T, Float64> = PropertyFactory<T, Float64>(elem, data, 0.0, container)
+    static func valueProperty<T, E>(elem: BaseElement, data: T, dataK: Float64, mult: Option<Float64>, container: DynamicPropertyContainer): PropertyFactory<T, E> where T <: ToString , E <: ToString {
+        let p: PropertyFactory<T, E> = PropertyFactory<T, E>(elem, data, 0.0, container)
         p.dataK_Number = [dataK]
         p.isNull = false
         

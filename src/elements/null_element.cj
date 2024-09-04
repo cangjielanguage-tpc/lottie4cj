@@ -3,7 +3,7 @@
  */
 
 /**
- * @file This file is BaseElement.
+ * @file This file is NullElement.
  */
 package lottie4cj.elements
 
