@@ -179,7 +179,7 @@ public class Mpropo {
     public var _mdf: Bool = false
 }
 
-public func indexOf(referenceNode: Object, arr: ArrayList<Object>): Int64 {
+public func indexOf<T>(referenceNode: T, arr: ArrayList<T>): Int64 where T <: Object {
     var index: Int64 = 0
     for (createNS in arr) {
         if (refEq(createNS, referenceNode)) {

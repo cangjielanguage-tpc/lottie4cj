@@ -5,12 +5,10 @@ package lottie4cj.elements.helpers.shapes
 
 import lottie4cj.model.*
 //TODO
-public class SVGFillStyleData {
-
-    var style: Object
+public class SVGFillStyleData <: SVGNoStyleData {
     //elem: SVGShapeElement styleOb: SVGStyleData
-    public init(elem: Object, data: Layer,styleOb: Object) {
-        this.style = styleOb
+    public init(elem: Object, data: Datas,styleOb: SVGStyleData) {
+        super(elem,data,styleOb)
     }   
 
 }

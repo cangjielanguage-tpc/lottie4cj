@@ -5,10 +5,13 @@ package lottie4cj.elements.helpers.shapes
 
 
 //TODO
-public class SVGNoStyleData {
+public open class SVGNoStyleData {
 
-    var style: SVGStyleData
-
+    public var style: SVGStyleData
+    public var gf: CreateNS = CreateNS("")
+    public var ms: CreateNS = CreateNS("")
+    public var of: CreateNS = CreateNS("")
+    public var maskId: String = ""
     public init(elem: Object, data: Datas, styleOb: SVGStyleData) {
        this.style = styleOb
     }
