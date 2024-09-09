@@ -18,7 +18,7 @@ public class TM {
     }
 }
 
-public class ICompElement <: BaseElement {
+public open class ICompElement <: BaseElement {
 
     //TODO：拆分多继承问题 -- extendPrototype([BaseElement, TransformElement, HierarchyElement, FrameElement, RenderableDOMElement], ICompElement)
 

@@ -34,7 +34,7 @@ public open class SvgBaseElement <: Equatable<SvgBaseElement> {
 
     var maskedElement: CreateNS = CreateNS("")
 
-    var _sizeChanged: Bool = false
+    public var _sizeChanged: Bool = false
 
     public init(data: Layer, globalData: GlobalData) {
         this.globalData = globalData

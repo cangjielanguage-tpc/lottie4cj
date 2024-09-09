@@ -22,7 +22,7 @@ public class TransformElement{
     public init(data: Layer, globalData: GlobalData) {
         this.data = data
         this.globalData = globalData
-        this.finalTransform = FinalTransform(Mprop(),false, false,Matrix())
+        this.finalTransform = FinalTransform()
         if (this.data.ao != 0) {
             this.finalTransform.mProp.autoOriented = true
         }
