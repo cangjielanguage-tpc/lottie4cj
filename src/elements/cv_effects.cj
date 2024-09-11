@@ -26,7 +26,7 @@ public class CvEffects {
             var types = elem.data.ef[i].ty
 
             if (registeredEffects.contains(types)) {    
-                //filterManager = CvGaussianBlurEffect(elem.effectsManager.effectElements[i], elem);
+                filterManager = CvGaussianBlurEffect(EffectsManager(), elem);
             }
             if (filterManager.isSome()) {
                 this.filters.append(filterManager.getOrThrow())

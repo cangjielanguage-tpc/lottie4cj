@@ -43,15 +43,12 @@ public class CvTextElement <: ITextElement{
         this.currentRender = None
         this.renderType = "canvas"
         this.values = valuesData("rgba(0,0,0,0)","rgba(0,0,0,0)", 0.0, "")
-        //this.initElement(data, globalData, comp)
     }
 
     public func tHelper() { }
 
     public func buildNewText() {
         var documentData = this.textProperty.currentData
-        //this.renderedLetters = createSizedArray(documentData.l ? documentData.l.length : 0);
-
         var hasFill = false
         if (!documentData.fc.isEmpty()) {
             hasFill = true
@@ -69,7 +66,6 @@ public class CvTextElement <: ITextElement{
 
         var fontData = this.globalData.fontManager.getFontByName(documentData.f)
         var letters: ArrayList<Letter> = documentData.l
-        //mHelper: new Matrix(),
         var matrixHelper: Matrix =  Matrix()
         this.stroke = hasStroke
         this.values.fValue = "${documentData.finalSize}" + "px " + this.globalData.fontManager.getFontByName(documentData.f).fFamily
@@ -80,7 +76,6 @@ public class CvTextElement <: ITextElement{
         var cnt = 0
         for (i in 0..len) {
             var charData = this.globalData.fontManager.getCharData(documentData.finalText[i], fontData.fStyle, this.globalData.fontManager.getFontByName(documentData.f).fFamily)
-            //shapeData = (charData && charData.data) || {};
             var shapeData = charData.data
             matrixHelper.reset()
         }

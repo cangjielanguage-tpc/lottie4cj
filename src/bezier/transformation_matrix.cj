@@ -328,9 +328,6 @@ public class Matrix {
 
     public func toCSS() {
         // Doesn't make much sense to add this optimization. If it is an identity matrix, it's very likely this will get called only once since it won't be keyframed.
-        /* if(this.isIdentity()) {
-                return '';
-            } */
         var i = 0
         var props = this.props
         var cssValue = "matrix3d("
@@ -357,9 +354,6 @@ public class Matrix {
 
     public func to2dCSS() {
         // Doesn't make much sense to add this optimization. If it is an identity matrix, it's very likely this will get called only once since it won't be keyframed.
-        /* if(this.isIdentity()) {
-                return '';
-            } */
         var props = this.props;
         var _a = roundMatrixProperty(props[0])
         var _b = roundMatrixProperty(props[1])
