@@ -1,0 +1,232 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ */
+
+/**
+ * @file This file is TextSelectorProp.
+ */
+package lottie4cj.property
+
+internal import lottie4cj.utils.text.*
+
+public class TextSelectorProp {
+
+    //数据来源分析：data  =>  layer.t.a[i].s(AnimatableTextPropertiesS)
+    //数据来源分析：arr  <=  TextAnimatorDataProperty.container 中  =>  TextAnimatorProperty
+    public static func getTextSelectorProp(elem: ITextElement, data: AnimatableTextPropertiesS): TextSelectorPropFactory {
+        //TODO: TextSelectorPropFactory 的 init 是 2 个参数。
+        return TextSelectorPropFactory(elem, data)
+    }
+}
+
+public class TextSelectorPropFactory <: DynamicPropertyContainer {
+    //TODO：拆分多继承问题 -- extendPrototype([DynamicPropertyContainer], TextSelectorPropFactory)
+
+    //TODO：TextAnimatorDataProperty 用到，增加成员变量 t，编译用。
+    public var t: Int64 = 0
+
+    var elem: ITextElement
+    var data: AnimatableTextPropertiesS
+    //TODO: elem 中还未引入 comp 成员变量。  //var comp = elem.comp
+
+    var _currentTextLength: Int64 = -1
+    var k: Bool = false
+
+    var finalS: Float64 = 0.0
+    var finalE: Float64 = 0.0
+
+    var xe: PropertyFactory<AK, Int64>
+    var ne: PropertyFactory<AK, Int64>
+    var a: PropertyFactory<AK, Int64>
+
+    //TODO: s/e/o/sm 在 json 中暂未找到。是否将 s/e/o/sm 当成空的 AK？？？
+    var s: PropertyFactory<AK, Int64>
+    //TODO: 是否将 e 当成空的 PropertyFactory
+    var e: PropertyFactory<AK, Int64>
+    var o: PropertyFactory<AK, Int64>
+    var sm: PropertyFactory<AK, Int64>
+
+    //数据来源分析：data  =>  layer.t.a[i].s(AnimatableTextPropertiesS)
+    public init(elem: ITextElement, data: AnimatableTextPropertiesS) {
+        super(elem)
+        this.data = data
+        this.elem = elem
+        //TODO: elem 中还未引入 comp 成员变量。  //this.comp = elem.comp
+
+        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elem)
+        let emptypf = PropertyFactory<AK, Int64>(elem, AK(), 0.0, dp)
+        //TODO: 是否将 s/e/o/sm 当成空的 AK 进行初始化？？？
+        this.s = emptypf
+        this.e = PropertyFactory<AK, Int64>(elem, AK(), 0.0, dp)
+        this.o = emptypf
+        this.xe = emptypf
+        this.ne = emptypf
+        this.sm = emptypf
+        this.a = emptypf
+
+        this.initDynamicPropertyContainer(elem)
+
+        //TODO: s/e/o/om 在 json 中暂未找到。是否将 s/e/o/sm 当成空的 AK 进行初始化？？？
+        this.s = PropertyFactory<AK, Int64>.getProp(elem, AK(), 0, 0.0, this)
+        //TODO: 是否将 e 当成空的 PropertyFactory？？？
+        this.e.v = [100.0]
+        this.o = PropertyFactory<AK, Int64>.getProp(elem, AK(), 0, 0.0, this)
+
+        //"xe": {"a": 0, "k": 0} //走【分支1】
+        this.xe = PropertyFactory<AK, Int64>.getProp(elem, data.xe, data.xe.k, 0.0, this)
+        //"ne": {"a": 0, "k": 0} //走【分支1】
+        this.ne = PropertyFactory<AK, Int64>.getProp(elem, data.ne, data.ne.k, 0.0, this)
+        //"a": {"a": 0, "k": 100} //走【分支1】
+        this.a = PropertyFactory<AK, Int64>.getProp(elem, data.a, data.a.k, 0.01, this)
+
+        this.sm = PropertyFactory.getProp(elem, AK(k: 100), 100, 0.0, this)
+
+        if (this.dynamicProperties.size == 0) {
+            this.getValue()
+        }
+    }
+    
+    //TODO: 在 getMult == TextExpressionSelectorPropFactory.getValueProxy 扩展？？？
+    public open func getMult(index: Int64, total: Int64): Float64 { return 0.0 }
+
+    public func getMult(ind2: Float64): Float64 {
+        var ind: Float64 = ind2
+        if (this._currentTextLength != this.elem.textProperty.currentData.l.size) {
+            this.getValue()
+        }
+        var x1: Float64 = 0.0
+        var y1: Float64 = 0.0
+        var x2: Float64 = 1.0
+        var y2: Float64 = 1.0
+        if (this.ne.v[0] > 0.0) {
+            x1 = this.ne.v[0] / 100.0
+        } else {
+            y1 = -this.ne.v[0] / 100.0
+        }
+        if (this.xe.v[0] > 0.0) {
+            x2 = 1.0 - this.xe.v[0] / 100.0
+        } else {
+            y2 = 1.0 + this.xe.v[0] / 100.0
+        }
+        let easer: (Float64) -> Float64 = BezierFactory.getBezierEasing(x1, y1, x2, y2, "").getOfBezierEasing
+
+        var mult: Float64 = 0.0
+        let s: Float64 = this.finalS
+        let e: Float64 = this.finalE
+        let types: Int64 = this.data.sh
+        if (types == 2) {
+            if (e == s) {
+                mult = if (ind >= e) { 1.0 } else { 0.0 }
+            } else {
+                mult = max(0.0, min(0.5 / (e - s) + (ind - s) / (e - s), 1.0))
+            }
+            mult = easer(mult)
+        } else if (types == 3) {
+            if (e == s) {
+                mult = if (ind >= e) { 0.0 } else { 1.0 }
+            } else {
+                mult = 1.0 - max(0.0, min(0.5 / (e - s) + (ind - s) / (e - s), 1.0))
+            }
+
+            mult = easer(mult)
+        } else if (types == 4) {
+            if (e == s) {
+                mult = 0.0
+            } else {
+                mult = max(0.0, min(0.5 / (e - s) + (ind - s) / (e - s), 1.0))
+                if (mult < 0.5) {
+                    mult *= 2.0
+                } else {
+                    mult = 1.0 - 2.0 * (mult - 0.5)
+                }
+            }
+            mult = easer(mult)
+        } else if (types == 5) {
+            if (e == s) {
+                mult = 0.0
+            } else {
+                let tot: Float64 = e - s
+
+                ind = min(max(0.0, ind + 0.5 - s), e - s)
+                let x: Float64 = -tot / 2.0 + ind
+                let a: Float64 = tot / 2.0
+                mult = sqrt(1.0 - (x * x) / (a * a))
+            }
+            mult = easer(mult)
+        } else if (types == 6) {
+            if (e == s) {
+                mult = 0.0
+            } else {
+                ind = min(max(0.0, ind + 0.5 - s), e - s)
+                mult = (1.0 + (cos((Float64.PI + Float64.PI * 2.0 * (ind) / (e - s))))) / 2.0   // eslint-disable-line
+            }
+            mult = easer(mult)
+        } else {
+            if (ind >= floor(s)) {
+                if (ind - s < 0.0) {
+                    mult = max(0.0, min(min(e, 1.0) - (s - ind), 1.0))
+                } else {
+                    mult = max(0.0, min(e - ind, 1.0))
+                }
+            }
+            mult = easer(mult)
+        }
+
+        /*
+         * 平稳实施。
+         * 平滑度表示原始[01]范围的缩小范围。
+         * 如果平滑度为25%，则新范围将为[0.375 0.625]
+         * 步骤如下：
+         * -找到新范围的较低值（阈值）
+         * -如果乘数小于该值，则将其降至0
+         * -如果它更大，
+         * -减去阈值
+         * -将其除以平滑度（这将使范围返回到[0 1]）
+         * 注意：如果它在某些情况下不起作用，请考虑在easer之前应用它。
+         */
+        if (this.sm.v[0] != 100.0) {
+            var smoothness: Float64 = this.sm.v[0] * 0.01
+            if (smoothness == 0.0) {
+                smoothness = 0.00000001
+            }
+            let threshold: Float64 = 0.5 - smoothness * 0.5
+            if (mult < threshold) {
+                mult = 0.0
+            } else {
+                mult = (mult - threshold) / smoothness
+                if (mult > 1.0) {
+                    mult = 1.0
+                }
+            }
+        }
+        return mult * this.a.v[0]
+    }
+
+    public func getValue(newCharsFlag: Bool) {
+        //是调用 DynamicPropertyContainer.iterateDynamicProperties ？？？
+        this.iterateDynamicProperties()
+        this._mdf = newCharsFlag || this._mdf
+        this._currentTextLength = this.elem.textProperty.currentData.l.size
+        if (newCharsFlag && this.data.r == 2) {
+            //TODO: s/e 在 json 中暂未找到
+            this.e.v = [ Float64(this._currentTextLength) ]
+        }
+
+        var divisor: Float64 = 1.0
+        if (this.data.r != 2) {
+            divisor = Float64(100 / this.data.totalChars)
+        }
+
+        //TODO: o/s/e 在 json 中暂未找到
+        let o: Float64 = this.o.v[0] / divisor
+        var s: Float64 = this.s.v[0] / divisor + o
+        var e: Float64 = (this.e.v[0] / divisor) + o
+        if (s > e) {
+            let _s: Float64 = s
+            s = e
+            e = _s
+        }
+        this.finalS = s
+        this.finalE = e
+    }
+}

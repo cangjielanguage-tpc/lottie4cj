@@ -467,7 +467,7 @@ public class TextProperty {
                 uncollapsedSpaces = 0.0
             }
 
-            letters.append(Letter(l: cLength, an: cLength, add: currentSize, n: newLineFlag, anIndexes: Array<Int64>(), val: val, line: currentLine, animatorJustifyOffset: 0))
+            letters.append(Letter(l: cLength, an: cLength, add: currentSize, n: newLineFlag, anIndexes: Array<Int64>(), val: val, line: currentLine, animatorJustifyOffset: 0.0))
             if (anchorGrouping == 2) { // eslint-disable-line eqeqeq
                 currentSize += cLength
                 if (val == "" || val == " " || i == len - 1) {

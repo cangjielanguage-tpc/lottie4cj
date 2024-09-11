@@ -16,10 +16,11 @@ public class Letter <: Equatable<Letter> {
     public var anIndexes: Array<Int64> = Array<Int64>()
     public var val: String = ""
     public var line: Int64 = 0
-    public var animatorJustifyOffset: Int64 = 0
+    public var animatorJustifyOffset: Float64 = 0.0
 
     public var ind: Int64 = 0
     public var extra: Float64 = 0.0
+
     public init(
         l!: Float64 = 0.0,
         an!: Float64 = 0.0,
@@ -28,7 +29,7 @@ public class Letter <: Equatable<Letter> {
         anIndexes!: Array<Int64> = Array<Int64>(),
         val!: String = "",
         line!: Int64 = 0,
-        animatorJustifyOffset!: Int64 = 0
+        animatorJustifyOffset!: Float64 = 0.0
     ){
         this.l = l
         this.an = an
