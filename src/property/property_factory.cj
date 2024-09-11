@@ -153,7 +153,7 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
                 if (nextKeyData_s.size == 0) {
                     arr = keyData_e
                 }
-                keyframeMetadata.bezierData = Bez.buildBezierData()(keyData_s, arr, keyData.to, keyData.ti)
+                keyframeMetadata.bezierData = Bez.buildBezierData(keyData_s, arr, keyData.to, keyData.ti)
             }
             var bezierData: BezierData = keyframeMetadata.bezierData
             if (frameNum >= nextKeyTime || frameNum < keyTime) {
