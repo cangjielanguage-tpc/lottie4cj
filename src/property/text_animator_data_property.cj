@@ -75,20 +75,18 @@ public class TextAnimatorDataProperty {
 
     var elem: ITextElement
     var animatorProps: AnimatableTextPropertiesA
-    //TODO：暂未实现 TextAnimatorProperty
-    //var container: TextAnimatorProperty
+    var container: TextAnimatorProperty
     
     var a: AnimatableTextProperty
     var s: TextSelectorPropFactory
 
-    public init (elem: ITextElement, animatorProps: AnimatableTextPropertiesA){
+    public init (elem: ITextElement, animatorProps: AnimatableTextPropertiesA, container: TextAnimatorProperty){
         this.elem = elem
         this.animatorProps = animatorProps
-        //TODO：暂未实现 TextAnimatorProperty  //this.container = container
+        this.container = container
 
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elem)
         //空的 PropertyFactor，为了 this.a 中数据不存在时，当做默认值使用。
-        let defaultData = PropertyFactory<Float64, Float64>(elem, 0.0, 0.0, dp)
+        let defaultData = PropertyFactory<Float64, Float64>(elem, 0.0, 0.0, container)
         //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。   //defaultData.propType = false
 
         //数据来源分析：textAnimatorAnimatables  ==  animatorProps.a  <=  this._textData.a[i].a  =>  layer.t.a[i].a(AnimatableTextProperties)
@@ -97,27 +95,27 @@ public class TextAnimatorDataProperty {
         //TODO: sw/sc 为空数组时，需单独处理。
         let sw: PropertyFactory<Array<Keyframe<Float64>>, Float64>
         if (textAnimatorAnimatables.sw.size == 0) {
-            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>(elem, Array<Keyframe<Float64>>(), 0.0, dp)
+            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>(elem, Array<Keyframe<Float64>>(), 0.0, container)
             //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。   //sw.propType = false
         } else if (textAnimatorAnimatables.sw.size == 1) {//走【分支1】
-            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, textAnimatorAnimatables.sw, textAnimatorAnimatables.sw[0].k ?? 0.0, 0.0, dp)
+            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, textAnimatorAnimatables.sw, textAnimatorAnimatables.sw[0].k ?? 0.0, 0.0, container)
         } else {//走【分支3】
-            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, textAnimatorAnimatables.sw, textAnimatorAnimatables.sw, 0, 0.0, dp)
+            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, textAnimatorAnimatables.sw, textAnimatorAnimatables.sw, 0, 0.0, container)
         }
         let sc: PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>
         if (textAnimatorAnimatables.sw.size == 0) {
-            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>(elem, Array<Keyframe<Array<Float64>>>(), 0.0, dp)
+            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>(elem, Array<Keyframe<Array<Float64>>>(), 0.0, container)
             //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。   //sc.propType = false
         } else if (textAnimatorAnimatables.sw.size == 1) {//走【分支2】
-            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(elem, textAnimatorAnimatables.sc, textAnimatorAnimatables.sc[0].k ?? Array<Float64>(), 0.0, dp)
+            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(elem, textAnimatorAnimatables.sc, textAnimatorAnimatables.sc[0].k ?? Array<Float64>(), 0.0, container)
         } else {//走【分支4】
-            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(elem, textAnimatorAnimatables.sc, textAnimatorAnimatables.sc, 1, 0.0, dp)
+            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(elem, textAnimatorAnimatables.sc, textAnimatorAnimatables.sc, 1, 0.0, container)
         }
         
         //走【分支4】
-        let fc: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>> = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(elem, textAnimatorAnimatables.fc, textAnimatorAnimatables.fc.k, 1, 0.0, dp)
+        let fc: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>> = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(elem, textAnimatorAnimatables.fc, textAnimatorAnimatables.fc.k, 1, 0.0, container)
         //走【分支3】
-        let t: PropertyFactory<ArrayKeyframeFloat64, Float64> = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, textAnimatorAnimatables.t, textAnimatorAnimatables.t.k, 0, 0.0, dp)
+        let t: PropertyFactory<ArrayKeyframeFloat64, Float64> = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, textAnimatorAnimatables.t, textAnimatorAnimatables.t.k, 0, 0.0, container)
     
         this.a = AnimatableTextProperty(
             sw: sw,
