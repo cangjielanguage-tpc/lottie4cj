@@ -14,6 +14,11 @@ internal import lottie4cj.utils.helpers.*
 //TODO: 未完全实现
 public open class BaseElement <: Equatable<BaseElement> {
 
+    //TODO: MaskElement 中编译用。
+    public var maskedElement: CreateNS = CreateNS("")
+    //TODO：父3类 TransformElement 中有 finalTransform，但是暂未和 BaseElement 编译关联起来。
+
+
     //TODO: 此处的 types == type。因为 type 是关键字，只能改为 types。
     //TODO: 未找到数据类型    //var types: Any
     //TODO: style 是一个对象??? 还是一个 HashMap<String, String> ???
@@ -121,4 +126,6 @@ public open class BaseElement <: Equatable<BaseElement> {
     //TODO: 返回值类型，需要和子类中的核对
     public open func sourceRectAtTime(): Any {}
 
+    //TODO: MaskElement 中编译用。
+    public func addRenderableComponent(elem: BaseElement): Unit{}
 }
