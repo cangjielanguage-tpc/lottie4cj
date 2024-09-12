@@ -11,7 +11,7 @@ public class AnimatableSplitDimensionPathValue <: ToString {
     
     public var a: Int64 = 0
     public var ix: Int64 = 0
-    
+    public var z: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
     private let _k: Array<Keyframe<PointF>>
     private let _x: Array<Keyframe<Float64>>
     private let _y: Array<Keyframe<Float64>>

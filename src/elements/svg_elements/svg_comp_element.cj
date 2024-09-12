@@ -15,14 +15,11 @@ internal import lottie4cj.utils.helpers.*
 internal import lottie4cj.elements.*
 
 //TODO: 未完全实现
-public open class SVGCompElement  {
+public open class SVGCompElement  <: ICompElement {
 
-    public var data: Layer
 
-    public var globalData: GlobalData
-
-    
     public init(data: Layer, globalData: GlobalData) {
+        super(data, globalData)
         this.data = data
         this.globalData = globalData
     }

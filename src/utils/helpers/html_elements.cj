@@ -14,7 +14,7 @@ package lottie4cj.utils.helpers
  */
 public open class CreateTag {
     public var types: String = ""
-    var style: TagStyle = TagStyle()
+    public var style: TagStyle = TagStyle()
     var innerText: String = ""
 
     /**
@@ -28,11 +28,12 @@ public open class CreateTag {
 
     //TODO: 未实现
     func appendChild(n: CreateTag) { }
+    public func appendChild(n: CreateNS) { }
     func setAttribute(k: String, v: String) { }
     func getContext(s: String) { }
 }
 
-class TagStyle {
+public class TagStyle {
     var fontFamily: String = ""
     var fontSize: Int64 = 0      //'300px'
     var fontVariant: String = "" //'normal'
@@ -43,6 +44,9 @@ class TagStyle {
     var left: Int64 = 0          //'-10000px'
     var top: Int64 = 0           //'-10000px'
     var letterSpacing = "absolute"  //字间距
+    public var transform = ""  
+    public var webkitTransform = "" 
+    public var opacity = 0  
 }
 
 class FontManagerNode {

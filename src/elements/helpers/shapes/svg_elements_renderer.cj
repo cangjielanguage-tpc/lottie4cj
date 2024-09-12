@@ -269,11 +269,22 @@ public class Datas {
     public var lc: Int64 = 0
     public var hd: Bool = false
     public var _render: Bool = false
+    public var hasMask: Bool = false
     public var g: Datasg = Datasg()
     public var ln: String = ""
     public var cl: String = ""
     public var bm: Int64 = 0
     public var r: Int64 = 0
+    public var shapes: Array<DatasShapes> = Array<DatasShapes>()
+}
+public class DatasShapes {
+    public var it: Array<DatasShapesIt> = Array<DatasShapesIt>()
+}
+public class DatasShapesIt {
+    public var s: ?DatasShapesIts = DatasShapesIts()
+}
+public class DatasShapesIts {
+    public var k: ArrayList<Float64> = ArrayList<Float64>()
 }
 
 public class Datasg {

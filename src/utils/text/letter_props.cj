@@ -8,11 +8,11 @@
 package lottie4cj.utils.text
 
 public class MDF {
-    var o: Bool = false
-    var sw: Bool = false
-    var sc: Bool = false
-    var fc: Bool = false
-    var m: Bool = false
+    public var o: Bool = false
+    public var sw: Bool = false
+    public var sc: Bool = false
+    public var fc: Bool = false
+    public var m: Bool = false
     var p: Bool = false
 
     init(){}
@@ -28,13 +28,13 @@ public class MDF {
 
 public class LetterProps {
 
-    var o: Int64 = 0
-    var sw: Int64 = 0
-    var sc: String = ""
-    var fc: String = ""
-    var m: String = ""
+    public var o: Int64 = 0
+    public var sw: Int64 = 0
+    public var sc: String = ""
+    public var fc: String = ""
+    public var m: String = ""
     var p: Array<Float64> = Array<Float64>()
-    var _mdf: MDF = MDF()
+    public var _mdf: MDF = MDF()
 
     /**
      * Create a LetterProps.

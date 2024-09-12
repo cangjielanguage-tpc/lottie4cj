@@ -17,6 +17,7 @@ public class CreateNS <: ToString & Equatable<CreateNS> {
 
     public var crossOrigin: String = ""
     public var src: String = ""
+    public var textContent: String = ""
     public var addEventListener: (String, () -> Unit, Bool) -> Unit = addEventListener
 
     var label: String = ""

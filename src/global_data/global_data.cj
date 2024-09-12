@@ -158,7 +158,7 @@ public class FinalTransform {
     public var _opMdf: Bool
     public var mat: Matrix
 
-    public init(mProp: Mprop, _matMdf: Bool, _opMdf: Bool, mat: Matrix) {
+    public init(mProp!: Mprop = Mprop(), _matMdf!: Bool= false, _opMdf!: Bool= false, mat!: Matrix= Matrix()) {
         this.mProp = mProp
         this._matMdf = _matMdf
         this._opMdf = _opMdf

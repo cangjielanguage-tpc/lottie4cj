@@ -55,7 +55,7 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
     
     var propType: String = ""
     var mult: Float64 = 1.0
-    var v: Array<Float64> = Array<Float64>()
+    public var v: Array<Float64> = Array<Float64>()
     var pv: Array<Float64> = Array<Float64>()
     
     var _mdf: Bool = false
