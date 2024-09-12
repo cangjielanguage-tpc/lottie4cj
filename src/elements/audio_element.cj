@@ -32,16 +32,13 @@ public class AudioElement {
 
     public func prepareFrame(num: Float64): Unit {
         if (!this._canPlay) {
-            //var timeRemapped = this.tm.v;
             this._currentTime = 0.0
         } else {
             this._currentTime = num / this.data.sr
         }
-        //this._volume = this.lv.v[0];
         var totalVolume = this._volume * this._volumeMultiplier;
         if (this._previousVolume != totalVolume) {
-            this._previousVolume = totalVolume;
-            //this.audio.volume(totalVolume);
+            this._previousVolume = totalVolume
         }
     }
 
@@ -50,16 +47,11 @@ public class AudioElement {
     }
 
     public func hide() {
-        //this.audio.pause();
         this._isPlaying = false
     }
 
     public func pause() {
-        try{
-            //this.audio.pause();
-        } catch (e: Exception) {
-            return;
-        }
+        // TODO
         this._isPlaying = false
         this._canPlay = false
     }
@@ -69,13 +61,12 @@ public class AudioElement {
     }
 
     public func setRate(rateValue: Int64) {
-        //this.audio.rate(rateValue)
+        // TODO
     }
 
     public func volume(volumeValue: Int64) {
         this._volumeMultiplier = volumeValue;
         this._previousVolume = volumeValue * this._volume;
-        //this.audio.volume(this._previousVolume);
     }
 
     public func getBaseElement(): Option<Object> {

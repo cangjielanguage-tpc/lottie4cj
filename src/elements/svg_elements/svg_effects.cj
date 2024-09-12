@@ -37,24 +37,19 @@ public class SVGEffects  {
             filterManager = None
             var types = elem.data.ef[i].ty
             if (registeredEffects.contains(types)) {
-                // var Effect = registeredEffects[types].effect
-                // filterManager = Effect(fil, elem.effectsManager.effectElements[i], elem, idPrefix + count, source);
                 source = idPrefix + "${count}"
                 if (registeredEffects[types].countsAsEffect.isSome()) {
                     count += 1
                 }
             }
             if (filterManager.isSome()) {
-                //this.filters.push(filterManager)
+                this.filters.append(filterManager.getOrThrow())
             }
         }
         if (count != 0) {
             elem.globalData.defs.appendChild(fil)
             elem.layerElement.setAttribute("filter", "url(" + getLocationHref() + "#" + filId + ")")
         }
-        // if (this.filters.length) {
-        //     elem.addRenderableComponent(this)
-        // }
     }
 }
 
