@@ -17,6 +17,7 @@ public class Letter <: Equatable<Letter> {
     public var val: String = ""
     public var line: Int64 = 0
     public var animatorJustifyOffset: Float64 = 0.0
+    public var yOffset: Int64 = 0
 
     public var ind: Int64 = 0
     public var extra: Float64 = 0.0

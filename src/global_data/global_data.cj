@@ -167,11 +167,58 @@ public class FinalTransform {
 }
 
 public class Mprop {
-    public var o: Mpropo = Mpropo()
-    public var v: Matrix = Matrix()
-    public var autoOriented: Bool = false
-    public var _opMdf: Bool = false
-    public var _mdf: Bool = false
+    public var o: Mpropo 
+    public var v: Matrix 
+    public var p: Mpropp 
+    public var or: MpropOr 
+    public var s: Mprops 
+    public var a: Mpropa 
+    public var autoOriented: Bool 
+    public var _opMdf: Bool 
+    public var _mdf: Bool
+    public var rxv: Float64 
+    public var ryv: Float64
+    public var rzv: Float64
+
+    public init(o!:Mpropo = Mpropo(),v!:Matrix = Matrix(),p!:Mpropp = Mpropp(),or!:MpropOr = MpropOr(),s!:Mprops = Mprops(),a!:Mpropa = Mpropa(),autoOriented!: Bool=false ,_opMdf!: Bool =false,_mdf!: Bool=false,rxv!:Float64 = 0.0,ryv!:Float64 = 0.0,rzv!:Float64 = 0.0) {
+        this.o =o
+        this.v = v
+        this.p = p
+        this.or = or
+        this.s = s
+        this.a = a
+        this.autoOriented = autoOriented
+        this._opMdf = _opMdf
+        this._mdf = _mdf
+        this.rxv = rxv
+        this.ryv = ryv
+        this.rzv = rzv
+    }
+}
+public class Mpropp {
+    public var v: ArrayList<Float64>
+    public init(v!:ArrayList<Float64> = ArrayList<Float64>()) {
+        this.v = v
+    }
+}
+public class Mprops {
+    public var v: ArrayList<Float64> 
+    public init(v!:ArrayList<Float64> = ArrayList<Float64>()) {
+        this.v = v
+    }
+    
+}
+public class Mpropa {
+    public var v: ArrayList<Float64> 
+    public init(v!:ArrayList<Float64> = ArrayList<Float64>()) {
+        this.v = v
+    }
+}
+public class MpropOr {
+    public var v: ArrayList<Float64>
+    public init(v!:ArrayList<Float64> = ArrayList<Float64>()) {
+        this.v = v
+    }
 }
 public class Mpropo {
     public var v: Int64 = 0
@@ -188,4 +235,156 @@ public func indexOf<T>(referenceNode: T, arr: ArrayList<T>): Int64 where T <: Ob
         index++
     }
     return -1
+}
+public class Datas {
+    public var ty: String = ""
+    public var ml: String = ""
+    public var t: Int64 = 0
+    public var lj: Int64 = 0
+    public var lc: Int64 = 0
+    public var hd: Bool = false
+    public var _render: Bool = false
+    public var hasMask: Bool = false
+    public var g: Datasg = Datasg()
+    public var ln: String = ""
+    public var cl: String = ""
+    public var bm: Int64 = 0
+    public var r: Int64 = 0
+    public var shapes: Array<DatasShapes> = Array<DatasShapes>()
+}
+public class DatasShapes {
+    public var it: Array<DatasShapesIt> = Array<DatasShapesIt>()
+}
+public class DatasShapesIt {
+    public var s: ?DatasShapesIts = DatasShapesIts()
+}
+public class DatasShapesIts {
+    public var k: ArrayList<Float64> = ArrayList<Float64>()
+}
+
+public class Datasg {
+    public var p: Int64 = 0
+}
+
+let tmp_array_String = Array<String>()
+public class ElementData {
+   public var transform: SvgTransform = SvgTransform()
+   public var transformers: Array<SvgTransforms> = Array<SvgTransforms>()
+   public var style: SvgStyleElem = SvgStyleElem()
+   public var c: ElementDatac = ElementDatac()
+   public var o: ElementDatao = ElementDatao()
+   public var d: Option<ElementDatad> = ElementDatad()
+   public var w: ?ElementDataw = ElementDataw()
+   public var gf: CreateNS = CreateNS("")
+   public var of: CreateNS = CreateNS("")
+   public var g: ElementDatag = ElementDatag()
+   public var s: ElementDatas = ElementDatas()
+   public var e: ElementDatae = ElementDatae()
+   public var cst: Array<CreateNS> = Array<CreateNS>()
+   public var ost: Array<CreateNS> = Array<CreateNS>()
+   public var h: ElementDatah = ElementDatah()
+   public var a: ElementDataa = ElementDataa()
+   public var styles: Array<ElementDataStyle> = Array<ElementDataStyle>()
+   public var lvl: Int64 = 0
+   public var sh: ?ElementDataSh = None
+   public var caches: Array<String> = tmp_array_String
+   public var it: Array<ElementData> = Array<ElementData>()
+}
+public class SvgTransforms {
+    public var container: CreateNS = CreateNS("")
+    public var op: SvgOp = SvgOp()
+    public var mProps: SvgmProps = SvgmProps()
+}
+public class ElementDataShPaths {
+    public var _length: Int64 = 0
+    public var shapes: Array<Option<ShapeData>> = Array<Option<ShapeData>>()
+}
+public class ElementDataSh {
+    public var _mdf: Bool = false
+    public var v: ElementDataShv = ElementDataShv()
+    public var paths: ElementDataShPaths = ElementDataShPaths()
+}
+
+let twoarraydata = Array<Array<Float64>>()
+public class ElementDataShv {
+    public var _length: Int64 = 0
+    public var c: Int64 = 0 
+    public var v: Array<Array<Float64>> = twoarraydata
+    public var i: Array<Array<Float64>> = twoarraydata
+    public var o: Array<Array<Float64>> = twoarraydata
+}
+public class ElementDataStyle {
+    public var _mdf: Bool = false
+    public var v: Float64 = 0.0
+    public var lvl: Int64 = 0
+    public var d: String = ""
+}
+public class ElementDatah {
+    public var _mdf: Bool = false
+    public var v: Float64 = 0.0
+}
+public class ElementDataa {
+    public var _mdf: Bool = false
+    public var v: Float64 = 0.0
+}
+
+let arraydata = Array<Float64>()
+public class ElementDatas {
+    public var _mdf: Bool = false
+    public var v: Array<Float64> = arraydata
+}
+public class ElementDatae {
+    public var _mdf: Bool = false
+    public var v: Array<Float64> = arraydata
+}
+public class ElementDatag {
+    public var _hasOpacity: Int64 = 0
+    public var _collapsable: Bool = false
+    public var _cmdf: Bool = false
+    public var _omdf: Bool = false
+    public var c: Array<Float64> = arraydata
+    public var o: Array<Float64> = arraydata
+}
+public class ElementDatad {
+    public var _mdf: Bool = false
+    public var dashStr: String = ""
+    public var dashoffset: Array<String> = tmp_array_String
+}
+
+public class ElementDatac {
+    public var _mdf: Bool = false
+    public var v: Array<Float64> = arraydata
+}
+
+public class ElementDatao {
+    public var _mdf: Bool = false
+    public var v: String = ""
+}
+
+public class ElementDataw {
+    public var _mdf: Bool = false
+    public var v: Float64 = 0.0
+    public var mult: Float64 = 0.0
+    public var keyframes: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+}
+
+public class SvgTransform {
+    public var container: CreateNS = CreateNS("")
+    public var op: SvgOp = SvgOp()
+    public var mProps: SvgmProps = SvgmProps()
+}
+
+public class SvgOp {
+    public var _mdf: Bool = false
+    public var v: String = ""
+}
+
+public class SvgmProps {
+    public var _mdf: Bool = false
+    public var v: Matrix = Matrix()
+}
+
+public class SvgStyleElem {
+    public var pElem: CreateNS = CreateNS("")
+    public var msElem: Option<CreateNS> = None
 }

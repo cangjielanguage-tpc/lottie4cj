@@ -31,10 +31,11 @@ public open class ICompElement <: BaseElement {
     //TODO: 初始化后，传入 BaseRenderer.checkLayers(num: Float64) 函数。
     public var checkLayers: (Float64) -> Unit = { m => ()}
 
-    //TODO: 未实现,初拟定了一个数据类型TM.
+    public var supports3d: Bool = false
+    //TODO: 未实现,初拟定了一个数据类型TM
     public var tm: TM = TM()
     var renderedFrame: Float64 = 0.0
-    var completeLayers: Bool = false
+    public var completeLayers: Bool = false
     public var layers: Array<Layer> = Array<Layer>()
     //TODO: 未确认数据类型，暂定为 BaseElement。
     public var elements: Array<BaseElement> = Array<BaseElement>()

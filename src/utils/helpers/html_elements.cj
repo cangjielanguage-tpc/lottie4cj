@@ -27,26 +27,43 @@ public open class CreateTag {
     }
 
     //TODO: 未实现
-    func appendChild(n: CreateTag) { }
+    public func appendChild(n: CreateTag) { }
     public func appendChild(n: CreateNS) { }
-    func setAttribute(k: String, v: String) { }
+    public open func setAttribute(k: String, v: String) { }
     func getContext(s: String) { }
 }
 
 public class TagStyle {
-    var fontFamily: String = ""
-    var fontSize: Int64 = 0      //'300px'
+    public var fontFamily: String = ""
+    public var fontSize: String = ""  //'300px'
     var fontVariant: String = "" //'normal'
-    var fontStyle: String = ""   //'normal'
-    var fontWeight: String = ""  //'normal'
+    public var fontStyle: String = ""   //'normal'
+    public var fontWeight: String = ""  //'normal'
 
-    var position: String = ""    //'absolute'
-    var left: Int64 = 0          //'-10000px'
-    var top: Int64 = 0           //'-10000px'
+    public var position: String = ""    //'absolute'
+    public var left: Int64 = 0          //'-10000px'
+    public var top: Int64 = 0           //'-10000px'
     var letterSpacing = "absolute"  //字间距
     public var transform = ""  
     public var webkitTransform = "" 
     public var opacity = 0  
+    public var fill = ""
+    public var color = ""
+    public var stroke = ""
+    public var strokeWidth = ""
+    public var lineHeight = ""
+    public var display = ""
+    public var width = ""
+    public var height = ""
+    public var backgroundColor = ""
+    public var transformOrigin = ""
+    public var webkitTransformOrigin = ""
+    public var backfaceVisibility = ""
+    public var webkitBackfaceVisibility = ""
+    public var transformStyle = ""
+    public var webkitTransformStyle = ""
+    public var mozTransformStyle = ""
+
 }
 
 class FontManagerNode {

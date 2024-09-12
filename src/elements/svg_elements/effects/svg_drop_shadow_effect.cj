@@ -3,7 +3,8 @@
  */
 
 package lottie4cj.elements.svg_elements.effects
-
+internal import std.collection.*
+internal import std.format.*
 public open class SVGDropShadowEffect {
 
     var filterManager: FilterManager = FilterManager()
@@ -67,6 +68,29 @@ public open class SVGDropShadowEffect {
         var feMerge = SVGComposableEffect.createMergeNode(id,[id + "_drop_shadow_4",source]);
         filter.appendChild(feMerge);
     } 
+
+    public func renderFrame(forceRender: Bool): Unit {
+        if (forceRender || this.filterManager._mdf) {
+            if (forceRender || this.filterManager.effectElements[4].p._mdf) {
+                this.feGaussianBlur.setAttribute("stdDeviation", "${this.filterManager.effectElements[4].p.v.value / 4.0}");
+            }
+            if (forceRender || this.filterManager.effectElements[0].p._mdf) {
+                var col = this.filterManager.effectElements[0].p.v
+                this.feFlood.setAttribute("flood-color", "${rgbToHex(round(col[0] * 255.0), round(col[1] * 255.0), round(col[2] * 255.0))}");
+            }
+            if (forceRender || this.filterManager.effectElements[1].p._mdf) {
+                    this.feFlood.setAttribute("flood-opacity", "${this.filterManager.effectElements[1].p.v.value / 255.0}");
+            }
+            if (forceRender || this.filterManager.effectElements[2].p._mdf || this.filterManager.effectElements[3].p._mdf) {
+                var distance = this.filterManager.effectElements[3].p.v.value
+                var angle = (this.filterManager.effectElements[2].p.v.value - 90.0) * degToRads;
+                var x = distance * cos(angle);
+                var y = distance * sin(angle);
+                this.feOffset.setAttribute("dx", "${x}");
+                this.feOffset.setAttribute("dy", "${y}");
+            }
+        }
+     }
 
 }
 

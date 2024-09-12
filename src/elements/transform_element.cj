@@ -92,7 +92,7 @@ public open class TransformElement <: HierarchyElement {
         //TODO：暂未实现。
 
         let len: Int64 = transforms.size
-        var ptNew: (Float64, Float64, Float64) = (0.0, 0.0, 0.0)
+        var ptNew: Array<Float64> = [0.0, 0.0, 0.0]
         for (i in 0..len) {
             ptNew = transforms[i].mat.applyToPointArray(0.0, 0.0, 0.0)
             pt = [pt[0] - ptNew[0], pt[1] - ptNew[1], 0.0]

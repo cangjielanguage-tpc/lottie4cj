@@ -13,32 +13,20 @@ internal import lottie4cj.model.*
 internal import lottie4cj.global_data.*
 internal import lottie4cj.utils.helpers.*
 internal import lottie4cj.elements.*
+internal import lottie4cj.MaskElement
 
 //TODO: 未完全实现
-public open class SvgBaseElement <: Equatable<SvgBaseElement> {
-
-    public var data: Layer
+public open class SvgBaseElement <: BaseElement & Equatable<SvgBaseElement> {
 
     public var matteMasks: HashMap<Int64,String> = HashMap<Int64,String>()
 
-    var layerId: String = ""
-
-    public var globalData: GlobalData
-
-    var matteElement: CreateNS = CreateNS("")
-    var baseElement: CreateNS = CreateNS("")
-
     var transformedElement: CreateNS = CreateNS("")
-
-    var layerElement: CreateNS = CreateNS("")
-
-    var maskedElement: CreateNS = CreateNS("")
-
+    var maskManager: ?MaskElement = None
     public var _sizeChanged: Bool = false
+    var renderableEffectsManager: ?SVGEffects = None
 
     public init(data: Layer, globalData: GlobalData) {
-        this.globalData = globalData
-        this.data = data
+        super(data,globalData)
     }
 
     public func initRendererElement() {
@@ -67,10 +55,10 @@ public open class SvgBaseElement <: Equatable<SvgBaseElement> {
             this.baseElement = this.layerElement
         }
 
-        // if (this.data.ln) {
-        //     this.layerElement.setAttribute("id", this.data.ln)
-        // }
-        if (!this.data.cl.isEmpty()) {
+        if (this.data.ln.size > 0) {
+            this.layerElement.setAttribute('id', this.data.ln)
+        }
+        if (this.data.cl.size > 0) {
             this.layerElement.setAttribute("class", this.data.cl)
         }
         if (this.data.ty == 0 && !this.data.hd) {
@@ -82,9 +70,7 @@ public open class SvgBaseElement <: Equatable<SvgBaseElement> {
             cp.appendChild(pt)
             this.globalData.defs.appendChild(cp)
 
-            //TODO
-            //if (this.checkMasks()) {
-            if (this._sizeChanged) {
+            if (this.checkMasks()) {
                 var cpGroup = CreateNS("g")
                 cpGroup.setAttribute("clip-path", "url(" + getLocationHref() + "#" + clipId + ")")
                 cpGroup.appendChild(this.layerElement)
@@ -99,20 +85,23 @@ public open class SvgBaseElement <: Equatable<SvgBaseElement> {
             }
         }
         if (this.data.bm != 0) {
-            //this.setBlendMode()
+            this.setBlendMode()
         }
     }
 
     public func renderElement() {
-        //TODO
+        if (this.finalTransform._matMdf) {
+            this.transformedElement.setAttribute('transform', this.finalTransform.mat.to2dCSS());
+        }
+        if (this.finalTransform._opMdf) {
+            this.transformedElement.setAttribute('opacity', "${this.finalTransform.mProp.o.v}");
+        }
     }
 
     public func destroyBaseElement() {
         this.layerElement = CreateNS("")
-        // this.layerElement = None
-        // this.matteElement = None
         this.matteElement = CreateNS("")
-        //this.maskManager.destroy()
+        this.maskManager.getOrThrow().destroy()
     }
 
     public func getBaseElement(): Option<CreateNS> {
@@ -123,7 +112,8 @@ public open class SvgBaseElement <: Equatable<SvgBaseElement> {
     }
 
     public func createRenderableComponents() {
-        //TODO
+        this.maskManager = MaskElement(this.data, this, this.globalData)
+        this.renderableEffectsManager = SVGEffects(this)
     }
 
     public func getMatte(matteType: Int64) {
@@ -206,9 +196,9 @@ public open class SvgBaseElement <: Equatable<SvgBaseElement> {
     }
 
     public func setMatte(id: String) {
-        // if (!this.matteElement) {
-        //     return
-        // }
+        if (this.matteElement.types.size == 0) {
+            return
+        }
         this.matteElement.setAttribute("mask", "url(" + getLocationHref() + "#" + id + ")")
     }
     

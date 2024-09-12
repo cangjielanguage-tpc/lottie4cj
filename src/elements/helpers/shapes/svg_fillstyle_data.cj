@@ -4,6 +4,7 @@
 package lottie4cj.elements.helpers.shapes
 
 import lottie4cj.model.*
+internal import lottie4cj.global_data.*
 //TODO
 public class SVGFillStyleData <: SVGNoStyleData {
     //elem: SVGShapeElement styleOb: SVGStyleData

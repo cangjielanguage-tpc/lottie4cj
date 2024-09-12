@@ -5,7 +5,6 @@ package lottie4cj.bezier
 
 internal import std.math.*
 
-
 public class Matrix {
     public var props: Array<Float64> = Array<Float64>(16, repeat: 0.0)
 
@@ -82,7 +81,6 @@ public class Matrix {
         return this.transform(mCos, mSin, 0.0, 0.0, -mSin, mCos, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0).
             transform(1.0, 0.0, 0.0, 0.0, tan(ax), 1.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0).transform(
             mCos, -mSin, 0.0, 0.0, mSin, mCos, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0)
-        
     }
 
     public func scale(sx: Float64, sy: Float64, sz!: Float64 = 1.0) {
@@ -92,8 +90,8 @@ public class Matrix {
         return this.transform(sx, 0.0, 0.0, 0.0, 0.0, sy, 0.0, 0.0, 0.0, 0.0, sz, 0.0, 0.0, 0.0, 0.0, 1.0)
     }
 
-    public func setTransform(a: Float64, b: Float64, c: Float64, d: Float64, e: Float64, f: Float64, g: Float64, h: Float64,
-        i: Float64, j: Float64, k: Float64, l: Float64, m: Float64, n: Float64, o: Float64, p: Float64) {
+    public func setTransform(a: Float64, b: Float64, c: Float64, d: Float64, e: Float64, f: Float64, g: Float64,
+        h: Float64, i: Float64, j: Float64, k: Float64, l: Float64, m: Float64, n: Float64, o: Float64, p: Float64) {
         this.props[0] = a
         this.props[1] = b
         this.props[2] = c
@@ -207,7 +205,6 @@ public class Matrix {
     }
 
     public func clone(matr: Matrix) {
-
         for (i in 0..16) {
             matr.props[i] = this.props[i]
         }
@@ -221,11 +218,9 @@ public class Matrix {
     }
 
     public func applyToPoint(x: Float64, y: Float64, z: Float64) {
-        return (
-            x * this.props[0] + y * this.props[4] + z * this.props[8] + this.props[12],
+        return (x * this.props[0] + y * this.props[4] + z * this.props[8] + this.props[12],
             x * this.props[1] + y * this.props[5] + z * this.props[9] + this.props[13],
-            x * this.props[2] + y * this.props[6] + z * this.props[10] + this.props[14],
-        )
+            x * this.props[2] + y * this.props[6] + z * this.props[10] + this.props[14])
         /* return {
             x: x * me.a + y * me.c + me.e,
             y: x * me.b + y * me.d + me.f
@@ -266,17 +261,14 @@ public class Matrix {
         var inverseMatrix = this.getInverseMatrix()
         if (pt.size > 2) {
             return inverseMatrix.applyToPointArray(pt[0], pt[1], pt[2])
-        }else {
+        } else {
             return inverseMatrix.applyToPointArray(pt[0], pt[1], 0.0)
         }
     }
 
     public func inversePoints(pts: Array<Array<Float64>>) {
         var len = pts.size
-        var retPts: Array<(Float64,Float64,Float64)> = Array<(Float64,Float64,Float64)>(len, repeat: (0.0,0.0,0.0))
-        for (i in 0..len) {
-            retPts[i] = inversePoint(pts[i])
-        }
+        let retPts = pts |> map{v=>inversePoint(v)} |> collectArray
         return retPts
     }
 
@@ -306,15 +298,13 @@ public class Matrix {
         return arr
     }
 
-    public func applyToPointArray(x: Float64, y: Float64, z: Float64) {
+    public func applyToPointArray(x: Float64, y: Float64, z: Float64): Array<Float64> {
         if (this.isIdentity()) {
-            return (x, y, z)
+            return [x, y, z]
         } else {
-            return (
-                x * this.props[0] + y * this.props[4] + z * this.props[8] + this.props[12],
+            return [x * this.props[0] + y * this.props[4] + z * this.props[8] + this.props[12],
                 x * this.props[1] + y * this.props[5] + z * this.props[9] + this.props[13],
-                x * this.props[2] + y * this.props[6] + z * this.props[10] + this.props[14],
-            )
+                x * this.props[2] + y * this.props[6] + z * this.props[10] + this.props[14]]
         }
     }
 
@@ -323,7 +313,8 @@ public class Matrix {
             return "${x}" + "," + "${y}"
         }
         var _p = this.props;
-        return "${round((x * _p[0] + y * _p[4] + _p[12]) * 100.0) / 100.0}" + "," + "${round((x * _p[1] + y * _p[5] + _p[13]) * 100.0) / 100.0}"
+        return "${round((x * _p[0] + y * _p[4] + _p[12]) * 100.0) / 100.0}" + "," +
+            "${round((x * _p[1] + y * _p[5] + _p[13]) * 100.0) / 100.0}"
     }
 
     public func toCSS() {
@@ -336,7 +327,7 @@ public class Matrix {
             cssValue += "${round(props[i] * v) / v}"
             if (i == 15) {
                 cssValue += ")"
-            }else {
+            } else {
                 cssValue += ","
             }
             i += 1
