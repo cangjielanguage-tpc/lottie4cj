@@ -4,17 +4,27 @@
 
 package lottie4cj.property
 
+internal import std.collection.*
+
+internal import lottie4cj.model.*
+
 //TODO: 仅编译用，实际数据来源和 CVShapeElement 中 应用对齐。
-public open class ElementData {
+//TODO：和 elements\helpers\shapes\svg_elements_renderer.cj 中 ElementData 命名冲突。
+public open class ElementData2 {
 
-    var w: Array<PropertyFactory<Array<Keyframe<Float64>>, Float64>> = Array<PropertyFactory<Array<Keyframe<Float64>>, Float64>>()
+    //createStyleElement-----------------------------------------------------------------------------------------------------------
     var style: StyleElem = StyleElem()
-
-    var it: Array<ElementData> = Array<ElementData>()
-    var prevViewData: Array<ElementData> = Array<ElementData>()
-    var transform: Transform = Transform()
     
-    public init(elem: BaseElement) {}
+    //createGroupElement----------------------------------------------------------------------------------------------
+    var it: Array<ElementData2> = Array<ElementData2>()
+    var prevViewData: Array<ElementData2> = Array<ElementData2>()
+    
+    //createTransformElement----------------------------------------------------------------------------------------------
+    public var transform: Transform = Transform()
+
+    public init() {
+        let arr: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+    }
 
 }
 
@@ -29,8 +39,8 @@ public class Transform {
 
 //TODO: 仅编译用，实际数据来源和 CVShapeElement 中 应用对齐。
 public class StyleElem {
-
-    var data: ContentModel = ContentModel()  //(data.ty == 'fl'/'st'/'gf'/'gs')
+    //(data.ty == 'fl'/'st'/'gf'/'gs')
+    var data: ContentModel = ContentModel()
     var types: String = ""
     var closed: Bool = false
 }

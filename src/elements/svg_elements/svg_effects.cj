@@ -12,7 +12,6 @@ internal import lottie4cj.utils.*
 internal import lottie4cj.model.*
 internal import lottie4cj.global_data.*
 internal import lottie4cj.utils.helpers.*
-internal import lottie4cj.elements.*
 
 //TODO: 未完全实现
 var registeredEffects: HashMap<Int64, SvgRegisterEffect> = HashMap<Int64, SvgRegisterEffect>()

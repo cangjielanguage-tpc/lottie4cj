@@ -15,14 +15,18 @@ internal import std.random.*
 internal import std.collection.*
 internal import std.math.*
 
-func default_addDynamicProperty(tp: TextProperty): Unit {}
+public func default_addDynamicProperty(tp: TextProperty): Unit {}
 
+/*
+ * 初始化后需要传入2个函数：
+ * 1. addDynamicProperty    => 传入 TextElement 中的这个函数；（在TextElement.init传入编译失败，只能init之后传入。）
+ * 2. renderedFrameInComp() => 间接获取 this.elem.comp.renderedFrame 可变的当时的值。
+ */
 public class TextProperty {
 
     var frameId: Int64 = 0
     var lock: Bool = false
 
-    /* _frameId => initialDefaultFrame => -999999 */
     var _frameId: Int64 = -999999
 
     var pv: DocumentData = DocumentData()
@@ -32,21 +36,23 @@ public class TextProperty {
     public var _isFirstFrame: Bool = true
     public var _mdf: Bool = false
 
+    var data: LayerT
+
+    //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。
+    public var addDynamicPropertyInTextElement: (TextProperty) -> Unit = default_addDynamicProperty
+    let elemGlobalData: GlobalData
+    //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInComp】间接获取当时值。
+    public var renderedFrameInComp: () -> Float64 = { => 0.0}
+    //TODO: 暂时没有引入 BaseElement.comp--【不会再直接引入comp，具体用到comp的什么，再单独处理。】  //var comp = this.elem.comp
+
     var keysIndex: Int64 = 0
     var canResize: Bool = false
     var minimumFontSize: Float64 = 1.0
-    //TODO: 为了兼容，增加 2 个不用的参数
+    //TODO: 为了兼容，增加 2 个暂时不用的参数。
     var effectsSequence: ArrayList<(DocumentData, String) -> DocumentData> = ArrayList<(DocumentData, String) -> DocumentData>()
 
     public var currentData: DocumentData = DocumentData()
-
-    let defaultBoxWidth: Array<Float64> = [0.0, 0.0]
-
-    var data: LayerT
-    //TODO: 未完全实现 RendererBase / CanvasRendererBase        //public var comp: RendererBase
-
-    let globalData: GlobalData
-    public var addDynamicProperty: (TextProperty) -> Unit = default_addDynamicProperty
+    let defaultBoxWidth: Array<Float64> = [0.0, 0.0]    
 
     /**
      * Create a TextProperty instance based on parameters.
@@ -54,19 +60,15 @@ public class TextProperty {
      * @param globalData - Type of GlobalData, encapsulate instances of GlobalData data.
      * @param data - Type of LayerT, an instance of the "layers.t" data that encapsulates the animation.
      */
-    //data => layer.t
-    //TODO: 需要解构 ITextElement 和 TextProperty 互调用。
-    //TODO: 改成 TextProperty 中只传入 ITextElement 中部分函数和值
-    public TextProperty(globalData: GlobalData, data: LayerT) {
+    public TextProperty(data: LayerT, elemGlobalData: GlobalData) {
         this.data = data
-        //TODO: 未完全实现 RendererBase / CanvasRendererBase       //this.comp = comp
-        this.globalData = globalData
-
+        
+        this.elemGlobalData = elemGlobalData
         this.currentData.boxWidth = this.defaultBoxWidth
 
-        /**
-         * 数据类型对应：this.data.d.k[0].s => layer.t.d.k[0].s
-         * => Layer.t(LayerT).d(LayerTD).k[i](Array<Keyframe<DocumentData>>[i]).s(Option<DocumentData>)
+        /*
+         * 数据来源分析： this.data.d.k[0].s => layer.t.d.k[0].s
+         *  => Layer.t(LayerT).d(LayerTD).k[i](Array<Keyframe<DocumentData>>[i]).s(Option<DocumentData>)
          */
         if (this.data.d.k.size > 0) {
             this.copyData(this.currentData, this.data.d.k[0].s)
@@ -86,6 +88,12 @@ public class TextProperty {
      */
     public func copyData(obj: DocumentData, data: Option<DocumentData>): DocumentData {
         if (let Some(k) <- data) {
+            /*
+             * 数据来源分析： this.currentData.t  =>  this.data.d.k[this.keysIndex].s.t => layer.t.d.k[i].s.t
+             *  => Layer.t(LayerT).d(LayerTD).k[i](Array<Keyframe<DocumentData>>[i]).s(Option<DocumentData>).t
+             * obj.t  = k.t //原生的 t 改为 _t，现在的 t == layer.t.d.k[i].s.t，后续单独处理
+             * 理解错误，t就是字符串，只是js中开始赋值的是 0
+             */
             obj.t  = k.t
             obj.f  = k.f
             obj.s  = k.s
@@ -138,9 +146,10 @@ public class TextProperty {
      * @return Type of Bool.
      */
     public func searchKeyframes(): Bool {
-        //数据类型对应：this.data.d.k => layer.t.d.k => Layer.t(LayerT).d(LayerTD).k(Array<Keyframe<DocumentData>>)
+        //数据来源分析： this.data.d.k => layer.t.d.k => Layer.t(LayerT).d(LayerTD).k(Array<Keyframe<DocumentData>>)
         this.kf = this.data.d.k.size > 1
         if (this.kf) {
+            //this.addEffect(this.getKeyframeValue.bind(this))
             this.addEffect(this.getKeyframeValue)
         }
         return this.kf
@@ -154,8 +163,9 @@ public class TextProperty {
     //TODO: 为了兼容，增加 2 个不用的参数
     public func addEffect(effectFunction: (DocumentData, String) -> DocumentData): Unit {
         this.effectsSequence.append(effectFunction)
-        //TODO: 未实现 elem.addDynamicProperty
-        this.addDynamicProperty(this)
+        //TODO: 未实现 elem.addDynamicProperty。
+        //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。
+        this.addDynamicPropertyInTextElement(this)
     }
 
     /**
@@ -170,17 +180,17 @@ public class TextProperty {
      *
      * @param finalValue - Type of Option<DocumentData>.
      */
-    public func getValue(finalValue: Option<DocumentData>): Unit {
-        if (this.globalData.frameId == this.frameId || this.effectsSequence.size == 0) {
-            match(finalValue) {
+    public func getValue(_finalValue: Option<DocumentData>): Unit {
+        if (this.elemGlobalData.frameId == this.frameId || this.effectsSequence.size == 0) {
+            match(_finalValue) {
                 case Some(v) => ()
                 case None => return
             }
         }
 
-        /**
-         * 数据类型对应：this.currentData.t  =>  this.data.d.k[this.keysIndex].s.t => layer.t.d.k[i].s.t
-         * => Layer.t(LayerT).d(LayerTD).k[i](Array<Keyframe<DocumentData>>[i]).s(Option<DocumentData>).t
+        /*
+         * 数据来源分析 this.currentData.t  =>  this.data.d.k[this.keysIndex].s.t => layer.t.d.k[i].s.t
+         *  => Layer.t(LayerT).d(LayerTD).k[i](Array<Keyframe<DocumentData>>[i]).s(Option<DocumentData>).t
          */
         this.currentData.t = (this.data.d.k[this.keysIndex].s ?? DocumentData()).t
         let currentValue: DocumentData = this.currentData
@@ -194,29 +204,29 @@ public class TextProperty {
 
         let len: Int64 = this.effectsSequence.size
 
-        var _finalValue: DocumentData = this.data.d.k[this.keysIndex].s ?? DocumentData()
-        if (let Some(k) <- finalValue) {
-            _finalValue = k
+        var finalValue: DocumentData = this.data.d.k[this.keysIndex].s ?? DocumentData()
+        if (let Some(k) <- _finalValue) {
+            finalValue = k
         }
 
         for (i in 0..len) {
             //检查索引是否已更改，以防止每次表达式更新时都创建新对象。
             if (currentIndex != this.keysIndex) {
-                //TODO: 未实现 effectsSequence 带参重载函数
-                _finalValue = this.effectsSequence[i](_finalValue, _finalValue.t)
+                //TODO: 未实现 effectsSequence 带参重载函数                                         ???---lp---20240517--
+                finalValue = this.effectsSequence[i](finalValue, finalValue.t)
             } else {
-                //TODO: 未实现 effectsSequence 带参重载函数
-                _finalValue = this.effectsSequence[i](this.currentData, _finalValue.t)
+                //TODO: 未实现 effectsSequence 带参重载函数                                         ???---lp---20240517--
+                finalValue = this.effectsSequence[i](this.currentData, finalValue.t)
             }
         }
 
-        if (currentValue != _finalValue) {
-            this.setCurrentData(_finalValue)
+        if (currentValue != finalValue) {
+            this.setCurrentData(finalValue)
         }
         this.v = this.currentData
         this.pv = this.v
         this.lock = false
-        this.frameId = this.globalData.frameId
+        this.frameId = this.elemGlobalData.frameId
     }
 
     /**
@@ -226,14 +236,13 @@ public class TextProperty {
      * @param t - Type of String.
      * @return Type of DocumentData.
      */
-    //TODO: 为了兼容，增加 2 个不用的参数
+    //TODO: 为了兼容，增加 2 个暂时不用的参数。
     public func getKeyframeValue(data: DocumentData, t: String): DocumentData {
-        // 数据类型对应：this.data.d.k => layer.t.d.k => Layer.t(LayerT).d(LayerTD).k(Array<Keyframe<DocumentData>>)
+        //数据来源分析： this.data.d.k => layer.t.d.k => Layer.t(LayerT).d(LayerTD).k(Array<Keyframe<DocumentData>>)
         let textKeys: Array<Keyframe<DocumentData>> = this.data.d.k
 
-        //TODO: 未完全实现 RendererBase    //var frameNum: Float64 = this.elem.comp.renderedFrame
-        //TODO: this.elem.comp.renderedFrame 暂时用 0.0 代替
-        var frameNum: Float64 = 0.0
+        //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInComp】间接获取当时值。
+        var frameNum: Float64 = this.renderedFrameInComp()
 
         var i: Int64 = 0
         let len: Int64 = textKeys.size
@@ -261,14 +270,15 @@ public class TextProperty {
     public func buildFinalText(text: String): ArrayList<String> {
         var charactersArray: ArrayList<String> = ArrayList<String>(24)
         var i: Int64 = 0
+        var len = text.size
         var charCode: UInt32 = 0
         var secondCharCode: UInt32 = 0
         var shouldCombine: Bool = false
 
         let chars: Array<Rune> = text.toRuneArray()
-        var len = chars.size
 
         while (i < len) {
+            //charCode = text.charCodeAt(i)
             charCode = UInt32(chars[i])
             if (FontManager.isCombinedCharacter(charCode)) {
                 charactersArray[charactersArray.size - 1] = charactersArray[charactersArray.size - 1] + chars[i].toString()
@@ -310,10 +320,10 @@ public class TextProperty {
      *
      * @param documentData - Type of DocumentData.
      */
-    public func completeTextData(documentData: DocumentData): Unit {
+    public func completeTextData(documentData: DocumentData) {
         documentData.__complete = true
-        //TODO: 未完全实现 FontManager
-        var fontManager: FontManager = this.globalData.fontManager
+        //TODO: 未实现 FontManager
+        var fontManager: FontManager = this.elemGlobalData.fontManager
         var data: LayerT = this.data
         var letters: ArrayList<Letter> = ArrayList<Letter>()
 
@@ -328,11 +338,14 @@ public class TextProperty {
         var lineWidth: Float64 = 0.0
         var maxLineWidth: Float64 = 0.0
 
+        //TODO: 未实现 FontManager.getFontByName
         var fontData: Font = fontManager.getFontByName(documentData.f)
+        //TODO: 未确认使用位置
         var charData: FontCharacter = FontCharacter(CharsData(shapes: Array<ContentModel>()), "", 0.0, 0.0, "", "")
 
         var cLength: Float64 = 0.0
 
+        //TODO: 未实现 FontManager
         var fontProps: FontProps = getFontProperties(fontData)
 
         documentData.fWeight = fontProps.weight
@@ -384,8 +397,7 @@ public class TextProperty {
                             cLength = (charData.w * documentData.finalSize) / 100.0
                         }
                     } else {
-                        //TODO: 未实现 FontManager.measureText
-                        //cLength = fontManager.measureText(finalText[idx], documentData.f, documentData.finalSize)
+                        //TODO: 未实现 FontManager.measureText   //cLength = fontManager.measureText(finalText[idx], documentData.f, documentData.finalSize)
                     }
                     if (lineWidth + cLength > boxWidth && finalText[idx] != " ") {
                         if (lastSpaceIndex == -1) {
@@ -456,8 +468,7 @@ public class TextProperty {
                     cLength = 0.0
                 }
             } else {
-                //TODO: 未实现 FontManager.measureText
-                //cLength = fontManager.measureText(val, documentData.f, documentData.finalSize)
+                //TODO: 未实现 FontManager.measureText  //cLength = fontManager.measureText(val, documentData.f, documentData.finalSize)
             }
 
             if (currentChar == " ") {
@@ -552,10 +563,7 @@ public class TextProperty {
             if (animatorData.a.sw.size > 0) {
                 documentData.strokeWidthAnim = true
             }
-            //TODO: 未确认 animatorData.a.fh/fs/fb 数据类型
-            //if (animatorData.a.fc.k.size > 0 || animatorData.a.fh || animatorData.a.fs || animatorData.a.fb) {
-            //    documentData.fillColorAnim = true
-            //}
+            //TODO: 未确认 animatorData.a.fh/fs/fb 数据类型  //if (animatorData.a.fc.k.size > 0 || animatorData.a.fh || animatorData.a.fs || animatorData.a.fb) { documentData.fillColorAnim = true }
             ind = 0
 
             /**
@@ -605,7 +613,7 @@ public class TextProperty {
         documentData.ascent = (fontData.ascent * documentData.finalSize) / 100.0
     }
 
-    /**
+    /**	
      * Update document data.
      *
      * @param newData - Type of Option<DocumentData>.
@@ -621,8 +629,9 @@ public class TextProperty {
         let dData: Option<DocumentData> = this.copyData(dd, newData)
         this.data.d.k[index].s = dData
         this.recalculate(index)
-        //TODO: 未实现 ITextElement.addDynamicProperty
-        this.addDynamicProperty(this)
+        //TODO: 未实现 ITextElement.addDynamicProperty。
+        //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。
+        this.addDynamicPropertyInTextElement(this)
     }
 
     /**
@@ -647,11 +656,12 @@ public class TextProperty {
      *
      * @param canResize - Type of Bool.
      */
-    public func canResizeFont(canResize: Bool): Unit {
-        this.canResize = canResize
+    public func canResizeFont(_canResize: Bool): Unit {
+        this.canResize = _canResize
         this.recalculate(this.keysIndex)
-        //TODO: 未实现 ITextElement.addDynamicProperty
-        this.addDynamicProperty(this)
+        //TODO: 未实现 ITextElement.addDynamicProperty。
+        //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。
+        this.addDynamicPropertyInTextElement(this)
     }
 
     /**
@@ -659,15 +669,16 @@ public class TextProperty {
      *
      * @param fontValue - Type of Option<Float64>.
      */
-    public func setMinimumFontSize(fontValue: Option<Float64>): Unit {
-        if (let Some(v) <- fontValue) {
+    public func setMinimumFontSize(_fontValue: Option<Float64>): Unit {
+        if (let Some(v) <- _fontValue) {
             this.minimumFontSize = floor(v)
         } else {
             this.minimumFontSize = 1.0
         }
         this.recalculate(this.keysIndex)
-        //TODO: 未实现 ITextElement.addDynamicProperty
-        this.addDynamicProperty(this)
+        //TODO: 未实现 ITextElement.addDynamicProperty。
+        //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。
+        this.addDynamicPropertyInTextElement(this)
     }
 
 }

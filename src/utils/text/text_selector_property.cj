@@ -5,17 +5,19 @@
 /**
  * @file This file is TextSelectorProp.
  */
-package lottie4cj.property
+package lottie4cj.utils.text
 
-internal import lottie4cj.utils.text.*
+internal import lottie4cj.property.*
 
 public class TextSelectorProp {
 
-    //数据来源分析：data  =>  layer.t.a[i].s(AnimatableTextPropertiesS)
-    //数据来源分析：arr  <=  TextAnimatorDataProperty.container 中  =>  TextAnimatorProperty
-    public static func getTextSelectorProp(elem: ITextElement, data: AnimatableTextPropertiesS): TextSelectorPropFactory {
+    /*
+     * 数据来源分析：data  =>  layer.t.a[i].s(AnimatableTextPropertiesS)
+     * 数据来源分析：arr  <=  TextAnimatorDataProperty.container 中  =>  TextAnimatorProperty
+     */
+    public static func getTextSelectorProp(data: AnimatableTextPropertiesS, elemGlobalData: GlobalData, elemData: Layer, elemTextPropertyCurrentData: DocumentData): TextSelectorPropFactory {
         //TODO: TextSelectorPropFactory 的 init 是 2 个参数。
-        return TextSelectorPropFactory(elem, data)
+        return TextSelectorPropFactory(data, elemGlobalData, elemData, elemTextPropertyCurrentData)
     }
 }
 
@@ -25,9 +27,10 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
     //TODO：TextAnimatorDataProperty 用到，增加成员变量 t，编译用。
     public var t: Int64 = 0
 
-    var elem: ITextElement
+    var elemTextPropertyCurrentData: DocumentData = DocumentData()
+
     var data: AnimatableTextPropertiesS
-    //TODO: elem 中还未引入 comp 成员变量。  //var comp = elem.comp
+    //TODO: elem 中还未引入 comp 成员变量。--【不会再直接引入comp，具体用到comp的什么，再单独处理。】
 
     var _currentTextLength: Int64 = -1
     var k: Bool = false
@@ -46,40 +49,47 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
     var o: PropertyFactory<AK, Int64>
     var sm: PropertyFactory<AK, Int64>
 
-    //数据来源分析：data  =>  layer.t.a[i].s(AnimatableTextPropertiesS)
-    public init(elem: ITextElement, data: AnimatableTextPropertiesS) {
-        super(elem)
-        this.data = data
-        this.elem = elem
-        //TODO: elem 中还未引入 comp 成员变量。  //this.comp = elem.comp
+    //TODO: 未确认 dynamicProperties 的数据类型，暂定为 DynamicPropertyContainer
+    //在父类 DynamicPropertyContainer 中 //public var dynamicProperties: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>()
 
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elem)
-        let emptypf = PropertyFactory<AK, Int64>(elem, AK(), 0.0, dp)
+    //数据来源分析：data  =>  layer.t.a[i].s(AnimatableTextPropertiesS)
+    public init(data: AnimatableTextPropertiesS, elemGlobalData: GlobalData, elemData: Layer, elemTextPropertyCurrentData: DocumentData) {
+        super(elemGlobalData, elemData)
+        this.elemTextPropertyCurrentData = elemTextPropertyCurrentData
+        this.data = data
+
+        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData)
+        let emptypf = PropertyFactory<AK, Int64>(AK(), 0.0, dp, elemGlobalData, elemData)
         //TODO: 是否将 s/e/o/sm 当成空的 AK 进行初始化？？？
         this.s = emptypf
-        this.e = PropertyFactory<AK, Int64>(elem, AK(), 0.0, dp)
+        this.e = PropertyFactory<AK, Int64>(AK(), 0.0, dp, elemGlobalData, elemData)
         this.o = emptypf
         this.xe = emptypf
         this.ne = emptypf
         this.sm = emptypf
         this.a = emptypf
 
-        this.initDynamicPropertyContainer(elem)
+        this.initDynamicPropertyContainer(elemGlobalData, elemData)
 
-        //TODO: s/e/o/om 在 json 中暂未找到。是否将 s/e/o/sm 当成空的 AK 进行初始化？？？
-        this.s = PropertyFactory<AK, Int64>.getProp(elem, AK(), 0, 0.0, this)
+        //TODO: s/e 在 json 中暂未找到
+        //TODO: 是否将 s/e/o/sm 当成空的 AK 进行初始化？？？
+        this.s = PropertyFactory<AK, Int64>.getProp(AK(), 0, 0.0, this, elemGlobalData, elemData)
+
         //TODO: 是否将 e 当成空的 PropertyFactory？？？
         this.e.v = [100.0]
-        this.o = PropertyFactory<AK, Int64>.getProp(elem, AK(), 0, 0.0, this)
+
+        //TODO: o 在 json 中暂未找到
+        this.o = PropertyFactory<AK, Int64>.getProp(AK(), 0, 0.0, this, elemGlobalData, elemData)
 
         //"xe": {"a": 0, "k": 0} //走【分支1】
-        this.xe = PropertyFactory<AK, Int64>.getProp(elem, data.xe, data.xe.k, 0.0, this)
+        this.xe = PropertyFactory<AK, Int64>.getProp(data.xe, data.xe.k, 0.0, this, elemGlobalData, elemData)
         //"ne": {"a": 0, "k": 0} //走【分支1】
-        this.ne = PropertyFactory<AK, Int64>.getProp(elem, data.ne, data.ne.k, 0.0, this)
+        this.ne = PropertyFactory<AK, Int64>.getProp(data.ne, data.ne.k, 0.0, this, elemGlobalData, elemData)
         //"a": {"a": 0, "k": 100} //走【分支1】
-        this.a = PropertyFactory<AK, Int64>.getProp(elem, data.a, data.a.k, 0.01, this)
+        this.a = PropertyFactory<AK, Int64>.getProp(data.a, data.a.k, 0.01, this, elemGlobalData, elemData)
 
-        this.sm = PropertyFactory.getProp(elem, AK(k: 100), 100, 0.0, this)
+        //TODO: sm 在 json 中暂未找到
+        this.sm = PropertyFactory.getProp(AK(k: 100), 100, 0.0, this, elemGlobalData, elemData)
 
         if (this.dynamicProperties.size == 0) {
             this.getValue()
@@ -91,7 +101,7 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
 
     public func getMult(ind2: Float64): Float64 {
         var ind: Float64 = ind2
-        if (this._currentTextLength != this.elem.textProperty.currentData.l.size) {
+        if (this._currentTextLength != this.elemTextPropertyCurrentData.l.size) {
             this.getValue()
         }
         var x1: Float64 = 0.0
@@ -203,10 +213,10 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
     }
 
     public func getValue(newCharsFlag: Bool) {
-        //是调用 DynamicPropertyContainer.iterateDynamicProperties ？？？
+        //TODO: 是 DynamicPropertyContainer.iterateDynamicProperties ???
         this.iterateDynamicProperties()
         this._mdf = newCharsFlag || this._mdf
-        this._currentTextLength = this.elem.textProperty.currentData.l.size
+        this._currentTextLength = this.elemTextPropertyCurrentData.l.size
         if (newCharsFlag && this.data.r == 2) {
             //TODO: s/e 在 json 中暂未找到
             this.e.v = [ Float64(this._currentTextLength) ]

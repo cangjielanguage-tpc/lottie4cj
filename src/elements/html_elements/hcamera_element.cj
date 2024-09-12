@@ -8,7 +8,6 @@
 package lottie4cj.elements.html_elements
 
 internal import lottie4cj.property.*
-internal import lottie4cj.elements.*
 internal import lottie4cj.inner.*
 public class HCameraElement <: BaseElement{
 
@@ -20,22 +19,24 @@ public class HCameraElement <: BaseElement{
     public var a: ?PropertyFactory<ArrayKeyframePointF, Float64> = None
     public var mat: Matrix = Matrix()
     public var _prevMat: Matrix = Matrix()
-    public var _isFirstFrame: Bool = true
-    public var finalTransform: FinalTransform = FinalTransform()
+
+    //TODO: 和 \src\elements\helpers\transform_element.cj 中 FinalTransform 冲突了。
+    //public var finalTransform2: FinalTransform = FinalTransform()
 
     public init(data: Layer, globalData: GlobalData) {
         //this.initFrame()
         super(data,globalData)
-        this.pe = PropertyFactory<Layer, Float64>.getProp<Layer>(this, data, 0.0, 0.0, DynamicPropertyContainer(this))
+        this._isFirstFrame = true
+        this.pe = PropertyFactory<Layer, Float64>.getProp<Layer>(data, 0.0, 0.0, DynamicPropertyContainer(globalData, data), globalData, data)
         if (data.ks.p.a!=0) {
-            this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(this, data.ks.p.x, 1.0, 0.0, DynamicPropertyContainer(this))
-            this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(this, data.ks.p.y, 1.0, 0.0, DynamicPropertyContainer(this))
-            this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(this, data.ks.p.z, 1.0, 0.0, DynamicPropertyContainer(this))
+            this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.ks.p.x, 1.0, 0.0, DynamicPropertyContainer(globalData, data), globalData, data)
+            this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.ks.p.y, 1.0, 0.0, DynamicPropertyContainer(globalData, data), globalData, data)
+            this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.ks.p.z, 1.0, 0.0, DynamicPropertyContainer(globalData, data), globalData, data)
         } else {
-            this.p = PropertyFactory<AnimatableSplitDimensionPathValue, Float64>.getProp(this, data.ks.p, 1.0, 0.0, DynamicPropertyContainer(this))
+            this.p = PropertyFactory<AnimatableSplitDimensionPathValue, Float64>.getProp(data.ks.p, 1.0, 0.0, DynamicPropertyContainer(globalData, data), globalData, data)
         }
         if (!data.ks.a.isNull()) {
-            this.a = PropertyFactory<ArrayKeyframePointF, Float64>.getProp(this, data.ks.a, 1.0, 0.0, DynamicPropertyContainer(this))
+            this.a = PropertyFactory<ArrayKeyframePointF, Float64>.getProp(data.ks.a, 1.0, 0.0, DynamicPropertyContainer(globalData, data), globalData, data)
         }
 
     }

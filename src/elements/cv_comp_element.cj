@@ -4,15 +4,11 @@
 package lottie4cj.elements
 
 //TODO
-public class CvCompElement <: BaseElement{
+public class CvCompElement <: ICompElement {
 
-    protected var _isFirstFrame: Bool = false
-    protected var completeLayers: Bool = false
     protected var hasMasks: Bool = false
-    protected var layers: Array<Layer>
     protected var pendingElements: ArrayList<String> 
-    protected var elements: ArrayList<BaseElement>
-    protected var tm: TM
+
     //使用了data.layers暂时使用AnimationData
     public init(data: Layer, globalData: GlobalData) {
         super(data, globalData)
@@ -21,7 +17,7 @@ public class CvCompElement <: BaseElement{
         //this.layers = data.layers
         this.layers = Array<Layer>()
         this.pendingElements = ArrayList<String>()
-        this.elements = ArrayList<BaseElement>(this.layers.size)
+        this.elements = Array<BaseElement>(this.layers.size, repeat: BaseElement(data, globalData))
         //tm暂时不是data属性
         this.tm = TM()
         this.tm._placeholder = true
@@ -86,7 +82,7 @@ public class CvCompElement <: BaseElement{
             i -= 1
         }
         this.layers = Array<Layer>()
-        this.elements = ArrayList<BaseElement>()
+        this.elements = Array<BaseElement>()
     }
 
     public func createComp(data: Layer) {

@@ -8,7 +8,7 @@ package lottie4cj.property
 public open class ShapeDataShapeModifiers {
 
     //数据类型是多种Property：KeyframedShapeProperty/ShapeProperty/RectShapeProperty/EllShapeProperty/StarShapeProperty
-    var shape: ShapePropertyFactory
+    var shape: ShapePropertyFactory  //shape: data.sh
     
     //TODO: CVShapeData/SVGShapeData 抽象一个父类 BaseShapeData 出来？？？
     var data: BaseShapeData

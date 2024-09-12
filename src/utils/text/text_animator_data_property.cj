@@ -5,8 +5,7 @@
 /**
  * @file This file is TextAnimatorDataProperty.
  */
-
-package lottie4cj.property
+package lottie4cj.utils.text
 
 
 //TODO: 对应 model.AnimatableTextProperties
@@ -73,49 +72,57 @@ public class AnimatableTextProperty {
  */
 public class TextAnimatorDataProperty {
 
-    var elem: ITextElement
+    //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。
+    var elemGlobalData: GlobalData
+    var elemData: Layer
+    var elemTextPropertyCurrentData: DocumentData
+    
     var animatorProps: AnimatableTextPropertiesA
     var container: TextAnimatorProperty
     
     var a: AnimatableTextProperty
     var s: TextSelectorPropFactory
 
-    public init (elem: ITextElement, animatorProps: AnimatableTextPropertiesA, container: TextAnimatorProperty){
-        this.elem = elem
+    public init (animatorProps: AnimatableTextPropertiesA, container: TextAnimatorProperty, elemGlobalData: GlobalData, elemData: Layer, elemTextPropertyCurrentData: DocumentData){
         this.animatorProps = animatorProps
         this.container = container
 
+        this.elemGlobalData = elemGlobalData
+        this.elemData = elemData
+        this.elemTextPropertyCurrentData = elemTextPropertyCurrentData
+
         //空的 PropertyFactor，为了 this.a 中数据不存在时，当做默认值使用。
-        let defaultData = PropertyFactory<Float64, Float64>(elem, 0.0, 0.0, container)
-        //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。   //defaultData.propType = false
+        let defaultData = PropertyFactory<Float64, Float64>(0.0, 0.0, container, elemGlobalData, elemData)
+        //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。  //defaultData.propType = false
 
         //数据来源分析：textAnimatorAnimatables  ==  animatorProps.a  <=  this._textData.a[i].a  =>  layer.t.a[i].a(AnimatableTextProperties)
         let textAnimatorAnimatables: AnimatableTextProperties = animatorProps.a
 
-        //TODO: sw/sc 为空数组时，需单独处理。
         let sw: PropertyFactory<Array<Keyframe<Float64>>, Float64>
+        //TODO: sw/sc 为空数组时，需单独处理。
         if (textAnimatorAnimatables.sw.size == 0) {
-            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>(elem, Array<Keyframe<Float64>>(), 0.0, container)
-            //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。   //sw.propType = false
+            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, container, elemGlobalData, elemData)
+            //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。  //sw.propType = false
         } else if (textAnimatorAnimatables.sw.size == 1) {//走【分支1】
-            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, textAnimatorAnimatables.sw, textAnimatorAnimatables.sw[0].k ?? 0.0, 0.0, container)
+            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(textAnimatorAnimatables.sw, textAnimatorAnimatables.sw[0].k ?? 0.0, 0.0, container, elemGlobalData, elemData)
         } else {//走【分支3】
-            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, textAnimatorAnimatables.sw, textAnimatorAnimatables.sw, 0, 0.0, container)
+            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(textAnimatorAnimatables.sw, textAnimatorAnimatables.sw, 0, 0.0, container, elemGlobalData, elemData)
         }
         let sc: PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>
+        //TODO: sw/sc 为空数组时，需单独处理。
         if (textAnimatorAnimatables.sw.size == 0) {
-            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>(elem, Array<Keyframe<Array<Float64>>>(), 0.0, container)
-            //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。   //sc.propType = false
+            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>(Array<Keyframe<Array<Float64>>>(), 0.0, container, elemGlobalData, elemData)
+            //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。  //sc.propType = false
         } else if (textAnimatorAnimatables.sw.size == 1) {//走【分支2】
-            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(elem, textAnimatorAnimatables.sc, textAnimatorAnimatables.sc[0].k ?? Array<Float64>(), 0.0, container)
+            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(textAnimatorAnimatables.sc, textAnimatorAnimatables.sc[0].k ?? Array<Float64>(), 0.0, container, elemGlobalData, elemData)
         } else {//走【分支4】
-            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(elem, textAnimatorAnimatables.sc, textAnimatorAnimatables.sc, 1, 0.0, container)
+            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(textAnimatorAnimatables.sc, textAnimatorAnimatables.sc, 1, 0.0, container, elemGlobalData, elemData)
         }
         
         //走【分支4】
-        let fc: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>> = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(elem, textAnimatorAnimatables.fc, textAnimatorAnimatables.fc.k, 1, 0.0, container)
+        let fc: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>> = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(textAnimatorAnimatables.fc, textAnimatorAnimatables.fc.k, 1, 0.0, container, elemGlobalData, elemData)
         //走【分支3】
-        let t: PropertyFactory<ArrayKeyframeFloat64, Float64> = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, textAnimatorAnimatables.t, textAnimatorAnimatables.t.k, 0, 0.0, container)
+        let t: PropertyFactory<ArrayKeyframeFloat64, Float64> = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(textAnimatorAnimatables.t, textAnimatorAnimatables.t.k, 0, 0.0, container, elemGlobalData, elemData)
     
         this.a = AnimatableTextProperty(
             sw: sw,
@@ -130,7 +137,7 @@ public class TextAnimatorDataProperty {
          * 数据来源分析：container  =>  TextAnimatorProperty
          * TODO: TextSelectorProp.getTextSelectorProp 只用到前 2 个参数。
          */
-        this.s = TextSelectorProp.getTextSelectorProp(elem, animatorProps.s)
+        this.s = TextSelectorProp.getTextSelectorProp(animatorProps.s, elemGlobalData, elemData, elemTextPropertyCurrentData)
         this.s.t = animatorProps.s.t
     }
 }

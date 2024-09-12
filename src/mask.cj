@@ -43,9 +43,9 @@ public open class MaskElement <: BaseElement {
         var len: Int64 = this.masksProperties.size
         
         //需要初始化一个空的 ViewData。
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(this.element)
-        let pf: PropertyFactory<Array<Keyframe<Int64>>, Int64> = PropertyFactory<Array<Keyframe<Int64>>, Int64>(this.element, Array<Keyframe<Int64>>(), 0.0, dp)
-        let spf: ShapePropertyFactory = ShapePropertyFactory(this.element, ContentModel(), 0)
+        let dp: DynamicPropertyContainer = DynamicPropertyContainer(globalData, data)
+        let pf: PropertyFactory<Array<Keyframe<Int64>>, Int64> = PropertyFactory<Array<Keyframe<Int64>>, Int64>(Array<Keyframe<Int64>>(), 0.0, dp, globalData, data)
+        let spf: ShapePropertyFactory = ShapePropertyFactory(ContentModel(), 0, globalData, data)
         let emptyViewData: ViewData = ViewData(op: pf, props: spf)
         this.viewData = Array<ViewData>(len, repeat: emptyViewData)
         
@@ -64,7 +64,7 @@ public open class MaskElement <: BaseElement {
         var feMorph: CreateNS = empty_createNS
 
         //TODO: 先初始化一个空的 x
-        var x: PropertyFactory<Array<Keyframe<Int64>>, Int64> = PropertyFactory<Array<Keyframe<Int64>>, Int64>(this.element, Array<Keyframe<Int64>>(), 0.0, dp)
+        var x: PropertyFactory<Array<Keyframe<Int64>>, Int64> = PropertyFactory<Array<Keyframe<Int64>>, Int64>(Array<Keyframe<Int64>>(), 0.0, dp, globalData, data)
         
         var maskType: String = "clipPath"
         var maskRef: String = "clip-path"
@@ -86,26 +86,26 @@ public open class MaskElement <: BaseElement {
                 rect.setAttribute("fill", "#ffffff")
                 /*
                  * TODO: this.element.comp 还未确认是否有循环引用问题，暂时没有关联。
-                 * rect.setAttribute("width", this.element.comp.data.w.toString())
-                 * rect.setAttribute("height", this.element.comp.data.h.toString())
+                 * //rect.setAttribute("width", this.element.comp.data.w.toString())
+                 * //rect.setAttribute("height", this.element.comp.data.h.toString())
                  */
                 currentMasks.append(rect)
             } else {
                 rect = empty_createNS
             }
 
-            //masksProperties.o => "o":{"k":100}   =>  properties[i].o = _o: Array<Keyframe<Int64>>
+            //数据来源分析：masksProperties.o => "o":{"k":100}   =>  properties[i].o = _o: Array<Keyframe<Int64>>
             let op: PropertyFactory<Array<Keyframe<Int64>>, Int64>
             if (properties[i].o.size == 1) {
                 //TODO: PropertyFactory.getProp 传入的参数是 MaskElement，不是 DynamicPropertyContainer？？？
                 //TODO: 暂时先传入 DynamicPropertyContainer。
-                op = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(this.element, properties[i].o, properties[i].o[0].k ?? 0, 0.01, dp)
+                op = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].o, properties[i].o[0].k ?? 0, 0.01, dp, globalData, data)
             } else if (properties[i].o.size > 1) {
-                op = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(this.element, properties[i].o, properties[i].o, 0, 0.01, dp)
+                op = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].o, properties[i].o, 0, 0.01, dp, globalData, data)
             } else {
-                op = PropertyFactory<Array<Keyframe<Int64>>, Int64>(this.element, properties[i].o, 0.01, dp)
+                op = PropertyFactory<Array<Keyframe<Int64>>, Int64>(properties[i].o, 0.01, dp, globalData, data)
             }
-            let props: ShapePropertyFactory = ShapePropertyFactory.getShapeProp(this.element, properties[i], 3)
+            let props: ShapePropertyFactory = ShapePropertyFactory.getShapeProp(properties[i], 3, globalData, data)
 
             path = CreateNS("path")
             if (properties[i].mode == "n") {
@@ -139,8 +139,8 @@ public open class MaskElement <: BaseElement {
                          * "x":{"k":0}  =>  _x: Array<Keyframe<Int64>>
                          * TODO: layers[i].masksProperties.x 有几种数据类型？？？   //TODO: 暂定就是 "x":{"k":0}。
                          * TODO: PropertyFactory.getProp 传入的参数是 MaskElement，不是 DynamicPropertyContainer？？？  //TODO: 暂时先传入 DynamicPropertyContainer。
-                         */
-                        x = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(this.element, properties[i].x, k, 0.0, dp)
+                         */  //TODO: 暂时先传入 DynamicPropertyContainer。
+                        x = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].x, k, 0.0, dp, globalData, data)
                         filterID = CreateElementID.createID()
                         expansor = CreateNS("filter")
                         expansor.setAttribute("id", filterID)
@@ -157,9 +157,10 @@ public open class MaskElement <: BaseElement {
                     }
                 } else if (properties[i].x.size > 1) {
                     //TODO: PropertyFactory.getProp 传入的参数是 MaskElement，不是 DynamicPropertyContainer？？？  //TODO: 暂时先传入 DynamicPropertyContainer。
-                    x = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(this.element, properties[i].x, properties[i].x, 0, 0.0, dp)
+                    x = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].x, properties[i].x, 0, 0.0, dp, globalData, data)
                 }
 
+                // TODO: 将其移动到工厂或构造函数
                 this.storedData[i] = StoredData(
                     elem: path,
                     x: x,
@@ -262,8 +263,8 @@ public open class MaskElement <: BaseElement {
     }
 
     public func renderFrame(isFirstFrame: Bool): Unit {
-        //TODO：父3类 TransformElement 中有 finalTransform，但是暂未和 BaseElement 编译关联起来。  //let finalMat: Matrix = this.element.finalTransform.mat
-        let finalMat: Matrix = Matrix()
+        //父3类 TransformElement 中有 finalTransform，但是暂未和 BaseElement 编译关联起来。
+        let finalMat: Matrix = this.element.finalTransform.mat
         let len: Int64 = this.masksProperties.size
         for (i in 0..len) {
             if (this.viewData[i].props._mdf || isFirstFrame) {
@@ -273,12 +274,10 @@ public open class MaskElement <: BaseElement {
                 this.viewData[i].elem.setAttribute("fill-opacity", this.viewData[i].op.v[0].toString())
             }
             if (this.masksProperties[i].mode != "n") {
-                /*
-                 * TODO：父3类 TransformElement 中有 finalTransform，但是暂未和 BaseElement 编译关联起来。 
-                 * if (this.viewData[i].invRect.isNull && (this.element.finalTransform.mProp._mdf || isFirstFrame)) {
-                 *     this.viewData[i].invRect.setAttribute("transform", finalMat.getInverseMatrix().to2dCSS())
-                 * }
-                 */
+                //父3类 TransformElement 中有 finalTransform，但是暂未和 BaseElement 编译关联起来。
+                if (this.viewData[i].invRect.isNull && (this.element.finalTransform.mProp._mdf || isFirstFrame)) {
+                    this.viewData[i].invRect.setAttribute("transform", finalMat.getInverseMatrix().to2dCSS())
+                }
                 if (this.storedData[i].x.isNull && (this.storedData[i].x._mdf || isFirstFrame)) {
                     var feMorph: CreateNS = this.storedData[i].expan
                     if (this.storedData[i].x.v[0] < 0.0) {

@@ -5,8 +5,10 @@ package lottie4cj.elements
 
 import lottie4cj.utils.helpers.*
 import lottie4cj.utils.helpers.*
+internal import lottie4cj.property.*
+
 //TODO 未完全实现
-public class CVShapeElement <: IShapeElement {
+public class CvShapeElement <: IShapeElement {
 
     protected var stylesList: ArrayList<StyleElem>
     protected var prevViewData: ArrayList<Object>
@@ -19,7 +21,7 @@ public class CVShapeElement <: IShapeElement {
         this.stylesList = ArrayList<StyleElem>()
         this.itemsData = Array<ContentModel>()
         this.prevViewData = ArrayList<Object>()
-        this.shapeModifiers = Array<ShapeModifiers>()
+        this.shapeModifiers = Array<ShapeModifier>()
         this.processedElements = ArrayList<ProcessedElement>()
         this.transformsManager = ShapeTransformManager()
     }
@@ -53,7 +55,8 @@ public class CVShapeElement <: IShapeElement {
     }
 
     public func createShapeElement(data: ShapeDataInCV) {
-        var elementData = CVShapeData()
+        //TODO: 传入 ShapePropertyFactory 是空的，编译用。
+        var elementData = CVShapeData(ShapePropertyFactory(ContentModel(), 0, this.globalData, this.data))
         this.shapes[this.shapes.size]=elementData
         return elementData
     }

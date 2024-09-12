@@ -12,10 +12,10 @@ internal import std.collection.*
 
 internal import lottie4cj.bezier.*
 internal import lottie4cj.inner.*
-internal import lottie4cj.model.*
-internal import lottie4cj.elements.*
+internal import lottie4cj.pool.*
 
 let initialDefaultFrame: Int64 = -999999
+let initialDefaultFrameFloat64: Float64 = -999999.0
 
 func defalut_fnc(num: Float64): Float64 {
     return 0.0
@@ -24,7 +24,7 @@ func defalut_fnc(num: Float64): Float64 {
 public class Caching {
     var lastFrame: Int64 = 0
     var lastIndex: Int64 = 0
-    //TODO: value 既可以是数组，也可以是数值。
+    //value 既可以是数组，也可以是数值。
     var value: Array<Float64> = Array<Float64>()
     var _lastKeyframeIndex: Int64 = 0
 
@@ -39,26 +39,59 @@ public class Caching {
     }
 }
 
-public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
+public class CachingAtTime {
+
+    var shapeValue: ShapeData = ShapeData()
+    var lastIndex: Int64 = 0
+    var lastTime: Float64 = initialDefaultFrameFloat64
+
+    //value 既可以是数组，也可以是数值。
+    var value: Array<Float64> = Array<Float64>()
+
+    public init(shapeValue!: ShapeData = ShapeData(), lastIndex!: Int64 = 0, lastTime!: Float64 = initialDefaultFrameFloat64){
+        this.shapeValue = shapeValue
+        this.lastIndex = lastIndex
+        this.lastTime = lastTime
+    }
+}
+
+/*
+ * 初始化后需要传入2个函数：
+ * 2. renderedFrameInComp() => 间接获取 this.elem.comp.renderedFrame 可变的当时的值。
+ */
+public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToString , E <: ToString {
 
     static var initFrameFloat64: Float64 = -999999.0
     static var initFrame: Int64 = initialDefaultFrame
+
+    //TODO: 暂未实现 getValueAtTime。在扩展中实现？？？
+    var hasGetValueAtTime: Bool = false
+    public var getValueAtTime: (Float64, Float64) -> Array<Float64> = { m, n => return Array<Float64>() }
+
+    //TODO: expression 中扩展的函数.       //public var getValueAtTime: (Float64) -> Array<Float64> = { n => return [n] }
+    //TODO: 未确定 propertyGroup 数据类型  //public var setGroupProperty: (propertyGroup) -> Unit
+    public var loopOut: (String, Int64, Bool) -> Array<Float64> = { s, m, n => return [0.0] }
+    public var loopIn: (String, Int64, Bool) -> Array<Float64> = { s, m, n => return [0.0] }
+    public var smooth: (Float64, Float64) -> Array<Float64> = { m, n => return [m, n] }
+    public var getVelocityAtTime: (Float64) -> Array<Float64> = { n => return [n] }
+    public var getSpeedAtTime: (Float64) -> Float64 = { n => return n }
+    public var numKeys: Int64 = 0
+    //TODO：成员变量，data: T 增加成员变量 ix ？？？  //public var propertyIndex = data.ix
+    public var _cachingAtTime: CachingAtTime = CachingAtTime()
+//-----------------------------------------------------------------------------------------------------------------
 
     //TODO: dataK 是否保存成 E 泛型结构？还是修改保存为 data_k_xxxProperty ???
     var dataK_Number: Array<Float64> = Array<Float64>()
     var dataK_Keyframed: Array<Keyframe<E>> = Array<Keyframe<E>>()
     
     var data: T
-    var elem: BaseElement
-    //TODO: 暂时没有引入 BaseElement.comp   //var comp: BaseRenderer
+    //TODO: 暂时没有引入 BaseElement.comp--【不会再直接引入comp，具体用到comp的什么，再单独处理。】
     var container: DynamicPropertyContainer
     
-    var propType: String = ""
     var mult: Float64 = 1.0
     public var v: Array<Float64> = Array<Float64>()
     var pv: Array<Float64> = Array<Float64>()
-    
-    public var _mdf: Bool = false
+
     var k: Bool = false
     var kf: Bool = false
     
@@ -80,15 +113,17 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
     
     //TODO: 未确认 this.sh 数据类型，为了编译暂定为Bool。
     var sh: Bool = false
-    
+
+    //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInComp】间接获取当时值。
+    public var renderedFrameInComp: () -> Float64 = { => 0.0}
+
     //TODO: container 数据类型不固定，是否提取出来一个接口？？？
-    // 已知 container 的数据类型：ShapeModifier的子类/ShapePropertyFactory  --都继承于 DynamicPropertyContainer。
-    public init(elem: BaseElement, data: T, mult: Float64, container: DynamicPropertyContainer, types!: Int64 = -1) {
-        this.elem = elem
+    //TODO: 已知 container 的数据类型：ShapeModifier的子类/ShapePropertyFactory  --都继承于 DynamicPropertyContainer。
+    public init(data: T, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, types!: Int64 = -1) {
+        super(elemGlobalData, elemData)
         this.data = data
         this.mult = mult
         this.container = container
-        //TODO: 暂时没有引入 BaseElement.comp  //this.comp = elem.comp
         
         if (types == 0 || types == 1) {
             this.effectsSequence.append(getValueAtCurrentTime)
@@ -256,7 +291,7 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
                                 outY = keyData.o.y
                                 inX = keyData.i.x
                                 inY = keyData.i.y
-                                //因为关键字， BezierFactory.getBezierEasing(outX, outY, inX, inY).get 中 get 重新命名为 getOfBezierEasing
+                                //因为关键字，BezierFactory.getBezierEasing(outX, outY, inX, inY).get 中 get 重新命名为 getOfBezierEasing
                                 fnc = BezierFactory.getBezierEasing(outX, outY, inX, inY, "").getOfBezierEasing
                                 keyData.keyframeMetadata = fnc
                             }
@@ -365,8 +400,8 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
 
     //只在 getProp【分支2】相关中使用；data.k是复杂架构，不能是数组或者空。  // data == ContentModel.s/e/h/a等
     func getValueAtCurrentTime(): Array<Float64> {
-        //TODO: 暂时没有引入 this.comp   //let frameNum: Float64 = this.comp.renderedFrame - this.offsetTime
-        let frameNum: Float64 = 0.0 - this.offsetTime
+        //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInComp】间接获取当时值。
+        let frameNum: Float64 = this.renderedFrameInComp() - this.offsetTime
         let initTime: Float64 = this.keyframes[0].t - this.offsetTime
         let endTime: Float64 = this.keyframes[this.keyframes.size - 1].t - this.offsetTime
         if (!(frameNum == Float64(this._caching.lastFrame) || (this._caching.lastFrame != initFrame &&
@@ -409,7 +444,7 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
     }
 
     func processEffectsSequence(): Unit {
-        if (this.elem.globalData.frameId == this.frameId || this.effectsSequence.size == 0 ) {
+        if (this.elemGlobalData.frameId == this.frameId || this.effectsSequence.size == 0 ) {
             return
         }
         if (this.lock) {
@@ -431,12 +466,13 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
         this.setVValue(finalValue)
         this._isFirstFrame = false
         this.lock = false
-        this.frameId = this.elem.globalData.frameId
+        this.frameId = this.elemGlobalData.frameId
     }
 
     public func addEffect(effectFunction: () -> Array<Float64>): Unit {
         this.effectsSequence.append(effectFunction)
-        // TODO: 暂时不调用 CvShapeData 中 addDynamicProperty 函数   //this.container.addDynamicProperty(this)
+        // TODO: 暂时不调用 CvShapeData 中 addDynamicProperty 函数
+        this.container.addDynamicProperty(this)
     }
     
     /**
@@ -444,38 +480,36 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
      * 这块的数据解析的结构和json有些不一样，要注意对应。（或者修改之前解析封装的结构）
      */
     //【分支1-变种】: dataK 不是数组，是数值 Int64，进入此分支。
-    public static func getProp<T>(elem: BaseElement, data: T, dataK: Int64, mult: Float64, container: DynamicPropertyContainer): PropertyFactory<T, Int64> where T <: ToString {
-        let p: PropertyFactory<T, Int64> = valueProperty(elem, data, Float64(dataK), mult, container)
+    public static func getProp<T>(data: T, dataK: Int64, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer): PropertyFactory<T, Int64> where T <: ToString {
+        let p: PropertyFactory<T, Int64> = valueProperty(data, Float64(dataK), mult, container, elemGlobalData, elemData)
         if (p.effectsSequence.size != 0) {
-            //TODO: 未实现 TextAnimatorProperty 
-            //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？----------------------------------------------------------2024.08.17
-            //container.addDynamicProperty(p)
+            container.addDynamicProperty(p)
         }
         return p
     }
     //【分支1】: dataK 不是数组，是数值/对象，进入此分支。
-    public static func getProp<T>(elem: BaseElement, data: T, dataK: Float64, mult: Float64, container: DynamicPropertyContainer): PropertyFactory<T, Float64> where T <: ToString {
-        let p: PropertyFactory<T, Float64> = valueProperty(elem, data, dataK, mult, container)
+    public static func getProp<T>(data: T, dataK: Float64, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer): PropertyFactory<T, Float64> where T <: ToString {
+        let p: PropertyFactory<T, Float64> = valueProperty(data, dataK, mult, container, elemGlobalData, elemData)
         if (p.effectsSequence.size != 0) {
-            //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？  //container.addDynamicProperty(p)
+            container.addDynamicProperty(p)
         }
         return p
     }
     
     //【分支2-变种】: dataK 是PointF，但是json中是数组 [number, number]，进入此分支。
-    public static func getProp<T>(elem: BaseElement, data: T, dataK: PointF, mult: Float64, container: DynamicPropertyContainer): PropertyFactory<T, PointF> where T <: ToString {
+    public static func getProp<T>(data: T, dataK: PointF, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer): PropertyFactory<T, PointF> where T <: ToString {
         //针对json中是[Float64, Float64]，解析后是 PointF的部分。
-        var p: PropertyFactory<T, PointF> = multiDimensionalProperty(elem, data, [dataK.x, dataK.y], mult, container, dataK)
+        var p: PropertyFactory<T, PointF> = multiDimensionalProperty(data, [dataK.x, dataK.y], mult, container, dataK, elemGlobalData, elemData)
         if (p.effectsSequence.size != 0) {
-            //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？  //container.addDynamicProperty(p)
+            container.addDynamicProperty(p)
         }
         return p
     }
     //【分支2】: dataK 是数组Array<number>，进入此分支。
-    public static func getProp<T>(elem: BaseElement, data: T, dataK: Array<Float64>, mult: Float64, container: DynamicPropertyContainer): PropertyFactory<T, Array<Float64>> where T <: ToString {
-        var p: PropertyFactory<T, Array<Float64>> = multiDimensionalProperty(elem, data, dataK, mult, container, dataK)
+    public static func getProp<T>(data: T, dataK: Array<Float64>, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer): PropertyFactory<T, Array<Float64>> where T <: ToString {
+        var p: PropertyFactory<T, Array<Float64>> = multiDimensionalProperty(data, dataK, mult, container, dataK, elemGlobalData, elemData)
         if (p.effectsSequence.size != 0) {
-            //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？  //container.addDynamicProperty(p)
+            container.addDynamicProperty(p)
         }
         return p
     }
@@ -483,24 +517,24 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
     //dataK 是否保存成 E 泛型结构？还是修改保存为 data_k_xxxProperty ??? -- 保存为 data_k_xxxProperty
     //【分支3】://TODO：此处传入的 data.k 是一个 Keyframe<E> 对象？？？
     //【分支4】://此处的 data.k 是一个数组Array<Keyframe<T>>
-    public static func getProp<T, E>(elem: BaseElement, data: T, dataK: Array<Keyframe<E>>, types: Int64, mult: Option<Float64>, container: DynamicPropertyContainer): PropertyFactory<T, E> where T <: ToString , E <: ToString {
+    public static func getProp<T, E>(data: T, dataK: Array<Keyframe<E>>, types: Int64, mult: Option<Float64>, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer): PropertyFactory<T, E> where T <: ToString , E <: ToString {
         var p: PropertyFactory<T, E>
         if (types == 0) {
-            p = keyframedValueProperty<T, E>(elem, data, dataK, mult, container, types)
+            p = keyframedValueProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData)
         } else if (types == 1) {
-            p = keyframedMultidimensionalProperty<T, E>(elem, data, dataK, mult, container, types)
+            p = keyframedMultidimensionalProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData)
         } else {
             throw Exception("调用分支错误。")
         }
         
         if (p.effectsSequence.size != 0) {
-            //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？  //container.addDynamicProperty(p)
+            container.addDynamicProperty(p)
         }
         return p
     }
     
-    static func valueProperty<T, E>(elem: BaseElement, data: T, dataK: Float64, mult: Option<Float64>, container: DynamicPropertyContainer): PropertyFactory<T, E> where T <: ToString , E <: ToString {
-        let p: PropertyFactory<T, E> = PropertyFactory<T, E>(elem, data, 0.0, container)
+    static func valueProperty<T, E>(data: T, dataK: Float64, mult: Option<Float64>, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer): PropertyFactory<T, E> where T <: ToString , E <: ToString {
+        let p: PropertyFactory<T, E> = PropertyFactory<T, E>(data, 0.0, container, elemGlobalData, elemData)
         p.dataK_Number = [dataK]
         p.isNull = false
         
@@ -525,8 +559,8 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
         return p
     }
     
-    static func multiDimensionalProperty<T, E>(elem: BaseElement, data: T, dataK: Array<Float64>, mult: Option<Float64>, container: DynamicPropertyContainer, dataE: E): PropertyFactory<T, E> where T <: ToString , E <: ToString {
-        let p: PropertyFactory<T, E> = PropertyFactory<T, E>(elem, data, 0.0, container)
+    static func multiDimensionalProperty<T, E>(data: T, dataK: Array<Float64>, mult: Option<Float64>, container: DynamicPropertyContainer, dataE: E, elemGlobalData: GlobalData, elemData: Layer): PropertyFactory<T, E> where T <: ToString , E <: ToString {
+        let p: PropertyFactory<T, E> = PropertyFactory<T, E>(data, 0.0, container, elemGlobalData, elemData)
         p.dataK_Number = dataK
         p.isNull = false
         
@@ -559,15 +593,15 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
         return p
     }
 
-    static func keyframedValueProperty<T, E>(elem: BaseElement, data: T, dataK: Array<Keyframe<E>>, mult: Option<Float64>, container: DynamicPropertyContainer, types: Int64): PropertyFactory<T, E> where T <: ToString , E <: ToString {
-        let p: PropertyFactory<T, E> = PropertyFactory<T, E>(elem, data, 0.0, container, types: types)
+    static func keyframedValueProperty<T, E>(data: T, dataK: Array<Keyframe<E>>, mult: Option<Float64>, container: DynamicPropertyContainer, types: Int64, elemGlobalData: GlobalData, elemData: Layer): PropertyFactory<T, E> where T <: ToString , E <: ToString {
+        let p: PropertyFactory<T, E> = PropertyFactory<T, E>(data, 0.0, container, elemGlobalData, elemData, types: types)
         p.dataK_Keyframed = dataK
         p.isNull = false
-        
+
         p.propType = "unidimensional"
         //TODO: 此处的 dataK: E 也是 Keyframe<E>类型？？？
         p.keyframes = dataK
-        p.offsetTime = elem.data.st
+        p.offsetTime = elemData.st
         p.frameId = -1
         p._caching = Caching(lastFrame: initFrame, lastIndex: 0, value: [0.0], _lastKeyframeIndex: -1)
         p.k = true
@@ -585,15 +619,15 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
         return p
     }
 
-    static func keyframedMultidimensionalProperty<T, E>(elem: BaseElement, data: T, dataK: Array<Keyframe<E>>, mult: Option<Float64>, container: DynamicPropertyContainer, types: Int64): PropertyFactory<T, E> where T <: ToString , E <: ToString {
-        let p: PropertyFactory<T, E> = PropertyFactory<T, E>(elem, data, 0.0, container, types: types)
+    static func keyframedMultidimensionalProperty<T, E>(data: T, dataK: Array<Keyframe<E>>, mult: Option<Float64>, container: DynamicPropertyContainer, types: Int64, elemGlobalData: GlobalData, elemData: Layer): PropertyFactory<T, E> where T <: ToString , E <: ToString {
+        let p: PropertyFactory<T, E> = PropertyFactory<T, E>(data, 0.0, container, elemGlobalData, elemData, types: types)
         p.dataK_Keyframed = dataK
         p.isNull = false
         
         p.propType = "multidimensional"
 
         p.keyframes = dataK
-        p.offsetTime = elem.data.st
+        p.offsetTime = elemData.st
         p.k = true
         p.kf = true
         p._isFirstFrame = true

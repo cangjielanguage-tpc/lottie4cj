@@ -13,10 +13,10 @@ public class MDF {
     public var sc: Bool = false
     public var fc: Bool = false
     public var m: Bool = false
-    var p: Bool = false
+    public var p: Bool = false
 
-    init(){}
-    init(o!: Bool, sw!: Bool, sc!: Bool, fc!: Bool, m!: Bool, p!: Bool){
+    public init(){}
+    public init(o!: Bool, sw!: Bool, sc!: Bool, fc!: Bool, m!: Bool, p!: Bool){
         this.o = o
         this.sw = sw
         this.sc = sc
@@ -33,7 +33,7 @@ public class LetterProps {
     public var sc: String = ""
     public var fc: String = ""
     public var m: String = ""
-    var p: Array<Float64> = Array<Float64>()
+    public var p: Array<Float64> = Array<Float64>()
     public var _mdf: MDF = MDF()
 
     /**
@@ -80,7 +80,7 @@ public class LetterProps {
      * @param p - Type of Array<Float64>, the value of p.
      * @return Type of Bool, the result of update the LetterProps instance.
      */
-    public func update(o: Int64, sw: Int64, sc: String, fc: String, m: String, p: Array<Float64>): Bool {
+    public func update(o: Int64, sw: Int64, sc: String, fc: String, m: String, p: Array<Float64>) {
         this._mdf.o = false
         this._mdf.sw = false
         this._mdf.sc = false
@@ -114,14 +114,8 @@ public class LetterProps {
             this._mdf.m = true
             updated = true
         }
-        if (this.p.size != p.size && (
-            (this.p.size > 0 && p.size > 0 && this.p[0] != p[0]) ||
-            (this.p.size > 1 && p.size > 1 && this.p[1] != p[1]) ||
-            (this.p.size > 4 && p.size > 4 && this.p[4] != p[4]) ||
-            (this.p.size > 5 && p.size > 5 && this.p[5] != p[5]) ||
-            (this.p.size > 12 && p.size > 12 && this.p[12] != p[12]) ||
-            (this.p.size > 13 && p.size > 13 && this.p[13] != p[13])
-        )) {
+        //TODO: 注意数组越界问题
+        if (this.p.size != p.size && (this.p[0] != p[0] || this.p[1] != p[1] || this.p[4] != p[4] || this.p[5] != p[5] || this.p[12] != p[12] || this.p[13] != p[13])) {
             this.p = p
             this._mdf.p = true
             updated = true

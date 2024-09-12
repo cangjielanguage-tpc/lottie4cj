@@ -19,9 +19,6 @@ public class CvBaseElement <: BaseElement {
     private var transformCanvas: TransformCanvas = TransformCanvas()
     private var renderableEffectsManager: ?CvEffects = None
     private var maskManager: ?CvMaskElement = None
-    private var hidden: Bool = false
-    private var isTransparent: Bool = false
-    private var _isFirstFrame: Bool = false
 
     public init(data: Layer, globalData: GlobalData) {
         super(data,globalData)

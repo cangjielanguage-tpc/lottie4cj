@@ -5,9 +5,13 @@
 /**
  * @file This file is TextAnimatorProperty.
  */
+package lottie4cj.utils.text
 
-package lottie4cj.property
+internal import lottie4cj.bezier.*
+internal import lottie4cj.inner.*
+internal import lottie4cj.pool.*
 
+internal import lottie4cj.property.*
 
 public class TextAnimatorProperty <: DynamicPropertyContainer {
     //TODO：拆分多继承问题 -- extendPrototype([DynamicPropertyContainer], TextAnimatorProperty)
@@ -28,46 +32,54 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
 
     public var _textData: LayerT
     public var _renderType: String
-    public var _elem: ITextElement
+    //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。
+    public let elemTextPropertyCurrentData: DocumentData
 
-    public init(textData: LayerT, renderType: String, elem: ITextElement) {
-        super(elem)
+    public init(textData: LayerT, renderType: String, elemGlobalData: GlobalData, elemData: Layer, elemTextPropertyCurrentData: DocumentData) {
+        super(elemGlobalData, elemData)
         this._textData = textData
         this._renderType = renderType
-        this._elem = elem
 
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elem)
-        let emptyPF: PropertyFactory<Float64, Float64> = PropertyFactory<Float64, Float64>(elem, 0.0, 0.0, dp)
+        this.elemTextPropertyCurrentData = elemTextPropertyCurrentData
+        //TODO: this._animatorsData 初始化放在后面。
+
+        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData)
+        let emptyPF: PropertyFactory<Float64, Float64> = PropertyFactory<Float64, Float64>(0.0, 0.0, dp, elemGlobalData, elemData)
         this._pathData = PathData(
                             a: emptyPF,
                             f: emptyPF,
                             l: emptyPF,
                             r: emptyPF,
                             p: emptyPF,
-                            m: ShapePropertyFactory(elem, ContentModel(), 0),
+                            m: ShapePropertyFactory(ContentModel(), 0, elemGlobalData, elemData),
                             pi: PathInfo()
                         )
 
-        this._moreOptions = MoreOptions( alignment: PropertyFactory<LayerTMA, Array<Float64>>(elem, LayerTMA(), 0.0, dp) )
+        this._moreOptions = MoreOptions( alignment: PropertyFactory<LayerTMA, Array<Float64>>(LayerTMA(), 0.0, dp, elemGlobalData, elemData) )
 
         //直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
-        this.initDynamicPropertyContainer(elem)
+        this.initDynamicPropertyContainer(elemGlobalData, elemData)
     }
 
     public func searchProperties() {
         let len: Int64 = this._textData.a.size
         var animatorProps: AnimatableTextPropertiesA = AnimatableTextPropertiesA()
 
-        this._animatorsData = Array<TextAnimatorDataProperty>(len, repeat: TextAnimatorDataProperty(this._elem, animatorProps, this))
+        this._animatorsData = Array<TextAnimatorDataProperty>(len, repeat: TextAnimatorDataProperty(animatorProps, this, this.elemGlobalData, this.elemData, this.elemTextPropertyCurrentData))
         for (i in 0..len) {
             //数据类型分析: animatorProps  =>  this._textData.a[i]  =>  layer.t.a[i](AnimatableTextPropertiesA)
             animatorProps = this._textData.a[i]
-            this._animatorsData[i] = TextAnimatorDataProperty(this._elem, animatorProps, this)
+            this._animatorsData[i] = TextAnimatorDataProperty(animatorProps, this, this.elemGlobalData, this.elemData, this.elemTextPropertyCurrentData)
         }
 
         //TODO: 暂时在 json 中找不到 layer.t.p。 this._pathData 是空对象。
         this._hasMaskedPath = false
 
+        /*
+         * 数据类型分析: this._textData.m.a  =>  layer.t.m.a(LayerTMA)
+         * 走【分支2】 => "a": {"a": 0, "k": [0, 0]}
+         * TODO：需要将 this._textData.m.a.k 的 Array<Int64> 转为 Array<Float64>。
+         */
         let lens: Int64 = this._textData.m.a.k.size
         var arr: Array<Float64> = Array<Float64>()
         if (lens > 0) {
@@ -77,9 +89,8 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                 arr[i] = Float64(ak[i])
             }
         }
-        //数据类型分析: this._textData.m.a  =>  layer.t.m.a(LayerTMA)
-        //走【分支2】 => "a": {"a": 0, "k": [0, 0]}
-        this._moreOptions.alignment = PropertyFactory<LayerTMA, Array<Float64>>.getProp(this._elem, this._textData.m.a, arr, 0.0, this)
+
+        this._moreOptions.alignment = PropertyFactory<LayerTMA, Array<Float64>>.getProp(this._textData.m.a, arr, 0.0, this, this.elemGlobalData, this.elemData)
     }
 
     /*
@@ -120,7 +131,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         var totalLength: Float64 = 0.0
         var perc: Float64 = 0.0
         var tanAngle: Float64 = 0.0
-        var mask: ShapePropertyFactory = ShapePropertyFactory(this._elem, ContentModel(), 0)
+        var mask: ShapePropertyFactory = ShapePropertyFactory(ContentModel(), 0, this.elemGlobalData, this.elemData)
         //TODO: 暂时在 json 中找不到 layer.t.p。 <=  //this._hasMaskedPath = false 
         if (this._hasMaskedPath) {
             mask = this._pathData.m
@@ -129,7 +140,8 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                 if (this._pathData.r.v.size != 0) {
                     paths = paths.reverse()
                 }
-                //TODO:释放从前面的 pathInfo 缓存的 bezier 数据：this_pathData.pi.  //TODO: PathInfo 是自定义数据类型。前面已经初始化。
+                //TODO:释放从前面的 pathInfo 缓存的 bezier 数据：this_pathData.pi
+                //TODO: PathInfo 是自定义数据类型。前面已经初始化。
 
                 len = paths._length - 1
                 var bezierData: BezierData = BezierData()
@@ -191,9 +203,10 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         yPos = 0.0
         var yOff: Float64 = documentData.finalSize * 1.2 * 0.714
         var firstLine: Bool = true
+
         var animatorProps: AnimatableTextProperty = animators[0].a
 
-        var animatorSelector: TextSelectorPropFactory = TextSelectorPropFactory(this._elem, AnimatableTextPropertiesS())
+        var animatorSelector: TextSelectorPropFactory = TextSelectorPropFactory(AnimatableTextPropertiesS(), this.elemGlobalData, this.elemData, this.elemTextPropertyCurrentData)
 
         var letterValue: LetterProps = LetterProps()
     
@@ -570,10 +583,10 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
     }
 
     public func getValue(): Unit {
-        if (this._elem.globalData.frameId == this._frameId) {
+        if (this.elemGlobalData.frameId == this._frameId) {
             return
         }
-        this._frameId = this._elem.globalData.frameId
+        this._frameId = this.elemGlobalData.frameId
         //TODO：调用父类 DynamicPropertyContainer.iterateDynamicProperties
         this.iterateDynamicProperties()
     }

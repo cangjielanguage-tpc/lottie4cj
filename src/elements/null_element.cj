@@ -8,6 +8,7 @@
 package lottie4cj.elements
 
 public class NullElement <: BaseElement {
+    //TODO：拆分多继承问题 -- extendPrototype([BaseElement, TransformElement, HierarchyElement, FrameElement], NullElement)
 
     /**
      * Create a NullElement instance based on parameters.
@@ -17,10 +18,16 @@ public class NullElement <: BaseElement {
      */
     public init(data: Layer, globalData: GlobalData) {
         super(data, globalData)
+
+        this.initFrame()
+        this.initBaseData(data, globalData)
+        this.initFrame()
+        this.initTransform(data, globalData)
+        this.initHierarchy()
     }
 
     public func prepareFrame(num: Int64): Unit {
-        //TODO: (问题点)仓颉的calss是单继承，调不到 FrameElement.prepareProperties  //this.prepareProperties(num, true)
+        this.prepareProperties(num, true)
     }
     
     public func renderFrame() {}
@@ -34,7 +41,5 @@ public class NullElement <: BaseElement {
     public func destroy() {}
     
     public func hide() {}
-
-    //TODO：拆分多继承问题 -- extendPrototype([BaseElement, TransformElement, HierarchyElement, FrameElement], NullElement)
 
 }

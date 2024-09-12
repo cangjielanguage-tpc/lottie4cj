@@ -18,19 +18,26 @@ public class TM {
     }
 }
 
+/*
+ * 初始化后需要传入1个函数：
+ * 1. buildAllItems    => 传入 BaseRenderer 中的这个函数。
+ * 2. checkLayers      => 传入 BaseRenderer 中的这个函数。
+ */
 public open class ICompElement <: BaseElement {
-
     //TODO：拆分多继承问题 -- extendPrototype([BaseElement, TransformElement, HierarchyElement, FrameElement, RenderableDOMElement], ICompElement)
 
-    //TODO: 未实现,初拟定了一个数据类型TM
+    //TODO: 初始化后，传入 BaseRenderer.buildAllItems() 函数。
+    public var buildAllItems: () -> Unit = { => ()}
+    //TODO: 初始化后，传入 BaseRenderer.checkLayers(num: Float64) 函数。
+    public var checkLayers: (Float64) -> Unit = { m => ()}
+
+    //TODO: 未实现,初拟定了一个数据类型TM.
     public var tm: TM = TM()
     var renderedFrame: Float64 = 0.0
     var completeLayers: Bool = false
     public var layers: Array<Layer> = Array<Layer>()
-    //TODO: 未确认数据类型
+    //TODO: 未确认数据类型，暂定为 BaseElement。
     public var elements: Array<BaseElement> = Array<BaseElement>()
-
-    //TODO: 未完全实现 RendererBase/CanvasRendererBase  //var comp: RendererBase
 
     /**
      * Create a ICompElement instance based on parameters.
@@ -42,9 +49,21 @@ public open class ICompElement <: BaseElement {
         super(data, globalData)
     }
 
-    //TODO: 未完全实现 BaseRenderer
-    //TODO: 未实现 initElement
-    
+    public func initElement(data: Layer, globalData: GlobalData) {
+        this.initFrame()
+        this.initBaseData(data, globalData)
+        this.initTransform(data, globalData)
+        this.initRenderable()
+        this.initHierarchy()
+        this.initRendererElement()
+        this.createContainerElements()
+        this.createRenderableComponents()
+        if (this.data.xt || !globalData.progressiveLoad) {
+            this.buildAllItems()
+        }
+        this.hide()
+    }
+
     /**
      * Prepare frame.
      *
@@ -52,9 +71,12 @@ public open class ICompElement <: BaseElement {
      */
     public func prepareFrame(num: Float64): Unit {
         this._mdf = false
-        //TODO: (问题点)仓颉的calss是单继承，调不到 RenderableElement.prepareRenderableFrame  //this.prepareRenderableFrame(num)
-        //TODO: (问题点)仓颉的calss是单继承，调不到 FrameElement.prepareProperties   //this.prepareProperties(num, this.isInRange)
-        //TODO: 未找到 data.xt    //if (!this.isInRange && !this.data.xt) { return }
+        this.prepareRenderableFrame(num)
+        this.prepareProperties(Int64(num), this.isInRange)
+        //TODO: 未在 json 中找到 layers.xt，暂时定义为 Bool类型。
+        if (!this.isInRange && !this.data.xt) {
+            return
+        }
     
         if (!this.tm._placeholder) {
             var timeRemapped: Float64 = this.tm.v
@@ -68,12 +90,12 @@ public open class ICompElement <: BaseElement {
 
         let len: Int64 = this.elements.size
         if (!this.completeLayers) {
-            //TODO: (问题点)仓颉的calss是单继承，调不到 BaseRenderer.checkLayers   //this.checkLayers(this.renderedFrame)
+            //TODO: 初始化后，传入 BaseRenderer.checkLayers(num: Float64) 函数。
+            this.checkLayers(this.renderedFrame)
         }
         //由于表达式之间的连接方式，此迭代需要向后进行
         for (i in (len - 1)..=0:-1) {
             if (this.completeLayers || this.elements.size > i) {
-                //TODO: 未实现 elements[i].prepareFrame
                 this.elements[i].prepareFrame(this.renderedFrame - this.layers[i].st)
                 if (this.elements[i]._mdf) {
                     this._mdf = true
@@ -81,11 +103,11 @@ public open class ICompElement <: BaseElement {
             }
         }
     }
-    
+
     /**
      * Render inner content.
      */
-    public func renderInnerContent(): Unit {
+    public open func renderInnerContent(): Unit {
         let len: Int64 = this.layers.size
         for (i in 0..len) {
             if (this.completeLayers || this.elements.size > i) {
@@ -93,7 +115,7 @@ public open class ICompElement <: BaseElement {
             }
         }
     }
-    
+
     /**
      * Render shape color.
      *
@@ -101,7 +123,7 @@ public open class ICompElement <: BaseElement {
      * @param endColor - Type of Array<Int64>, End color array RGBA.
      * @param index - Type of Int64, the subscript value of elements in the corresponding hierarchy.
      */
-    public func renderShapeColor(color: Array<Int64>, endColor: Array<Int64>, index: Int64): Unit {
+    public open func renderShapeColor(color: Array<Int64>, endColor: Array<Int64>, index: Int64): Unit {
         if (index == 0) {
             let len: Int64 = this.layers.size
             for (i in 0..len) {
@@ -123,7 +145,7 @@ public open class ICompElement <: BaseElement {
      * @param endColor - Type of Int64, Index value of hierarchy.
      * @param index - Type of Int64, the subscript value of elements in the corresponding hierarchy.
      */
-    public func renderShapeColor(color: Array<Int64>, endColor: Int64, index: Int64) {
+    public open func renderShapeColor(color: Array<Int64>, endColor: Int64, index: Int64): Unit {
         if (endColor == 0) {
             let len: Int64 = this.layers.size
             for (i in 0..len) {
@@ -144,7 +166,7 @@ public open class ICompElement <: BaseElement {
      * @param color - Type of Array<Int64>, Start color array RGBA.
      * @param index - Type of Int64, the subscript value of elements in the corresponding hierarchy.
      */
-    public func renderShapeColor(color: Array<Int64>, index: Int64) {
+    public open func renderShapeColor(color: Array<Int64>, index: Int64): Unit {
         let len: Int64 = this.layers.size
         for (i in 0..len) {
             if (this.completeLayers || this.elements.size > i) {
@@ -161,7 +183,7 @@ public open class ICompElement <: BaseElement {
     public func setElements(elems: Array<BaseElement>): Unit {
         this.elements = elems
     }
-    
+
     /**
      * Return the elements value.
      *
@@ -171,7 +193,7 @@ public open class ICompElement <: BaseElement {
         return this.elements
     }
 
-    /**
+    /**	    
      * Destroy the Element.
      */
     public func destroyElements(): Unit {
@@ -183,12 +205,12 @@ public open class ICompElement <: BaseElement {
         }
     }
 
-    /**
+    /**	    
      * Destroy the ICompElement.
      */
-    public func destroy(): Unit {
+    public open func destroy(): Unit {
         this.destroyElements()
-        //TODO: 未实现  //this.destroyBaseElement()
+        this.destroyBaseElement()
     }
 
 }

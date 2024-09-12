@@ -4,6 +4,7 @@
 
 package lottie4cj.property
 
+//TODO: 需确认是否和 ContentModel 的子类 Repeater 有关联？？？
 //TODO：需确认，其他 ShapeModifier 子类是否和 ContentModel 的其他子类有关联？？？
 public class RepeaterModifier <: ShapeModifier { 
     //TODO：拆分多继承问题 -- extendPrototype([ShapeModifier], RepeaterModifier)
@@ -21,7 +22,10 @@ public class RepeaterModifier <: ShapeModifier {
     var so: PropertyFactory<ArrayKeyframeFloat64, Float64>
     var eo: PropertyFactory<ArrayKeyframeFloat64, Float64>
     
-    //TODO: 未实现 TransformPropertyFactory   //var tr: TransformPropertyFactory.getTransformProperty(elem, v.tr, this)
+    //TODO: 未实现 TransformPropertyFactory  //var tr: TransformPropertyFactory.getTransformProperty(v.tr, this, elemGlobalData, elemData)
+
+    //TODO: 调用 CVShapeElement/SVGShapeElement.reloadShapes()
+    public var reloadShapesInShapeElement: () -> Unit = { => ()}
 
     var arr: Array<ContentModel> = Array<ContentModel>()
     var pos: Int64 = 0
@@ -30,59 +34,81 @@ public class RepeaterModifier <: ShapeModifier {
      * TODO: 提取的父类 ElementData：elementData是多种情况自定义结构/CVShapeData/ShapeModifier及子类
      * TODO: ShapeModifier <: DynamicPropertyContainer，让 DynamicPropertyContainer <: ElementData ???
      */
-    var elemsData: Array<ElementData> = Array<ElementData>()
+    var elemsData: Array<ElementData2> = Array<ElementData2>()
     
     var _currentCopies: Int64 = 0
     var _elements: ArrayList<ContentModel> = ArrayList<ContentModel>()
     var _groups: Array<ShapeGroup> = Array<ShapeGroup>()
 
-    public init(elem: IShapeElement, data: Repeater){
-        super(elem, data)
+    public init(data: Repeater, elemGlobalData: GlobalData, elemData: Layer, reloadShapes: () -> Unit){
+        super(data, elemGlobalData, elemData)
+        this.reloadShapesInShapeElement = reloadShapes
         
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elem)
-        this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>(elem, ArrayKeyframeFloat64(), 0.0, dp)
-        this.o = PropertyFactory<ArrayKeyframeFloat64, Float64>(elem, ArrayKeyframeFloat64(), 0.0, dp)
-        this.so = PropertyFactory<ArrayKeyframeFloat64, Float64>(elem, ArrayKeyframeFloat64(), 0.0, dp)
-        this.eo = PropertyFactory<ArrayKeyframeFloat64, Float64>(elem, ArrayKeyframeFloat64(), 0.0, dp)
+        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData)
+        this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData)
+        this.o = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData)
+        this.so = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData)
+        this.eo = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData)
         
-        //TODO: 未实现 TransformPropertyFactory   //var tr: TransformPropertyFactory.getTransformProperty(elem, v.tr, this)
+        //TODO: 未实现 TransformPropertyFactory  //var tr: TransformPropertyFactory.getTransformProperty(v.tr, this, elemGlobalData, elemData)
     }
-    
+
+    //TODO: 注意 怎么实现无参的初始化？？？
+    public init(arr: Array<ContentModel>, pos: Int64, elemsData: Array<ElementData2>, elemGlobalData: GlobalData, elemData: Layer, reloadShapes: () -> Unit) {
+        this((arr[pos] as Repeater).getOrThrow(), elemGlobalData, elemData, reloadShapes)
+        this.arr = arr
+        this.pos = pos
+        this.elemsData = elemsData
+
+        this.initDynamicPropertyContainer(elemGlobalData, elemData)
+        let rp: Repeater = (arr[pos] as Repeater).getOrThrow()
+        this.initModifierProperties(rp, elemGlobalData, elemData)
+        for (i in pos..0:-1) {
+            //unshift() 方法可向数组的开头添加一个或更多元素，并返回新的长度。 // this._elements.unshift(arr.splice(i,1)[0])
+            this._elements.prepend(arr[i])
+        }
+        if (this.dynamicProperties.size > 0) {
+            this.k = true
+        } else {
+            this.getValue(true)
+        }
+    }
+
     public func getValue(): Unit {
         this.processKeys()
     }
 
-    public func initModifierProperties(elem: IShapeElement, rp: Repeater): Unit {
+    public func initModifierProperties(rp: Repeater, elemGlobalData: GlobalData, elemData: Layer): Unit {
         //TODO: 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
         
         //"c": {"a": 0, "k": 2, "ix": 1}  //_c: Array<Keyframe<Float64>>
         if (rp.c.k.size == 1) {//走【分支1】
-            this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, rp.c, rp.c.k[0].k ?? 0.0, 0.0, this)
+            this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.c, rp.c.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData)
         } else if (rp.c.k.size > 1) {//走【分支3】
-            this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, rp.c, rp.c.k, 0, 0.0, this)
+            this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.c, rp.c.k, 0, 0.0, this, elemGlobalData, elemData)
         }
 
         //"o": {"a": 0, "k": 0, "ix": 2}  //_c: Array<Keyframe<Float64>>
         if (rp.o.k.size == 1) {//走【分支1】
-            this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, rp.o, rp.o.k[0].k ?? 0.0, 0.0, this)
+            this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.o, rp.o.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData)
         } else if (rp.o.k.size > 1) {//走【分支3】
-            this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, rp.o, rp.o.k, 0, 0.0, this)
+            this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.o, rp.o.k, 0, 0.0, this, elemGlobalData, elemData)
         }
         
         //TODO: 未实现 TransformPropertyFactory  //this.tr = TransformPropertyFactory.getTransformProperty(elem, rp.tr, this)
         
         //"so": {"a": 0, "k": 100, "ix": 5}  //_so: Array<Keyframe<Float64>>
         if (rp.tr.so.k.size == 1) {//走【分支1】
-            this.so = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, rp.tr.so, rp.tr.so.k[0].k ?? 0.0, 0.01, this)
+            this.so = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.tr.so, rp.tr.so.k[0].k ?? 0.0, 0.01, this, elemGlobalData, elemData)
         } else if (rp.tr.so.k.size > 1) {//走【分支3】
-            this.so = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, rp.tr.so, rp.tr.so.k, 0, 0.01, this)
+            this.so = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.tr.so, rp.tr.so.k, 0, 0.01, this, elemGlobalData, elemData)
         }
         
         //"eo": {"a": 0, "k": 100, "ix": 6}  //_eo: Array<Keyframe<Float64>>
         if (rp.tr.eo.k.size == 1) {//走【分支1】
-            this.eo = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, rp.tr.eo, rp.tr.eo.k[0].k ?? 0.0, 0.01, this)
+            this.eo = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.tr.eo, rp.tr.eo.k[0].k ?? 0.0, 0.01, this, elemGlobalData, elemData)
         } else if (rp.tr.eo.k.size > 1) {//走【分支3】
-            this.eo = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, rp.tr.eo, rp.tr.eo.k, 0, 0.01, this)
+            this.eo = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.tr.eo, rp.tr.eo.k, 0, 0.01, this, elemGlobalData, elemData)
         }
 
         this.data = rp
@@ -97,6 +123,7 @@ public class RepeaterModifier <: ShapeModifier {
     public func applyTransforms(pMatrix: Matrix, rMatrix: Matrix, sMatrix: Matrix, perc: Int64, inv: Bool) { }
     /*
     public func applyTransforms(pMatrix: Matrix, rMatrix: Matrix, sMatrix: Matrix, transform: TransformPropertyFactory, perc: Int64, inv: Bool) {
+        //var dir = inv ? -1 : 1
         var dir: Int64 = 1
         if (inv) {
             dir = -1
@@ -117,27 +144,6 @@ public class RepeaterModifier <: ShapeModifier {
 
         sMatrix.translate(transform.a.v[0], transform.a.v[1], transform.a.v[2])
     }*/
-
-    public init(elem: IShapeElement, arr: Array<ContentModel>, pos: Int64, elemsData: Array<ElementData>) {
-        this(elem, (arr[pos] as Repeater).getOrThrow())
-
-        this.arr = arr
-        this.pos = pos
-        this.elemsData = elemsData
-
-        this.initDynamicPropertyContainer(elem)
-        let rp: Repeater = (arr[pos] as Repeater).getOrThrow()
-        this.initModifierProperties(elem, rp)
-        for (i in (pos - 1)..=0:-1) {
-            //unshift() 方法可向数组的开头添加一个或更多元素，并返回新的长度。
-            this._elements.prepend(arr[i])
-        }
-        if (this.dynamicProperties.size > 0) {
-            this.k = true
-        } else {
-            this.getValue(true)
-        }
-    }
     
     public func resetElements(elements: Array<ContentModel>): Unit {
         let len: Int64 = elements.size
@@ -171,7 +177,7 @@ public class RepeaterModifier <: ShapeModifier {
     }
 
     public func processShapes(_isFirstFrame: Bool): Bool {
-        var items: Array<ElementData> = Array<ElementData>()
+        var items: Array<ElementData2> = Array<ElementData2>()
         var itemsTransform: Array<Float64> = Array<Float64>()
         var i: Int64 = 0
         var dir: Int64 = 0
@@ -233,7 +239,7 @@ public class RepeaterModifier <: ShapeModifier {
                 this._groups = diffArr.concat(this._groups)
                 
                 //TODO: 调用 CVShapeElement/SVGShapeElement.reloadShapes()
-                this.elem.reloadShapes()
+                this.reloadShapesInShapeElement()
                 hasReloaded = true
             }
             cont = 0
@@ -245,8 +251,8 @@ public class RepeaterModifier <: ShapeModifier {
                 if (!renderFlag) {
                     //TODO: this.elemsData[i].it 中的 it，是从哪儿来的？还是 elemsData 数组中存放的不是 ShapeModifier ？？
                     //TODO:  elemsData 数组中存放的是 shapes ？？
-                    var elems: Array<ElementData> = this.elemsData[i].it
-                    var transformData = elems[elems.size - 1]
+                    let elems: Array<ElementData2> = this.elemsData[i].it
+                    let transformData: ElementData2 = elems[elems.size - 1]
                     //TODO: 暂时未确认 transformData 数据类型
                     //TODO: 为避免循环/递归构造函数调用，方便初始化，transform.op 从 PropertyFactory 类型改为 Array<PropertyFactory> 类型。
                     if (transformData.transform.op[0].v[0] != 0.0) {
@@ -306,7 +312,7 @@ public class RepeaterModifier <: ShapeModifier {
             }
 
             i = this._currentCopies - 1
-
+            //TODO: Repeater 中需要新增成员变量 m。
             if (this.data.m == 1) {
                 i = 0
             }

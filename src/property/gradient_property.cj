@@ -3,9 +3,8 @@
  */
 
 /**
- * @file This file is GradientProperty.
+ * @file This file is BaseElement.
  */
-
 package lottie4cj.property
 
 /*
@@ -18,7 +17,8 @@ public class GradientProperty <: DynamicPropertyContainer {
     //TODO：拆分多继承问题 -- extendPrototype([DynamicPropertyContainer], GradientProperty);
 
     var data: ContentModelP
-    var c: Array<Float64>
+    //TODO: 和 ElementData2.c 名称冲突了，改为 c2。 c: PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>
+    var c2: Array<Float64>
     var o: Array<Float64>
     var _cmdf: Bool = false
     var _omdf: Bool = false
@@ -27,10 +27,10 @@ public class GradientProperty <: DynamicPropertyContainer {
     var props: PropertyFactory<ContentModelP, Array<Float64>>
     var k: Bool = false
 
-    public init(elem: BaseElement, data: ContentModelP, container: BaseElement) {
-        super(container)
+    public init(data: ContentModelP, elemGlobalData: GlobalData, elemData: Layer) {
+        super(elemGlobalData, elemData)
         this.data = data
-        this.c = Array<Float64>(data.p * 4, repeat: 0.0)
+        this.c2 = Array<Float64>(data.p * 4, repeat: 0.0)
         var cLength: Int64 = 0
         if (data.k.size > 1) {
             if (let Some(v) <- data.k[0].s) {
@@ -44,15 +44,15 @@ public class GradientProperty <: DynamicPropertyContainer {
         this.o = Array<Float64>(cLength, repeat: 0.0)
 
         //为了后续编译，提前初始化一个空的成员变量 this.props
-        this.props = PropertyFactory<ContentModelP, Array<Float64>>.getProp(elem, ContentModelP(), Array<Float64>(), -1.0, DynamicPropertyContainer(container))
+        this.props = PropertyFactory<ContentModelP, Array<Float64>>.getProp(ContentModelP(), Array<Float64>(), -1.0, DynamicPropertyContainer(elemGlobalData, elemData), elemGlobalData, elemData)
 
         this._collapsable = this.checkCollapsable()
         this._hasOpacity = cLength
-        //直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
-        this.initDynamicPropertyContainer(container)
+        //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
+        this.initDynamicPropertyContainer(elemGlobalData, elemData)
 
-        //"g":{"p":2,"k":{"a":0,"k":[0,1,1,1,1,0,0,0],"ix":9}}   //data.k = ContentModelP.k = Array<Keyframe<Array<Float64>>>
-        this.props = PropertyFactory<ContentModelP, Array<Float64>>.getProp(elem, data, data.k, 1, 0.0, this)
+        //"g":{"p":2,"k":{"a":0,"k":[0,1,1,1,1,0,0,0],"ix":9}}  //data.k = ContentModelP.k = Array<Keyframe<Array<Float64>>>
+        this.props = PropertyFactory<ContentModelP, Array<Float64>>.getProp(data, data.k, 1, 0.0, this, elemGlobalData, elemData)
         
         this.k = this.props.k
         this.getValue(true)
@@ -71,7 +71,7 @@ public class GradientProperty <: DynamicPropertyContainer {
     }
     
     public func checkCollapsable(): Bool {
-        if (this.o.size / 2 != this.c.size / 4) {
+        if (this.o.size / 2 != this.c2.size / 4) {
             return false
         }
         
@@ -109,8 +109,8 @@ public class GradientProperty <: DynamicPropertyContainer {
                     mult = 100.0
                 }
                 val = round(this.props.v[i] * mult)
-                if (this.c[i] != val) {
-                    this.c[i] = val
+                if (this.c2[i] != val) {
+                    this.c2[i] = val
                     this._cmdf = !forceRender
                 }
             }

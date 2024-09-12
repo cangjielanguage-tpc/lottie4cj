@@ -24,7 +24,7 @@ public class CvTextElement <: ITextElement{
 
     var currentRender: Option<String>
 
-    var renderType: String
+    //TODO：父类 ITextElement 中存在此成员变量 //var renderType: String
 
     var values: valuesData
 

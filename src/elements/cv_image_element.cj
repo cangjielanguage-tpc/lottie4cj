@@ -4,14 +4,13 @@
 package lottie4cj.elements
 
 
-public class CVImageElement <: BaseElement{
+public class CvImageElement <: IImageElement {
 
-    var assetData: Asset
 
     public init(data: Layer, globalData: GlobalData) {
         super(data, globalData)
         //TODO: 暂时用空的 Asset 代替
-        this.assetData = EMPTY_ASSET
+        this.assetData = Asset("", Array<Layer>(), 0, 0, "", "", 0)
 
     }
 

@@ -8,7 +8,6 @@
 package lottie4cj.elements
 
 internal import lottie4cj.bezier.*
-
 internal import lottie4cj.utils.text.*
 
 internal import std.math.*
@@ -16,16 +15,12 @@ internal import std.math.*
 public open class ITextElement <: BaseElement {
 
     public var lettersChangedFlag: Bool = true
+    public var renderType: String = ""
     
-    //TODO:需要解构 ITextElement 和 TextProperty 互调用。
-    //TODO: 改成 TextProperty 中只传入 ITextElement 中部分函数和值
+    //TODO:需要解构 ITextElement 和 TextProperty 互调用。改成 TextProperty 中只传入 ITextElement 中部分函数和值。
     public var textProperty: TextProperty
     
-    //TODO: 未实现 TextAnimatorProperty    //public var textAnimator: TextAnimatorProperty
-
-    //public var data: Layer
-    //public var globalData: GlobalData
-    //TODO: 未完全实现 RendererBase / CanvasRendererBase        //public var comp: RendererBase
+    public var textAnimator: TextAnimatorProperty
 
     /**
      * Create a ITextElement instance based on parameters.
@@ -34,24 +29,43 @@ public open class ITextElement <: BaseElement {
      * @param globalData - Type of GlobalData, encapsulate instances of GlobalData data.
      */
     public init(data: Layer, globalData: GlobalData) {
-        //此调用 this.initBaseData(data, globalData, comp) 等同于 BaseElement.init
-        
         super(data, globalData)
-        //this.data = data
-        //this.globalData = globalData
+        this.textProperty = TextProperty(data.t, globalData)
+        this.textAnimator = TextAnimatorProperty(data.t, this.renderType, globalData, data, this.textProperty.currentData)
+    }
+ 
+    //TODO: 未实现，编译用。
+    public func addDynamicProperty(tp: TextProperty): Unit {}
+
+    public func initElement(data: Layer, globalData: GlobalData) {
         this.lettersChangedFlag = true
-        
-        //TODO:需要解构 ITextElement 和 TextProperty 互调用。
-        //TODO: 改成 TextProperty 中只传入 ITextElement 中部分函数和值
-        this.textProperty = TextProperty(this.globalData, data.t)
+        this.initFrame()
+        //设置改图层参数
+        this.initBaseData(data, globalData)
+        /*
+         * 数据来源分析：data.t == LayerT  <=  data == layer
+         * 文本属性
+         * TODO：TextProperty初始化只接收到2个参数，未传入的 this.dynamicProperties 后续根据实际应用情况再做处理。
+         */
+        this.textProperty = TextProperty(data.t, globalData)
+        //文本动画属性
+        this.textAnimator = TextAnimatorProperty(data.t, this.renderType, globalData, data, this.textProperty.currentData)
+        //获取transform（layer.ks）相关的数据
+        this.initTransform(data, globalData) 
+        this.initHierarchy()
+        this.initRenderable()
+        this.initRendererElement()
+        //创建一个会包含子元素的g元素，并根据前面初始化的参与，设置g元素的属性（transform、filter、蒙层、id等）
+        this.createContainerElements()
+        this.createRenderableComponents()
+        this.createContent()
+        this.hide()
+        //TODO: TextAnimatorProperty.searchProperties() 是无参的，未传入的 this.dynamicProperties 后续根据实际应用情况再做处理。
+        this.textAnimator.searchProperties()
     }
 
-    //TODO: 未实现
-    public func addDynamicProperty(tp: TextProperty): Unit {}
-    //TODO: 未完全实现
-    public func initElement() {
-        this.textProperty.addDynamicProperty = this.addDynamicProperty
-    }
+    //TODO: 编译用，具体实现在子类 CVTextElement.buildNewText
+    public open func buildNewText(): Unit {}
 
     /**
      * Prepare frame.
@@ -60,15 +74,16 @@ public open class ITextElement <: BaseElement {
      */
     public func prepareFrame(num: Float64): Unit {
         this._mdf = false
-        //TODO: (问题点)仓颉的calss是单继承，调不到 RenderableElement.prepareRenderableFrame  //this.prepareRenderableFrame(num)
-        //TODO: (问题点)仓颉的calss是单继承，调不到 FrameElement.prepareProperties  //this.prepareProperties(num, this.isInRange)
+        this.prepareRenderableFrame(num)
+        this.prepareProperties(Int64(num), this.isInRange)
         if (this.textProperty._mdf || this.textProperty._isFirstFrame) {
-            //TODO: buildNewText => 陈文龙开发的CVTextElement.buildNewText  //this.buildNewText()
+            //TODO: buildNewText => 陈文龙开发的CVTextElement.buildNewText  
+            this.buildNewText()
             this.textProperty._isFirstFrame = false
             this.textProperty._mdf = false
         }
     }
-
+    
     /**
      * Create path shape.
      *
@@ -82,9 +97,9 @@ public open class ITextElement <: BaseElement {
         var shapeStr: String = ""
         var sp: ShapePath = ShapePath()
         for (j in 0..jLen) {
-            // "layers"."shapes".{"ty": "sh"} = ShapePathParser
+            //数据来源分析： "layers"."shapes".{"ty": "sh"} = ShapePathParser
             if (shapes[j].ty == "sh") {
-                // ks.k  ==>  ShapeData ==> pathNodes = shapes[j].ks.k
+                //数据来源分析： ks.k  ==>  ShapeData ==> pathNodes = shapes[j].ks.k
                 sp = (shapes[j] as ShapePath) ?? sp
                 pathNodes = sp.ks[0].k ?? pathNodes
                 shapeStr += buildShapeString(pathNodes, pathNodes.i.size, true, matrixHelper)
@@ -92,7 +107,7 @@ public open class ITextElement <: BaseElement {
         }
         return shapeStr
     }
-
+    
     /**
      * Update document data.
      *
@@ -102,7 +117,7 @@ public open class ITextElement <: BaseElement {
     public func updateDocumentData(newData: Option<DocumentData>, index: Option<Int64>): Unit {
         this.textProperty.updateDocumentData(newData, index)
     }
-
+    
     /**
      * Can resize font size.
      *
@@ -111,7 +126,7 @@ public open class ITextElement <: BaseElement {
     public func canResizeFont(canResize: Bool): Unit {
         this.textProperty.canResizeFont(canResize)
     }
-
+    
     /**
      * Set minimum font size.
      *
@@ -120,7 +135,7 @@ public open class ITextElement <: BaseElement {
     public func setMinimumFontSize(fontSize: Option<Float64>): Unit {
         this.textProperty.setMinimumFontSize(fontSize)
     }
-
+    
     /**
      * Applying Text Properties to a Matrix.
      *
@@ -130,7 +145,7 @@ public open class ITextElement <: BaseElement {
      * @param xPos - Type of Float64.
      * @param yPos - Type of Float64.
      */
-    //lineNumber => documentData.l[i].line
+    //数据来源分析：lineNumber => documentData.l[i].line
     public func applyTextPropertiesToMatrix(documentData: DocumentData, matrixHelper: Matrix, lineNumber: Int64, xPos: Float64, yPos: Float64): Unit {
         if (documentData.ps.size > 0) {
             matrixHelper.translate(documentData.ps[0], documentData.ps[1] + documentData.ascent, tz: 0.0)
@@ -144,20 +159,20 @@ public open class ITextElement <: BaseElement {
         }
         matrixHelper.translate(xPos, yPos, tz: 0.0)
     }
-
+    
     /**
      * Build color.
      *
      * @param colorData - Type of Array<Float64>, color data values..
      * @return Type of String.
      */
-    //colorData => documentData.fc
+    //数据来源分析：colorData => documentData.fc
     public func buildColor(colorData: Array<Float64>): String {
         return "rgb(" + round(colorData[0] * 255.0).toString() +
         "," + round(colorData[1] * 255.0).toString() +
         "," + round(colorData[2] * 255.0).toString() + ")"
     }
-
+    
     /**
      * Get a empty LetterProps.
      *
@@ -167,6 +182,6 @@ public open class ITextElement <: BaseElement {
         return LetterProps()
     }
     
-    public func destroy() { }
+    public open func destroy() { }
 
 }
