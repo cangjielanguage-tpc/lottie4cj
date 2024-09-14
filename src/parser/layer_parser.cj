@@ -142,7 +142,7 @@ public class LayerParser {
             let len: Int64 = ja.size()
             if (len > 0) {
                 let EMPTY_MASK: Mask = Mask()
-                masks = Array<Mask>(len, item: EMPTY_MASK)
+                masks = Array<Mask>(len, repeat: EMPTY_MASK)
                 for (i in 0..len) {
                     let jsonObject: JsonObject = ja[i].asObject()
                     masks[i] = MaskParser.parse(jsonObject)
@@ -154,7 +154,7 @@ public class LayerParser {
             let ja: JsonArray = v.asArray()
             let len: Int64 = ja.size()
             let EMPTY_CM: ContentModel = ContentModel()
-            shapes = Array<ContentModel>(len, item: EMPTY_CM)
+            shapes = Array<ContentModel>(len, repeat: EMPTY_CM)
             for (i in 0..len) {
                 let jsonObject: JsonObject = ja[i].asObject()
                 let shape: ContentModel = ContentModelParser.parse(jsonObject)
@@ -178,7 +178,7 @@ public class LayerParser {
                 let len: Int64 = ja.size()
                 if (len > 0) {
                     let EMPTY_ATPA: AnimatableTextPropertiesA = AnimatableTextPropertiesA()
-                    let a: Array<AnimatableTextPropertiesA> = Array<AnimatableTextPropertiesA>(len, item: EMPTY_ATPA)
+                    let a: Array<AnimatableTextPropertiesA> = Array<AnimatableTextPropertiesA>(len, repeat: EMPTY_ATPA)
                     for (i in 0..len) {
                         let jo: JsonObject = ja[i].asObject()
                         let textProperties: AnimatableTextPropertiesA = AnimatableTextPropertiesParser.parse(jo)
@@ -200,9 +200,9 @@ public class LayerParser {
             let ja: JsonArray = v.asArray()
             let len: Int64 = ja.size()
             if (len > 0) {
-                let effectNames: Array<String> = Array<String>(len, item: "")
+                let effectNames: Array<String> = Array<String>(len, repeat: "")
                 let EMPTY_ARRAY_EFFECT: Array<Effect> = Array<Effect>()
-                ef = Array<LayerEF>(len, item: LayerEF(0, "", EMPTY_ARRAY_EFFECT))
+                ef = Array<LayerEF>(len, repeat: LayerEF(0, "", EMPTY_ARRAY_EFFECT))
                 for (i in 0..len) {
                     var ty: Int64 = 0
                     var nm: String = ""
@@ -335,7 +335,7 @@ public class LayerParser {
                 let ja: JsonArray = val.asArray()
                 let len: Int64 = ja.size()
                 if (len > 0) {
-                    k = Array<Int64>(len, item: 0)
+                    k = Array<Int64>(len, repeat: 0)
                     for (i in 0..len) {
                         k[i] = ja[i].asInt().getValue()
                     }

@@ -11,13 +11,13 @@ public class TestLottie4cjPolystarShape{
     func test_PolystarShape_01():Unit {
         var nm="nm_PolystarShape"
         var sy=Int64.Max
-        var pt= ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(104,item:Keyframe<Float64>()))
+        var pt= ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>()))
         var p=AnimatableSplitDimensionPathValue()
-        var r= ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(104,item:Keyframe<Float64>()))
-        var or= ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(104,item:Keyframe<Float64>()))
-        var os= ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(104,item:Keyframe<Float64>()))
-        var ir= ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(104,item:Keyframe<Float64>()))
-        var is2= ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(104,item:Keyframe<Float64>()))
+        var r= ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>()))
+        var or= ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>()))
+        var os= ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>()))
+        var ir= ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>()))
+        var is2= ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>()))
         var hd=true
         var d=Int64.Max
         var polystarShape=PolystarShape(nm: nm, sy: sy, pt: pt, p: p, r: r, or: or, os: os, ir:ir, is2:is2, hd:hd, d:d)

@@ -12,7 +12,7 @@ public class CvShapeData {
 
     public init(element: BaseElement, data: ShapeDataInCV, styles: ArrayList<StyleElem>, transformsManager: ShapeTransformManager) {
         this.styledShapes = ArrayList<Object>()
-        this.tr = Array<Int64>([0, 0, 0, 0, 0, 0])
+        this.tr = [0, 0, 0, 0, 0, 0]
         var ty: Int64 = 4
         if (data.ty == "rc") {
             ty = 5

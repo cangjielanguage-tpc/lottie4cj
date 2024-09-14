@@ -31,7 +31,7 @@ class KeyframesParser {
                 if (equalsJsonKind(jk, JsonKind.JsInt) || equalsJsonKind(jk, JsonKind.JsFloat)) {
                     keyframes = [KeyframeParser.parse(jv, valueParser, false)]
                 } else {
-                    keyframes = Array<Keyframe<T>>(len, item: Keyframe<T>())
+                    keyframes = Array<Keyframe<T>>(len, repeat: Keyframe<T>())
                     for (i in 0..len) {
                         let jsonValue: JsonValue = ja[i]
                         keyframes[i] = KeyframeParser.parse(jsonValue, valueParser, true)

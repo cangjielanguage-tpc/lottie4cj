@@ -10,7 +10,7 @@ public class TestLottie4cjContentModelPK{
     @TestCase
     func test_ContentModelPK_toString_01():Unit {
         let kaf=Keyframe<Array<Float64>>()
-        var k= Array<Keyframe<Array<Float64>>>(101,item:kaf)
+        var k= Array<Keyframe<Array<Float64>>>(101, repeat:kaf)
         var cmp=ContentModelPK(k:k)
         @Assert(cmp.toString(),"ContentModelPK: { k = ${k} }")
         @Assert(cmp.k.toString(),k.toString())

@@ -42,7 +42,7 @@ func test_01(): Int64 {
 func readFile(path: String): String {
     let file: File = File(path, OpenOption.Open(true, true))
     let len: Int64 = file.length
-    var buf: Array<Byte> = Array<Byte>(len, item: 0)
+    var buf: Array<Byte> = Array<Byte>(len, repeat: 0)
     file.read(buf)
     file.close()
 

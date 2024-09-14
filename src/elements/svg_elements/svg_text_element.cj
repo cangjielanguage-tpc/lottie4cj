@@ -70,9 +70,9 @@ public class SVGTextLottieElement <: ITextElement{
         //TODO tSpan.styles.display 
         var documentData = this.textProperty.currentData
         this.renderedLetters = if(documentData.l.size > 0) {
-            Array<LetterProps>(documentData.l.size, item: LetterProps())
+            Array<LetterProps>(documentData.l.size, repeat: LetterProps())
         }else {
-            Array<LetterProps>(0, item: LetterProps())
+            Array<LetterProps>(0, repeat: LetterProps())
         }
         if (documentData.fc.size > 0) {
             this.layerElement.setAttribute("fill", this.buildColor(documentData.fc))

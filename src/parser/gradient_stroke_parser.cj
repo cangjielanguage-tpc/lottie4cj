@@ -101,7 +101,7 @@ class GradientStrokeParser {
             let len: Int64 = ja.size()
             if (len > 0) {
                 let EMPTY_CMD: ContentModelD = ContentModelD(n: "", v: ContentModelDK())
-                lineDashPattern = Array<ContentModelD>(len, item: EMPTY_CMD)
+                lineDashPattern = Array<ContentModelD>(len, repeat: EMPTY_CMD)
                 for (i in 0..len) {
                     let jo: JsonObject = ja[i].asObject()
                     var n: String = ""

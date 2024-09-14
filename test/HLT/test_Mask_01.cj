@@ -12,9 +12,9 @@ public class TestLottie4cjMask{
         var cl=true
         var inv=true
         var mode="Mask_mode"
-        var pt=Array<Keyframe<ShapeData>>(56,item:Keyframe<ShapeData>())
-        var o=Array<Keyframe<Int64>>(57,item:Keyframe<Int64>())
-        var x=Array<Keyframe<Int64>>(58,item:Keyframe<Int64>())
+        var pt=Array<Keyframe<ShapeData>>(56, repeat:Keyframe<ShapeData>())
+        var o=Array<Keyframe<Int64>>(57, repeat:Keyframe<Int64>())
+        var x=Array<Keyframe<Int64>>(58, repeat:Keyframe<Int64>())
         var nm="Mask_nm"
         var mask=Mask(cl:cl,inv:inv,mode:mode,pt:pt,o:o,x:x,nm:nm)
         @Assert(mask.pt.toString(),pt.toString())

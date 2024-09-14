@@ -10,7 +10,7 @@ public class TestLottie4cjRoundedCorners{
     func test_RoundedCorners_toString_01():Unit {
         var nm="RoundedCorners_nm"
         var kf=Keyframe<Float64>()
-        var k=Array<Keyframe<Float64>>(34,item:kf)
+        var k=Array<Keyframe<Float64>>(34, repeat:kf)
         let r = ArrayKeyframeFloat64(k: k)
         var hd=true
 

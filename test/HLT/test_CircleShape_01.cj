@@ -11,7 +11,7 @@ public class TestLottie4cjCircleShape{
     func test_CircleShape_toString_01():Unit {
         var nm="CircleShape_nm"
         var p=AnimatableSplitDimensionPathValue()
-        var k=Array<Keyframe<PointF>>(208,item:Keyframe<PointF>())
+        var k=Array<Keyframe<PointF>>(208, repeat:Keyframe<PointF>())
         var s=ArrayKeyframePointF(k: k)
         var hd=true
         var d=Int64.Max

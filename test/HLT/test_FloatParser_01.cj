@@ -12,7 +12,7 @@ public class TestLottie4cjFloatParser{
     func test_FloatParser_01():Unit {
         var fp=FloatParser.INSTANCE
         var flag=1
-        var illeagal=Array<JsonValue>([JsonNull(),JsonBool(true),JsonString("JsonString"),JsonObject(),JsonArray(Array<JsonValue>([JsonNull(),JsonInt(128),JsonFloat(Float64(22))]))])
+        var illeagal=[JsonNull(),JsonBool(true),JsonString("JsonString"),JsonObject(),JsonArray([JsonNull(),JsonInt(128),JsonFloat(Float64(22))])]
         for (iv in 0..illeagal.size){
             flag=1
             try{
@@ -33,7 +33,7 @@ public class TestLottie4cjFloatParser{
     @TestCase
     func test_FloatParser_02():Unit {
         var fp=FloatParser.INSTANCE
-        var ja=JsonArray(Array<JsonValue>([JsonInt(128),JsonFloat(Float64(22))]))
+        var ja=JsonArray([JsonInt(128),JsonFloat(Float64(22))])
         var re=fp.parse(ja)
         @Assert(re,Float64(128))
     }

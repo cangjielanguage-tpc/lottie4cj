@@ -25,7 +25,7 @@ class JsonUtils {
     static func jsonToColor(reader: JsonValue): Array<Float64> {
         let ja: JsonArray = reader.asArray()
         let len: Int64 = ja.size()
-        let color: Array<Float64> = Array<Float64>(len, item: 0.0)
+        let color: Array<Float64> = Array<Float64>(len, repeat: 0.0)
 
         for (i in 0..len) {
             color[i] = ja[i].asFloat().getValue()
@@ -41,7 +41,7 @@ class JsonUtils {
             let len: Int64 = ja.size()
             if (len > 0) {
                 let EMPTY_POINTF: PointF = PointF()
-                points = Array<PointF>(len, item: EMPTY_POINTF)
+                points = Array<PointF>(len, repeat: EMPTY_POINTF)
                 for (i in 0..len) {
                     let jv: JsonValue = ja[i]
                     points[i] = jsonToPoint(jv)

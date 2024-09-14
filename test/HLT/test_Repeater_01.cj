@@ -10,9 +10,9 @@ public class TestLottie4cjRepeater{
     @TestCase
     func test_Repeater_01():Unit {
         var nm="nm_Repeater"
-        var ck=Array<Keyframe<Float64>>(111,item:Keyframe<Float64>())
+        var ck=Array<Keyframe<Float64>>(111, repeat:Keyframe<Float64>())
         var c = ArrayKeyframeFloat64(k: ck)
-        var ok=Array<Keyframe<Float64>>(101,item:Keyframe<Float64>())
+        var ok=Array<Keyframe<Float64>>(101, repeat:Keyframe<Float64>())
         var o = ArrayKeyframeFloat64(k: ok)
         var tr=AnimatableTransform()
         var hd=true

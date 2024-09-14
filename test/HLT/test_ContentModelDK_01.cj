@@ -10,7 +10,7 @@ public class TestLottie4cjContentModelDK{
     @TestCase
     func test_ContentModelDK_toString_01():Unit {
         let kf=Keyframe<Float64>()
-        var k=Array<Keyframe<Float64>>(100,item:kf)
+        var k=Array<Keyframe<Float64>>(100, repeat:kf)
         let cmdk= ContentModelDK(k:k)
         @Assert(cmdk.toString(),"ContentModelDK: { k = ${k} }")
         @Assert(cmdk.k.toString(),k.toString())

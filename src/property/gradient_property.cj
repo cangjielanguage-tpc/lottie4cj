@@ -30,7 +30,7 @@ public class GradientProperty <: DynamicPropertyContainer {
     public init(elem: BaseElement, data: ContentModelP, container: BaseElement) {
         super(container)
         this.data = data
-        this.c = Array<Float64>(data.p * 4, item: 0.0)
+        this.c = Array<Float64>(data.p * 4, repeat: 0.0)
         var cLength: Int64 = 0
         if (data.k.size > 1) {
             if (let Some(v) <- data.k[0].s) {
@@ -41,7 +41,7 @@ public class GradientProperty <: DynamicPropertyContainer {
                 cLength = v.size - data.p * 4
             }
         }
-        this.o = Array<Float64>(cLength, item: 0.0)
+        this.o = Array<Float64>(cLength, repeat: 0.0)
 
         //为了后续编译，提前初始化一个空的成员变量 this.props
         this.props = PropertyFactory<ContentModelP, Array<Float64>>.getProp(elem, ContentModelP(), Array<Float64>(), -1.0, DynamicPropertyContainer(container))

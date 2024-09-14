@@ -17,7 +17,7 @@ internal import encoding.json.*
  * @return Type of Array<MarkerData>, analyzed markers data.
  */
 public func markerParser(_markers: Array<Marker>): Array<MarkerData> {
-    var markers: Array<MarkerData> = Array<MarkerData>(_markers.size, item: MarkerData())
+    var markers: Array<MarkerData> = Array<MarkerData>(_markers.size, repeat: MarkerData())
     for (i in 0.._markers.size) {
         var _marker: Marker = _markers[i]
         var markerData: MarkerData = MarkerData(

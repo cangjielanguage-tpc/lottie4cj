@@ -51,7 +51,7 @@ public class TestsMatrix {
     @TestCase
     public func testsMatrix04(): Unit {
         var src1 = Matrix()
-        src1.cloneFromProps(Array<Float64>(16,item: 0.6))
+        src1.cloneFromProps(Array<Float64>(16,repeat: 0.6))
         var src = src1.isIdentity()
         @Assert(src, false)
     }

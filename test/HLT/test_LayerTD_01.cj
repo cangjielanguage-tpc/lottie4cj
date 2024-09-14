@@ -9,7 +9,7 @@ public class TestLottie4cjLayerTD{
     @TestCase
     func test_LayerTD_toString_01():Unit {
         var kfd=Keyframe<DocumentData>()
-        var akfd=Array<Keyframe<DocumentData>>(345,item:kfd)
+        var akfd=Array<Keyframe<DocumentData>>(345, repeat:kfd)
         var ltd=LayerTD(k:akfd)
         @Assert(ltd.toString(),"LayerTD: {\n k = ${akfd}\n}")
         @Assert(ltd.k.toString(),akfd.toString())

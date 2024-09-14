@@ -10,7 +10,7 @@ public class TestLottie4cjShapeGroup{
     func test_ShapeGroup_toString_01():Unit {
         var cm=ContentModel()
         var nm="ShapeGroup"
-        var it=Array<ContentModel>(102,item:cm)
+        var it=Array<ContentModel>(102, repeat:cm)
         var hd=true
         var sg=ShapeGroup(nm,it,hd)
         @Assert(sg.toString(),"ShapeGroup[gr]: {\n" +

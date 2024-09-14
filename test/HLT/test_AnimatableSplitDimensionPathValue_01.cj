@@ -10,8 +10,8 @@ public class TestLottie4cjAnimatableSplitDimensionPathValue{
     func test_AnimatableSplitDimensionPathValue_toString_01():Unit {
         var kfp=Keyframe<PointF>()
         var kff=Keyframe<Float64>()
-        var akff=Array<Keyframe<Float64>>(34,item:kff)
-        var akfp=Array<Keyframe<PointF>>(334,item:kfp)
+        var akff=Array<Keyframe<Float64>>(34, repeat:kff)
+        var akfp=Array<Keyframe<PointF>>(334, repeat:kfp)
         var asdp=AnimatableSplitDimensionPathValue(k:akfp,x:akff,y:akff)
         @Assert(asdp.toString(),"AnimatableSplitDimensionPathValue: {\n" +
                                                          "k = ${akfp}\n" +

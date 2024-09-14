@@ -183,10 +183,10 @@ public class RepeaterModifier <: ShapeModifier {
             if (this._groups.size < copies) {
                 var diffNum: Int64 = copies - this._groups.size
                 let empty_ShapeGroup: ShapeGroup = ShapeGroup("", Array<ContentModel>(), false)
-                let diffArr: Array<ShapeGroup> = Array<ShapeGroup>(diffNum, item: empty_ShapeGroup)
+                let diffArr: Array<ShapeGroup> = Array<ShapeGroup>(diffNum, repeat: empty_ShapeGroup)
 
                 while (this._groups.size < copies) {
-                    let it: Array<ContentModel> = Array<ContentModel>(this._elements.size + 1, item: ContentModel())
+                    let it: Array<ContentModel> = Array<ContentModel>(this._elements.size + 1, repeat: ContentModel())
                     //TODO: 将 this._elements 循环逐级 clone 的新对象，存储到 it 中
                     for(j in 0..this._elements.size) {
                         //TODO：【暂未实现】 shape 逐级实现 clone() 函数。
@@ -221,7 +221,7 @@ public class RepeaterModifier <: ShapeModifier {
                 //单次扩展数组，改为最后一次性扩展
                 let diffArrSize: Int64 = diffArr.size
                 let len: Int64 = this.arr.size + diffArrSize
-                let arr_new: Array<ContentModel> = Array<ContentModel>(len, item: ContentModel())
+                let arr_new: Array<ContentModel> = Array<ContentModel>(len, repeat: ContentModel())
                 for (i in 0..diffArrSize) {
                     arr_new[i] = diffArr[i]
                 }

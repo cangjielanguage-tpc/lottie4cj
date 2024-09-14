@@ -12,7 +12,7 @@ public class TestLottie4cjColorParser{
     func test_ColorParser_01():Unit {
         var cp=ColorParser.INSTANCE
         var flag=1
-        var illeagal=Array<JsonValue>([JsonNull(),JsonBool(true),JsonString("JsonString"),JsonInt(128),JsonFloat(Float64(22)),JsonObject()])
+        var illeagal=[JsonNull(),JsonBool(true),JsonString("JsonString"),JsonInt(128),JsonFloat(Float64(22)),JsonObject()]
         for (iv in 0..illeagal.size){
             flag=1
             try{
@@ -28,7 +28,7 @@ public class TestLottie4cjColorParser{
     @TestCase
     func test_ColorParser_02():Unit {
         var cp=ColorParser.INSTANCE
-        var ja=JsonArray(Array<JsonValue>([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))]))
+        var ja=JsonArray([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))])
         var re=cp.parseColor(ja)
         var exp_color=Color(25,128,22,24)
         @Assert(re.toString(),exp_color.toString())
@@ -36,7 +36,7 @@ public class TestLottie4cjColorParser{
     @TestCase
     func test_ColorParser_03():Unit {
         var cp=ColorParser.INSTANCE
-        var ja=JsonArray(Array<JsonValue>([JsonBool(true),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))]))
+        var ja=JsonArray([JsonBool(true),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))])
         var flag=1
         try{
             cp.parseColor(ja)
@@ -50,7 +50,7 @@ public class TestLottie4cjColorParser{
     @TestCase
     func test_ColorParser_04():Unit {
         var cp=ColorParser.INSTANCE
-        var ja=JsonArray(Array<JsonValue>([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24))]))
+        var ja=JsonArray([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24))])
         var re=cp.parseColor(ja)
         var exp_color=Color(1,128,22,24)
         @Assert(re.toString(),exp_color.toString())
@@ -58,7 +58,7 @@ public class TestLottie4cjColorParser{
     @TestCase
     func test_ColorParser_05():Unit {
         var cp=ColorParser.INSTANCE
-        var ja=JsonArray(Array<JsonValue>([JsonBool(true),JsonFloat(Float64(22)),JsonFloat(Float64(24))]))
+        var ja=JsonArray([JsonBool(true),JsonFloat(Float64(22)),JsonFloat(Float64(24))])
         var flag=1
         try{
             cp.parseColor(ja)
@@ -72,7 +72,7 @@ public class TestLottie4cjColorParser{
     @TestCase
     func test_ColorParser_06():Unit {
         var cp=ColorParser.INSTANCE
-        var ja=JsonArray(Array<JsonValue>([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25)),JsonFloat(Float64(45))]))
+        var ja=JsonArray([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25)),JsonFloat(Float64(45))])
         var re=cp.parseColor(ja)
         var exp_color=Color(25,128,22,24)
         @Assert(re.toString(),exp_color.toString())
@@ -80,7 +80,7 @@ public class TestLottie4cjColorParser{
     @TestCase
     func test_ColorParser_07():Unit {
         var cp=ColorParser.INSTANCE
-        var ja=JsonArray(Array<JsonValue>([JsonFloat(0.235),JsonFloat(Float64(0.415)),JsonFloat(Float64(0.386)),JsonFloat(Float64(0.48)),JsonFloat(Float64(0.65))]))
+        var ja=JsonArray([JsonFloat(0.235),JsonFloat(Float64(0.415)),JsonFloat(Float64(0.386)),JsonFloat(Float64(0.48)),JsonFloat(Float64(0.65))])
         var re=cp.parseColor(ja)
         var exp_color=Color(Int64(0.48*Float64(255)),Int64(0.235*Float64(255)),Int64(0.415*Float64(255)),Int64(0.386*Float64(255)))
         @Assert(re.toString(),exp_color.toString())

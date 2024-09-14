@@ -26,9 +26,9 @@ public class TestLottie4cjShapeData{
     func test_ShapeData_toString_02():Unit {
         var c=true
         var pf=PointF(x:Float64(1080),y:Float64(1080))
-        var v=Array<PointF>(101,item:pf)
-        var i=Array<PointF>(10,item:pf)
-        var o=Array<PointF>(1,item:pf)
+        var v=Array<PointF>(101, repeat:pf)
+        var i=Array<PointF>(10, repeat:pf)
+        var o=Array<PointF>(1, repeat:pf)
         var sd=ShapeData(c:c,v:v,i:i,o:o)
         @Assert(sd.toString(), "ShapeData: {\n" +
                                   "c = ${c}\n" +

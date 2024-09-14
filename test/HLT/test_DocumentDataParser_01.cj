@@ -12,7 +12,7 @@ public class TestLottie4cjDocumentDataParser{
     func test_DocumentDataParser_01():Unit {
         var dd=DocumentDataParser.INSTANCE
         var flag=1
-        var illeagal=Array<JsonValue>([JsonNull(),JsonBool(true),JsonString("JsonString"),JsonInt(128),JsonFloat(Float64(22)),JsonArray()])
+        var illeagal=[JsonNull(),JsonBool(true),JsonString("JsonString"),JsonInt(128),JsonFloat(Float64(22)),JsonArray()]
         for (iv in 0..illeagal.size){
             flag=1
             try{
@@ -35,12 +35,12 @@ public class TestLottie4cjDocumentDataParser{
                                             ("tr",JsonInt(134)),
                                             ("lh",JsonFloat(135)),
                                             ("ls",JsonFloat(135)),
-                                            ("fc",JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)]))),
-                                            ("sc",JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)]))),
+                                            ("fc",JsonArray([JsonInt(128),JsonInt(228)])),
+                                            ("sc",JsonArray([JsonInt(128),JsonInt(228)])),
                                             ("sw",JsonFloat(135)),
                                             ("of",JsonBool(true)),
-                                            ("ps",JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)]))),
-                                            ("sz",JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)])))
+                                            ("ps",JsonArray([JsonInt(128),JsonInt(228)])),
+                                            ("sz",JsonArray([JsonInt(128),JsonInt(228)]))
                                            ])
         var jo=JsonObject(maps)
         var re=dd.parse(jo)
@@ -52,12 +52,12 @@ public class TestLottie4cjDocumentDataParser{
                    tr: 134,
                    lh: Float64(135),
                    ls: Float64(135),
-                   fc: Array<Float64>([Float64(128),Float64(228)]),
-                   sc: Array<Float64>([Float64(128),Float64(228)]),
+                   fc: [Float64(128),Float64(228)],
+                   sc: [Float64(128),Float64(228)],
                    sw: Float64(135),
                    of: true,
-                   ps: Array<Float64>([Float64(128),Float64(228)]),
-                   sz: Array<Float64>([Float64(128),Float64(228)])
+                   ps: [Float64(128),Float64(228)],
+                   sz: [Float64(128),Float64(228)]
                )
         @Assert(re.toString(),exp_re.toString())
     }

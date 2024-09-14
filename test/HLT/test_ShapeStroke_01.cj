@@ -10,14 +10,14 @@ public class TestLottie4cjShapeStroke{
     @TestCase
     func test_ShapeStroke_01():Unit {
         var nm="nm_ShapeStroke"
-        var c= Array<Keyframe<Array<Float64>>>(145,item:Keyframe<Array<Float64>>())
-        var w= Array<Keyframe<Float64>>(425,item:Keyframe<Float64>())
-        var o= Array<Keyframe<Int64>>(450,item:Keyframe<Int64>())
+        var c= Array<Keyframe<Array<Float64>>>(145, repeat:Keyframe<Array<Float64>>())
+        var w= Array<Keyframe<Float64>>(425, repeat:Keyframe<Float64>())
+        var o= Array<Keyframe<Int64>>(450, repeat:Keyframe<Int64>())
         var lc=Int64.Max
         var lj=Int64.Max
         var ml=Float64(9)
         var hd=true
-        var d=Array<ContentModelD>(105,item:ContentModelD())
+        var d=Array<ContentModelD>(105, repeat:ContentModelD())
 
         var shapeStroke=ShapeStroke(nm: nm, c: c, w: w, o: o, lc: lc, lj: lj, ml: ml,hd:hd, d:d)
 

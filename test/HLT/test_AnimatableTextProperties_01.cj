@@ -9,10 +9,10 @@ public class TestLottie4cjAnimatableTextProperties{
     @TestCase
     func test_AnimatableTextProperties_toString_01():Unit {
         var kaf=Keyframe<Array<Float64>>()
-        var akaf=Array<Keyframe<Array<Float64>>>(100,item:kaf)
+        var akaf=Array<Keyframe<Array<Float64>>>(100, repeat:kaf)
         var fc=ArrayKeyframeArrayFloat64(k:akaf)
-        var sc=Array<Keyframe<Array<Float64>>>(101,item:kaf)
-        var sw=Array<Keyframe<Float64>>(102,item:Keyframe<Float64>())
+        var sc=Array<Keyframe<Array<Float64>>>(101, repeat:kaf)
+        var sw=Array<Keyframe<Float64>>(102, repeat:Keyframe<Float64>())
         var t=ArrayKeyframeFloat64()
         var atp=AnimatableTextProperties(fc:fc,sc:sc,sw:sw,t:t)
         @Assert(atp.toString(),"AnimatableTextProperties: {\n" +

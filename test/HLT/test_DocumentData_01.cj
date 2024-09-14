@@ -15,8 +15,8 @@ public class TestLottie4cjDocumentData{
         var trValue=95
         var lhValue=Float64(1.00000)
         var lsValue=Float64(1.00000)
-        var fcValue=Array<Float64>(100,item:Float64(1.00000))
-        var scValue=Array<Float64>(100,item:Float64(1.00000))
+        var fcValue=Array<Float64>(100, repeat:Float64(1.00000))
+        var scValue=Array<Float64>(100, repeat:Float64(1.00000))
         var swValue=Float64(2.00000)
         var ofValue=true
         var psValue: Array<Float64> = [Float64(25),Float64(25)]

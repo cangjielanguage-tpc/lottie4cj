@@ -15,18 +15,18 @@ public class TestLottie4cjAnimationData{
         var op=Float64(7.666)
         var fr=Float64(9.666)
         var v="v_AnimationData"
-        var layers=Array<Layer>(109,item:Layer())
+        var layers=Array<Layer>(109, repeat:Layer())
 
         var id="Asset_id"
         var lr=Layer()
-        var lrs=Array<Layer>(102,item:lr)
+        var lrs=Array<Layer>(102, repeat:lr)
         var w_Asset=567
         var h_Asset=765
         var p="Asset_P"
         var u="Asset_U"
         var at=Asset(id,lrs,w_Asset,h_Asset,p,u, 0)
 
-        var assets=Array<Asset>(110,item:at)
+        var assets=Array<Asset>(110, repeat:at)
         var fonts=Fonts()
 
         var data=CharsData()
@@ -36,9 +36,9 @@ public class TestLottie4cjAnimationData{
         var style=""
         var fFamily=""
         var fc=FontCharacter(data,ch,size,w_FontCharacter,style,fFamily)
-        var chars=Array<FontCharacter>(108,item:fc)
+        var chars=Array<FontCharacter>(108, repeat:fc)
         var marker=Marker("cm",Float64(9),Float64(19))
-        var markers=Array<Marker>(109,item:marker)
+        var markers=Array<Marker>(109, repeat:marker)
         var nm="nm_AnimationData"
         var ddd=Int64.Max
 

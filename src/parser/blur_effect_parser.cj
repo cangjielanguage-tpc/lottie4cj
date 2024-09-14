@@ -20,7 +20,7 @@ class BlurEffectParser {
             let ja: JsonArray = v.asArray()
             let len: Int64 = ja.size()
             let EMPTY_EFFECT: Effect = Effect()
-            ef = Array<Effect>(len, item: EMPTY_EFFECT)
+            ef = Array<Effect>(len, repeat: EMPTY_EFFECT)
             for (i in 0..len) {
                 let jo: JsonObject = ja[i].asObject()
                 let be: Effect = maybeParseInnerEffect(jo)

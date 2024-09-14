@@ -46,7 +46,7 @@ public class BezierData {
         if (len < 0) {
             throw IllegalArgumentException("The length of points cannot be negative.")
         }
-        this.points = Array<PointData>(len, item: empty)
+        this.points = Array<PointData>(len, repeat: empty)
     }
 
     /**
@@ -211,7 +211,7 @@ public class Bez {
     static func getBezierData(length: Int64): BezierData {
         let bd: BezierData = BezierData()
         bd.segmentLength = 0.0
-        bd.points = Array<PointData>(length, item: PointData())
+        bd.points = Array<PointData>(length, repeat: PointData())
         return bd
     }
 
@@ -257,7 +257,7 @@ public class Bez {
             var bezierData = BezierData(curveSegments, empty)
             let len: Int64 = pt3.size
             for (k in 0..curveSegments) {
-                point = Array<Float64>(len, item: 0.0)
+                point = Array<Float64>(len, repeat: 0.0)
                 perc = Float64(k / (curveSegments - 1))
                 ptDistance = 0.0
                 for (i in 0..len) {
@@ -371,7 +371,7 @@ public class Bez {
         let t1t1u1_3: Float64 = t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1 // eslint-disable-line camelcase
         let t1t1t1: Float64 = t1 * t1 * t1
         
-        let bezierSegmentPoints: Array<Float64> = Array<Float64>(8, item: 0.0)
+        let bezierSegmentPoints: Array<Float64> = Array<Float64>(8, repeat: 0.0)
         let len: Int64 = pt1.size
         for (i in 0..len) {
             bezierSegmentPoints[i * 4] = round((u0u0u0 * pt1[i] + t0u0u0_3 * pt3[i] + t0t0u0_3 * pt4[i] + t0t0t0 * pt2[i]) * 1000.0) / 1000.0 // eslint-disable-line camelcase

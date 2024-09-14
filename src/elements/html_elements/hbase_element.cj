@@ -95,7 +95,7 @@ public open class HBaseElement <: Equatable<HBaseElement> {
     }
 
     public func createRenderableComponents() {
-        this.maskManager = MaskElement()
+        this.maskManager = MaskElement(Layer(),BaseElement(Layer(),this.globalData),this.globalData)
     }
 
     public func addEffects() {}

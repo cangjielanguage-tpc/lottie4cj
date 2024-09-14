@@ -9,7 +9,7 @@ public class TestLottie4cjArrayKeyframeFloat64{
     @TestCase
     func test_ArrayKeyframeFloat64_toString_01():Unit {
         var kaf=Keyframe<Array<Float64>>()
-        var akaf=Array<Keyframe<Array<Float64>>>(100,item:kaf)
+        var akaf=Array<Keyframe<Array<Float64>>>(100, repeat:kaf)
         var akfaf=ArrayKeyframeArrayFloat64(k:akaf)
         @Assert(akfaf.k.toString(),akaf.toString())
         @Assert(akfaf.toString(),"ArrayKeyframeArrayFloat64: { k = ${akaf} }")

@@ -9,9 +9,9 @@ public class TestLottie4cjShapeTrimPath{
     @TestCase
     func test_ShapeTrimPath_toString_01():Unit {
         var kf=Keyframe<Float64>()
-        var s=Array<Keyframe<Float64>>(15,item:kf)
-        var e=Array<Keyframe<Float64>>(16,item:kf)
-        var o=Array<Keyframe<Float64>>(17,item:kf)
+        var s=Array<Keyframe<Float64>>(15, repeat:kf)
+        var e=Array<Keyframe<Float64>>(16, repeat:kf)
+        var o=Array<Keyframe<Float64>>(17, repeat:kf)
         var nm="ShapeTrimPath_nm"
         var m=Int64.Max
         var hd=true
