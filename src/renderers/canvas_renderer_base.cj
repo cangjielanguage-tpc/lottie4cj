@@ -269,7 +269,7 @@ public open class CanvasRendererBase <: BaseRenderer {
         this.globalData.progressiveLoad = this.renderConfig.progressiveLoad
         this.globalData.transformCanvas = this.transformCanvas
 
-        //TODO: 未实现  //this.elements = Array<>(animData.layers.size, item: element)
+        //TODO: 未实现  //this.elements = Array<>(animData.layers.size, repeat: element)
 
         this.updateContainerSize(0, 0)
     }
@@ -349,7 +349,7 @@ public open class CanvasRendererBase <: BaseRenderer {
             }
 
             var xPos: String = pos[0..4]
-            var yPos: String = pos.trimLeft(xPos)
+            var yPos: String = pos.removePrefix(xPos)
             elementRel = elementWidth / elementHeight
             animationRel = this.transformCanvas.w / this.transformCanvas.h
             if ((animationRel > elementRel && fillType == "meet") || (animationRel < elementRel && fillType == "slice")) {

@@ -38,8 +38,8 @@ public class TestLottie4cjKeyframe{
         var o=PointF(x:Float64(-104),y:Float64(-105))
         var i=PointF(x:Float64(-106),y:Float64(-107))
         var h=Int64(-108)
-        var to: Array<Float64> = Array<Float64>([-109.0,-110.0])
-        var ti: Array<Float64> = Array<Float64>([-111.0,-112.0])
+        var to: Array<Float64> = [-109.0,-110.0]
+        var ti: Array<Float64> = [-111.0,-112.0]
         var kf=Keyframe(k:k,t:t,s:s,e:e,o:o,i:i,h:h,to:to,ti:ti)
         @Assert(kf.toString(),"Keyframe{\n" +
                              "k = ${k.getOrThrow()}\n" +
@@ -61,8 +61,8 @@ public class TestLottie4cjKeyframe{
         var o=PointF(x:Float64(-0),y:Float64(-0))
         var i=PointF(x:Float64(-0),y:Float64(-0))
         var h=Int64(-0)
-        var to: Array<Float64> = Array<Float64>([-0.0,-0.0])
-        var ti: Array<Float64> = Array<Float64>([-0.0,-0.0])
+        var to: Array<Float64> = [-0.0,-0.0]
+        var ti: Array<Float64> = [-0.0,-0.0]
         var kf=Keyframe(k:k,t:t,s:s,e:e,o:o,i:i,h:h,to:to,ti:ti)
         @Assert(kf.toString(),"Keyframe{\n" +
                              "k = None\n" +

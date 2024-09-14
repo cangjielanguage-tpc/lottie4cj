@@ -12,7 +12,7 @@ public class TestLottie4cjEffect{
         let ty=567
         var nm="Effect_nm"
         let kaf=Keyframe<Array<Float64>>()
-        let k= Array<Keyframe<Array<Float64>>>(101,item:kaf)
+        let k= Array<Keyframe<Array<Float64>>>(101, repeat:kaf)
         let cmpk=ContentModelPK(k:k)
         let isNull=true
         let effect=Effect(ty:ty, nm:nm, v:cmpk, isNull:isNull)

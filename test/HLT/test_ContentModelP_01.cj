@@ -11,7 +11,7 @@ public class TestLottie4cjContentModelP{
     func test_ContentModelP_toString_01():Unit {
         var p=Int64.Max
         let kaf=Keyframe<Array<Float64>>()
-        var k= Array<Keyframe<Array<Float64>>>(101,item:kaf)
+        var k= Array<Keyframe<Array<Float64>>>(101, repeat:kaf)
         var cmp=ContentModelP(p:p, k:k)
         @Assert(cmp.toString(),"ContentModelP: {\n" +
                                      "p = ${p},\n" +

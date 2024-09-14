@@ -13,7 +13,7 @@ public class TestLottie4cjPointFParser{
     func test_PointFParser_01():Unit {
         var pp=PointFParser.INSTANCE
         var flag=1
-        var illeagal=Array<JsonValue>([JsonNull(),JsonBool(true),JsonString("JsonString"),JsonInt(128),JsonFloat(Float64(22))])
+        var illeagal=[JsonNull(),JsonBool(true),JsonString("JsonString"),JsonInt(128),JsonFloat(Float64(22))]
         for (iv in 0..illeagal.size){
             flag=1
             try{
@@ -29,14 +29,14 @@ public class TestLottie4cjPointFParser{
     @TestCase
     func test_PointFParser_02():Unit {
         var pp=PointFParser.INSTANCE
-        var ja=JsonArray(Array<JsonValue>([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))]))
+        var ja=JsonArray([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))])
         var re=pp.parse(ja)
         @Assert(re.toString(),PointF(x:Float64(128),y:Float64(22)).toString())
     }
     @TestCase
     func test_PointFParser_03():Unit {
         var pp=PointFParser.INSTANCE
-        var ja=JsonArray(Array<JsonValue>([JsonNull(),JsonBool(true),JsonFloat(Float64(24)),JsonFloat(Float64(25))]))
+        var ja=JsonArray([JsonNull(),JsonBool(true),JsonFloat(Float64(24)),JsonFloat(Float64(25))])
         var flag=1
         try{
             pp.parse(ja)

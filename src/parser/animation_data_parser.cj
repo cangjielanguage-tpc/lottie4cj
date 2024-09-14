@@ -151,7 +151,7 @@ public class AnimationDataParser {
         /* Iterate through and parse each layer. */
         let len: Int64 = reader.size()
         let EMPTY_LAYER: Layer = Layer()
-        let layers: Array<Layer> = Array<Layer>(len, item: EMPTY_LAYER)
+        let layers: Array<Layer> = Array<Layer>(len, repeat: EMPTY_LAYER)
         for (i in 0..len) {
             let jv: JsonValue = reader[i]
             /* Layer parsing. */
@@ -184,7 +184,7 @@ public class AnimationDataParser {
         }
         let EMPTY_ARRAY_LAYER: Array<Layer> = Array<Layer>()
         let EMPTY_ASSET: Asset = Asset("", Array<Layer>(), 0, 0, "", "", 0)
-        let assets: Array<Asset> = Array<Asset>(len, item: EMPTY_ASSET)
+        let assets: Array<Asset> = Array<Asset>(len, repeat: EMPTY_ASSET)
         for (i in 0..len) {
             var id: String = ""
             var layers: Array<Layer> = EMPTY_ARRAY_LAYER
@@ -206,7 +206,7 @@ public class AnimationDataParser {
                 let ja: JsonArray = v.asArray()
                 let len: Int64 = ja.size()
                 let EMPTY_LAYER: Layer = Layer()
-                layers = Array<Layer>(len, item: EMPTY_LAYER)
+                layers = Array<Layer>(len, repeat: EMPTY_LAYER)
                 for (j in 0..len) {
                   let jsonValue: JsonValue = ja[j]
                   let layer: Layer = LayerParser.parse(jsonValue)
@@ -247,7 +247,7 @@ public class AnimationDataParser {
             let len: Int64 = ja.size()
             if (len > 0) {
                 let EMPTY_FONT: Font = Font("", "", "", 0.0, "", 0, "", "", "")
-                list = Array<Font>(len, item: EMPTY_FONT)
+                list = Array<Font>(len, repeat: EMPTY_FONT)
                 for (i in 0..len) {
                     let jo: JsonObject = ja[i].asObject()
                     let font: Font = FontParser.parse(jo)
@@ -261,7 +261,7 @@ public class AnimationDataParser {
     private static func parseChars(reader: JsonArray): Array<FontCharacter> {
         let len: Int64 = reader.size()
         let EMPTY_FCHARS: FontCharacter = FontCharacter(CharsData(shapes: Array<ContentModel>()), "", 0.0, 0.0, "", "")
-        let chars: Array<FontCharacter> = Array<FontCharacter>(len, item: EMPTY_FCHARS)
+        let chars: Array<FontCharacter> = Array<FontCharacter>(len, repeat: EMPTY_FCHARS)
         for (i in 0..len) {
             let jo: JsonObject = reader[i].asObject()
             let character: FontCharacter = FontCharacterParser.parse(jo)
@@ -283,7 +283,7 @@ public class AnimationDataParser {
             return Array<Marker>()
         }
         let EMPTY_MARKER: Marker = Marker("", 0.0, 0.0)
-        let markers: Array<Marker> = Array<Marker>(len, item: EMPTY_MARKER)
+        let markers: Array<Marker> = Array<Marker>(len, repeat: EMPTY_MARKER)
         for (i in 0..len) {
             var comment: String = ""
             var frame: Float64 = 0.0

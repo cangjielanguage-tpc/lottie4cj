@@ -7,7 +7,7 @@ internal import std.math.*
 
 
 public class Matrix {
-    public var props: Array<Float64> = Array<Float64>(16, item: 0.0)
+    public var props: Array<Float64> = Array<Float64>(16, repeat: 0.0)
 
     var _identity: Bool = true
     var _identityCalculated: Bool = false
@@ -273,7 +273,7 @@ public class Matrix {
 
     public func inversePoints(pts: Array<Array<Float64>>) {
         var len = pts.size
-        var retPts: Array<(Float64,Float64,Float64)> = Array<(Float64,Float64,Float64)>(len, item: (0.0,0.0,0.0))
+        var retPts: Array<(Float64,Float64,Float64)> = Array<(Float64,Float64,Float64)>(len, repeat: (0.0,0.0,0.0))
         for (i in 0..len) {
             retPts[i] = inversePoint(pts[i])
         }
@@ -281,7 +281,7 @@ public class Matrix {
     }
 
     public func applyToTriplePoints(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>) {
-        var arr = Array<Float64>(6, item: 0.0)
+        var arr = Array<Float64>(6, repeat: 0.0)
         if (this.isIdentity()) {
             arr[0] = pt1[0]
             arr[1] = pt1[1]

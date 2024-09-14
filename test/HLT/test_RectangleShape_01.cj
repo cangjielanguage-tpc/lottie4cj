@@ -12,13 +12,13 @@ public class TestLottie4cjRectangleShape{
 
         var kfp=Keyframe<PointF>()
         var kff=Keyframe<Float64>()
-        var akff=Array<Keyframe<Float64>>(34,item:kff)
-        var akfp=Array<Keyframe<PointF>>(334,item:kfp)
+        var akff=Array<Keyframe<Float64>>(34, repeat:kff)
+        var akfp=Array<Keyframe<PointF>>(334, repeat:kfp)
         var p=AnimatableSplitDimensionPathValue(k:akfp,x:akff,y:akff)
 
-        var sk=Array<Keyframe<PointF>>(301,item:kfp)
+        var sk=Array<Keyframe<PointF>>(301, repeat:kfp)
         var s = ArrayKeyframePointF(k: sk)
-        var rk=Array<Keyframe<Float64>>(301,item:kff)
+        var rk=Array<Keyframe<Float64>>(301, repeat:kff)
         var r =ArrayKeyframeFloat64(k: rk)
         var hd=true
         var rts=RectangleShape(nm:nm,p:p,s:s,r:r,hd:hd)

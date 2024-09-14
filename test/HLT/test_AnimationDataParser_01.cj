@@ -13,7 +13,7 @@ public class TestLottie4cjAnimationDataParser{
     func test_AnimationDataParser_01():Unit {
         let file: File = File("./data.json", OpenOption.Open(true, true))
         let len: Int64 = file.length
-        var buf: Array<Byte> = Array<Byte>(len, item: 0)
+        var buf: Array<Byte> = Array<Byte>(len, repeat: 0)
         file.read(buf)
         file.close()
         var cur=String.fromUtf8(buf)
@@ -52,7 +52,7 @@ markers.size = 0
     func test_AnimationDataParser_02():Unit {
         let file: File = File("./data.json", OpenOption.Open(true, true))
         let len: Int64 = file.length
-        var buf: Array<Byte> = Array<Byte>(len, item: 0)
+        var buf: Array<Byte> = Array<Byte>(len, repeat: 0)
         file.read(buf)
         file.close()
         var cur="""

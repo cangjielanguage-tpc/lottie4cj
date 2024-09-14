@@ -10,7 +10,7 @@ public class TestLottie4cjAsset{
     func test_Asset_toString_01():Unit {
         var id="Asset_id"
         var lr=Layer()
-        var lrs=Array<Layer>(102,item:lr)
+        var lrs=Array<Layer>(102, repeat:lr)
         var w=567
         var h=765
         var p="Asset_P"

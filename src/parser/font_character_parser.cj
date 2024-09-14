@@ -47,7 +47,7 @@ class FontCharacterParser {
                 let ja: JsonArray = val.asArray()
                 let len: Int64 = ja.size()
                 let EMPTY_CM: ContentModel = ContentModel()
-                shapes = Array<ContentModel>(len, item: EMPTY_CM)
+                shapes = Array<ContentModel>(len, repeat: EMPTY_CM)
                 for (i in 0..len) {
                     let jsonObject: JsonObject = ja[i].asObject()
                     shapes[i] = ContentModelParser.parse(jsonObject)

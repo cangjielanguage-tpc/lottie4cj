@@ -13,7 +13,7 @@ public class TestLottie4cjGradientColorParser{
         var colorPoints=Int64.Max
         var gradientColorParser=GradientColorParser(colorPoints)
         var flag=1
-        var illeagal=Array<JsonValue>([JsonNull(),JsonBool(true),JsonInt(128),JsonFloat(Float64(22)),JsonString("JsonString"),JsonObject()])
+        var illeagal=[JsonNull(),JsonBool(true),JsonInt(128),JsonFloat(Float64(22)),JsonString("JsonString"),JsonObject()]
         for (iv in 0..illeagal.size){
             flag=1
             try{
@@ -32,7 +32,7 @@ public class TestLottie4cjGradientColorParser{
         var colorPoints=Int64.Min
         var gradientColorParser=GradientColorParser(colorPoints)
         var flag=1
-        var ja=JsonArray(Array<JsonValue>([JsonNull(),JsonBool(true),JsonString("JsonString"),JsonObject()]))
+        var ja=JsonArray([JsonNull(),JsonBool(true),JsonString("JsonString"),JsonObject()])
         try{
             gradientColorParser.parse(ja)
         }catch(e:JsonException){
@@ -46,9 +46,9 @@ public class TestLottie4cjGradientColorParser{
     func test_GradientColorParser_03():Unit {
         var colorPoints=Int64.Min
         var gradientColorParser=GradientColorParser(colorPoints)
-        var ja=JsonArray(Array<JsonValue>([JsonInt(128),JsonFloat(Float64(22))]))
+        var ja=JsonArray([JsonInt(128),JsonFloat(Float64(22))])
         var re=gradientColorParser.parse(ja)
         println(re)
-        @Assert(re,Array<Float64>([128.000000, 22.000000]))
+        @Assert(re,[128.000000, 22.000000])
     }
 }

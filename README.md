@@ -5,7 +5,7 @@
 <p align="center">
 <img alt="" src="https://img.shields.io/badge/release-v0.0.1-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/build-pass-brightgreen" style="display: inline-block;" />
-<img alt="" src="https://img.shields.io/badge/cjc-v0.54.3-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/cjc-v0.55.3-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/cjcov-91.9%25-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/project-open-brightgreen" style="display: inline-block;" />
 </p>
@@ -116,7 +116,7 @@ func test_01(): Int64 {
 func readFile(path: String): String {
     let file: File = File(path, OpenOption.Open(true, true))
     let len: Int64 = file.length
-    var buf: Array<Byte> = Array<Byte>(len, item: 0)
+    var buf: Array<Byte> = Array<Byte>(len, repeat: 0)
     file.read(buf)
     file.close()
 

@@ -58,7 +58,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         let len: Int64 = this._textData.a.size
         var animatorProps: AnimatableTextPropertiesA = AnimatableTextPropertiesA()
 
-        this._animatorsData = Array<TextAnimatorDataProperty>(len, item: TextAnimatorDataProperty(this._elem, animatorProps, this))
+        this._animatorsData = Array<TextAnimatorDataProperty>(len, repeat: TextAnimatorDataProperty(this._elem, animatorProps, this))
         for (i in 0..len) {
             //数据类型分析: animatorProps  =>  this._textData.a[i]  =>  layer.t.a[i](AnimatableTextPropertiesA)
             animatorProps = this._textData.a[i]
@@ -71,7 +71,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         let lens: Int64 = this._textData.m.a.k.size
         var arr: Array<Float64> = Array<Float64>()
         if (lens > 0) {
-            arr = Array<Float64>(lens, item: 0.0)
+            arr = Array<Float64>(lens, repeat: 0.0)
             let ak: Array<Int64> = this._textData.m.a.k
             for (i in 0..lens) {
                 arr[i] = Float64(ak[i])

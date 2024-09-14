@@ -47,7 +47,7 @@ public open class MaskElement <: BaseElement {
         let pf: PropertyFactory<Array<Keyframe<Int64>>, Int64> = PropertyFactory<Array<Keyframe<Int64>>, Int64>(this.element, Array<Keyframe<Int64>>(), 0.0, dp)
         let spf: ShapePropertyFactory = ShapePropertyFactory(this.element, ContentModel(), 0)
         let emptyViewData: ViewData = ViewData(op: pf, props: spf)
-        this.viewData = Array<ViewData>(len, item: emptyViewData)
+        this.viewData = Array<ViewData>(len, repeat: emptyViewData)
         
         let empty_createNS: CreateNS = CreateNS("")
     

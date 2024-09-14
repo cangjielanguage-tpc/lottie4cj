@@ -12,7 +12,7 @@ public class TestLottie4cjScaleXYParser{
     func test_ScaleXYParser_01():Unit {
         var sp=ScaleXYParser.INSTANCE
         var flag=1
-        var illeagal=Array<JsonValue>([JsonNull(),JsonBool(true),JsonString("JsonString"),JsonInt(128),JsonFloat(Float64(22)),JsonObject()])
+        var illeagal=[JsonNull(),JsonBool(true),JsonString("JsonString"),JsonInt(128),JsonFloat(Float64(22)),JsonObject()]
         for (iv in 0..illeagal.size){
             flag=1
             try{
@@ -28,14 +28,14 @@ public class TestLottie4cjScaleXYParser{
     @TestCase
     func test_ScaleXYParser_02():Unit {
         var sp=ScaleXYParser.INSTANCE
-        var ja=JsonArray(Array<JsonValue>([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))]))
+        var ja=JsonArray([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))])
         var re=sp.parse(ja)
-        @Assert(re,Array<Float64>([128.000000, 22.000000, 24.000000, 25.000000]))
+        @Assert(re,[128.000000, 22.000000, 24.000000, 25.000000])
     }
     @TestCase
     func test_ScaleXYParser_03():Unit {
         var sp=ScaleXYParser.INSTANCE
-        var ja=JsonArray(Array<JsonValue>([JsonNull(),JsonBool(true),JsonFloat(Float64(24)),JsonFloat(Float64(25))]))
+        var ja=JsonArray([JsonNull(),JsonBool(true),JsonFloat(Float64(24)),JsonFloat(Float64(25))])
         var flag=1
         try{
             sp.parse(ja)

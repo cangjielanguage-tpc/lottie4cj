@@ -12,7 +12,7 @@ public class TestLottie4cjShapePath{
         var nm="ShapePath_nm"
         var ind=Int64.Max
         let kf=Keyframe<ShapeData>()
-        var ks= Array<Keyframe<ShapeData>>(101,item:kf)
+        var ks= Array<Keyframe<ShapeData>>(101, repeat:kf)
         var hd=true
         var sp=ShapePath(nm:nm,ind:ind,ks:ks,hd:hd)
         @Assert(sp.toString(),"ShapePath[sh]: {\n" +

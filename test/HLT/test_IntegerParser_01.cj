@@ -12,7 +12,7 @@ public class TestLottie4cjIntegerParser{
     func test_IntegerParser_01():Unit {
         var intP=IntegerParser.INSTANCE
         var flag=1
-        var illeagal=Array<JsonValue>([JsonNull(),JsonBool(true),JsonString("JsonString"),JsonObject(),JsonArray(Array<JsonValue>([JsonNull(),JsonInt(128),JsonFloat(Float64(22))]))])
+        var illeagal=[JsonNull(),JsonBool(true),JsonString("JsonString"),JsonObject(),JsonArray([JsonNull(),JsonInt(128),JsonFloat(Float64(22))])]
         for (iv in 0..illeagal.size){
             flag=1
             try{
@@ -33,7 +33,7 @@ public class TestLottie4cjIntegerParser{
     @TestCase
     func test_IntegerParser_02():Unit {
         var intP=IntegerParser.INSTANCE
-        var ja=JsonArray(Array<JsonValue>([JsonInt(128),JsonFloat(Float64(22))]))
+        var ja=JsonArray([JsonInt(128),JsonFloat(Float64(22))])
         var re=intP.parse(ja)
         @Assert(re,128)
     }

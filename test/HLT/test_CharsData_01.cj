@@ -9,7 +9,7 @@ public class TestLottie4cjCharsData{
     @TestCase
     func test_CharsData_toString_01():Unit {
         var cm=ContentModel()
-        var shapes=Array<ContentModel>(102,item:cm)
+        var shapes=Array<ContentModel>(102, repeat:cm)
         var cd=CharsData(shapes:shapes)
         @Assert(cd.toString(),"CharsData: {\n shapes.size = ${shapes.size},\n shapes = ${shapes.toString()}\n }")
         @Assert(cd.shapes.toString(),shapes.toString())

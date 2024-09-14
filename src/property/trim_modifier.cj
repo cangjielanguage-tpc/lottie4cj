@@ -70,7 +70,7 @@ public open class TrimModifier <: ShapeModifier {
     }
     
     public func calculateShapeEdges(s: Float64, e: Float64, shapeLength: Float64, addedLength: Float64, totalModifierLength: Float64): Array<Array<Float64>> {
-        var segments: Array<Array<Float64>> = Array<Array<Float64>>(2, item: Array<Float64>())
+        var segments: Array<Array<Float64>> = Array<Array<Float64>>(2, repeat: Array<Float64>())
         var len: Int64 = 0
         if (e <= 1.0) {
             //TODO: [注意]-直接用 Array<Int64> 代替 [s: s, e: e]，s 代表下标 0，e 代表下标 1。  //segments.push([s: s, e: e])
@@ -85,7 +85,7 @@ public open class TrimModifier <: ShapeModifier {
             len = 2
         }
         var index: Int64 = 0
-        let shapeSegments: Array<Array<Float64>> = Array<Array<Float64>>(2, item: Array<Float64>())
+        let shapeSegments: Array<Array<Float64>> = Array<Array<Float64>>(2, repeat: Array<Float64>())
 
         var segmentOb: Array<Float64> = Array<Float64>()
         for (i in 0..len) {
@@ -208,7 +208,7 @@ public open class TrimModifier <: ShapeModifier {
                         pathsData = this.releasePathsData(shapeData.pathsData)
                         //TODO: 在函数 releasePathsData 中没有办法清空 clean 参数数组 shapeData.pathsData，只能返回值为空，再赋值为空。
                         shapeData.pathsData = pathsData
-                        pathsData = Array<SegmentsLengthElement>(jLen, item: SegmentsLengthElement())
+                        pathsData = Array<SegmentsLengthElement>(jLen, repeat: SegmentsLengthElement())
                         for (j in 0..jLen) {
                             // 数据类型分析推测：pathData = segmentsLengthPool.newElement()  =>   pathData.lengths[i] = bezierLengthPool.newElement()
                             pathData = Bez.getSegmentsLength(shapePaths.shapes[j])
@@ -248,7 +248,7 @@ public open class TrimModifier <: ShapeModifier {
                         shapeS = edges[j][0]
                         shapeE = edges[j][1]
 
-                        segments = Array<Array<Float64>>(2, item: Array<Float64>())
+                        segments = Array<Array<Float64>>(2, repeat: Array<Float64>())
                         var segmentsLength: Int64 = 0
                         let shapeData_totalShapeLength: Float64 = Float64(shapeData.totalShapeLength)
                         if (shapeE <= 1.0) {

@@ -12,9 +12,9 @@ public class TestLottie4cjShapeDataParser{
     func test_ShapeDataParser_01():Unit {
         var sdp=ShapeDataParser.INSTANCE
         var flag=1
-        var illeagal=Array<JsonValue>([JsonNull(),JsonBool(true),JsonString("JsonString"),
+        var illeagal=[JsonNull(),JsonBool(true),JsonString("JsonString"),
                                        JsonInt(128),JsonFloat(Float64(22)),
-                                       JsonArray(Array<JsonValue>([JsonNull(),JsonBool(true)]))])
+                                       JsonArray([JsonNull(),JsonBool(true)])]
         for (iv in 0..illeagal.size){
             flag=1
             try{
@@ -45,16 +45,16 @@ public class TestLottie4cjShapeDataParser{
     func test_ShapeDataParser_03():Unit {
         var sdp=ShapeDataParser.INSTANCE
         var maps=HashMap<String,JsonValue>([("c",JsonBool(true)),
-                                            ("v",JsonArray(Array<JsonValue>([JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)])),JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)]))]))),
-                                            ("i",JsonArray(Array<JsonValue>([JsonArray(Array<JsonValue>([JsonFloat(38),JsonFloat(18)])),JsonArray(Array<JsonValue>([JsonFloat(38),JsonFloat(18)]))]))),
-                                            ("o",JsonArray(Array<JsonValue>([JsonArray(Array<JsonValue>([JsonFloat(18),JsonInt(28)])),JsonArray(Array<JsonValue>([JsonFloat(18),JsonInt(28)]))])))])
+                                            ("v",JsonArray([JsonArray([JsonInt(128),JsonInt(228)]),JsonArray([JsonInt(128),JsonInt(228)])])),
+                                            ("i",JsonArray([JsonArray([JsonFloat(38),JsonFloat(18)]),JsonArray([JsonFloat(38),JsonFloat(18)])])),
+                                            ("o",JsonArray([JsonArray([JsonFloat(18),JsonInt(28)]),JsonArray([JsonFloat(18),JsonInt(28)])]))])
         var jo=JsonObject(maps)
         var re=sdp.parse(jo)
         var exp_re=ShapeData(
                                c: true,
-                               v: Array<PointF>([PointF(x:Float64(128),y:Float64(228)),PointF(x:Float64(128),y:Float64(228))]),
-                               i: Array<PointF>([PointF(x:Float64(38),y:Float64(18)),PointF(x:Float64(38),y:Float64(18))]),
-                               o: Array<PointF>([PointF(x:Float64(18),y:Float64(28)),PointF(x:Float64(18),y:Float64(28))])
+                               v: [PointF(x:Float64(128),y:Float64(228)),PointF(x:Float64(128),y:Float64(228))],
+                               i: [PointF(x:Float64(38),y:Float64(18)),PointF(x:Float64(38),y:Float64(18))],
+                               o: [PointF(x:Float64(18),y:Float64(28)),PointF(x:Float64(18),y:Float64(28))]
                            )
         @Assert(re.toString(),exp_re.toString())
     }
@@ -62,16 +62,16 @@ public class TestLottie4cjShapeDataParser{
     func test_ShapeDataParser_04():Unit {
         var sdp=ShapeDataParser.INSTANCE
         var maps=HashMap<String,JsonValue>([
-                                            ("v",JsonArray(Array<JsonValue>([JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)])),JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)]))]))),
-                                            ("i",JsonArray(Array<JsonValue>([JsonArray(Array<JsonValue>([JsonFloat(38),JsonFloat(18)])),JsonArray(Array<JsonValue>([JsonFloat(38),JsonFloat(18)]))]))),
-                                            ("o",JsonArray(Array<JsonValue>([JsonArray(Array<JsonValue>([JsonFloat(18),JsonInt(28)])),JsonArray(Array<JsonValue>([JsonFloat(18),JsonInt(28)]))])))])
+                                            ("v",JsonArray([JsonArray([JsonInt(128),JsonInt(228)]),JsonArray([JsonInt(128),JsonInt(228)])])),
+                                            ("i",JsonArray([JsonArray([JsonFloat(38),JsonFloat(18)]),JsonArray([JsonFloat(38),JsonFloat(18)])])),
+                                            ("o",JsonArray([JsonArray([JsonFloat(18),JsonInt(28)]),JsonArray([JsonFloat(18),JsonInt(28)])]))])
         var jo=JsonObject(maps)
         var re=sdp.parse(jo)
         var exp_re=ShapeData(
                                c: false,
-                               v: Array<PointF>([PointF(x:Float64(128),y:Float64(228)),PointF(x:Float64(128),y:Float64(228))]),
-                               i: Array<PointF>([PointF(x:Float64(38),y:Float64(18)),PointF(x:Float64(38),y:Float64(18))]),
-                               o: Array<PointF>([PointF(x:Float64(18),y:Float64(28)),PointF(x:Float64(18),y:Float64(28))])
+                               v: [PointF(x:Float64(128),y:Float64(228)),PointF(x:Float64(128),y:Float64(228))],
+                               i: [PointF(x:Float64(38),y:Float64(18)),PointF(x:Float64(38),y:Float64(18))],
+                               o: [PointF(x:Float64(18),y:Float64(28)),PointF(x:Float64(18),y:Float64(28))]
                            )
         @Assert(re.toString(),exp_re.toString())
     }
@@ -79,9 +79,9 @@ public class TestLottie4cjShapeDataParser{
     func test_ShapeDataParser_05():Unit {
         var sdp=ShapeDataParser.INSTANCE
         var maps=HashMap<String,JsonValue>([("c",JsonInt(123)),
-                                            ("v",JsonArray(Array<JsonValue>([JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)])),JsonArray(Array<JsonValue>([JsonInt(128),JsonInt(228)]))]))),
-                                            ("i",JsonArray(Array<JsonValue>([JsonArray(Array<JsonValue>([JsonFloat(38),JsonFloat(18)])),JsonArray(Array<JsonValue>([JsonFloat(38),JsonFloat(18)]))]))),
-                                            ("o",JsonArray(Array<JsonValue>([JsonArray(Array<JsonValue>([JsonFloat(18),JsonInt(28)])),JsonArray(Array<JsonValue>([JsonFloat(18),JsonInt(28)]))])))])
+                                            ("v",JsonArray([JsonArray([JsonInt(128),JsonInt(228)]),JsonArray([JsonInt(128),JsonInt(228)])])),
+                                            ("i",JsonArray([JsonArray([JsonFloat(38),JsonFloat(18)]),JsonArray([JsonFloat(38),JsonFloat(18)])])),
+                                            ("o",JsonArray([JsonArray([JsonFloat(18),JsonInt(28)]),JsonArray([JsonFloat(18),JsonInt(28)])]))])
         var jo=JsonObject(maps)
         var flag=1
         try{

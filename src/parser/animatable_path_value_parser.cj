@@ -44,7 +44,7 @@ public class AnimatablePathValueParser {
                 keyframes = [PathKeyframeParser.parse(ja)]
             } else if (equalsJsonKind(jk, JsonKind.JsObject)) {
                 let EMPTY_KEYFRAME_POINTF: Keyframe<PointF> = Keyframe<PointF>()
-                keyframes = Array<Keyframe<PointF>>(len, item: EMPTY_KEYFRAME_POINTF)
+                keyframes = Array<Keyframe<PointF>>(len, repeat: EMPTY_KEYFRAME_POINTF)
                 for (i in 0..len) {
                     keyframes[i] = PathKeyframeParser.parse(ja[i])
                 }

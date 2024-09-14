@@ -20,7 +20,7 @@ public class CvMaskElement {
         this.data = data
         this.element = element
         this.masksProperties = this.data.masksProperties
-        this.viewData = Array<Object>(this.masksProperties.size,item: Object())
+        this.viewData = Array<Object>(this.masksProperties.size,repeat: Object())
         this.list = ArrayList<Array<Float64>>()
         this.ptsds = None
         var len = this.masksProperties.size

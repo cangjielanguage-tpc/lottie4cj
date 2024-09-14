@@ -9,18 +9,18 @@ public class TestLottie4cjLayerT{
     @TestCase
     func test_LayerT_toString_01():Unit {
         var kfd=Keyframe<DocumentData>()
-        var akfd=Array<Keyframe<DocumentData>>(345,item:kfd)
+        var akfd=Array<Keyframe<DocumentData>>(345, repeat:kfd)
         var ltd=LayerTD(k:akfd)
 
         var kaf=Keyframe<Array<Float64>>()
-        var akaf=Array<Keyframe<Array<Float64>>>(100,item:kaf)
+        var akaf=Array<Keyframe<Array<Float64>>>(100, repeat:kaf)
         var fc=ArrayKeyframeArrayFloat64(k:akaf)
-        var sc=Array<Keyframe<Array<Float64>>>(101,item:kaf)
-        var sw=Array<Keyframe<Float64>>(102,item:Keyframe<Float64>())
+        var sc=Array<Keyframe<Array<Float64>>>(101, repeat:kaf)
+        var sw=Array<Keyframe<Float64>>(102, repeat:Keyframe<Float64>())
         var t=ArrayKeyframeFloat64()
         var atp=AnimatableTextProperties(fc:fc,sc:sc,sw:sw,t:t)
         var atpa=AnimatableTextPropertiesA(a:atp)
-        var aatpa=Array<AnimatableTextPropertiesA>(105,item:atpa)
+        var aatpa=Array<AnimatableTextPropertiesA>(105, repeat:atpa)
 
         var m: LayerTM = LayerTM()
 

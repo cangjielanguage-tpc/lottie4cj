@@ -18,38 +18,38 @@ public class TestLottie4cjLayer{
         var sh= Int64.Max
         var sc= "Layer_sc"
 
-        var a=ArrayKeyframePointF(k: Array<Keyframe<PointF>>(232,item:Keyframe<PointF>()))
+        var a=ArrayKeyframePointF(k: Array<Keyframe<PointF>>(232, repeat:Keyframe<PointF>()))
         var p=AnimatableSplitDimensionPathValue()
-        var s=ArrayKeyframeArrayFloat64(k: Array<Keyframe<Array<Float64>>>(232,item:Keyframe<Array<Float64>>()))
+        var s=ArrayKeyframeArrayFloat64(k: Array<Keyframe<Array<Float64>>>(232, repeat:Keyframe<Array<Float64>>()))
         var r= ArrayKeyframeFloat64()
-        var o= ArrayKeyframeInt64(k: Array<Keyframe<Int64>>(232,item:Keyframe<Int64>()))
-        var so=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232,item:Keyframe<Float64>()))
-        var eo=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232,item:Keyframe<Float64>()))
-        var sk=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232,item:Keyframe<Float64>()))
-        var sa=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232,item:Keyframe<Float64>()))
+        var o= ArrayKeyframeInt64(k: Array<Keyframe<Int64>>(232, repeat:Keyframe<Int64>()))
+        var so=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232, repeat:Keyframe<Float64>()))
+        var eo=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232, repeat:Keyframe<Float64>()))
+        var sk=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232, repeat:Keyframe<Float64>()))
+        var sa=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232, repeat:Keyframe<Float64>()))
         var ty_AnimatableTransform="AnimatableTransform_ty"
 
         var ks= AnimatableTransform(a:a,p:p,s:s,r:r,o:o,so: so,eo: eo,sk: sk,sa: sa,ty: ty_AnimatableTransform)
 
         var tt = Int64.Max
         var mask=Mask()
-        var masksProperties = Array<Mask>(108,item:mask)
+        var masksProperties = Array<Mask>(108, repeat:mask)
 
-        var shapes = Array<ContentModel>(104,item:ContentModel())
+        var shapes = Array<ContentModel>(104, repeat:ContentModel())
 
         var kfd=Keyframe<DocumentData>()
-        var akfd=Array<Keyframe<DocumentData>>(345,item:kfd)
+        var akfd=Array<Keyframe<DocumentData>>(345, repeat:kfd)
         var ltd=LayerTD(k:akfd)
 
         var kaf=Keyframe<Array<Float64>>()
-        var akaf=Array<Keyframe<Array<Float64>>>(100,item:kaf)
+        var akaf=Array<Keyframe<Array<Float64>>>(100, repeat:kaf)
         var fc=ArrayKeyframeArrayFloat64(k:akaf)
-        var sc_atp=Array<Keyframe<Array<Float64>>>(101,item:kaf)
-        var sw_atp=Array<Keyframe<Float64>>(102,item:Keyframe<Float64>())
+        var sc_atp=Array<Keyframe<Array<Float64>>>(101, repeat:kaf)
+        var sw_atp=Array<Keyframe<Float64>>(102, repeat:Keyframe<Float64>())
         var t_atp=ArrayKeyframeFloat64()
         var atp=AnimatableTextProperties(fc:fc,sc:sc_atp,sw:sw_atp,t:t_atp)
         var atpa=AnimatableTextPropertiesA(a:atp)
-        var aatpa=Array<AnimatableTextPropertiesA>(105,item:atpa)
+        var aatpa=Array<AnimatableTextPropertiesA>(105, repeat:atpa)
 
         var t=LayerT(d:ltd,a:aatpa)
 
@@ -58,7 +58,7 @@ public class TestLottie4cjLayer{
         var aef= Array<Effect>()
         var lef=LayerEF(ty_layerEF,nm_layerEF,aef)
 
-        var ef= Array<LayerEF>(23,item:lef)
+        var ef= Array<LayerEF>(23, repeat:lef)
         var sr = Float64(101)
         var st = Float64(102)
         var w = Float64(103)
@@ -67,7 +67,7 @@ public class TestLottie4cjLayer{
         var op = Float64(106)
 
         let kf=Keyframe<Float64>()
-        var k=Array<Keyframe<Float64>>(100,item:kf)
+        var k=Array<Keyframe<Float64>>(100, repeat:kf)
         var tm = ContentModelDK(k:k)
         var cl: String = "Layer_cl"
         var hd: Bool = true
@@ -129,7 +129,7 @@ public class TestLottie4cjLayer{
         var t_atp=ArrayKeyframeFloat64()
         var atp=AnimatableTextProperties(fc:fc,sc:sc_atp,sw:sw_atp,t:t_atp)
         var atpa=AnimatableTextPropertiesA(a:atp)
-        var aatpa=Array<AnimatableTextPropertiesA>(105,item:atpa)
+        var aatpa=Array<AnimatableTextPropertiesA>(105, repeat:atpa)
 
         var t=LayerT(d:ltd,a:aatpa)
         var ef= Array<LayerEF>()

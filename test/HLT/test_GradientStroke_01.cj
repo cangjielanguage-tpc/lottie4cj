@@ -11,17 +11,17 @@ public class TestLottie4cjGradientStroke{
     func test_GradientStroke_01():Unit {
         var nm="nm_GradientStroke"
         var g=ContentModelP()
-        var o=Array<Keyframe<Int64>>(104,item:Keyframe<Int64>())
+        var o=Array<Keyframe<Int64>>(104, repeat:Keyframe<Int64>())
         var t=Int64.Max
-        var s=Array<Keyframe<PointF>>(104,item:Keyframe<PointF>())
-        var e=Array<Keyframe<PointF>>(104,item:Keyframe<PointF>())
-        var w=Array<Keyframe<Float64>>(104,item:Keyframe<Float64>())
+        var s=Array<Keyframe<PointF>>(104, repeat:Keyframe<PointF>())
+        var e=Array<Keyframe<PointF>>(104, repeat:Keyframe<PointF>())
+        var w=Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>())
 
         var lc=Int64.Max
         var lj=Int64.Max
         var ml=Float64(9)
         var hd=true
-        var d=Array<ContentModelD>(105,item:ContentModelD())
+        var d=Array<ContentModelD>(105, repeat:ContentModelD())
 
         var gradientStroke=GradientStroke(nm: nm, g: g, o: o, t: t, s: s, e: e, w: w, lc:lc, lj:lj, ml:ml,hd:hd, d:d)
 
@@ -91,13 +91,13 @@ public class TestLottie4cjGradientStroke{
     func test_GradientStroke_03():Unit {
         var nm="nm_GradientStroke"
         var sy=Int64.Max
-        var pt=Array<Keyframe<Float64>>(104,item:Keyframe<Float64>())
+        var pt=Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>())
         var p=AnimatableSplitDimensionPathValue()
-        var r=Array<Keyframe<Float64>>(104,item:Keyframe<Float64>())
-        var or=Array<Keyframe<Float64>>(104,item:Keyframe<Float64>())
-        var os=Array<Keyframe<Float64>>(104,item:Keyframe<Float64>())
-        var ir=Array<Keyframe<Float64>>(104,item:Keyframe<Float64>())
-        var is2=Array<Keyframe<Float64>>(104,item:Keyframe<Float64>())
+        var r=Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>())
+        var or=Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>())
+        var os=Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>())
+        var ir=Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>())
+        var is2=Array<Keyframe<Float64>>(104, repeat:Keyframe<Float64>())
         var hd=true
         var d=Int64.Max
 

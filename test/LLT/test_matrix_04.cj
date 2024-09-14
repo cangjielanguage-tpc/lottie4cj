@@ -55,7 +55,7 @@ public class TestsMatrix {
     @TestCase
     public func testsMatrix05(): Unit {
         var src1 = Matrix()
-        var src = src1.inversePoint(Array<Float64>(16,item:0.862))
+        var src = src1.inversePoint(Array<Float64>(16,repeat:0.862))
         @Assert(src[0], 0.862000)
     }
 }

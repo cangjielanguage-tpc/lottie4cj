@@ -8,15 +8,15 @@ public import lottie4cj.model.*
 public class TestLottie4cjAnimatableTransform{
     @TestCase
     func test_AnimatableTransform_toString_01():Unit {
-        var a=ArrayKeyframePointF(k: Array<Keyframe<PointF>>(232,item:Keyframe<PointF>()))
+        var a=ArrayKeyframePointF(k: Array<Keyframe<PointF>>(232, repeat:Keyframe<PointF>()))
         var p=AnimatableSplitDimensionPathValue()
-        var s=ArrayKeyframeArrayFloat64(k: Array<Keyframe<Array<Float64>>>(232,item:Keyframe<Array<Float64>>()))
+        var s=ArrayKeyframeArrayFloat64(k: Array<Keyframe<Array<Float64>>>(232, repeat:Keyframe<Array<Float64>>()))
         var r= ArrayKeyframeFloat64()
-        var o= ArrayKeyframeInt64(k: Array<Keyframe<Int64>>(232,item:Keyframe<Int64>()))
-        var so=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232,item:Keyframe<Float64>()))
-        var eo=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232,item:Keyframe<Float64>()))
-        var sk=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232,item:Keyframe<Float64>()))
-        var sa=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232,item:Keyframe<Float64>()))
+        var o= ArrayKeyframeInt64(k: Array<Keyframe<Int64>>(232, repeat:Keyframe<Int64>()))
+        var so=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232, repeat:Keyframe<Float64>()))
+        var eo=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232, repeat:Keyframe<Float64>()))
+        var sk=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232, repeat:Keyframe<Float64>()))
+        var sa=ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>(232, repeat:Keyframe<Float64>()))
         var ty="AnimatableTransform_ty"
 
         var at=AnimatableTransform(a:a,p:p,s:s,r:r,o:o,so: so,eo: eo,sk: sk,sa: sa,ty: ty)

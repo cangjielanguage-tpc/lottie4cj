@@ -36,9 +36,9 @@ public class ShapeData <: ToString {
         }
         let empty_point: PointF = PointF()
         empty_point.isNull = true
-        this.v = Array<PointF>(this._maxLength, item: empty_point)
-        this.i = Array<PointF>(this._maxLength, item: empty_point)
-        this.o = Array<PointF>(this._maxLength, item: empty_point)
+        this.v = Array<PointF>(this._maxLength, repeat: empty_point)
+        this.i = Array<PointF>(this._maxLength, repeat: empty_point)
+        this.o = Array<PointF>(this._maxLength, repeat: empty_point)
     }
 
     /**
@@ -109,9 +109,9 @@ public class ShapeData <: ToString {
     public func doubleArrayLength() {
         let empty_point: PointF = PointF()
         empty_point.isNull = true
-        this.v = this.v.concat(Array<PointF>(this._maxLength, item: empty_point))
-        this.i = this.i.concat(Array<PointF>(this._maxLength, item: empty_point))
-        this.o = this.o.concat(Array<PointF>(this._maxLength, item: empty_point))
+        this.v = this.v.concat(Array<PointF>(this._maxLength, repeat: empty_point))
+        this.i = this.i.concat(Array<PointF>(this._maxLength, repeat: empty_point))
+        this.o = this.o.concat(Array<PointF>(this._maxLength, repeat: empty_point))
         this._maxLength *= 2
     }
     
@@ -123,9 +123,9 @@ public class ShapeData <: ToString {
         let empty_point: PointF = PointF()
         empty_point.isNull = true
         let length: Int64 = maxLength - this._maxLength
-        this.v = this.v.concat(Array<PointF>(length, item: empty_point))
-        this.i = this.i.concat(Array<PointF>(length, item: empty_point))
-        this.o = this.o.concat(Array<PointF>(length, item: empty_point))
+        this.v = this.v.concat(Array<PointF>(length, repeat: empty_point))
+        this.i = this.i.concat(Array<PointF>(length, repeat: empty_point))
+        this.o = this.o.concat(Array<PointF>(length, repeat: empty_point))
         this._maxLength = maxLength
     }
 

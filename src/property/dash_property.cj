@@ -33,19 +33,19 @@ public class DashProperty <: DynamicPropertyContainer {
 
     var dashArray: Array<Float64> = Array<Float64>()
     //TODO: 长度为 1 的数组，是否换成数值成员变量类型 ？？？
-    var dashoffset: Array<Float64> = Array<Float64>(1, item: 0.0)
+    var dashoffset: Array<Float64> = Array<Float64>(1, repeat: 0.0)
 
     //createStyleElement(data) 中 data  == ContentModel => data.d = ShapeStroke/GradientStroke.d(Array<ContentModelD>)
     public init(elem: BaseElement, data: Array<ContentModelD>, renderer: String, container: BaseElement) {
         super(container)
         this.elem = elem
         let empty_dp: DataProp<ContentModelDK, Float64> = DataProp<ContentModelDK, Float64>(n: "", p: PropertyFactory<ContentModelDK, Float64>(elem, ContentModelDK(), 0.0, DynamicPropertyContainer(container)))
-        this.dataProps = Array<DataProp<ContentModelDK, Float64>>(data.size, item: empty_dp)
+        this.dataProps = Array<DataProp<ContentModelDK, Float64>>(data.size, repeat: empty_dp)
         this.renderer = renderer
 
         let len: Int64 = data.size
         if (data.size > 0) {
-            this.dashArray = Array<Float64>(len - 1, item: 0.0)
+            this.dashArray = Array<Float64>(len - 1, repeat: 0.0)
         }
 
         //直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。

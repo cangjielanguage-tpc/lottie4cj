@@ -11,7 +11,7 @@ public class TestLottie4cjAnimatablePathValueParser{
     @TestCase
     func test_AnimatablePathValueParser_01():Unit {
         var flag=1
-        var illeagal=Array<JsonValue>([JsonNull(),JsonBool(true),JsonString("JsonString"),JsonInt(128),JsonFloat(Float64(22))])
+        var illeagal=[JsonNull(),JsonBool(true),JsonString("JsonString"),JsonInt(128),JsonFloat(Float64(22))]
         for (iv in 0..illeagal.size){
             flag=1
             try{
@@ -33,7 +33,7 @@ public class TestLottie4cjAnimatablePathValueParser{
 
     @TestCase
     func test_AnimatablePathValueParser_03():Unit {
-        var ja=JsonArray(Array<JsonValue>([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))]))
+        var ja=JsonArray([JsonInt(128),JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))])
         var re=AnimatablePathValueParser.parse(ja)
         var exp_re=###"[Keyframe{
 k = PointF: {x='128.000000', y='22.000000'}
@@ -51,7 +51,7 @@ ti = []
 
     @TestCase
     func test_AnimatablePathValueParser_04():Unit {
-        var ja=JsonArray(Array<JsonValue>([JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))]))
+        var ja=JsonArray([JsonFloat(Float64(22)),JsonFloat(Float64(24)),JsonFloat(Float64(25))])
         var re=AnimatablePathValueParser.parse(ja)
         var exp_re=###"[Keyframe{
 k = PointF: {x='22.000000', y='24.000000'}
@@ -68,7 +68,7 @@ ti = []
     }
     @TestCase
     func test_AnimatablePathValueParser_05():Unit {
-        var ja=JsonArray(Array<JsonValue>([JsonObject(),JsonFloat(Float64(24)),JsonFloat(Float64(25))]))
+        var ja=JsonArray([JsonObject(),JsonFloat(Float64(24)),JsonFloat(Float64(25))])
         var flag=1
         try{
             AnimatablePathValueParser.parse(ja)
@@ -81,7 +81,7 @@ ti = []
     }
     @TestCase
     func test_AnimatablePathValueParser_06():Unit {
-        var ja=JsonArray(Array<JsonValue>([JsonNull(),JsonFloat(Float64(24)),JsonFloat(Float64(25))]))
+        var ja=JsonArray([JsonNull(),JsonFloat(Float64(24)),JsonFloat(Float64(25))])
         var re=AnimatablePathValueParser.parse(ja)
         @Assert(re.toString(),"[]")
     }

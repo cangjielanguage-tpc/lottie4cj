@@ -19,10 +19,10 @@ public class CvContextData {
         this.cTr = Matrix()
         this.cO = 1
         var len: Int64 = 15
-        this.saved = Array<Array<Float64>>(len, item: [])
-        this.savedOp = Array<Float64>(len,item: 0.0)
+        this.saved = Array<Array<Float64>>(len, repeat: [])
+        this.savedOp = Array<Float64>(len,repeat: 0.0)
         for (i in 0..len) {
-            this.saved[i] = Array<Float64>(16,item: 0.0)
+            this.saved[i] = Array<Float64>(16,repeat: 0.0)
         }
         this._length = len
     }
@@ -30,13 +30,13 @@ public class CvContextData {
     public func duplicate() {
         var newLength = this._length * 2
         var currentSavedOp = this.savedOp.clone()
-        this.savedOp = Array<Float64>(newLength,item: 0.0)
+        this.savedOp = Array<Float64>(newLength,repeat: 0.0)
         currentSavedOp.copyTo(this.savedOp, 0, 0, currentSavedOp.size)
         var currentSaved = this.saved.clone()
-        this.saved = Array<Array<Float64>>(newLength, item: [])
+        this.saved = Array<Array<Float64>>(newLength, repeat: [])
         currentSaved.copyTo(this.saved, 0, 0, currentSaved.size)
         for (i in this._length..newLength) {
-            this.saved[i] = Array<Float64>(16,item: 0.0)
+            this.saved[i] = Array<Float64>(16,repeat: 0.0)
         }
         this._length = newLength
     }

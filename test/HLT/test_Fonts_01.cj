@@ -24,7 +24,7 @@ public class TestLottie4cjFonts{
         fStyle="fStyle"
         ascent=Float64(1.0)
         var ft=Font(fFamily,fName,fStyle,ascent, fOrigin, origin, fPath, fClass, fWeight)
-        var listCur=Array<Font>(10,item:ft)
+        var listCur=Array<Font>(10, repeat:ft)
         var fts=Fonts(list:listCur)
         @Assert(fts.toString(), "Fonts: {\n list = ${listCur}\n }")
         @Assert(fts.list.toString(), listCur.toString())
@@ -36,7 +36,7 @@ public class TestLottie4cjFonts{
         fStyle=""
         ascent=Float64(-1.0)
         var ft=Font(fFamily,fName,fStyle,ascent, fOrigin, origin, fPath, fClass, fWeight)
-        var listCur=Array<Font>(10,item:ft)
+        var listCur=Array<Font>(10, repeat:ft)
         var fts=Fonts(list:listCur)
         @Assert(fts.toString(), "Fonts: {\n list = ${listCur}\n }")
         @Assert(fts.list.toString(), listCur.toString())

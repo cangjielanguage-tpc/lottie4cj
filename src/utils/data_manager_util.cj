@@ -132,7 +132,7 @@ func checkChars(animationData: AnimationData, completeShapes: (Array<ContentMode
                       a: ArrayKeyframePointF(k: arrayKeyframePoint),
                       p: AnimatableSplitDimensionPathValue(k: arrayKeyframePoint),
                       s: ArrayKeyframeArrayFloat64(k: [Keyframe<Array<Float64>>(k: [100.0, 100.0])]),
-                      r: ArrayKeyframeFloat64(k: Array<Keyframe<Float64>>([Keyframe<Float64>(k: 0.0)])),
+                      r: ArrayKeyframeFloat64(k: [Keyframe<Float64>(k: 0.0)]),
                       o: ArrayKeyframeInt64(k: [Keyframe<Int64>(k: 100)])
                 )
                 //TODO: 在 json 中找不到 chars[i].t
@@ -168,13 +168,13 @@ func checkColors(animationData: AnimationData): Unit {
                     let shape: ShapeFill = (shapes[i] as ShapeFill).getOrThrow()
                     c = shape.c
                     
-                    c_k = Array<KeyframeArrayFloat64>(c.size, item: KeyframeArrayFloat64())
+                    c_k = Array<KeyframeArrayFloat64>(c.size, repeat: KeyframeArrayFloat64())
                     shape.c_k = c_k
                 } else if (shapes[i].ty == "st") {
                     let shape: ShapeStroke = (shapes[i] as ShapeStroke).getOrThrow()
                     c = shape.c
                     
-                    c_k = Array<KeyframeArrayFloat64>(c.size, item: KeyframeArrayFloat64())
+                    c_k = Array<KeyframeArrayFloat64>(c.size, repeat: KeyframeArrayFloat64())
                     shape.c_k = c_k
                 }
                 
@@ -184,7 +184,7 @@ func checkColors(animationData: AnimationData): Unit {
                         let keyframe: KeyframeArrayFloat64 = KeyframeArrayFloat64()
                         keyframe.kIsArray = true
                         if (let Some(v) <- c[j].s) {
-                            let s: Array<Float64> = Array<Float64>(4, item: 0.0)
+                            let s: Array<Float64> = Array<Float64>(4, repeat: 0.0)
                             s[0] = v[0] / 255.0
                             s[1] = v[1] / 255.0
                             s[2] = v[2] / 255.0
@@ -192,7 +192,7 @@ func checkColors(animationData: AnimationData): Unit {
                             keyframe.s = s
                         }
                         if (let Some(v) <- c[j].e) {
-                            let e: Array<Float64> = Array<Float64>(4, item: 0.0)
+                            let e: Array<Float64> = Array<Float64>(4, repeat: 0.0)
                             e[0] = v[0] / 255.0
                             e[1] = v[1] / 255.0
                             e[2] = v[2] / 255.0
@@ -205,7 +205,7 @@ func checkColors(animationData: AnimationData): Unit {
                     let keyframe: KeyframeArrayFloat64 = KeyframeArrayFloat64()
                     keyframe.kIsArray = false
                     if (let Some(v) <- c[0].k) {
-                        let k: Array<Float64> = Array<Float64>(4, item: 0.0)
+                        let k: Array<Float64> = Array<Float64>(4, repeat: 0.0)
                         k[0] = v[0] / 255.0
                         k[1] = v[1] / 255.0
                         k[2] = v[2] / 255.0

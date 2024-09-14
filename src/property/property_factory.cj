@@ -99,7 +99,7 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
         var offsetTime: Float64 = this.offsetTime
         var newValue: Array<Float64> = Array<Float64>()
         if (this.propType == "multidimensional") {
-            newValue = Array<Float64>(this.pv.size, item: 0.0)
+            newValue = Array<Float64>(this.pv.size, repeat: 0.0)
         }
         var iterationIndex: Int64 = caching.lastIndex
         var i: Int64 = iterationIndex
@@ -287,7 +287,7 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
     }
 
     func slerp(a: Array<Float64>, b: Array<Float64>, t: Float64): Array<Float64> {
-        let out: Array<Float64> = Array<Float64>(4, item: 0.0)
+        let out: Array<Float64> = Array<Float64>(4, repeat: 0.0)
         let ax: Float64 = a[0]
         let ay: Float64 = a[1]
         let az: Float64 = a[2]
@@ -543,9 +543,9 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
         p.frameId = -1
 
         let len: Int64 = dataK.size
-        p.v = Array<Float64>(len, item: 0.0)
-        p.pv = Array<Float64>(len, item: 0.0)
-        p.vel = Array<Float64>(len, item: 0.0)
+        p.v = Array<Float64>(len, repeat: 0.0)
+        p.pv = Array<Float64>(len, repeat: 0.0)
+        p.vel = Array<Float64>(len, repeat: 0.0)
         var num: Float64 = 0.0
         for (i in 0..len) {
             //此处的 dataK 是一个数组Array<number>
@@ -609,10 +609,10 @@ public class PropertyFactory<T, E> where T <: ToString , E <: ToString {
         if (let Some(v) <- dataK[0].s) {
             arrLen = 1
         }
-        p.v = Array<Float64>(arrLen, item: initFrameFloat64)
-        p.pv = Array<Float64>(arrLen, item: initFrameFloat64)
+        p.v = Array<Float64>(arrLen, repeat: initFrameFloat64)
+        p.pv = Array<Float64>(arrLen, repeat: initFrameFloat64)
 
-        p._caching = Caching(lastFrame: initFrame, lastIndex: 0, value: Array<Float64>(arrLen, item: 0.0))
+        p._caching = Caching(lastFrame: initFrame, lastIndex: 0, value: Array<Float64>(arrLen, repeat: 0.0))
         
         return p
     }

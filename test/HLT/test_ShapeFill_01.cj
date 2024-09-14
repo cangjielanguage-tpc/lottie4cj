@@ -9,7 +9,7 @@ public class TestLottie4cjShapeFill{
     @TestCase
     func test_ShapeFill_toString_01():Unit {
         var nm="ShapeFill_String"
-        var kfaf=Array<Float64>(100,item:3.14)
+        var kfaf=Array<Float64>(100, repeat:3.14)
 
         var k=Option<Array<Float64>>.Some(kfaf)
         var t=Float64(1.1)
@@ -22,9 +22,9 @@ public class TestLottie4cjShapeFill{
         var ti: Array<Float64> = [111.0,112.0]
         var kf=Keyframe(k:k,t:t,s:s,e:e,o:o_kef,i:i,h:h,to:to,ti:ti)
 
-        var c=Array<Keyframe<Array<Float64>>>(100,item:kf)
+        var c=Array<Keyframe<Array<Float64>>>(100, repeat:kf)
         var akf=Keyframe<Int64>()
-        var o_ShapeFill=Array<Keyframe<Int64>>(100,item:akf)
+        var o_ShapeFill=Array<Keyframe<Int64>>(100, repeat:akf)
         var fillEnabled=true
         var r=Int64.Max
         var hd=true

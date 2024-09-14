@@ -70,7 +70,7 @@ public class OffsetPathModifier <: ShapeModifier {
             len += count
         }
         var index: Int64 = 0
-        var multiSegments: Array<Array<PolynomialBezier>> = Array<Array<PolynomialBezier>>(len, item: Array<PolynomialBezier>())
+        var multiSegments: Array<Array<PolynomialBezier>> = Array<Array<PolynomialBezier>>(len, repeat: Array<PolynomialBezier>())
     
         for (i in 0..count) {
             segment = PolynomialBezier.shapeSegment(inputBezier, i)

@@ -54,7 +54,7 @@ public class CVShapeElement <: IShapeElement {
 
     public func createShapeElement(data: ShapeDataInCV) {
         var elementData = CVShapeData()
-        this.shapes.set(this.shapes.size,elementData)
+        this.shapes[this.shapes.size]=elementData
         return elementData
     }
 

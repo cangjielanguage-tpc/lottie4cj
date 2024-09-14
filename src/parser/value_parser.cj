@@ -78,13 +78,13 @@ public class ArrayFloat64Parser <: ValueParser<Array<Float64>> {
         if (equalsJsonKind(jk, JsonKind.JsArray)) {
             let ja: JsonArray = reader.asArray()
             let len: Int64 = ja.size()
-            let res: Array<Float64> = Array<Float64>(len, item: 0.0)
+            let res: Array<Float64> = Array<Float64>(len, repeat: 0.0)
             for (i in 0..len) {
                 res[i] = ja[i].asFloat().getValue()
             }
             return res
         } else {
-            let res: Array<Float64> = Array<Float64>(1, item: 0.0)
+            let res: Array<Float64> = Array<Float64>(1, repeat: 0.0)
             res[0] = reader.asFloat().getValue()
             return res
         }
@@ -206,7 +206,7 @@ public class DocumentDataParser <: ValueParser<DocumentData> {
         if (let Some(v) <- reader.get(NAMES[11])) { // "ps"
             let ja: JsonArray = v.asArray()
             let len: Int64 = ja.size()
-            boxPosition = Array<Float64>(len, item: 0.0)
+            boxPosition = Array<Float64>(len, repeat: 0.0)
             for(i in 0..len) {
                 boxPosition[i] = ja[i].asFloat().getValue()
             }
@@ -214,7 +214,7 @@ public class DocumentDataParser <: ValueParser<DocumentData> {
         if (let Some(v) <- reader.get(NAMES[12])) { // "sz"
             let ja: JsonArray = v.asArray()
             let len: Int64 = ja.size()
-            boxSize = Array<Float64>(len, item: 0.0)
+            boxSize = Array<Float64>(len, repeat: 0.0)
             for(i in 0..len) {
                 boxSize[i] = ja[i].asFloat().getValue()
             }
@@ -348,7 +348,7 @@ public class ScaleXYParser <: ValueParser<Array<Float64>> {
     public func parse(reader: JsonValue): Array<Float64> {
         let ja: JsonArray = reader.asArray()
         let len: Int64 = ja.size()
-        let res: Array<Float64> = Array<Float64>(len, item: 0.0)
+        let res: Array<Float64> = Array<Float64>(len, repeat: 0.0)
 
         for (i in 0..len) {
             res[i] = ja[i].asFloat().getValue()
@@ -378,7 +378,7 @@ public class ColorParser <: ValueParser<Array<Float64>> {
     public func parse(reader: JsonValue): Array<Float64> {
         let ja: JsonArray = reader.asArray()
 
-        let res: Array<Float64> = Array<Float64>(4, item: 1.0)
+        let res: Array<Float64> = Array<Float64>(4, repeat: 1.0)
 
         res[0] = ja[0].asFloat().getValue()
         res[1] = ja[1].asFloat().getValue()

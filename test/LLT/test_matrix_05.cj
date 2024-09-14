@@ -29,17 +29,17 @@ public class TestsMatrix {
     @TestCase
     public func testsMatrix01(): Unit {
         var src1 = Matrix()
-        let data = Array<Float64>(16,item: 6.95)
-        var src = src1.inversePoints(Array<Array<Float64>>(16,item:data))
+        let data = Array<Float64>(16,repeat: 6.95)
+        var src = src1.inversePoints(Array<Array<Float64>>(16,repeat:data))
         @Assert(src[0][1], 6.950000)
     }
 
     @TestCase
     public func testsMatrix02(): Unit {
         var src1 = Matrix()
-        let data = Array<Float64>(16,item: 6.95)
-        let data1 = Array<Float64>(16,item: -15.5)
-        let data2 = Array<Float64>(16,item: 0.39)
+        let data = Array<Float64>(16,repeat: 6.95)
+        let data1 = Array<Float64>(16,repeat: -15.5)
+        let data2 = Array<Float64>(16,repeat: 0.39)
         var src = src1.applyToTriplePoints(data,data1,data2)
         @Assert(src[0], 6.950000)
     }

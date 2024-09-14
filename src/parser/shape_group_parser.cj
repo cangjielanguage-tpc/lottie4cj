@@ -29,7 +29,7 @@ class ShapeGroupParser {
             let ja: JsonArray = v.asArray()
             let len: Int64 = ja.size()
             let EMPTY_CM: ContentModel = ContentModel()
-            items = Array<ContentModel>(len, item: EMPTY_CM)
+            items = Array<ContentModel>(len, repeat: EMPTY_CM)
             for (i in 0..len) {
                 let jo: JsonObject = ja[i].asObject()
                 let newItem: ContentModel = ContentModelParser.parse(jo)
