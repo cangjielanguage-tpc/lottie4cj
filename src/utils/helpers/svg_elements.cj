@@ -22,7 +22,7 @@ public class CreateNS <: ToString & Equatable<CreateNS> {
 
     var label: String = ""
     var ks: HashMap<String, String> = HashMap<String, String>()
-    var childs: ArrayList<CreateNS> = ArrayList<CreateNS>()
+    public var childs: ArrayList<CreateNS> = ArrayList<CreateNS>()
 
     //TODO: 暂时无成员变量 style 的数据类型
     //TODO: style 是一个对象??? 还是一个 HashMap<String, String> ???

@@ -19,6 +19,7 @@ public open class BaseElement <: RenderableDOMElement & Equatable<BaseElement> {
 
     //TODO: maskedElement 在 MaskElement 中编译用。
     public var maskedElement: CreateNS = CreateNS("")
+    public var matteElement: CreateNS = CreateNS("")
     //TODO: 未找到数据类型，暂定为 String 类型。
     var types: String = ""
     //TODO: style 是一个对象??? 还是一个 HashMap<String, String> ???
