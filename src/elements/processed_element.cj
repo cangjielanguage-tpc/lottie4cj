@@ -7,13 +7,15 @@
  */
 package lottie4cj.elements
 
+
+//TODO: 未实现，编译用
 public open class ProcessedElement {
 
-    //TODO: 未确认数据类型，暂定BaseElement
-    public var elem: BaseElement
+    public var elem: ContentModel = ContentModel()
     public var pos: Int64 = 0
 
-    public init(elem: BaseElement, pos: Int64){
+    public init(){}
+    public init(elem: ContentModel, pos: Int64){
         this.elem = elem
         this.pos = pos
     }

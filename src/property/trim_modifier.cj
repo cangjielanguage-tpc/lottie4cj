@@ -15,42 +15,42 @@ public open class TrimModifier <: ShapeModifier {
     var eValue: Float64 = 0.0
     var m: Int64 = 0
 
-    public init(elem: IShapeElement, data: ContentModel){
-        super(elem, data)
+    public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer){
+        super(data, elemGlobalData, elemData)
         
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elem)
-        this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>(elem, Array<Keyframe<Float64>>(), 0.0, dp)
-        this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>(elem, Array<Keyframe<Float64>>(), 0.0, dp)
-        this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>(elem, Array<Keyframe<Float64>>(), 0.0, dp)
+        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData)
+        this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData)
+        this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData)
+        this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData)
     }
-    
+
     public func getValue(): Unit {
         this.processKeys()
     }
 
-    public func initModifierProperties(elem: IShapeElement, data: ContentModel) {
+    public func initModifierProperties(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer) {
         if (data.ty == "tm") {
             let tm: ShapeTrimPath = (data as ShapeTrimPath).getOrThrow()
 
             //"s": {"a": 0, "k": 0, "ix": 1}  //_s: Array<Keyframe<Float64>>
             if (tm.s.size == 1) {//走【分支1】
-                this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, tm.s, tm.s[0].k ?? 0.0, 0.01, this)
+                this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.s, tm.s[0].k ?? 0.0, 0.01, this, elemGlobalData, elemData)
             } else if (tm.s.size > 1) {//走【分支3】
-                this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, tm.s, tm.s, 0, 0.01, this)
+                this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.s, tm.s, 0, 0.01, this, elemGlobalData, elemData)
             }
 
             //"e":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":37,"s":[0],"e":[100]},{"t":58.0000023623884}],"ix":2}
             if (tm.e.size == 1) {//走【分支1】  //_e: Array<Keyframe<Float64>>
-                this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, tm.e, tm.e[0].k ?? 0.0, 0.01, this)
+                this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.e, tm.e[0].k ?? 0.0, 0.01, this, elemGlobalData, elemData)
             } else if (tm.e.size > 1) {//走【分支3】
-                this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, tm.e, tm.e, 0, 0.01, this)
+                this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.e, tm.e, 0, 0.01, this, elemGlobalData, elemData)
             }
 
             //"o":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":37,"s":[18],"e":[0]},{"t":58.0000023623884}],"ix":3}
             if (tm.o.size == 1) {//走【分支1】   //_o: Array<Keyframe<Float64>>
-                this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, tm.o, tm.o[0].k ?? 0.0, 0.0, this)
+                this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.o, tm.o[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData)
             } else if (tm.o.size > 1) {//走【分支3】
-                this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(elem, tm.o, tm.o, 0, 0.0, this)
+                this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.o, tm.o, 0, 0.0, this, elemGlobalData, elemData)
             }
             
             this.m = tm.m
@@ -131,7 +131,7 @@ public open class TrimModifier <: ShapeModifier {
         return Array<SegmentsLengthElement>()
     }
     
-    public func processShapes(_isFirstFrame: Bool): Unit {
+    public func processShapes(_isFirstFrame: Bool): Bool {
         var s_v: Float64 = 0.0
         var e_v: Float64 = 0.0
         if (this._mdf || _isFirstFrame) {
@@ -291,6 +291,7 @@ public open class TrimModifier <: ShapeModifier {
                 this.shapes[i].shape._mdf = true
             }
         }
+        return true
     }
     
     public func addPaths(newPaths: ArrayList<ShapeData>, localShapeCollection: ShapeCollection): Unit {

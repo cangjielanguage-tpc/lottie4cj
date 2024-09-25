@@ -9,18 +9,18 @@ public class RoundCornersModifier <: ShapeModifier {
 
     var rd: PropertyFactory<ArrayKeyframeFloat64, Float64>
     
-    public init(elem: IShapeElement, data: ContentModel){
-        super(elem, data)
+    public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer){
+        super(data, elemGlobalData, elemData)
         
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elem)
-        this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>(elem, ArrayKeyframeFloat64(), 0.0, dp)
+        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData)
+        this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData)
     }
     
     public func getValue(): Unit {
         this.processKeys()
     }
 
-    public func initModifierProperties(elem: IShapeElement, data: ContentModel): Unit {
+    public func initModifierProperties(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer): Unit {
         //TODO: 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
 
         if (data.ty == "rd") {
@@ -28,14 +28,14 @@ public class RoundCornersModifier <: ShapeModifier {
             
             //"r": {"a": 0, "k": 10, "ix": 1}  //_r: Array<Keyframe<Float64>>
             if (rd.r.k.size == 1) {//走【分支1】
-                this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, rd.r, rd.r.k[0].k ?? 0.0, 0.0, this)
+                this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rd.r, rd.r.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData)
             } else if (rd.r.k.size > 1) {//走【分支3】
-                this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, rd.r, rd.r.k, 0, 0.0, this)
+                this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rd.r, rd.r.k, 0, 0.0, this, elemGlobalData, elemData)
             }
         }
         this._isAnimated = this.rd.effectsSequence.size != 0
     }
-    
+
     public func processPath(path: ShapeData, round: Float64): ShapeData {
         var clonedPath: ShapeData = ShapeData()  //shapePool.newElement()
         
@@ -114,7 +114,7 @@ public class RoundCornersModifier <: ShapeModifier {
         return clonedPath
     }
     
-    public func processShapes(_isFirstFrame: Bool) {
+    public func processShapes(_isFirstFrame: Bool): Bool {
         var shapePaths: ArrayList<ShapeData> = ArrayList<ShapeData>()
         let len: Int64 = this.shapes.size
         var jLen: Int64 = 0
@@ -140,6 +140,7 @@ public class RoundCornersModifier <: ShapeModifier {
         if (this.dynamicProperties.size == 0) {
             this._mdf = false
         }
+        return true
     }
 
 }

@@ -11,10 +11,14 @@ public class AnimatableSplitDimensionPathValue <: ToString {
     
     public var a: Int64 = 0
     public var ix: Int64 = 0
-    public var z: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+
     private let _k: Array<Keyframe<PointF>>
     private let _x: Array<Keyframe<Float64>>
     private let _y: Array<Keyframe<Float64>>
+
+    //TODO: 暂未在 json 中找到 z。暂定为 Array<Keyframe<Float64>>。TransformProperty中编译用。
+    public var z: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
+    public var s: Bool = false
 
     /**
      * Create a AnimatableSplitDimensionPathValue instance based on parameters.

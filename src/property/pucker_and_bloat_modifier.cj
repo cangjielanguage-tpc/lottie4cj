@@ -11,18 +11,18 @@ public class PuckerAndBloatModifier <: ShapeModifier {
     var amount: PropertyFactory<AK, Float64>
     var lineJoin: Int64 = 0
 
-    public init(elem: IShapeElement, data: ContentModel){
-        super(elem, data)
+    public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer){
+        super(data, elemGlobalData, elemData)
         
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elem)
-        this.amount = PropertyFactory<AK, Float64>(elem, AK(), 0.0, dp)
+        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData)
+        this.amount = PropertyFactory<AK, Float64>(AK(), 0.0, dp, elemGlobalData, elemData)
     }
     
     public func getValue(): Unit {
         this.processKeys()
     }
     
-    public func initModifierProperties(elem: IShapeElement, data: ContentModel) {
+    public func initModifierProperties(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer) {
         //TODO: 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
 
         /*
@@ -32,10 +32,10 @@ public class PuckerAndBloatModifier <: ShapeModifier {
         if (data.ty == "gf") {
             let gf: GradientFill = (data as GradientFill).getOrThrow()
             //TODO: 传入的 tr.a 必须存在，否则代码运行异常。
-            this.amount = PropertyFactory<AK, Float64>.getProp(elem, gf.a, Float64(gf.a.k), 0.0, this)
+            this.amount = PropertyFactory<AK, Float64>.getProp(gf.a, Float64(gf.a.k), 0.0, this, elemGlobalData, elemData)
         } else if (data.ty == "gs") {
             let gs: GradientStroke = (data as GradientStroke).getOrThrow()
-            this.amount = PropertyFactory<AK, Float64>.getProp(elem, gs.a, Float64(gs.a.k), 0.0, this)
+            this.amount = PropertyFactory<AK, Float64>.getProp(gs.a, Float64(gs.a.k), 0.0, this, elemGlobalData, elemData)
         }
 
         this._isAnimated = this.amount.effectsSequence.size != 0
@@ -74,7 +74,7 @@ public class PuckerAndBloatModifier <: ShapeModifier {
         return clonedPath
     }
     
-    public func processShapes(_isFirstFrame: Bool) {
+    public func processShapes(_isFirstFrame: Bool): Bool {
         var shapePaths: ArrayList<ShapeData> = ArrayList<ShapeData>()
         let len: Int64 = this.shapes.size
         var jLen: Int64 = 0
@@ -100,6 +100,7 @@ public class PuckerAndBloatModifier <: ShapeModifier {
         if (!this.dynamicProperties.size > 0) {
             this._mdf = false
         }
+        return true
     }
 
 }

@@ -12,20 +12,20 @@ public open class ZigZagModifier <: ShapeModifier {
     var frequency: PropertyFactory<ArrayKeyframeFloat64, Float64>
     var pointsType: PropertyFactory<ArrayKeyframeFloat64, Float64>
 
-    public init(elem: IShapeElement, data: ContentModel){
-        super(elem, data)
+    public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer){
+        super(data, elemGlobalData, elemData)
         
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elem)
-        this.amplitude = PropertyFactory<ArrayKeyframeFloat64, Float64>(elem, ArrayKeyframeFloat64(), 0.0, dp)
-        this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>(elem, ArrayKeyframeFloat64(), 0.0, dp)
-        this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>(elem, ArrayKeyframeFloat64(), 0.0, dp)
+        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData)
+        this.amplitude = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData)
+        this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData)
+        this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData)
     }
     
     public func getValue(): Unit {
         this.processKeys()
     }
     
-    public func initModifierProperties(elem: IShapeElement, data: ContentModel) {
+    public func initModifierProperties(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer) {
         //TODO: 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
 
         //TODO: 暂定 ZigZagModifier 对应 PolystarShape 数据类型。
@@ -35,15 +35,15 @@ public open class ZigZagModifier <: ShapeModifier {
             //TODO: 暂定 ZigZagModifier 对应 PolystarShape 数据类型。暂未确认 data.s 数据类型。  //this.amplitude = PropertyFactory.getProp(elem, data.s, 0, null, this)
             
             if (sr.r.k.size == 1) {//走【分支1】
-                this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, sr.r, sr.r.k[0].k ?? 0.0, 0.0, this)
+                this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(sr.r, sr.r.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData)
             } else if (sr.r.k.size > 1) {//走【分支3】
-                this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, sr.r, sr.r.k, 0, 0.0, this)
+                this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(sr.r, sr.r.k, 0, 0.0, this, elemGlobalData, elemData)
             }
             
             if (sr.pt.k.size == 1) {//走【分支1】
-                this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, sr.pt, sr.pt.k[0].k ?? 0.0, 0.0, this)
+                this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(sr.pt, sr.pt.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData)
             } else if (sr.pt.k.size > 1) {//走【分支3】
-                this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(elem, sr.pt, sr.pt.k, 0, 0.0, this)
+                this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(sr.pt, sr.pt.k, 0, 0.0, this, elemGlobalData, elemData)
             }
         }
 
@@ -83,7 +83,7 @@ public open class ZigZagModifier <: ShapeModifier {
         return clonedPath
     }
     
-    public func processShapes(_isFirstFrame: Bool) {
+    public func processShapes(_isFirstFrame: Bool): Bool {
         var shapePaths: ArrayList<ShapeData> = ArrayList<ShapeData>()
         var len: Int64 = this.shapes.size
         var jLen: Int64 = 0
@@ -115,6 +115,7 @@ public open class ZigZagModifier <: ShapeModifier {
         if (this.dynamicProperties.size == 0) {
             this._mdf = false
         }
+        return true
     }
 
 }

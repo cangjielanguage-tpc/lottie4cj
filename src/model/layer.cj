@@ -9,6 +9,17 @@ package lottie4cj.model
 
 public class Layer <: ToString {
 
+    //TODO: ICompElement编译用。
+    public var xt: Bool = false //不确认xt数据类型，暂定为Bool。
+    //TODO: 当 layer.ty == 101 && isAsset == true 时，此 Layer 实际代表的是 Asset。兼容 BaseRenderer.searchExtraCompositions 中 createComp 函数应用。
+    public var asset: Asset = Asset("", Array<Layer>(), 0, 0, "", "", 0)
+    public var isAsset: Bool = false
+
+    //TODO: RenderableElement编译用。
+    public var textData: Size = Size()
+    public var width: Int64 = 0
+    public var height: Int64 = 0
+
     public var hasMask: Bool = false
     public var td: Int64 = 0
     

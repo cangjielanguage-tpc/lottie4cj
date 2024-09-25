@@ -4,7 +4,7 @@
 package lottie4cj.elements
 
 //TODO
-public class CvSolidElement <: BaseElement {
+public class CvSolidElement <: ISolidElement {
     public init(data:Layer, globalData: GlobalData) {
         super(data, globalData)
     }

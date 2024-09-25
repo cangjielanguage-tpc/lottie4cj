@@ -9,7 +9,11 @@ package lottie4cj.elements
 
 internal import lottie4cj.model.*
 
-public class ISolidElement <: BaseElement {
+/*
+ * TODO：初始化后需要单独执行 this.initElement(data, globalData)，放在 init 中编译报错。
+ */
+public open class ISolidElement <: IImageElement {
+    //TODO：拆分多继承问题 -- extendPrototype([IImageElement], ISolidElement)
 
     /**
      * Create a ISolidElement instance based on parameters.
@@ -19,9 +23,8 @@ public class ISolidElement <: BaseElement {
      */
     public init(data: Layer, globalData: GlobalData) {
         super(data, globalData)
+        //TODO：初始化后需要单独执行 this.initElement(data, globalData)，放在 init 中编译报错。
     }
-
-    //TODO：拆分多继承问题 --extendPrototype([IImageElement], ISolidElement)
 
     /**
      * Create content.

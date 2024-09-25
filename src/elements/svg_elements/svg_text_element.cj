@@ -13,11 +13,12 @@ var emptyShapeData = Layer()
 public class SVGTextLottieElement <: ITextElement{
     
     public var textSpans: ArrayList<TextSpans>
-    public var renderType: String
+    //TODO：父类 ITextElement 中存在此成员变量 //public var renderType: String
     public var textContainer: CreateNS = CreateNS("")
     public var _sizeChanged: Bool = false
     public var renderedLetters: Array<LetterProps> = Array<LetterProps>()
-    public var mHelper: Matrix = Matrix()
+    //TODO：和 \src\elements\transform_element.cj 函数同名。暂时 mHelper 改为 mHelper2.
+    public var mHelper2: Matrix = Matrix()
 
 
     public init(data: Layer, globalData: GlobalData ) {
@@ -105,7 +106,7 @@ public class SVGTextLottieElement <: ITextElement{
         var len = letters.size
 
         var tSpan: CreateNS = CreateNS("")
-        var matrixHelper = this.mHelper
+        var matrixHelper = this.mHelper2
         var shapeStr = ""
         var singleShape = this.data.singleShape
         var xPos = 0.0

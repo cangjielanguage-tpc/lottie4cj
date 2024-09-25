@@ -7,11 +7,17 @@
  */
 package lottie4cj.elements.helpers.shapes
 
+internal import lottie4cj.property.*
+
 //TODO: 未实现，编译用
 public class CVShapeData {
 
     //TODO: 未实现                                                                                 ???---lp---20240516--
     //CVShapeData.sh => ShapePropertyFactory.getShapeProp => KeyframedShapeProperty/ShapeProperty/RectShapeProperty/EllShapeProperty/StarShapeProperty
+    public var sh: ShapePropertyFactory
 
+    public init(sh: ShapePropertyFactory){
+        this.sh = sh
+    }
 
 }

@@ -11,15 +11,11 @@ internal import lottie4cj.elements.helpers.shapes.*
 
 public open class IShapeElement <: BaseElement {
 
-    //TODO: 未实现  ShapeModifiers
-    public var shapeModifiers: Array<ShapeModifiers> = Array<ShapeModifiers>()
+    var shapeModifiers: Array<ShapeModifier> = Array<ShapeModifier>()
 
-    public var processedElements: ArrayList<ProcessedElement> = ArrayList<ProcessedElement>()
-    
-    //TODO: 未实现 CVShapeData
-    public var shapes: Array<CVShapeData> = Array<CVShapeData>()
-
-    var _isFirstFrame: Bool = false
+    //TODO: 自定义数据类型 ProcessedElement。
+    var processedElements: ArrayList<ProcessedElement> = ArrayList<ProcessedElement>()
+    var shapes: Array<CVShapeData> = Array<CVShapeData>()
 
     /**
      * Create a IShapeElement instance based on parameters.
@@ -34,12 +30,12 @@ public open class IShapeElement <: BaseElement {
     /**
      * Add shape to modifiers.
      *
-     * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.
+     * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.	    // data => CVShapeData/SVGShapeData 抽象一个父类 BaseShapeData 出来
      */
-    public func addShapeToModifiers(data: Layer): Unit {
+    // data => CVShapeData/SVGShapeData 抽象一个父类 BaseShapeData 出来
+    public func addShapeToModifiers(data: BaseShapeData): Unit {
         let len: Int64 = this.shapeModifiers.size
         for (i in 0..len) {
-            //TODO: 未实现
             this.shapeModifiers[i].addShape(data)
         }
     }
@@ -53,8 +49,8 @@ public open class IShapeElement <: BaseElement {
     public func isShapeInAnimatedModifiers(data: Layer): Bool {
         var i: Int64 = 0
         let len: Int64 = this.shapeModifiers.size
-        while (i < len) {
-            //TODO: 未实现
+        for (i in 0..len) {
+            //TODO：在 IShapeElement 中定义函数 isAnimatedWithShape，但未找到原函数实现。
             if (this.shapeModifiers[i].isAnimatedWithShape(data)) {
                 return true
             }
@@ -69,19 +65,23 @@ public open class IShapeElement <: BaseElement {
         if (this.shapeModifiers.size == 0) {
             return
         }
-        //TODO: 未实现
         var len: Int64 = this.shapes.size
         for (i in 0..len) {
-            //TODO: 未实现 //this.shapes[i].sh.reset()
+            /*
+             * 数据来源分析：this.shapes  ==  CVShapeElement.shapes  == Array<CVShapeData>
+             * this.shapes[i].sh  ==  ShapePropertyFactory
+             * CVShapeElement.shapes.sh => CVShapeData.sh => ShapePropertyFactory.getShapeProp => KeyframedShapeProperty/ShapeProperty/RectShapeProperty/EllShapeProperty/StarShapeProperty
+             *
+             */
+            this.shapes[i].sh.reset()
         }
 
         len = this.shapeModifiers.size
         var shouldBreakProcess: Bool = false
         for (i in (len - 1)..=0:-1) {
-            //TODO: 未实现
             shouldBreakProcess = this.shapeModifiers[i].processShapes(this._isFirstFrame)
             //解决中继器重置形状以使以下进程被调用两次的情况的变通方法
-            //TODO:找到更好的解决方案
+            // TODO: find a better solution for this
             if (shouldBreakProcess) {
                 break
             }
@@ -94,12 +94,13 @@ public open class IShapeElement <: BaseElement {
      * @param elem - Type of BaseElement, search the processed elements.
      * @return Type of Int64, return the pos of the processed element.
      */
-    public func searchProcessedElement(elem: BaseElement): Int64 {
+    //数据来源分析：elem == ContentModel  <= arr[i] == ContentModel  <=  arr == this.shapesData == Layer.shapes == Array<ContentModel>
+    public func searchProcessedElement(elem: ContentModel): Int64 {
         let elements: ArrayList<ProcessedElement> = this.processedElements
         let len: Int64 = elements.size
         for (i in 0..len) {
-            //TODO: 需要再确认数据类型
-            if (elements[i].elem == elem) {
+            //TODO: 需要再确认数据类型   //if (elements[i].elem == elem)
+            if (refEq(elements[i].elem, elem)) {
                 return elements[i].pos
             }
         }
@@ -112,26 +113,27 @@ public open class IShapeElement <: BaseElement {
      * @param elem - Type of BaseElement, add processed elements.
      * @param elem - Type of Int64, processed element's pos..
      */
-    public func addProcessedElement(elem: BaseElement, pos: Int64): Unit {
+    //数据来源分析：elem == ContentModel  <= arr[i] == ContentModel  <=  arr == this.shapesData == Layer.shapes == Array<ContentModel>
+    public func addProcessedElement(elem: ContentModel, pos: Int64): Unit {
         let elements: ArrayList<ProcessedElement> = this.processedElements
         var i: Int64 = elements.size
         while (i != 0) {
             i -= 1
-            //TODO: 需要再确认数据类型
-            if (elements[i].elem == elem) {
+            //TODO: 需要再确认数据类型  if (elements[i].elem == elem)
+            if (refEq(elements[i].elem, elem)) {
                 elements[i].pos = pos
                 return
             }
         }
-        //TODO: 未实现ProcessedElement
+        //TODO: ProcessedElement 自定义数据类型。
         elements.append(ProcessedElement(elem, pos))
     }
     
     public func prepareFrame(num: Float64) {
-        //TODO: (问题点)仓颉的calss是单继承，调不到 RenderableElement.prepareRenderableFrame  //this.prepareRenderableFrame(num)
-        //TODO: (问题点)仓颉的calss是单继承，调不到 FrameElement.prepareProperties //this.prepareProperties(num, this.isInRange)
+        this.prepareRenderableFrame(num)
+        this.prepareProperties(Int64(num), this.isInRange)
     }
-
+    
     //TODO: 配合 RepeaterModifier 编译用，暂未实现。
     public open func reloadShapes(): Unit {}
 

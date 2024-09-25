@@ -5,8 +5,7 @@
 /**
  * @file This file is a TextAnimatorProperty dependency file.
  */
-
-package lottie4cj.property
+package lottie4cj.utils.text
 
 //TODO: 自定义数据类型。
 class MoreOptions {

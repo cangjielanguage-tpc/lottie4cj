@@ -6,29 +6,28 @@ package lottie4cj.property
 func default_Bool_to_Unit(flag: Bool): Unit {}
 
 public open class ShapeModifier <: DynamicPropertyContainer {
+    //TODO：拆分多继承问题 -- extendPrototype([DynamicPropertyContainer], ShapeModifier)
     
     //TODO: 暂未确定数据类型，自定义数据类型 ShapeDataShapeModifiers。
     var shapes: ArrayList<ShapeDataShapeModifiers> = ArrayList<ShapeDataShapeModifiers>()
     var frameId: Int64 = initialDefaultFrame
     var closed: Bool = false
     var k: Bool = false
-    
-    var elem: IShapeElement
-    
+
     // 只在 CVShapeElement/SVGShapeElement 中调用， elem = CVShapeElement/SVGShapeElement，data = ContentModel
     // data类型：tm/rd/pb/zz/op / rp /ms
-    public init(elem: IShapeElement, data: ContentModel) {
-        super(elem)
-        this.elem = elem
+    public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer) {
+        super(elemGlobalData, elemData)
     }
-    public static func initShapeModifier(elem: IShapeElement, data: ContentModel): ShapeModifier {
-        let sm: ShapeModifier = ShapeModifier(elem, data)
-        // 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
-        sm.initDynamicPropertyContainer(elem)
-        // 直接调用的 DynamicPropertyContainer.initModifierProperties。
-        sm.initModifierProperties(elem, data)
 
-        // 调用父类 DynamicPropertyContainer.dynamicProperties
+    public static func initShapeModifier(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer): ShapeModifier {
+        let sm: ShapeModifier = ShapeModifier(data, elemGlobalData, elemData)
+        //直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
+        sm.initDynamicPropertyContainer(elemGlobalData, elemData)
+        //直接调用的 DynamicPropertyContainer.initModifierProperties。
+        sm.initModifierProperties(data, elemGlobalData, elemData)
+
+        //调用父类 DynamicPropertyContainer.dynamicProperties
         if (sm.dynamicProperties.size > 0) {
             sm.k = true
         } else {
@@ -37,7 +36,7 @@ public open class ShapeModifier <: DynamicPropertyContainer {
         return sm
     }
 
-    public open func initModifierProperties(elem: IShapeElement, data: ContentModel): Unit {}
+    public open func initModifierProperties(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer): Unit {}
     
     public open func addShapeToModifier(shapeData: ShapeDataShapeModifiers): Unit {}
     
@@ -50,8 +49,9 @@ public open class ShapeModifier <: DynamicPropertyContainer {
             var shapeData: ShapeDataShapeModifiers = ShapeDataShapeModifiers(shape: data.sh, data: data, localShapeCollection: ShapeCollection())
             this.shapes.append(shapeData)
             this.addShapeToModifier(shapeData)
-            // 调用父类 DynamicPropertyContainer._isAnimated
+            //TODO：调用父类 DynamicPropertyContainer._isAnimated
             if (this._isAnimated) {
+                //data => CVShapeData/SVGShapeData
                 //TODO: 未实现CVShapeData/SVGShapeData.setAsAnimated()
                 data.setAsAnimated()
             }
@@ -59,12 +59,16 @@ public open class ShapeModifier <: DynamicPropertyContainer {
     }
 
     public open func processKeys(): Unit {
-        if (this.elem.globalData.frameId == this.frameId) {
+        if (this.elemGlobalData.frameId == this.frameId) {
             return
         }
-        this.frameId = this.elem.globalData.frameId
-        // 调用父类 DynamicPropertyContainer.iterateDynamicProperties
+        this.frameId = this.elemGlobalData.frameId
+        //调用父类 DynamicPropertyContainer.iterateDynamicProperties
         this.iterateDynamicProperties()
     }
+
+    //TODO：用于 IShapeElement 编译，isAnimatedWithShape 未找到原函数。
+    public open func isAnimatedWithShape(data: Layer): Bool { return true }
+    public open func processShapes(flag: Bool): Bool { return true }
 
 }

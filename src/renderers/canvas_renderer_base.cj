@@ -7,31 +7,43 @@
  */
 package lottie4cj.renderers
 
+/*
+ * 初始化后需要传入1个函数：
+ * 1. contentModeInAnimationItem() => 间接获取 this.animationItem.contentMode 可变的当时的值。
+ */
+public abstract class CanvasRendererBase <: BaseRenderer {
+    //TODO：拆分多继承问题 -- //extendPrototype([BaseRenderer], CanvasRendererBase)
 
-public open class CanvasRendererBase <: BaseRenderer {
-
-    /**
+    /* 
      * 数据类型推测路线：
      * this.canvasContext = this.renderConfig.context
      * this.canvasContext = this.animationItem.wrapper
      * [AnimationItem] this.wrapper = params.wrapper || params.container ( params <=> loadAnimation(params) )
      *   =>  CanvasRenderingContext2D = this.canvasContext = this.renderConfig.context
      */
-    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //public var canvasContext: CanvasRenderingContext2D = None
+    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
+    //public var canvasContext: CanvasRenderingContext2D = None
 
     public var data: AnimationData = AnimationData()
     public var transformCanvas: TransformCanvas = TransformCanvas()
     public var renderedFrame: Int64 = -1
     public var contextData = CvContextData()
- 
+    
     public var transformMat: Matrix = Matrix()
     public var rendererType: String = "canvas"
     public var destroyed: Bool = false
-    
-    
+
     public var animationItem: AnimationItem
     public var renderConfig: RenderConfig
-    //TODO：是否将 GlobalDataCanvas 和 GlobalData 进行合并
+
+    /*
+     * TODO：解构以下 AnimationItem 和 Renderer。
+     * this.animationItem.wrapper
+     * this.animationItem.container
+     * this.animationItem._isFirstFrame
+     */
+    //TODO：this.animationItem.contentMode 的值是可变的，故不能直接传值，需要通过函数【contentModeInAnimationItem】间接获取当时值。
+    public var contentModeInAnimationItem: () -> String = { => ""}
 
     /**
      * Create a CanvasRendererBase instance based on parameters.
@@ -45,7 +57,6 @@ public open class CanvasRendererBase <: BaseRenderer {
         this.renderConfig = RenderConfig()
         if (let Some(v) <- config) {
             this.renderConfig.clearCanvas = v.clearCanvas
-
             //TODO: 未确认数据类型 context  //context = v.context
             this.renderConfig.progressiveLoad = v.progressiveLoad
             this.renderConfig.preserveAspectRatio = v.preserveAspectRatio
@@ -55,6 +66,7 @@ public open class CanvasRendererBase <: BaseRenderer {
             this.renderConfig.id = v.id
             this.renderConfig.dpr = v.dpr
         }
+        // initRenderConfig 函数中同时处理了 dpr
 
         this.globalData = GlobalData(
             frameNum: -1,
@@ -64,27 +76,20 @@ public open class CanvasRendererBase <: BaseRenderer {
         )
     }
 
-    //TODO：拆分多继承问题 -- extendPrototype([BaseRenderer], CanvasRendererBase)
+    public func createShape(data: Layer): CvShapeElement { 
+        return CvShapeElement(data, globalData)
+    }
 
-    //TODO: 未实现 BaseElement 子类 CvShapeData  //public func createShape(data: Layer): CvShapeData { return CvShapeData(data, this.globalData, this) }
-    public func createShape(data: Layer): BaseElement { 
-        return BaseElement(data, globalData)
+    public func createText(data: Layer): CvTextElement { 
+        return CvTextElement(data, globalData)
     }
-    
-    //TODO: 未实现 BaseElement 子类 CvTextElement  //public func createText(data: Layer): CvTextElement { return CvTextElement(data, this.globalData, this) }
-    public func createText(data: Layer): BaseElement { 
-        return BaseElement(data, globalData)
+
+    public func createImage(data: Layer): CvImageElement { 
+        return CvImageElement(data, globalData)
     }
-    
-    //TODO: 未实现 BaseElement 子类 CvImageElement  //public func createImage(data: Layer): CvImageElement { return CvImageElement(data, this.globalData, this) }
-    public func createImage(data: Layer): BaseElement { 
-        return BaseElement(data, globalData)
-    }
-    
-    
-    //TODO: 未实现 BaseElement 子类 CvSolidElement  //public func createSolid(data: Layer): CvSolidElement { return CvSolidElement(data, this.globalData, this) }
-    public func createSolid(data: Layer): BaseElement { 
-        return BaseElement(data, globalData)
+
+    public func createSolid(data: Layer): CvSolidElement { 
+        return CvSolidElement(data, globalData)
     }
 
     /**
@@ -94,7 +99,6 @@ public open class CanvasRendererBase <: BaseRenderer {
      * @return Type of NullElement.
      */
     public func createNull(data: Layer): NullElement {
-        //TODO: 需要解构互调用  //return NullElement(data, this.globalData, this)
         return NullElement(data, this.globalData)
     }
 
@@ -108,15 +112,14 @@ public open class CanvasRendererBase <: BaseRenderer {
             return
         }
         if (!this.renderConfig.clearCanvas) {//canvasContext 是画布组件中的 CanvasRenderingContext2D
-            //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-            //this.canvasContext.transform(props[0], props[1], props[4], props[5], props[12], props[13])
+            //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.canvasContext.transform(props[0], props[1], props[4], props[5], props[12], props[13])
             return
         }
         //将画布变换矩阵重置为新的变换
         this.transformMat.cloneFromProps(props)
         //从存储的转换堆栈中获取最后一个转换值
-        var currentTransform = this.contextData.getTransform()
-        var cProps = currentTransform.props
+        let currentTransform: Matrix = this.contextData.getTransform()
+        let cProps: Array<Float64> = currentTransform.props
         //在新变换之后应用最后一个变换值，以尊重变换的顺序
         this.transformMat.transform(
             cProps[0], cProps[1], cProps[2], cProps[3], cProps[4], cProps[5], cProps[6], cProps[7], cProps[8],
@@ -126,8 +129,7 @@ public open class CanvasRendererBase <: BaseRenderer {
         currentTransform.cloneFromProps(this.transformMat.props)
         var trProps = currentTransform.props
         //在画布上应用新的变换
-        //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-        //this.canvasContext.setTransform(trProps[0], trProps[1], trProps[4], trProps[5], trProps[12], trProps[13])
+        //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.canvasContext.setTransform(trProps[0], trProps[1], trProps[4], trProps[5], trProps[12], trProps[13])
     }
 
     /**
@@ -136,14 +138,12 @@ public open class CanvasRendererBase <: BaseRenderer {
      * @param op - Type of Int64.
      */
     public func ctxOpacity(op: Int64): Unit {
-        var currentOpacity = this.contextData.getOpacity()
-        if (!this.renderConfig.clearCanvas) {
+        var currentOpacity: Int64 = this.contextData.getOpacity()
+        if (!this.renderConfig.clearCanvas) { //canvasContext 是画布组件中的 CanvasRenderingContext2D
             if (op < 0) {
-                //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-                //this.canvasContext.globalAlpha *= 0
+                //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.canvasContext.globalAlpha = 0
             } else {
-                //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-                //this.canvasContext.globalAlpha *= op
+                //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.canvasContext.globalAlpha *= op
             }
 
             this.globalData.currentGlobalAlpha = currentOpacity
@@ -169,8 +169,8 @@ public open class CanvasRendererBase <: BaseRenderer {
      */
     public func reset(): Unit {
         if (!this.renderConfig.clearCanvas) {
-            //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-            //this.canvasContext.restore()   //canvasContext 是画布组件中的 CanvasRenderingContext2D
+            //canvasContext 是画布组件中的 CanvasRenderingContext2D
+            //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.canvasContext.restore()
             return
         }
         this.contextData.reset()
@@ -206,21 +206,16 @@ public open class CanvasRendererBase <: BaseRenderer {
             //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.canvasContext.restore()
             this.globalData.blendMode = "source-over"
         }
-        //TODO: this.contextData（CvContextData） 为完全开发
-        /*
-        var popped = this.contextData.pop()
-        var transform = popped.transform
-        var opacity = popped.opacity
-        //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-        this.canvasContext.setTransform(transform[0], transform[1], transform[4], transform[5], transform[12], transform[13])
-        //TODO： 暂时无法获得 opacity
+
+        let popped: (Array<Float64>,Int64) = this.contextData.pop()
+        let transform: Array<Float64> = popped[0]
+        let opacity: Int64 = popped[1]
+        //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.canvasContext.setTransform(transform[0], transform[1], transform[4], transform[5], transform[12], transform[13])
+
         if (this.globalData.currentGlobalAlpha != opacity) {
-            //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-            this.canvasContext.globalAlpha = opacity
-            //TODO： 暂时无法获得 opacity
+            //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.canvasContext.globalAlpha = opacity
             this.globalData.currentGlobalAlpha = opacity
         }
-        */
     }
 
     /**
@@ -229,26 +224,28 @@ public open class CanvasRendererBase <: BaseRenderer {
      * @param animData - Type of AnimationData, an instance of the json data that encapsulates the animation.
      */
     public func configAnimation(animData: AnimationData): Unit {
-        //TODO：未开发 animationItem.wrapper
         /*
-        if (this.animationItem.wrapper) {
-            //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-            this.canvasContext = this.animationItem.wrapper
-        } else {  //canvasContext 是画布组件中的 CanvasRenderingContext2D
-            //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-            this.canvasContext = this.renderConfig.context
-        }
-        */
+         //TODO：未开发 animationItem.wrapper
+         if (this.animationItem.wrapper) {
+           //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
+           this.canvasContext = this.animationItem.wrapper
+         } else {  //canvasContext 是画布组件中的 CanvasRenderingContext2D
+           //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
+           this.canvasContext = this.renderConfig.context
+         }
+         */
 
-        if (this.animationItem.contentMode == "Fill") {
+        //TODO：this.animationItem.contentMode 的值是可变的，故不能直接传值，需要通过函数【contentModeInAnimationItem】间接获取当时值。
+        let contentMode: String = contentModeInAnimationItem()
+        if (contentMode == "Fill") {
             this.renderConfig.preserveAspectRatio = "none"
-        } else if (this.animationItem.contentMode == "Top") {
+        } else if (contentMode == "Top") {
             this.renderConfig.preserveAspectRatio = "xMinYMin meet"
-        } else if (this.animationItem.contentMode == "Cover") {
+        } else if (contentMode == "Cover") {
             this.renderConfig.preserveAspectRatio = "xMidYMid slice"
-        } else if (this.animationItem.contentMode == "Buttom") {
+        } else if (contentMode == "Buttom") {
             this.renderConfig.preserveAspectRatio = "xMaxYMax meet"
-        } else if (this.animationItem.contentMode == "Contain") {
+        } else if (contentMode == "Contain") {
             this.renderConfig.preserveAspectRatio = "xMidYMid meet"
         }
 
@@ -264,12 +261,13 @@ public open class CanvasRendererBase <: BaseRenderer {
         )
         this.setupGlobalData(animData, CreateTag(""))
         //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.globalData.canvasContext = this.canvasContext
-        //TODO：未完全实现 CanvasRendererBase  //this.globalData.renderer = this
+        //TODO：是都需要解构 CanvasRendererBase 和 GlobalData？？？  //this.globalData.renderer = this
         this.globalData.isDashed = false
         this.globalData.progressiveLoad = this.renderConfig.progressiveLoad
         this.globalData.transformCanvas = this.transformCanvas
 
-        //TODO: 未实现  //this.elements = Array<>(animData.layers.size, repeat: element)
+        let emptyBaseElement: BaseElement = BaseElement(Layer(), globalData)
+        this.elements = Array<BaseElement>(animData.layers.size, repeat: emptyBaseElement)
 
         this.updateContainerSize(0, 0)
     }
@@ -320,9 +318,12 @@ public open class CanvasRendererBase <: BaseRenderer {
             elementWidth = width
             elementHeight = height
         } else {
-            //TODO：未实现this.canvasContext。CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-            //if (this.canvasContext) {
-                //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //elementHeight = this.canvasContext.height  //elementWidth = this.canvasContext.width
+            /*
+            //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
+            if (this.canvasContext) {
+                TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
+                elementHeight = this.canvasContext.height
+                elementWidth = this.canvasContext.width
 
                 if (elementHeight == 0) {
                     elementHeight = 360
@@ -330,14 +331,15 @@ public open class CanvasRendererBase <: BaseRenderer {
                 if (elementWidth == 0) {
                     elementWidth = 540
                 }
-            //}
+            }
+            */
         }
 
         var elementRel: Int64 = 0
         var animationRel: Int64 = 0
 
         if (this.renderConfig.preserveAspectRatio.contains("meet") || this.renderConfig.preserveAspectRatio.contains("slice")) {
-            var par: Array<String> = this.renderConfig.preserveAspectRatio.split(" ")
+            let par: Array<String> = this.renderConfig.preserveAspectRatio.split(" ")
             var fillType: String = "meet"
             if (par.size >= 2){
                 fillType = par[1]
@@ -348,8 +350,8 @@ public open class CanvasRendererBase <: BaseRenderer {
                 pos = par[0]
             }
 
-            var xPos: String = pos[0..4]
-            var yPos: String = pos.removePrefix(xPos)
+            let xPos: String = pos[0..4]
+            let yPos: String = pos.removePrefix(xPos)
             elementRel = elementWidth / elementHeight
             animationRel = this.transformCanvas.w / this.transformCanvas.h
             if ((animationRel > elementRel && fillType == "meet") || (animationRel < elementRel && fillType == "slice")) {
@@ -388,8 +390,8 @@ public open class CanvasRendererBase <: BaseRenderer {
         this.transformCanvas.props = [Float64(this.transformCanvas.sx), 0.0, 0.0, 0.0, 0.0, Float64(this.transformCanvas.sy), 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, Float64(this.transformCanvas.tx), Float64(this.transformCanvas.ty), 0.0, 1.0]
 
         this.ctxTransform(this.transformCanvas.props)
-        //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
         /*
+        TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
         this.canvasContext.beginPath()
         this.canvasContext.rect(0, 0, this.transformCanvas.w, this.transformCanvas.h)
         this.canvasContext.closePath()
@@ -403,8 +405,8 @@ public open class CanvasRendererBase <: BaseRenderer {
      * Destroy the CanvasRendererBase.
      */
     public func destroy(): Unit {
-        //TODO： animationItem 未开发
         /*
+        //TODO： animationItem 未开发
         if (this.renderConfig.clearCanvas && this.animationItem.wrapper && this.transformCanvas) {
             //TODO： animationItem 未开发
             this.animationItem.wrapper.clearRect(0, 0, this.transformCanvas.w, this.transformCanvas.h)
@@ -418,9 +420,11 @@ public open class CanvasRendererBase <: BaseRenderer {
         }
 
         this.elements = Array<BaseElement>()
+        /*
         //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-        //this.globalData.canvasContext = Option<CanvasRenderingContext2D>.None
-        //this.animationItem.container = Option<CanvasRenderingContext2D>.None
+        this.globalData.canvasContext = Option<CanvasRenderingContext2D>.None
+        this.animationItem.container = Option<CanvasRenderingContext2D>.None
+        */
         this.destroyed = true
     }
 
@@ -460,7 +464,6 @@ public open class CanvasRendererBase <: BaseRenderer {
             let len: Int64 = this.layers.size
             for (i in 0..len) {
                 if (this.completeLayers || this.elements.size > i) {
-                    //TODO: 函数参数不一致 //this.elements[i].changeColor(color, undefined)
                     this.elements[i].changeColor(color, 0)
                 }
             }
@@ -482,7 +485,6 @@ public open class CanvasRendererBase <: BaseRenderer {
         let len: Int64 = this.layers.size
         for (i in 0..len) {
             if (this.completeLayers || this.elements.size > i) {
-                //TODO: 函数参数不一致 //this.elements[i].changeColor(color, undefined)
                 this.elements[i].changeColor(color, 0)
             }
         }
@@ -516,10 +518,8 @@ public open class CanvasRendererBase <: BaseRenderer {
         }
         if (this.globalData._mdf) {
             if (this.renderConfig.clearCanvas) {
-                //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-                //this.canvasContext.clearRect(0, 0, this.transformCanvas.w, this.transformCanvas.h)
+                //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.canvasContext.clearRect(0, 0, this.transformCanvas.w, this.transformCanvas.h)
             } else {
-                //TODO: 函数参数不一致 //this.save()
                 this.save(false)
             }
             for (i in (len - 1)..=0:-1) {
@@ -528,7 +528,6 @@ public open class CanvasRendererBase <: BaseRenderer {
                 }
             }
             if (!this.renderConfig.clearCanvas) {
-                //this.restore()
                 this.restore(false)
             }
         }
@@ -540,12 +539,12 @@ public open class CanvasRendererBase <: BaseRenderer {
      * @param pos - Type of Int64.
      */
     public func buildItem(pos: Int64): Unit {
-        var elements = this.elements
+        let elements: Array<BaseElement> = this.elements
         if (elements.size > pos || this.layers[pos].ty == 99) {
             return
         }
-        //TODO: 函数参数不一致  //var element = this.createItem(this.layers[pos], this, this.globalData)
-        var element = this.createItem(this.layers[pos])
+        //TODO: 函数参数不一致，有 2 个参数暂时未传递。
+        let element: BaseElement = this.createItem(this.layers[pos])
         elements[pos] = element
         element.initExpressions()
     }
@@ -555,8 +554,10 @@ public open class CanvasRendererBase <: BaseRenderer {
      */
     public func checkPendingElements(): Unit {
         while (this.pendingElements.size != 0) {
-            var element = this.pendingElements.remove(this.pendingElements.size - 1)
-            //TODO: 未实现 element.checkParenting  //element.checkParenting()
+            let element: BaseElement = this.pendingElements.remove(this.pendingElements.size - 1)
+
+            //TODO[lp]: - HierarchyElement.checkParenting => element 是 HierarchyElement ？？？
+            element.checkParenting()
         }
     }
 
@@ -567,4 +568,5 @@ public open class CanvasRendererBase <: BaseRenderer {
     public func show(): Unit {
         //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.animationItem.container.style.display = "block"
     }
+
 }

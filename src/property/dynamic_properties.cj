@@ -7,20 +7,29 @@
  */
 package lottie4cj.property
 
-internal import lottie4cj.elements.*
-
+internal import lottie4cj.global_data.*
+internal import lottie4cj.model.*
 
 //TODO： DynamicPropertyContainer 是各个 property 的父类？？？
-public open class DynamicPropertyContainer {
+public open class DynamicPropertyContainer <: ElementData2 {
 
-    public var container: BaseElement
+    //TODO：FrameElement 中编译用。
+    public var propType: String = ""
+
+    //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。
+    public var elemGlobalData: GlobalData = GlobalData()
+    public var elemData: Layer = Layer()
+
     //TODO: 未确认 dynamicProperties 的数据类型，暂定为 DynamicPropertyContainer
     public var dynamicProperties: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>()
     public var _mdf: Bool = false
     public var _isAnimated: Bool = false
 
-    public init(container: BaseElement) {
-        this.container = container
+    public init() {}
+
+    public init(elemGlobalData: GlobalData, elemData: Layer) {
+        this.elemGlobalData = elemGlobalData
+        this.elemData = elemData
     }
 
     public open func getValue(): Unit {}
@@ -49,8 +58,9 @@ public open class DynamicPropertyContainer {
     }
 
     /* container  =>  ITextElement */
-    public func initDynamicPropertyContainer(container: BaseElement): Unit {
-        this.container = container
+    public func initDynamicPropertyContainer(elemGlobalData: GlobalData, elemData: Layer): Unit {
+        this.elemGlobalData = elemGlobalData
+        this.elemData = elemData
         this.dynamicProperties.clear()
         this._mdf = false
         this._isAnimated = false
