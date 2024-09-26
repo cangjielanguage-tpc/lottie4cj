@@ -212,6 +212,7 @@ public open class SvgBaseElement <: Equatable<SvgBaseElement> {
         this.matteElement.setAttribute("mask", "url(" + getLocationHref() + "#" + id + ")")
     }
     
+    public func show() {}
 
     public operator func ==(that: SvgBaseElement): Bool { return true }
 

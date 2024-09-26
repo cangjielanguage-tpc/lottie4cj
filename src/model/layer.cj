@@ -54,7 +54,7 @@ public class Layer <: ToString {
     public let op: Float64                           // 19 = outFrame
     public let tm: ContentModelDK                    // 20 = timeRemapping
     public let cl: String                            // 21 = cl
-    public let hd: Bool                              // 22 = hidden
+    public var hd: Bool                              // 22 = hidden
     public let ao: Int64                             // 23 = autoOrient
     public let bm: Int64                             // 24 = blendMode
 
