@@ -10,7 +10,6 @@ package lottie4cj.renderers
 internal import lottie4cj.model.*
 internal import lottie4cj.elements.*
 internal import lottie4cj.elements.helpers.*
-internal import lottie4cj.animation.*
 internal import lottie4cj.global_data.*
 internal import lottie4cj.bezier.*
 internal import lottie4cj.utils.*
@@ -19,6 +18,22 @@ internal import lottie4cj.utils.helpers.*
 internal import std.collection.*
 
 public open class BaseRenderer {
+
+    /*
+     * TODO：解构以下 AnimationItem 和 Renderer。
+     * this.animationItem.wrapper
+     * this.animationItem.container
+     * this.animationItem._isFirstFrame
+     * this.animationItem.contentMode
+     */
+    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //public var wrapperInAnimationItem: CanvasRenderingContext2D
+    //TODO: 字符串不能直接传递，否则 animationItem.contentMode 中修改，此处不会修改。
+    public var containerInAnimationItem: CreateNS = CreateNS("")
+    public var _isFirstFrameInAnimationItem: () -> Float64 = { => 0.0 }
+    //TODO：this.animationItem.contentMode 的值是可变的，故不能直接传值，需要通过函数【contentModeInAnimationItem】间接获取当时值。
+    public var contentModeInAnimationItem: () -> String = { => "" }
+
+    public var rendererType: String = ""
 
     public var layers: Array<Layer> = Array<Layer>()
     public var completeLayers: Bool = true
@@ -30,9 +45,19 @@ public open class BaseRenderer {
     //TODO: 数据类型未确认，暂定是 BaseElement
     public var pendingElements: ArrayList<BaseElement> = ArrayList<BaseElement>()
 
-    //TODO: 在子类 CanvasRendererBase 中具体实现
+    //在子类 CanvasRendererBase 中具体实现
     public open func buildItem(pos: Int64): Unit {}
     public open func checkPendingElements(): Unit {}
+    public open func configAnimation(animData: AnimationData): Unit {}
+    public open func updateContentMode(contentMode: String): Unit {}
+    public open func updateContainerSize(width: Int64, height: Int64): Unit {}
+    public open func changeColor(color: Array<Int64>, endColor: Array<Int64>, layer: Int64, index: Int64): Unit {}
+    public open func changeColor(color: Array<Int64>, endColor: Int64, layer: Int64, index: Int64): Unit {}
+    public open func changeColor(color: Array<Int64>, layer: Int64, index: Int64): Unit {}
+    public open func renderFrame(num: Float64, forceRender: Bool): Unit {}
+    public open func destroy(): Unit {}
+    public open func hide(): Unit {}
+    public open func show(): Unit {}
 
     public func checkLayers(num: Float64): Unit {
         var len: Int64 = this.layers.size
@@ -48,7 +73,6 @@ public open class BaseRenderer {
                     this.buildItem(i)
                 }
             }
-
             if (this.elements.size <= i) {
                 this.completeLayers = false
             }

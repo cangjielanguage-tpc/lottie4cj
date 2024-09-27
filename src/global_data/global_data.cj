@@ -112,7 +112,7 @@ public class RenderConfig {
 public class GlobalData {
 
     //TODO: 未实现 ProjectInterface  //public var projectInterface: ProjectInterface = ProjectInterface()
-    public var frameNum: Int64 = -1
+    public var frameNum: Float64 = -1.0
     public var _mdf: Bool = false
     public var renderConfig: RenderConfig= RenderConfig()
     public var currentGlobalAlpha: Int64 = -1
@@ -139,7 +139,7 @@ public class GlobalData {
 
     public init(){}
     
-    public init(frameNum!: Int64, _mdf!: Bool, renderConfig!: RenderConfig, currentGlobalAlpha!: Int64) {
+    public init(frameNum!: Float64, _mdf!: Bool, renderConfig!: RenderConfig, currentGlobalAlpha!: Int64) {
         this.frameNum = frameNum
         this._mdf = _mdf
         this.renderConfig = renderConfig

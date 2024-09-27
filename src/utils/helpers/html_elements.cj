@@ -14,8 +14,12 @@ package lottie4cj.utils.helpers
  */
 public open class CreateTag {
     public var types: String = ""
+    public var innerText: String = ""
+
+    //TODO: style 和 styles 在 arkts 中是同一个成员变量。但是因为数据类型同时具备 Object 和 HashMap<String, String>情况，拆成两个？？？
+    //TODO：style 和 styles 需要进行合并处理吗？？？后续赋值/使用等会受影响？？？
+    public var styles: HashMap<String, String> = HashMap<String, String>()
     public var style: TagStyle = TagStyle()
-    var innerText: String = ""
 
     /**
      * Create a CreateTag instance based on the parameter.
