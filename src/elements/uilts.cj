@@ -32,23 +32,3 @@ func getBlendMode(mode: Int64): String {
     }
 }
 
-public class Data {
-
-    public var masksProperties: ?ArrayList<Mask> = None
-
-    public var shapes: ArrayList<Object> = ArrayList<Object>()
-
-    public var tt: Int64 = 0
-
-    public  var bm: Int64 = 0
-
-    public var td: Int64 = 0
-
-    public var hd: Bool = false
-
-    public  var ty: Int64 = 0
-
-    public var layers: ArrayList<Object> = ArrayList<Object>()
-}
-
-

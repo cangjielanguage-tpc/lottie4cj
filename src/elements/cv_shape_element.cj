@@ -42,7 +42,7 @@ public class CvShapeElement <: IShapeElement {
         //this.searchShapes(this.shapesData, this.itemsData, this.prevViewData, true, ArrayList<Object>())
     }
 
-    public func createStyleElement(data: Data, transforms: ArrayList<Object>) {
+    public func createStyleElement(data: Layer, transforms: ArrayList<Object>) {
         //TODO
     }
 
@@ -50,7 +50,7 @@ public class CvShapeElement <: IShapeElement {
         //TODO
     }
 
-    public func createTransformElement(data: Data) {
+    public func createTransformElement(data: Layer) {
         //TODO
     }
 

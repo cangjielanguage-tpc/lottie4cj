@@ -37,7 +37,7 @@ public class LayerExpressionInterface {
         return toWorldMat
     }
 
-    func toWorldVec(arr: Array<Float64>, time: Option<Float64>): (Float64, Float64, Float64) {
+    func toWorldVec(arr: Array<Float64>, time: Option<Float64>): Array<Float64> {
         let toWorldMat: Matrix = this.getMatrix(time)
         toWorldMat.props[12] = 0.0
         toWorldMat.props[13] = 0.0
@@ -45,12 +45,12 @@ public class LayerExpressionInterface {
         return this.applyPoint(toWorldMat, arr)
     }
 
-    func toWorld(arr: Array<Float64>, time: Option<Float64>): (Float64, Float64, Float64) {
+    func toWorld(arr: Array<Float64>, time: Option<Float64>): Array<Float64> {
         let toWorldMat: Matrix = this.getMatrix(time)
         return this.applyPoint(toWorldMat, arr)
     }
 
-    func fromWorldVec(arr: Array<Float64>, time: Option<Float64>): (Float64, Float64, Float64) {
+    func fromWorldVec(arr: Array<Float64>, time: Option<Float64>): Array<Float64> {
         let toWorldMat: Matrix = this.getMatrix(time)
         toWorldMat.props[12] = 0.0
         toWorldMat.props[13] = 0.0
@@ -58,12 +58,12 @@ public class LayerExpressionInterface {
         return this.invertPoint(toWorldMat, arr)
     }
 
-    func fromWorld(arr: Array<Float64>, time: Option<Float64>): (Float64, Float64, Float64) {
+    func fromWorld(arr: Array<Float64>, time: Option<Float64>): Array<Float64> {
         let toWorldMat: Matrix = this.getMatrix(time)
         return this.invertPoint(toWorldMat, arr)
     }
 
-    func applyPoint(matrix: Matrix, arr: Array<Float64>): (Float64, Float64, Float64) {
+    func applyPoint(matrix: Matrix, arr: Array<Float64>): Array<Float64> {
         //TODO：未实现 elem.hierarchy
         /*
         if (this._elem.hierarchy && this._elem.hierarchy.length) {
@@ -80,7 +80,7 @@ public class LayerExpressionInterface {
         return matrix.applyToPointArray(arr[0], arr[1], param2)
     }
 
-    func invertPoint(matrix: Matrix, arr: Array<Float64>): (Float64, Float64, Float64) {
+    func invertPoint(matrix: Matrix, arr: Array<Float64>): Array<Float64> {
         //TODO：未实现 elem.hierarchy
         /*
         if (this._elem.hierarchy && this._elem.hierarchy.length) {
@@ -93,7 +93,7 @@ public class LayerExpressionInterface {
         return matrix.inversePoint(arr)
     }
 
-    func fromComp(arr: Array<Float64>): (Float64, Float64, Float64) {
+    func fromComp(arr: Array<Float64>): Array<Float64> {
         let toWorldMat: Matrix = Matrix()
         toWorldMat.reset()
         //TODO：未实现 this._elem.finalTransform  //this._elem.finalTransform.mProp.applyToMatrix(toWorldMat)
@@ -162,14 +162,14 @@ public class ThisLayerFunction {
     //TODO: 未实现 anchorPoint/anchor_point
 
     public var getMatrix: (Option<Float64>) -> Matrix
-    public var invertPoint: (Matrix, Array<Float64>) -> (Float64, Float64, Float64)
-    public var applyPoint: (Matrix, Array<Float64>) -> (Float64, Float64, Float64)
-    public var toWorld: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
-    public var toWorldVec: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
-    public var fromWorld: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
-    public var fromWorldVec: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
-    public var toComp: (Array<Float64>, Option<Float64>) -> (Float64, Float64, Float64)
-    public var fromComp: (Array<Float64>) -> (Float64, Float64, Float64)
+    public var invertPoint: (Matrix, Array<Float64>) -> Array<Float64>
+    public var applyPoint: (Matrix, Array<Float64>) -> Array<Float64>
+    public var toWorld: (Array<Float64>, Option<Float64>) -> Array<Float64>
+    public var toWorldVec: (Array<Float64>, Option<Float64>) -> Array<Float64>
+    public var fromWorld: (Array<Float64>, Option<Float64>) -> Array<Float64>
+    public var fromWorldVec: (Array<Float64>, Option<Float64>) -> Array<Float64>
+    public var toComp: (Array<Float64>, Option<Float64>) -> Array<Float64>
+    public var fromComp: (Array<Float64>) -> Array<Float64>
     public var sampleImage: () -> Array<Float64>
 
     //TODO: element各个子类型中，sourceRectAtTime 函数返回值类型是不一样的 //var sourceRectAtTime: () -> (可变类型) = elem.sourceRectAtTime

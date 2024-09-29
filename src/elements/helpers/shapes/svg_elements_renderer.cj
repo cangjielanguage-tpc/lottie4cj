@@ -73,7 +73,7 @@ public class SVGElementsRenderer {
         var iterations: Int64
         var k: Int64
         for (l in 0..lLen) {
-            redraw = itemData.sh._mdf || isFirstFrame
+            redraw = itemData.sh.getOrThrow()._mdf || isFirstFrame
             if (itemData.styles[l].lvl < lvl) {
                 mat = _matrixHelper.reset()
                 iterations = lvl - itemData.styles[l].lvl
@@ -96,7 +96,7 @@ public class SVGElementsRenderer {
             } else {
                 mat = _identityMatrix
             }
-            var paths = itemData.sh.paths
+            var paths = itemData.sh.getOrThrow().paths
             var jLen = paths._length
             if (redraw) {
                 pathStringTransformed = ""
@@ -252,151 +252,14 @@ public class SVGElementsRenderer {
         if (itemData.o._mdf || isFirstFrame) {
             styleElem.pElem.setAttribute("stroke-opacity", itemData.o.v)
         }
-        if (itemData.w._mdf || isFirstFrame) {
-            styleElem.pElem.setAttribute("stroke-width", itemData.w.v)
-            if (styleElem.msElem.isSome()) {
-                styleElem.msElem.getOrThrow().setAttribute("stroke-width", itemData.w.v)
+        if (itemData.w.getOrThrow()._mdf || isFirstFrame) {
+            styleElem.pElem.setAttribute("stroke-width", "${itemData.w.getOrThrow().v}")
+            if(let Some (vs) <- styleElem.msElem){
+                vs.setAttribute("stroke-width", "${itemData.w.getOrThrow().v}") 
             }
         }
     }
 }
 
-public class Datas {
-    public var ty: String = ""
-    public var ml: String = ""
-    public var t: Int64 = 0
-    public var lj: Int64 = 0
-    public var lc: Int64 = 0
-    public var hd: Bool = false
-    public var _render: Bool = false
-    public var hasMask: Bool = false
-    public var g: Datasg = Datasg()
-    public var ln: String = ""
-    public var cl: String = ""
-    public var bm: Int64 = 0
-    public var r: Int64 = 0
-    public var shapes: Array<DatasShapes> = Array<DatasShapes>()
-}
-public class DatasShapes {
-    public var it: Array<DatasShapesIt> = Array<DatasShapesIt>()
-}
-public class DatasShapesIt {
-    public var s: ?DatasShapesIts = DatasShapesIts()
-}
-public class DatasShapesIts {
-    public var k: ArrayList<Float64> = ArrayList<Float64>()
-}
-
-public class Datasg {
-    public var p: Int64 = 0
-}
-
-public class ElementData {
-   public var transform: SvgTransform = SvgTransform()
-   public var transformers: Array<SvgTransforms> = Array<SvgTransforms>()
-   public var style: SvgStyleElem = SvgStyleElem()
-   public var c: ElementDatac = ElementDatac()
-   public var o: ElementDatao = ElementDatao()
-   public var d: Option<ElementDatad> = ElementDatad()
-   public var w: ElementDataw = ElementDataw()
-   public var gf: CreateNS = CreateNS("")
-   public var of: CreateNS = CreateNS("")
-   public var g: ElementDatag = ElementDatag()
-   public var s: ElementDatas = ElementDatas()
-   public var e: ElementDatae = ElementDatae()
-   public var cst: Array<CreateNS> = Array<CreateNS>()
-   public var ost: Array<CreateNS> = Array<CreateNS>()
-   public var h: ElementDatah = ElementDatah()
-   public var a: ElementDataa = ElementDataa()
-   public var styles: Array<ElementDataStyle> = Array<ElementDataStyle>()
-   public var lvl: Int64 = 0
-   public var sh: ElementDataSh = ElementDataSh()
-   public var caches: Array<String> = Array<String>()
-}
-public class SvgTransforms {
-    public var container: CreateNS = CreateNS("")
-    public var op: SvgOp = SvgOp()
-    public var mProps: SvgmProps = SvgmProps()
-}
-public class ElementDataShPaths {
-    public var _length: Int64 = 0
-    public var shapes: Array<Option<ShapeData>> = Array<Option<ShapeData>>()
-}
-public class ElementDataSh {
-    public var _mdf: Bool = false
-    public var v: Float64 = 0.0
-    public var paths: ElementDataShPaths = ElementDataShPaths()
-}
-public class ElementDataStyle {
-    public var _mdf: Bool = false
-    public var v: Float64 = 0.0
-    public var lvl: Int64 = 0
-    public var d: String = ""
-}
-public class ElementDatah {
-    public var _mdf: Bool = false
-    public var v: Float64 = 0.0
-}
-public class ElementDataa {
-    public var _mdf: Bool = false
-    public var v: Float64 = 0.0
-}
-public class ElementDatas {
-    public var _mdf: Bool = false
-    public var v: Array<Float64> = Array<Float64>()
-}
-public class ElementDatae {
-    public var _mdf: Bool = false
-    public var v: Array<Float64> = Array<Float64>()
-}
-public class ElementDatag {
-    public var _hasOpacity: Int64 = 0
-    public var _collapsable: Bool = false
-    public var _cmdf: Bool = false
-    public var _omdf: Bool = false
-    public var c: Array<Float64> = Array<Float64>()
-    public var o: Array<Float64> = Array<Float64>()
-}
-public class ElementDatad {
-    public var _mdf: Bool = false
-    public var dashStr: String = ""
-    public var dashoffset: Array<String> = Array<String>()
-}
-
-public class ElementDatac {
-    public var _mdf: Bool = false
-    public var v: Array<Float64> = Array<Float64>()
-}
-
-public class ElementDatao {
-    public var _mdf: Bool = false
-    public var v: String = ""
-}
-
-public class ElementDataw {
-    public var _mdf: Bool = false
-    public var v: String = ""
-}
-
-public class SvgTransform {
-    public var container: CreateNS = CreateNS("")
-    public var op: SvgOp = SvgOp()
-    public var mProps: SvgmProps = SvgmProps()
-}
-
-public class SvgOp {
-    public var _mdf: Bool = false
-    public var v: String = ""
-}
-
-public class SvgmProps {
-    public var _mdf: Bool = false
-    public var v: Matrix = Matrix()
-}
-
-public class SvgStyleElem {
-    public var pElem: CreateNS = CreateNS("")
-    public var msElem: Option<CreateNS> = None
-}
 
 

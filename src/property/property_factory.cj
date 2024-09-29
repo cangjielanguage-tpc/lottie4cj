@@ -112,11 +112,11 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     public var isNull: Bool = true
     
     //TODO: 未确认 this.sh 数据类型，为了编译暂定为Bool。
-    var sh: Bool = false
+    public var sh: Bool = false
 
     //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInComp】间接获取当时值。
     public var renderedFrameInComp: () -> Float64 = { => 0.0}
-
+    
     //TODO: container 数据类型不固定，是否提取出来一个接口？？？
     //TODO: 已知 container 的数据类型：ShapeModifier的子类/ShapePropertyFactory  --都继承于 DynamicPropertyContainer。
     public init(data: T, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, types!: Int64 = -1) {

@@ -56,6 +56,13 @@ public class TransformProperty <: DynamicPropertyContainer {
 
     public var data: AnimatableTransform
 
+    
+    //TODO: 未在 AnimatableTransform 中找到 rx 。设置成空的。
+    public var rx: PropertyFactory<Array<Keyframe<Float64>>, Float64>
+    public var ry: PropertyFactory<Array<Keyframe<Float64>>, Float64>
+    public var rz: PropertyFactory<Array<Keyframe<Float64>>, Float64>
+    public var or: PropertyFactory<Array<Keyframe<Float64>>, Float64>
+
     /*
      * 数据来源分析：
      *  elem      => TransformElement/CVShapeElement/SVGShapeElement/elem
@@ -74,6 +81,12 @@ public class TransformProperty <: DynamicPropertyContainer {
         this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData)
         this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData)
         this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData)
+        
+        this.rx = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData)
+        this.ry = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData)
+        this.rz = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData)
+        this.or = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData)
+
 
         this.r = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData)
 

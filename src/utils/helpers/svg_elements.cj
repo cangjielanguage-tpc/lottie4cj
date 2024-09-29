@@ -13,7 +13,7 @@ let svgNS: String = "http://www.w3.org/2000/svg"
 
 func addEventListener(types: String, callback: () -> Unit, flag: Bool): Unit { }
 
-public class CreateNS <: ToString & Equatable<CreateNS> {
+public class CreateNS <: CreateTag & ToString & Equatable<CreateNS> {
 
     public var crossOrigin: String = ""
     public var src: String = ""
@@ -29,7 +29,8 @@ public class CreateNS <: ToString & Equatable<CreateNS> {
     public var styles: HashMap<String, String> = HashMap<String, String>()
     
     public let isNull: Bool
-
+    
+    //public var style: TagStyle = TagStyle()
     /**
      * Create a CreateNS instance based on the parameter.
      *
@@ -46,6 +47,7 @@ public class CreateNS <: ToString & Equatable<CreateNS> {
      * @param svg - Type of String.
      */
     public init(types: String, svg: String) {
+        super(types)
         this.label = types
         
         if (types == "") {

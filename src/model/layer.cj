@@ -31,6 +31,7 @@ public class Layer <: ToString {
     //从 animationData.assets 中找到符合条件的 Asset，条件：this.Layer.refId == Asset.id。
     //从找到符合条件的 Asset 中拿到 Asset.layers，赋值到成员变量 layers 中。
     public var layers: Array<Layer> = Array<Layer>()
+    public var ln: String = ""
 
     public let nm: String                            // 0 = layerName
     public let ind: Int64                            // 1 = layerId

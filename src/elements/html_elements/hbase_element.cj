@@ -11,40 +11,34 @@ internal import std.collection.*
 internal import lottie4cj.model.*
 internal import lottie4cj.global_data.*
 internal import lottie4cj.utils.helpers.*
-internal import lottie4cj.*
+internal import lottie4cj.MaskElement
 internal import lottie4cj.elements.helpers.shapes.*
 internal import lottie4cj.bezier.*
+internal import lottie4cj.utils.*
 //TODO: 未完全实现
-public open class HBaseElement <: Equatable<HBaseElement> {
+public open class HBaseElement <: BaseElement & Equatable<HBaseElement> {
 
-    public var data: Datas
-    public var globalData: GlobalData
-    public var baseElement: CreateTag = CreateTag("")
     public var transformedElement: ?CreateTag = None
     public var svgElement: CreateNS = CreateNS("")
-    public var layerElement: CreateNS = CreateNS("")
-    public var maskedElement: CreateNS = CreateNS("")
-    public var maskManager: ?MaskElement = None
-    public var _isFirstFrame: Bool = false
-    public var hidden: Bool = false
-    public var finalTransform: FinalTransform = FinalTransform()
 
-    public init(data: Datas, globalData: GlobalData) {
-        this.globalData = globalData
-        this.data = data
+    var maskManager: ?MaskElement = None
+    public init(data: Layer, globalData: GlobalData) {
+        super(data, globalData)
     }
 
     public func initRendererElement() {
-        this.baseElement = CreateTag("div")
+        // 未找到 this.data.tg
+        this.baseElement = (CreateTag("div") as CreateNS).getOrThrow()
         if (this.data.hasMask) {
             this.svgElement = CreateNS("svg")
             this.layerElement = CreateNS("g")
             this.maskedElement = this.layerElement
             this.svgElement.appendChild(this.layerElement)
             this.baseElement.appendChild(this.svgElement)
-       } else {
-            this.layerElement = CreateNS("div")
+        } else {
+            this.layerElement = this.baseElement
         }
+        styleDiv(this.baseElement)
     }
 
     public func createContainerElements(){
@@ -74,7 +68,7 @@ public open class HBaseElement <: Equatable<HBaseElement> {
             transformedElementStyle.webkitTransform = matrixValue
         }
         if (this.finalTransform._opMdf) {
-            transformedElementStyle.opacity = this.finalTransform.mProp.o.v
+            transformedElementStyle.opacity = Int64(this.finalTransform.mProp.o.v[0])
         }
     }
 
@@ -84,6 +78,7 @@ public open class HBaseElement <: Equatable<HBaseElement> {
         if (this.data.hd || this.hidden) {
             return
         }
+        // 调用不到 renderTransform() renderRenderable() renderInnerContent()
         this.renderElement()
         if (this._isFirstFrame) {
             this._isFirstFrame = false
@@ -91,11 +86,19 @@ public open class HBaseElement <: Equatable<HBaseElement> {
     }
 
     public func destroy() {
-        
+        this.layerElement = CreateNS("")
+        this.transformedElement = None
+        if (this.matteElement.types.size > 0) {
+            this.matteElement = CreateNS("")
+        }
+        if (this.maskManager.isSome()) {
+            this.maskManager.getOrThrow().destroy()
+            this.maskManager = None
+        }
     }
 
     public func createRenderableComponents() {
-        this.maskManager = MaskElement(Layer(),BaseElement(Layer(),this.globalData),this.globalData)
+        this.maskManager = MaskElement(this.data, this, this.globalData)
     }
 
     public func addEffects() {}
