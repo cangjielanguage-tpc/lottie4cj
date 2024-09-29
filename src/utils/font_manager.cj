@@ -38,7 +38,7 @@ public class FontManager {
     public var fonts: Array<Font> = Array<Font>()
     public var chars: ArrayList<FontCharacter> = ArrayList<FontCharacter>()
     var typekitLoaded: Int64 = 0
-    var isLoaded: Bool = false
+    public var isLoaded: Bool = false
     var _warned: Bool = false
     var initTime: Int64 = 0
 

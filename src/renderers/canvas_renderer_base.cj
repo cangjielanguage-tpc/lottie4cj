@@ -21,39 +21,24 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * [AnimationItem] this.wrapper = params.wrapper || params.container ( params <=> loadAnimation(params) )
      *   =>  CanvasRenderingContext2D = this.canvasContext = this.renderConfig.context
      */
-    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-    //public var canvasContext: CanvasRenderingContext2D = None
+    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //public var canvasContext: CanvasRenderingContext2D = None
 
     public var data: AnimationData = AnimationData()
     public var transformCanvas: TransformCanvas = TransformCanvas()
-    public var renderedFrame: Int64 = -1
+    public var renderedFrame: Float64 = -1.0
     public var contextData = CvContextData()
     
     public var transformMat: Matrix = Matrix()
-    public var rendererType: String = "canvas"
     public var destroyed: Bool = false
 
-    public var animationItem: AnimationItem
     public var renderConfig: RenderConfig
 
-    /*
-     * TODO：解构以下 AnimationItem 和 Renderer。
-     * this.animationItem.wrapper
-     * this.animationItem.container
-     * this.animationItem._isFirstFrame
-     */
-    //TODO：this.animationItem.contentMode 的值是可变的，故不能直接传值，需要通过函数【contentModeInAnimationItem】间接获取当时值。
-    public var contentModeInAnimationItem: () -> String = { => ""}
-
     /**
-     * Create a CanvasRendererBase instance based on parameters.
+     * Create a CanvasRendererBase instance based on parameter.
      *
-     * @param animationItem - Type of AnimationItem.
      * @param config - Type of Option<RenderConfig>.
      */
-    public init(animationItem: AnimationItem, config: Option<RenderConfig>) {
-        this.animationItem = animationItem
-    
+    public init(config: Option<RenderConfig>) {
         this.renderConfig = RenderConfig()
         if (let Some(v) <- config) {
             this.renderConfig.clearCanvas = v.clearCanvas
@@ -69,11 +54,12 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         // initRenderConfig 函数中同时处理了 dpr
 
         this.globalData = GlobalData(
-            frameNum: -1,
+            frameNum: -1.0,
             _mdf: false,
             renderConfig: this.renderConfig,
             currentGlobalAlpha: -1
         )
+        this.rendererType = "canvas"
     }
 
     public func createShape(data: Layer): CvShapeElement { 
@@ -226,9 +212,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
     public func configAnimation(animData: AnimationData): Unit {
         /*
          //TODO：未开发 animationItem.wrapper
-         if (this.animationItem.wrapper) {
+         if (this.wrapperInAnimationItem) {
            //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-           this.canvasContext = this.animationItem.wrapper
+           this.canvasContext = this.wrapperInAnimationItem
          } else {  //canvasContext 是画布组件中的 CanvasRenderingContext2D
            //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
            this.canvasContext = this.renderConfig.context
@@ -407,9 +393,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
     public func destroy(): Unit {
         /*
         //TODO： animationItem 未开发
-        if (this.renderConfig.clearCanvas && this.animationItem.wrapper && this.transformCanvas) {
+        if (this.renderConfig.clearCanvas && this.wrapperInAnimationItem && this.transformCanvas) {
             //TODO： animationItem 未开发
-            this.animationItem.wrapper.clearRect(0, 0, this.transformCanvas.w, this.transformCanvas.h)
+            this.wrapperInAnimationItem.clearRect(0, 0, this.transformCanvas.w, this.transformCanvas.h)
         }
         */
         let len: Int64 = this.layers.size
@@ -423,7 +409,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         /*
         //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
         this.globalData.canvasContext = Option<CanvasRenderingContext2D>.None
-        this.animationItem.container = Option<CanvasRenderingContext2D>.None
+        this.containerInAnimationItem = Option<CanvasRenderingContext2D>.None
         */
         this.destroyed = true
     }
@@ -496,24 +482,24 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param num - Type of Int64.
      * @param forceRender - Type of Bool, whether to force rendering..
      */
-    public func renderFrame(num: Int64, forceRender: Bool): Unit {
-        if ((this.renderedFrame == num && this.renderConfig.clearCanvas == true && !forceRender) || this.destroyed || num == -1) {
+    public func renderFrame(num: Float64, forceRender: Bool): Unit {
+        if ((this.renderedFrame == num && this.renderConfig.clearCanvas == true && !forceRender) || this.destroyed || num == -1.0) {
             return
         }
         this.renderedFrame = num
-        this.globalData.frameNum = num - this.animationItem._isFirstFrame
+        this.globalData.frameNum = num - this._isFirstFrameInAnimationItem()
         this.globalData.frameId += 1
         this.globalData._mdf = !this.renderConfig.clearCanvas || forceRender
         //TODO: 未实现 ProjectInterface  //this.globalData.projectInterface.currentFrame = num
 
         let len: Int64 = this.layers.size
         if (!this.completeLayers) {
-            this.checkLayers(Float64(num))
+            this.checkLayers(num)
         }
     
         for (i in 0..len) {
             if (this.completeLayers || this.elements.size > i) {
-                this.elements[i].prepareFrame(Float64(num) - this.layers[i].st)
+                this.elements[i].prepareFrame(num - this.layers[i].st)
             }
         }
         if (this.globalData._mdf) {

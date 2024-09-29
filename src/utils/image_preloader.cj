@@ -12,13 +12,15 @@ internal import lottie4cj.inner.*
 //TODO：image 是系统 api，暂时不联合编译   //import ohos.image.*
 
 
-public class ImagePreloader<T> where T <: ToString {
+public class ImagePreloader {
 
     // 定时器ID
     private var timer: ?Timer = None
+    private let emptyAnimationData: AnimationData = AnimationData()
+    private let emptyCreateNS: CreateNS = CreateNS("")
     
-    var _createImageData: (Asset) -> OB<CreateNS> = default_Asset_To_OB_CreateNS
-    
+    var _createImageData: (Asset) -> OB = default_Asset_To_OB_CreateNS
+
     var assetsPath: String = ""
     var path: String = ""
     var totalImages: Int64 = 0
@@ -29,14 +31,14 @@ public class ImagePreloader<T> where T <: ToString {
     //TODO: 未确认成员变量中数据类型
     var imagesLoadedCb: () -> Unit = default_Unit_To_Unit
     var imagesLoadedCbFlag: Bool = false
-    var images: ArrayList<OB<T>> = ArrayList<OB<T>>(24)
+    var images: ArrayList<OB> = ArrayList<OB>(24)
     //TODO：AbilityContext 是仓颉 UI 中的系统组件 api，暂时不联合编译  //var context: Option<AbilityContext> = Option<AbilityContext>.None
     
     //TODO: this._elementHelper 未确认成员变量中数据类型
     var _elementHelper: CreateNS = CreateNS("")
     
     // 使用空对象替代不支持动态创建的Canvas组件
-    let proxyImage: CreateNS = CreateNS("")
+    let proxyImage: ImgOB = ImgOB(isNull: true)
     
     //generatePixelMapAndRefreshUI的入参ob可能为undefined，所以这里需要每隔一段时间检测一下ob是否实例化好了
     var isOB: Bool = false
@@ -108,40 +110,42 @@ public class ImagePreloader<T> where T <: ToString {
         this.timer = Timer.repeatTimes(500, Duration.millisecond, Duration.millisecond * 50, inside)
     }
 
-    func generatePixelMapAndRefreshUI2(data: Array<UInt8>, ob: OB<CreateNS>, callback: () -> Unit) {
+    func generatePixelMapAndRefreshUI2(data: Array<UInt8>, ob: OB, callback: () -> Unit) {
         //TODO：image 系统 api 函数，暂时不联合编译
         /*
         this.isOB = true
         let imageSource = image.createImageSource(data)
-        // piexlmap 改成不可编辑状态，优化图形图像端读取速度
+        //piexlmap 改成不可编辑状态，优化图形图像端读取速度
         let opts: image.DecodingOptions = DecodingOptions(
             editable: false,
             desiredPixelFormat: image.PixelMapFormat.RGBA_8888
         )
-        // 创建 pixel_map
+        //创建 pixel_map
         let pixelMap: PixelMap = imageSource.createPixelMap(options: opts)
+        //TODO: OB.img 从元组改为对象？？？
         ob.img.pixel_map = pixelMap
-        // 获取解析出来的 pixel_map 的宽、高
+        //获取解析出来的 pixel_map 的宽、高
         let imageInfo: ImageInfo = pixelMap.getImageInfo()
         ob.img.width = imageInfo.size.width
         ob.img.height = imageInfo.size.height
         callback()
         */
     }
-    func generatePixelMapAndRefreshUI2(uri: String, ob: OB<CreateNS>, callback: () -> Unit) {
+    func generatePixelMapAndRefreshUI2(uri: String, ob: OB, callback: () -> Unit) {
         //TODO：image 系统 api 函数，暂时不联合编译
         /*
         this.isOB = true
         let imageSource = image.createImageSource(uri)
-        // piexlmap 改成不可编辑状态，优化图形图像端读取速度
+        //piexlmap 改成不可编辑状态，优化图形图像端读取速度
         let opts: image.DecodingOptions = DecodingOptions(
             editable: false,
             desiredPixelFormat: image.PixelMapFormat.RGBA_8888
         )
-        // 创建 pixel_map
+        //创建 pixel_map
         let pixelMap: PixelMap = imageSource.createPixelMap(options: opts)
+        //TODO: OB.img 从元组改为对象？？？
         ob.img.pixel_map = pixelMap
-        // 获取解析出来的 pixel_map 的宽、高
+        //获取解析出来的 pixel_map 的宽、高
         let imageInfo: ImageInfo = pixelMap.getImageInfo()
         ob.img.width = imageInfo.size.width
         ob.img.height = imageInfo.size.height
@@ -156,17 +160,19 @@ public class ImagePreloader<T> where T <: ToString {
      * @param assetData - Type of Asset.
      * @return Type of BOB<CreateNS>.
      */
-    public func createImageData(assetData: Asset): OB<CreateNS> {
+    //TODO: assetData 未确认数据类型，暂定为 Asset
+    public func createImageData(assetData: Asset): OB {
         let paths: String = getAssetsPath(assetData, this.assetsPath, this.path)
-        let img: CreateNS = CreateNS("image")
+        let imgCreateNS: CreateNS = CreateNS("image")
         if (isSafari) {
-            this.testImageLoaded(img)
+            this.testImageLoaded(imgCreateNS)
         } else {
-            img.addEventListener("load", this.imageLoaded, false)
+            //TODO：未实现 img.addEventListener
+            imgCreateNS.addEventListener("load", this.imageLoaded, false)
         }
         
-        let ob: OB<CreateNS> = OB<CreateNS>(
-            img: img,
+        let ob: OB = OB(
+            img: ImgOB(createNS: imgCreateNS, isCreateNS: true),
             assetData: assetData
         )
         
@@ -176,11 +182,11 @@ public class ImagePreloader<T> where T <: ToString {
             this.imageLoaded()
         }
         
-        img.addEventListener("error", inside, false)
-        img.setAttributeNS("http://www.w3.org/1999/xlink", "href", paths)
+        imgCreateNS.addEventListener("error", inside, false)
+        imgCreateNS.setAttributeNS("http://www.w3.org/1999/xlink", "href", paths)
         
         //TODO: 在 JavaScript 中，append() 方法用于向 DOM（文档对象模型）中的元素末尾添加一个或多个子节点。
-        this._elementHelper.appendChild(img)
+        this._elementHelper.appendChild(imgCreateNS)
         
         return ob
     }
@@ -193,14 +199,21 @@ public class ImagePreloader<T> where T <: ToString {
      * @return Type of BOB<CreateNS>.
      */
     //TODO:里面的 img 需要拆出来。
-    public func createImgData(assetData: Asset): OB<CreateNS> {
+    public func createImgData(assetData: Asset): OB {
         var paths: String = getAssetsPath(assetData, this.assetsPath, this.path)
         //TODO：AbilityContext 是仓颉 UI 中的系统组件 api，暂时不联合编译
+        /*
+        var context = this.context
+        if (context == null) {
+            //TODO：未实现 getContext。
+            context = getContext()
+        }
+        */
         //因OpenHarmony无法通过createTag创建html中的img标签，所以这里构造一个img对象，同进添加其使用到的addEventListener方法
-        let img: CreateNS = CreateNS("imag")
+        let imgCreateNS: CreateNS = CreateNS("imag")
 
-        let ob: OB<CreateNS> = OB<CreateNS>(
-            img: img,
+        let ob: OB = OB(
+            img: ImgOB(createNS: imgCreateNS, isCreateNS: true),
             assetData: assetData
         )
         
@@ -217,7 +230,7 @@ public class ImagePreloader<T> where T <: ToString {
                         let isExist: Bool = File.exists(filePath)
                         
                         if (isExist) {
-                            // 直接读取文件中所有数据
+                            /* 直接读取文件中所有数据 */
                             try {
                                 let arrayBuffer: Array<Byte> = File.readFrom(filePath)
                                 generatePixelMapAndRefreshUI2(arrayBuffer, ob, callback)
@@ -227,9 +240,8 @@ public class ImagePreloader<T> where T <: ToString {
                             }
                         } else {
                             //获取rawfile的字节数组数据
-                            //TODO：AbilityContext 是仓颉 UI 中的系统组件 api，暂时不联合编译
+                            //TODO: 参考 gifdrawable 库 ResourceLoader.loadMedia
                             /*
-                            //参考 gifdrawable 库 ResourceLoader.loadMedia
                             if (let Some(v) <- context) {
                                 let stageContext = getStageContext(v)
                                 let rm: ResourceManager = ResourceManager.getResourceManager(stageContext)
@@ -263,10 +275,10 @@ public class ImagePreloader<T> where T <: ToString {
             }
         }
         
-        img.addEventListener = addEventListener
+        imgCreateNS.addEventListener = addEventListener
 
-        img.crossOrigin = "anonymous"
-        img.addEventListener("load", this.imageLoaded, false)
+        imgCreateNS.crossOrigin = "anonymous"
+        imgCreateNS.addEventListener("load", this.imageLoaded, false)
         
         func insideError(){
             //TODO: 需要确认空对象问题
@@ -274,21 +286,24 @@ public class ImagePreloader<T> where T <: ToString {
             this.imageLoaded()
         }
         
-        img.addEventListener("error", insideError, false)
-        img.src = paths
+        imgCreateNS.addEventListener("error", insideError, false)
+        imgCreateNS.src = paths
 
         return ob
     }
 
-    func createFootageData(data: Asset): OB<AnimationData> {
-        let ob = OB<AnimationData>(img: AnimationData(), assetData: data)
-        let path = getAssetsPath(data, this.assetsPath, this.path)
+    func createFootageData(data: Asset): OB {
+        //TODO: 是否改为元组类型。(CreateNS, AnimationData, Bool)。Bool = true 代表 CreateNS；Bool = false 代表 AnimationData.
+        let ob: OB = OB(assetData: data)
+        let path: String = getAssetsPath(data, this.assetsPath, this.path)
 
         func onComplete(footageData: AnimationData): Unit {
-            ob.img = footageData
+            ob.img.animationData = footageData
+            ob.img.isCreateNS = false
             this.footageLoaded()
         }
         func onError(): Unit {
+            ob.img = ImgOB(isNull: true)
             this.footageLoaded()
         }
         
@@ -303,6 +318,7 @@ public class ImagePreloader<T> where T <: ToString {
      * @param assets - Type of Array<Asset>.
      * @param cb - Type of function () -> Unit.
      */
+    //TODO: 在 json 中找不到 assets[i].t,此步执行无意义！
     public func loadAssets(assets: Array<Asset>, cb: () -> Unit): Unit {
         this.imagesLoadedCb = cb
         let len: Int64 = assets.size
@@ -337,7 +353,7 @@ public class ImagePreloader<T> where T <: ToString {
      * @param assetData - Type of Asset.
      * @return Type of Option<T>.
      */
-    public func getAsset(assetData: Asset): Option<T> {
+    public func getAsset(assetData: Asset): ImgOB {
         var i: Int64 = 0
         let len: Int64 = this.images.size
         while (i < len) {
@@ -346,7 +362,7 @@ public class ImagePreloader<T> where T <: ToString {
             }
             i += 1
         }
-        return None
+        return ImgOB(isNull: true)
     }
 
     /**
@@ -385,6 +401,7 @@ public class ImagePreloader<T> where T <: ToString {
      */
     //TODO：AbilityContext 是仓颉 UI 中的系统组件 api，暂时不联合编译    //context: AbilityContext
     public func setCacheType(types: String, elementHelper: CreateNS): Unit {
+        //TODO：AbilityContext 是仓颉 UI 中的系统组件 api，暂时不联合编译  //this.context = context
         if (types == "svg") {
             this._elementHelper = elementHelper
             this._createImageData = this.createImageData

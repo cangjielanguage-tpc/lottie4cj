@@ -24,13 +24,8 @@ public class CreateNS <: CreateTag & ToString & Equatable<CreateNS> {
     var ks: HashMap<String, String> = HashMap<String, String>()
     public var childs: ArrayList<CreateNS> = ArrayList<CreateNS>()
 
-    //TODO: 暂时无成员变量 style 的数据类型
-    //TODO: style 是一个对象??? 还是一个 HashMap<String, String> ???
-    public var styles: HashMap<String, String> = HashMap<String, String>()
-    
     public let isNull: Bool
-    
-    //public var style: TagStyle = TagStyle()
+
     /**
      * Create a CreateNS instance based on the parameter.
      *

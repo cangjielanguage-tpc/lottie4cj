@@ -12,13 +12,12 @@ public class CanvasRenderer <: CanvasRendererBase {
     //TODO：拆分多继承问题 -- //extendPrototype([CanvasRendererBase], CanvasRenderer)
 
     /**
-     * Create a CanvasRenderer instance based on parameters.
+     * Create a CanvasRenderer instance based on parameter.
      *
-     * @param animationItem - Type of AnimationItem.
      * @param config - Type of Option<RenderConfig>.
      */
-    public init(animationItem: AnimationItem, config: Option<RenderConfig>) {
-        super(animationItem, config)
+    public init(config: Option<RenderConfig>) {
+        super(config)
         if (let Some(v) <- config) {
             this.renderConfig.runExpressions = v.runExpressions
         }

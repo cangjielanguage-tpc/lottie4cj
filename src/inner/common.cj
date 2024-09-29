@@ -6,7 +6,7 @@ package lottie4cj.inner
 
 internal import std.math.*
 
-let subframeEnabled: Bool = true
+var subframeEnabled: Bool = true
 
 var idPrefix: String = ""
 public let isSafari: Bool = false
@@ -18,6 +18,13 @@ public let degToRads: Float64 = Float64.PI / 180.0
 public let roundCorner: Float64 = 0.5519
 
 let initialDefaultFrame: Int64 = -999999
+
+public func setSubframeEnabled(flag: Bool): Unit {
+    subframeEnabled = flag
+}
+public func getSubframeEnabled(): Bool {
+    return subframeEnabled
+}
 
 public class CreateElementID {
 
