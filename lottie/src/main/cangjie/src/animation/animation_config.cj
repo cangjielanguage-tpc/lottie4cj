@@ -1,0 +1,135 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ */
+
+/**
+ * @file This file is AnimationConfig.
+ */
+package lottie.animation
+
+import ohos.base.*
+import ohos.component.*
+import ohos.state_manage.*
+import ohos.state_macro_manage.*
+
+/**
+ * 动画事件回调函数声明
+ */
+public class AnimationEventCallback {
+    public var callback: (Option<BMEvent>) -> Unit //= { m => ()}
+    public init(callback: (Option<BMEvent>) -> Unit){
+        this.callback = callback
+    }
+}
+
+
+public class AnimationConfig {
+    /**
+     * 与canvas组件绑定的上下文CanvasRenderingContext2D, 提供最基础的绘制渲染能力
+     */
+    //TODO：要挂载动画的DOM对象
+    public var container: CanvasRenderingContext2D
+    public var wrapper: CanvasRenderingContext2D
+    public var wrapper_ns: CreateNS = CreateNS("")
+
+    /**
+     * 渲染类型, 目前支持canvas方式
+     */
+    public var renderer: String = ""
+    public var animType: String = ""
+
+    /**
+     * 动画播放结束后, 是否循环播放，默认值true, 值为true时无限循环播放 值类型为number, 且>=1时为设置重复播放的次数
+     * 定为 Int64 数据类型，<= 1 表示不循环
+     * //TODO: 是否需要再增加一个成员变量，表示是否循环？？？和循环次数分开？？？
+     */
+    public var loop: Bool = false
+    public var loopNum: Int64 = 0
+
+    /**
+     * 自动播放设置
+     */
+    public var autoplay: Bool = false
+
+    /**
+     * 初始化动画资源播放时的整体帧范围
+     * 动画片段声明 AnimationSegment = [number, number] => Array<Float64>，其中的数据含义：time,...
+     */
+    public var initialSegment: Array<Float64> = Array<Float64>()
+
+    /**
+     * 动画名称, 动画成功加载后, 可在Lottie相关接口上, 应用该名称进行动画控制
+     */
+    public var name: String = ""
+
+    /**
+     * 应用上下文 Context 在HSP场景下需要传正确的context，非HSP场景不影响，context可以不传
+     */
+    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //public var context?: common.UIAbilityContext
+
+    /**
+     * 应用包名 用于打印日志区分不同模块调用启动aniamtor，packageName可以不传
+     */
+    public var packageName: String = ""
+
+    /**
+     * 动画填充模式 支持填充模式：Fill, Top, Cover, Buttom, Contain  默认模式是：Contain
+     */
+    public var contentMode: String = ""
+
+    //TODO: AnimationItem.setParams 编译用。
+    public var rendererSettings: RenderConfig = RenderConfig()
+    public var autoloadSegments: Bool = true
+    public var assetsPath: String = ""
+    public var audioFactory: (String) -> Audio = { m => return Audio() }
+    // hasAudioFactory 表示 audioFactory 是否有实际代码逻辑。
+    public var hasAudioFactory: Bool = false
+
+    /**
+     * json格式的动画数据, 仅限json格式.
+     */
+    public var animationData: AnimationData = AnimationData(isNull: true)
+
+    /**
+     * 应用内的动画数据文件路径, 仅限json格式
+     * path 路径仅支持entry/src/main/ets 路径下的相对路径，不支持跨包路径设置
+     * @example path: 'common/lottie/data.json'
+     */
+    public var path: String = ""
+    
+    //public init(){
+    //    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
+    //    this.wrapper = wrapper
+    //}
+    var context: Option<AbilityContext> = None
+
+    public init(
+        wrapper_ns!: CreateNS,
+        //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
+        container!: CanvasRenderingContext2D,
+        renderer!: String = "canvas",
+        loop!: Bool = true,
+        autoplay!: Bool = true,
+        name!: String = "",
+        contentMode!: String = "",
+        path!: String = "",
+        animationData!: AnimationData = AnimationData(),
+        context!: Option<AbilityContext> = None
+    ){
+        this.wrapper_ns = wrapper_ns
+        //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
+        this.wrapper = container
+
+        this.container = container
+        this.renderer = renderer
+        this.loop = loop
+        this.autoplay = autoplay
+        this.name = name
+        this.contentMode = contentMode
+        this.path = path
+
+        this.animationData = animationData
+        this.context = context
+    }
+
+}
