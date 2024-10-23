@@ -19,20 +19,20 @@ import ohos.state_macro_manage.Component
 import ohos.state_macro_manage.State
 import ohos.state_macro_manage.r
 
-/*
 @Entry
 @Component
-class MyView2 {
-    @State
-    var message: String = "Hello Cangjie"
+class MyView222 {
+    var settings: RenderingContextSettings = RenderingContextSettings(antialias: true)
+    var context: CanvasRenderingContext2D = CanvasRenderingContext2D(this.settings)
+
     func build() {
-        Row {
-            Column {
-                Button(message).onClick {
-                    evt => AppLog.info("Hello Cangjie")
-                }.fontSize(40).height(80)
-            }.width(100.percent)
-        }.height(100.percent)
+        Flex(
+            FlexParams(direction: FlexDirection.Column, alignItems: ItemAlign.Center,
+            justifyContent: FlexAlign.Center)) {
+            Canvas(this.context).width(100.percent).height(100.percent).backgroundColor(0xffff00).onReady(
+                {
+                => this.context.fillRect(0, 30, 100, 100)
+            })
+        }.width(100.percent).height(100.percent)
     }
 }
-*/

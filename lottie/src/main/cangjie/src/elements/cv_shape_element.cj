@@ -56,6 +56,10 @@ public class CvShapeElement <: IShapeElement {
         Array<Float64>()
     }
 
+    public override func renderFrame(): Unit {
+        super.renderFrame(false)
+    }
+
     public func createContent() {
         this.searchShapes(this.shapesData, this.itemsData, this.prevViewData, true, ArrayList<AnimatableTransformElement>())
     }
@@ -315,15 +319,18 @@ public class CvShapeElement <: IShapeElement {
     }
 
     public override func renderInnerContent() {
-        //this.canvasContext.fillStyle(Color.GREEN)
-        //this.canvasContext.fillRect(0, 150, 200, 200)
+
 
 
         this.transformHelper().opacity = 1.0
         this.transformHelper()._opMdf = false
         this.renderModifiers()
+        this.canvasContext.fillStyle(Color.BLACK)
+        this.canvasContext.fillRect(0, 150, 200, 200)
         this.transformsManager.processSequences(this._isFirstFrame)
         this.renderShape(this.transformHelper(), this.shapesData, this.itemsData, isMain:true)
+        this.canvasContext.fillStyle(Color.GREEN)
+        this.canvasContext.fillRect(0, 150, 200, 200)
     }
 
     public func renderShapeTransform(parentTransform: TransformInElement, groupTransform: TransformInElement) {
@@ -351,7 +358,7 @@ public class CvShapeElement <: IShapeElement {
             if (!(((types == "st" || types == "gs") && currentStyle.wi == 0.0) || !currentStyle.data._shouldRender ||
                 currentStyle.coOp == 0.0 || this.globalData.currentGlobalAlpha == 0)) {
                 //TODO: this.globalData.renderer数据类型是什么？
-                //renderer.save()
+                this.globalData.save(false)
                 var elems = currentStyle.elements
                 if (types == "st" || types == "gs") {
                     if (types == "st") {
@@ -359,7 +366,7 @@ public class CvShapeElement <: IShapeElement {
                     }else {
                         ctx.strokeStyle(currentStyle.grd.getOrThrow())
                     }
-                    ctx.lineWidth(currentStyle.wi)
+//                    ctx.lineWidth(currentStyle.wi)
                     //  1: "butt",
                     //  2: "round",
                     //  3: "square",
@@ -390,11 +397,13 @@ public class CvShapeElement <: IShapeElement {
                         ctx.fillStyle(currentStyle.grd.getOrThrow())
                     }
                 }
-                //renderer.ctxOpacity(currentStyle.coOp)
+                this.globalData.ctxOpacity(Int64(currentStyle.coOp))
                 if (types != "st" && types != "gs") {
                     ctx.beginPath()
                 }
-               // renderer.ctxTransform(currentStyle.preTransforms.finalTransform.props)
+                Hilog.error(0, "---9--", "----->${currentStyle.preTransforms.finalTransform.props}")
+                var tmps = currentStyle.preTransforms.finalTransform.props
+               this.globalData.ctxTransform(currentStyle.preTransforms.finalTransform.props)
                 var jLen = elems.size
                 for (j in 0..jLen) {
                     if (types == "st" || types == "gs") {
@@ -418,9 +427,11 @@ public class CvShapeElement <: IShapeElement {
                     var kLen = nodes.size
                     for (k in 0..kLen) {
                         if (nodes[k].t == "m") {
-                            ctx.moveTo(nodes[k].p[0], nodes[k].p[1])
+//                            ctx.moveTo(nodes[k].p[0], nodes[k].p[1])
+                            ctx.moveTo(30, 30)
                         } else if (nodes[k].t == "c") {
-                            ctx.bezierCurveTo(nodes[k].pts[0], nodes[k].pts[1], nodes[k].pts[2], nodes[k].pts[3], nodes[k].pts[4], nodes[k].pts[5])
+//                            ctx.bezierCurveTo(nodes[k].pts[0], nodes[k].pts[1], nodes[k].pts[2], nodes[k].pts[3], nodes[k].pts[4], nodes[k].pts[5])
+                            ctx.bezierCurveTo(20, 100, 200, 100, 200, 20)
                         } else {
                             ctx.closePath()
                         }
@@ -437,6 +448,7 @@ public class CvShapeElement <: IShapeElement {
                     ctx.fill()
                 }
                 //renderer.restore()
+                this.globalData.restore(false)
             }
         }
     }
@@ -453,6 +465,7 @@ public class CvShapeElement <: IShapeElement {
         this.renderShapeColor(color,endColor,items,data)
     }
 
+    // SEE
     public func renderShapeColor(color: Array<Int64>, endColor:Int64, items: Array<ContentModel>, data: Array<ContentModelElement>): Unit {
         var len = items.size - 1
         var i = len
@@ -477,7 +490,6 @@ public class CvShapeElement <: IShapeElement {
             } else if (items[i].ty == "gr") {
                 this.renderShapeColor(color, endColor, (items[i] as ShapeGroup).getOrThrow().it, (data[i] as ShapeGroupElement).getOrThrow().it)
             } else if (items[i].ty == "gf" || items[i].ty == "gs") {
-                try {
                     //data[i].style.grd = undefined
                     var lens = 3
                     for (j in 0..lens) {
@@ -493,8 +505,6 @@ public class CvShapeElement <: IShapeElement {
 //                            data[i].g.c[j * 4 + 1] = color[0]
 //                          }
                     }
-                  } catch (e: Exception) {
-                  }
             }
             i -= 1
         }
@@ -581,7 +591,6 @@ public class CvShapeElement <: IShapeElement {
                 // data[i]------->ShapeGroupElement
                 this.renderShapeColor(color, endColor, (items[i] as ShapeGroup).getOrThrow().it, (data[i] as ShapeGroupElement).getOrThrow().it)
             } else if (items[i].ty == "gf" || items[i].ty == "gs") {
-                try {
                     let fse: FillStrokeElement = (items[i] as FillStrokeElement).getOrThrow()
                     //data[i].style.grd = undefined
                     var lens = 3
@@ -598,8 +607,6 @@ public class CvShapeElement <: IShapeElement {
                           fse.g.c[j * 4 + 1] = color[0]
                         }
                     }
-                } catch (e: Exception) {
-                }
             }
             i -= 1
         }
@@ -620,20 +627,27 @@ public class CvShapeElement <: IShapeElement {
         var groupTransform = parentTransform
         var i = len
         while (i >= 0) {
-            if (items[i].ty == "tr") {
+            let ity = items[i].ty
+            if (ity == "tr") {
                 groupTransform = (data[i] as AnimatableTransformElement).getOrThrow().transform
                 this.renderShapeTransform(parentTransform, groupTransform)
-            } else if (items[i].ty == "sh" || items[i].ty == "el" || items[i].ty == "rc" || items[i].ty == "sr") {
+            }
+            else if (ity == "sh" || ity == "el" || ity == "rc" || ity == "sr") {
                 this.renderPath(items[i], data[i])
-            } else if (items[i].ty == "fl") {
+            }
+            else if (ity == "fl") {
                 this.renderFill(items[i], (data[i] as FillStrokeElement).getOrThrow(), groupTransform)
-            } else if (items[i].ty == "st") {
+            }
+            else if (ity == "st") {
                 this.renderStroke(items[i], (data[i] as FillStrokeElement).getOrThrow(), groupTransform)
-            } else if (items[i].ty == "gf" || items[i].ty == "gs") {
+            }
+            else if (ity == "gf" || ity == "gs") {
                 this.renderGradientFill((items[i] as FillStroke).getOrThrow(), (data[i] as FillStrokeElement).getOrThrow(), groupTransform)
-            } else if (items[i].ty == "gr") {
+            }
+            else if (ity == "gr") {
                 this.renderShape(groupTransform, (items[i] as ShapeGroup).getOrThrow().it, (data[i] as ShapeGroupElement).getOrThrow().it)
-            } else if (items[i].ty == "tm") {
+            }
+            else if (ity == "tm") {
                 //
             }
             i -= 1
@@ -643,40 +657,46 @@ public class CvShapeElement <: IShapeElement {
         }
     }
 
-    public func renderStyledShape(styledShape: StyledShape, shape: ShapePropertyFactory) {
+    public func renderStyledShape(styledShape: StyledShape, shape: ShapePropertyFactory) {  //see
         if (this._isFirstFrame || shape._mdf || styledShape.transforms._mdf) {
             var shapeNodes = styledShape.trNodes
             var paths: ShapeCollection = shape.paths
             var len: Int64 = 0
+            var i = 0
             var jLen = paths._length
             shapeNodes.clear()
-            var i = 0
             var groupTransformMat = styledShape.transforms.finalTransform
             for (j in 0..jLen) {
                 var pathNodesos: Option<ShapeData> = paths.shapes.get(j)
                 if (let Some(pathNodes) <- pathNodesos) {
                     if (pathNodes.v.size > 0) {
                         len = pathNodes._length
-                        i = 1
-                        while (i < len) {
-                            if (i == 1) {
+                        for (index in 1..len) {
+                            if (index == 1) {
                                 shapeNodes.append(StyledShapeTrNodes("m",
                                     p: groupTransformMat.applyToPointArray(pathNodes.v[0].x, pathNodes.v[0].y, 0.0)
                                 ))
                             }
                             shapeNodes.append(StyledShapeTrNodes("c",
-                                pts: groupTransformMat.applyToTriplePoints([pathNodes.o[i - 1].x,pathNodes.o[i - 1].y], [pathNodes.i[i].x,pathNodes.i[i].y], [pathNodes.v[i].x,pathNodes.v[i].y]),
+                                pts: groupTransformMat.applyToTriplePoints([pathNodes.o[index - 1].x,pathNodes.o[index - 1].y], [pathNodes.i[index].x,pathNodes.i[index].y], [pathNodes.v[index].x,pathNodes.v[index].y])
                             ))
-                            i += 1
+                            i = index
                         }
                         if (len == 1) {
-                            shapeNodes.append(StyledShapeTrNodes("m",
-                                p: groupTransformMat.applyToPointArray(pathNodes.v[0].x, pathNodes.v[0].y, 0.0),
-                            ))
+                            shapeNodes.append(StyledShapeTrNodes("m", p: groupTransformMat.applyToPointArray(pathNodes.v[0].x, pathNodes.v[0].y, 0.0)))
                         }
                         if (pathNodes.c  && len > 0) {
+                            let aaa = groupTransformMat.applyToTriplePoints(
+                                                                            [pathNodes.o[i].x,pathNodes.o[i].y],
+                                                                            [pathNodes.i[0].x,pathNodes.i[0].y],
+                                                                            [pathNodes.v[0].x,pathNodes.v[0].y]
+                                                                            )
                             shapeNodes.append(StyledShapeTrNodes("c",
-                                pts: groupTransformMat.applyToTriplePoints([pathNodes.o[i - 1].x,pathNodes.o[i - 1].y], [pathNodes.i[0].x,pathNodes.i[0].y], [pathNodes.v[0].x,pathNodes.v[0].y]),
+                                pts: groupTransformMat.applyToTriplePoints(
+                                                                            [pathNodes.o[i].x,pathNodes.o[i].y],
+                                                                            [pathNodes.i[0].x,pathNodes.i[0].y],
+                                                                            [pathNodes.v[0].x,pathNodes.v[0].y]
+                                                                            )
                             ))
                             shapeNodes.append(StyledShapeTrNodes( "z"))
                         }

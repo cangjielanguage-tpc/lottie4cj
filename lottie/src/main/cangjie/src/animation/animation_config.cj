@@ -28,8 +28,8 @@ public class AnimationConfig {
      * 与canvas组件绑定的上下文CanvasRenderingContext2D, 提供最基础的绘制渲染能力
      */
     //TODO：要挂载动画的DOM对象
-    public var container: CanvasRenderingContext2D
-    public var wrapper: CanvasRenderingContext2D
+    public var container: LottieCanvasRenderingContext2D
+    public var wrapper: LottieCanvasRenderingContext2D
     public var wrapper_ns: CreateNS = CreateNS("")
 
     /**
@@ -118,9 +118,9 @@ public class AnimationConfig {
     ){
         this.wrapper_ns = wrapper_ns
         //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-        this.wrapper = container
+        this.wrapper = LottieCanvasRenderingContext2D(container)
 
-        this.container = container
+        this.container = LottieCanvasRenderingContext2D(container)
         this.renderer = renderer
         this.loop = loop
         this.autoplay = autoplay

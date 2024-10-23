@@ -16,7 +16,7 @@ public class CanvasRenderer <: CanvasRendererBase {
      *
      * @param config - Type of Option<RenderConfig>.
      */
-    public init(config: Option<RenderConfig>, container: CanvasRenderingContext2D) {
+    public init(config: Option<RenderConfig>, container: LottieCanvasRenderingContext2D) {
         super(config, container)
         if (let Some(v) <- config) {
             this.renderConfig.runExpressions = v.runExpressions

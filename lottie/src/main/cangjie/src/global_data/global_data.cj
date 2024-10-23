@@ -136,8 +136,8 @@ public class GlobalData {
 
     //public var canvasContext: CanvasContext = CanvasContext()
     //TODO: 初始化一个空的 CanvasRenderingContext2D 编译用。
-    private var renderingSettings: RenderingContextSettings = RenderingContextSettings(antialias: true)
-    public var canvasContext: CanvasRenderingContext2D = CanvasRenderingContext2D(this.renderingSettings)
+//    private var renderingSettings: RenderingContextSettings = unsafe{zeroValue<RenderingContextSettings>()}
+    public var canvasContext: LottieCanvasRenderingContext2D = unsafe{zeroValue<LottieCanvasRenderingContext2D>()}
     public var hasCanvasRenderingContext2D: Bool = false
 
     public var transformCanvas: TransformCanvas = TransformCanvas()
@@ -183,12 +183,12 @@ public class GlobalData {
     public init(){
         this.isNull = true
     }
-    public init(canvasContext: CanvasRenderingContext2D){
+    public init(canvasContext: LottieCanvasRenderingContext2D){
         this.canvasContext = canvasContext
     }
     
     public init(frameNum!: Float64, _mdf!: Bool, renderConfig!: RenderConfig, currentGlobalAlpha!: Int64,
-        canvasContext!: CanvasRenderingContext2D
+        canvasContext!: LottieCanvasRenderingContext2D
         //save!: (Bool) -> Unit = { m => () },
         //ctxTransform!: (Array<Float64>) -> Unit = { m => () },
         //ctxOpacity!: (Int64) -> Unit = { m => () },

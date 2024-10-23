@@ -123,7 +123,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
 
 //RenderableElement-1-----------------------------------------------------------------------------
-    public var canvasContext: CanvasRenderingContext2D
+    public var canvasContext: LottieCanvasRenderingContext2D
     //public var canvasContext: CanvasContext = unsafe {zeroValue<CanvasContext>()}
     public var transformCanvas: TransformCanvas = TransformCanvas()
     public var renderableEffectsManager: CvEffects = unsafe {zeroValue<CvEffects>()}
@@ -719,6 +719,8 @@ public open class BaseElement <: Equatable<BaseElement> {
      * current frame number in Layer's time   //层时间中的当前帧数
      */
     public func checkLayerLimits(num: Float64): Unit {
+        let a = this.data.ip - this.data.st <= num
+        let b = this.data.op - this.data.st > num
         if (this.data.ip - this.data.st <= num && this.data.op - this.data.st > num) {
             if (!this.isInRange) {
                 this.globalData._mdf = true
@@ -863,22 +865,22 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.prepareLayer()
         //TODO: [已解构--直接调用函数，省去renderer. ]解构 renderer 和 globalData。
         this.globalData.save(forceRealStack)  //CanvasRendererBase
-        this.globalData.ctxTransform(this.finalTransform.mat.props) //CanvasRendererBase
+//        this.globalData.ctxTransform(this.finalTransform.mat.props) //CanvasRendererBase
         this.globalData.ctxOpacity(Int64(this.finalTransform.mProp.o.v[0]))   //CanvasRendererBase
         this.renderInnerContent() //CVShapeElement
-        this.globalData.restore(forceRealStack)
-        //将两个layer数据分别绘制到两个离屏画布上，通过将离屏绘制数据结合混合模式绘制到当前显示画布上，实现mask效果
-        this.exitLayer() // CVBaseElement
-
-        //恢复高斯模糊的默认值，防止非高斯模糊图层也高斯模糊 shadowBlur(blur: Int64): Unit
-        this.canvasContext.shadowBlur(0)
-
-        if (this.maskManager.hasMasks) {
-            this.globalData.restore(true)
-        }
-        if (this._isFirstFrame) {
-            this._isFirstFrame = false
-        }
+//        this.globalData.restore(forceRealStack)
+//        //将两个layer数据分别绘制到两个离屏画布上，通过将离屏绘制数据结合混合模式绘制到当前显示画布上，实现mask效果
+//        this.exitLayer() // CVBaseElement
+//
+//        //恢复高斯模糊的默认值，防止非高斯模糊图层也高斯模糊 shadowBlur(blur: Int64): Unit
+//        this.canvasContext.shadowBlur(0)
+//
+//        if (this.maskManager.hasMasks) {
+//            this.globalData.restore(true)
+//        }
+//        if (this._isFirstFrame) {
+//            this._isFirstFrame = false
+//        }
     }
 
     public open func hide(): Unit {
@@ -907,7 +909,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     public open func createElements(): Unit {}
 
-    public open func clearCanvas(canvasContext: CanvasRenderingContext2D): Unit {
+    public open func clearCanvas(canvasContext: LottieCanvasRenderingContext2D): Unit {
          canvasContext.clearRect(
              this.transformCanvas.tx,
              this.transformCanvas.ty,
@@ -941,7 +943,7 @@ public open class BaseElement <: Equatable<BaseElement> {
     public open func renderShapeColor(color: Array<Int64>, endColor: Int64, index: Int64) {}
 
     public open func destroy() {
-        this.canvasContext = unsafe {zeroValue<CanvasRenderingContext2D>()}
+        this.canvasContext = unsafe {zeroValue<LottieCanvasRenderingContext2D>()}
         this.data = Layer()
         this.globalData = unsafe {zeroValue<GlobalData>()}
         this.maskManager.destroy()
@@ -1073,5 +1075,3 @@ public open class BaseElement <: Equatable<BaseElement> {
 
 
 }
-
-
