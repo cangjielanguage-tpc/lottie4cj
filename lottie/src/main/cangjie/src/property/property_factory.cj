@@ -204,7 +204,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
 
         while (flag) {
             keyData = this.keyframes[i]
-            nextKeyData = this.keyframes[i + 1]
+            nextKeyData = this.keyframes[i + 1] //see
             if (i == len - 1 && frameNum >= (nextKeyData.t - offsetTime)) {
                 if (keyData.h != 0) {
                     keyData = nextKeyData
@@ -236,10 +236,31 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         var keyTime: Float64 = keyData.t - offsetTime
         var endValue: Array<Float64> = Array<Float64>()
 
-        let keyData_s: Array<Float64> = (keyData.s as Array<Float64>).getOrThrow()
-        let keyData_e: Array<Float64> = (keyData.e as Array<Float64>).getOrThrow()
-        let nextKeyData_s: Array<Float64> = (nextKeyData.s as Array<Float64>).getOrThrow()
+        let keyData_s: Array<Float64> =
+        if (let Some(v: Float64)<- keyData.s) {
+            [v]
+        } else if (let Some(v: Array<Float64>) <- keyData.s) {
+            v
+        } else {
+            throw Exception()
+        }
 
+        let keyData_e: Array<Float64> =
+        if (let Some(v: Float64)<- keyData.e) {
+            [v]
+        } else if (let Some(v: Array<Float64>) <- keyData.s) {
+            v
+        } else {
+            throw Exception()
+        }
+        let nextKeyData_s: Array<Float64> =
+        if (let Some(v: Float64)<- nextKeyData.s) {
+            [v]
+        } else if (let Some(v: Array<Float64>) <- keyData.s) {
+            v
+        } else {
+            throw Exception()
+        }
         if (keyData.to.size != 0) { // to: PointF 改为 Array<Float64>
             if (keyframeMetadata.bezierData.isNull()) {
                 var arr: Array<Float64> = nextKeyData_s
@@ -320,12 +341,16 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             if (this.sh && keyData.h != 1) {
                 if (frameNum >= nextKeyTime) {
                     newValue[0] = endValue[0]
-                    newValue[1] = endValue[1]
-                    newValue[2] = endValue[2]
+                    if (endValue.size > 1) {
+                        newValue[1] = endValue[1]
+                        newValue[2] = endValue[2]
+                    }
                 } else if (frameNum <= keyTime) {
                     newValue[0] = keyData_s[0]
-                    newValue[1] = keyData_s[1]
-                    newValue[2] = keyData_s[2]
+                    if (keyData_s.size > 1) {
+                        newValue[1] = keyData_s[1]
+                        newValue[2] = keyData_s[2]
+                    }
                 } else {
                     let quatStart: Array<Float64> = createQuaternion(keyData_s)
                     let quatEnd: Array<Float64> = createQuaternion(endValue)
@@ -470,7 +495,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 this._caching.lastIndex = 0
             }
 
-            var renderResult = this.interpolateValue(frameNum, this._caching)
+            var renderResult = this.interpolateValue(frameNum, this._caching)  // See ????
             this.pv = renderResult
         }
         this._caching.lastFrame = Int64(frameNum)
@@ -595,16 +620,20 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     public static func getProp<T, E>(data: T, dataK: Array<Keyframe<E>>, types: Int64, mult: Option<Float64>, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>): PropertyFactory<T, E> where T <: ToString , E <: ToString {
         var vLen2: Int64 = vLen
         var p: PropertyFactory<T, E>
-        if (types == 0) {
-            //dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!
-            p = keyframedValueProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties)
-        } else if (types == 1) {
-            p = keyframedMultidimensionalProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties)
-            vLen2 = p.v.size
+        if( dataK.size == 1){
+            p = valueProperty<T, E>(data, Float64((dataK[0].k.getOrThrow() as Int64).getOrThrow()), mult, container, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties)
         } else {
-            throw Exception("调用分支错误。")
+            if (types == 0) {
+                //dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!
+                p = keyframedValueProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties)
+            } else if (types == 1) {
+                p = keyframedMultidimensionalProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties)
+                vLen2 = p.v.size
+            } else {
+                throw Exception("调用分支错误。")
+            }
         }
-        
+
         if (p.effectsSequence.size != 0) {
             //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？
             container.addDynamicProperty(p)
@@ -888,18 +917,18 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         //var currentFrame: Float64 = this.comp.renderedFrame
         var currentFrame: Float64 = this.renderedFrameInComp()
 
-        var keyframes: Array<Keyframe<E>> = this.keyframes
-        var lastKeyFrame: Float64 = keyframes[keyframes.size - 1].t
+        var kfs: Array<Keyframe<E>> = this.keyframes
+        var lastKeyFrame: Float64 = kfs[kfs.size - 1].t
         if (currentFrame <= lastKeyFrame) {
             return this.pv
         }
         var cycleDuration: Float64 = 0.0
         var firstKeyFrame: Float64 = 0.0
         if (!durationFlag) {
-            if (duration == 0 || duration > keyframes.size - 1) {
-                duration = keyframes.size - 1
+            if (duration == 0 || duration > kfs.size - 1) {
+                duration = kfs.size - 1
             }
-            firstKeyFrame = keyframes[keyframes.size - 1 - duration].t
+            firstKeyFrame = kfs[kfs.size - 1 - duration].t
             cycleDuration = lastKeyFrame - firstKeyFrame
         } else {
             if (duration == 0) {
@@ -961,18 +990,18 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         //TODO: CanvasRendererBase.renderedFrame = Int64
         var currentFrame: Float64 = this.renderedFrameInComp()
 
-        var keyframes: Array<Keyframe<E>> = this.keyframes
-        var firstKeyFrame: Float64 = keyframes[0].t
+        var kfs: Array<Keyframe<E>> = this.keyframes
+        var firstKeyFrame: Float64 = kfs[0].t
         if (currentFrame >= firstKeyFrame) {
             return this.pv
         }
         var cycleDuration: Float64 = 0.0
         var lastKeyFrame: Float64 = 0.0
         if (!durationFlag) {
-            if (duration == 0 || duration > keyframes.size - 1) {
-                duration = keyframes.size - 1
+            if (duration == 0 || duration > kfs.size - 1) {
+                duration = kfs.size - 1
             }
-            lastKeyFrame = keyframes[duration].t
+            lastKeyFrame = kfs[duration].t
             cycleDuration = lastKeyFrame - firstKeyFrame
         } else {
             if (duration == 0) {

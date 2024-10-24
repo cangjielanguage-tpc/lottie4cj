@@ -101,6 +101,9 @@ public open class ICompElement <: BaseElement {
         //由于表达式之间的连接方式，此迭代需要向后进行
         for (i in (len - 1)..=0:-1) {
             if (this.completeLayers || this.elements.size > i) {
+                let a = this.renderedFrame
+                let b = this.layers[i].st
+                let c = this.renderedFrame - this.layers[i].st
                 this.elements[i].prepareFrame(this.renderedFrame - this.layers[i].st) // IShapeElement
                 if (this.elements[i]._mdf) {
                     this._mdf = true

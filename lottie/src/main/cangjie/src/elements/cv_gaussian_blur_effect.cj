@@ -10,7 +10,7 @@ public class CvGaussianBlurEffect {
 
     private var filterManager: GroupEffect
     //private var canvasContext: CanvasContext
-    private var canvasContext: CanvasRenderingContext2D
+    private var canvasContext: LottieCanvasRenderingContext2D
 
     //TODO: 暂时先将 CvBaseElement 和 BaseElement 合并。避免后面 CVXXXElement 多继承 XXXElement和 CVBaseElement
     //public init(filterManager: EffectsManager, elem: CvBaseElement) {

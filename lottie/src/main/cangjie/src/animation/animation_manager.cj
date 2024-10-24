@@ -126,7 +126,7 @@ public class AnimationManager {
 
         //TODO: 调用 setData(wrapper: CanvasRenderingContext2D, animationData: AnimationData) ？？？
         //TODO: element 数据类型是 CanvasRenderingContext2D 还是 CreateNS ？？？-- 再增加一个参数 wrapper_ns: CreateNS
-        animItem.setData(params.container, animationData, wrapper_ns: element)
+        animItem.setData(params.container.ctx2d, animationData, wrapper_ns: element)
 
         return animItem
     }

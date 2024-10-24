@@ -38,7 +38,7 @@ public open class BaseRenderer {
      */
     //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
     //TODO: 初始化一个空的 CanvasRenderingContext2D。
-    public var wrapperInAnimationItem: CanvasRenderingContext2D
+    public var wrapperInAnimationItem: LottieCanvasRenderingContext2D
 
     /*
      * 数据类型推测路线：
@@ -49,7 +49,7 @@ public open class BaseRenderer {
      */
     //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
     //CanvasRendererBase 中挪过来的。
-    public var canvasContext: CanvasRenderingContext2D
+    public var canvasContext: LottieCanvasRenderingContext2D
 
     //TODO: 字符串不能直接传递，否则 animationItem.contentMode 中修改，此处不会修改。
     //TODO: 不确定 this.animationItem.container数据类型暂定为 CreateNS。【对应的是html渲染的 hide/show】。
@@ -104,8 +104,8 @@ public open class BaseRenderer {
      *
      * @param config - Type of Option<RenderConfig>.
      */
-    public init(container: CanvasRenderingContext2D) {
-        this.canvasContext = container
+    public init(container: LottieCanvasRenderingContext2D) {
+        this.canvasContext = (container)
         this.wrapperInAnimationItem = container
 
         //调试CVCompElement 中图形绘制渲染未生效，未报错问题。 继承关系中成员变量赋值成功与否。【后续删除】

@@ -433,6 +433,7 @@ public class DataManager {
         setupWorker()
         let processId: String = createProcess(onComplete, onError)
         //TODO: 把 workerInstance.postMessage 改为多参函数？？？
+        // async 异步
         workerInstance.postMessage(Data(
             types: "loadAnimation",
             //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译

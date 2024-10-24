@@ -30,7 +30,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      *
      * @param config - Type of Option<RenderConfig>.
      */
-    public init(config: Option<RenderConfig>, container: CanvasRenderingContext2D) {
+    public init(config: Option<RenderConfig>, container: LottieCanvasRenderingContext2D) {
         super(container)
         //this.canvasContext = container
         //this.wrapperInAnimationItem = container
@@ -117,7 +117,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
 
 
         //在画布上应用新的变换
-        this.canvasContext.setTransform(trProps[0], trProps[1], trProps[4], trProps[5], trProps[12], trProps[13])
+        // this.canvasContext.setTransform(trProps[0], trProps[1], trProps[4], trProps[5], trProps[12], trProps[13])
         //TODO: bug【14】暂不处理，调试用。写成死的。
         //this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
     }
@@ -299,16 +299,17 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      */
     public func updateContainerSize(width: Int64, height: Int64): Unit {
 
-        this.canvasContext.restore()
-        this.canvasContext.setTransform(1, 0, 0, 1, 0, 0) //resetting the transform
-        this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h) //清空之前画布
-        //TODO:怎么获取之前的画布 width 和 height？？？
-        //this.canvasContext.clearRect(0, 0, this.canvasContext.width, this.canvasContext.height) //清空之前画布
-        //TODO:[39]- 先按照 arkts 中 数据写死 this.canvasContext.width 和 this.canvasContext.height
-        let ccw = 174.46153846153845
-        let cch = 200.0
-        this.canvasContext.clearRect(0.0, 0.0, ccw, cch) //清空之前画布
-        this.canvasContext.save()
+//        this.canvasContext.restore()
+//        this.canvasContext.setTransform(1, 0, 0, 1, 0, 0) //resetting the transform
+//        this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h) //清空之前画布
+//        //TODO:怎么获取之前的画布 width 和 height？？？
+//        //this.canvasContext.clearRect(0, 0, this.canvasContext.width, this.canvasContext.height) //清空之前画布
+//        //TODO:[39]- 先按照 arkts 中 数据写死 this.canvasContext.width 和 this.canvasContext.height
+//        let ccw = 174.46153846153845
+//        let cch = 200.0
+//        this.canvasContext.clearRect(0.0, 0.0, ccw, cch) //清空之前画布
+//        this.canvasContext.save()
+
         this.reset()
         var elementWidth: Float64 = 0.0
         var elementHeight: Float64 = 0.0

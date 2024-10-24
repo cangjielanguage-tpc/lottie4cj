@@ -66,7 +66,7 @@ public class AnimationItem <: BaseEvent {
     public var _isFirstFrame: Float64 = -1.0
     public var frameModifier: Float64 = 0.0
 
-    public var wrapper: CanvasRenderingContext2D
+    public var wrapper: LottieCanvasRenderingContext2D
 
     /*
      * 初始化动画资源播放时的整体帧范围
@@ -363,7 +363,7 @@ public class AnimationItem <: BaseEvent {
         if (!hasRenderer) {
             return
         }
-        try {
+//        try {
             this.animationData = animData
             if (this.initialSegment.size >= 2) {
                 this.totalFrames = floor(this.initialSegment[1] - this.initialSegment[0])
@@ -394,9 +394,10 @@ public class AnimationItem <: BaseEvent {
                 this.audioController.pause()
             }
 
-        } catch (error: Exception) {
-            this.triggerConfigError(error)
-        }
+//        } catch (error: Exception) {
+//            this.triggerConfigError(error)
+//            throw error
+//        }
     }
 
     public func waitForFontsLoaded(): Unit {
@@ -491,26 +492,28 @@ public class AnimationItem <: BaseEvent {
         if (!this.hasRenderer) {
             return
         }
-        try {
+//        try {
             this.renderer.changeColor(color, endColor, layer, index)
             //替换play函数为gotoFrame,防止play方法创建Animator对象，导致修改颜色后刷帧问题
             this.gotoFrame()
             this.renderer.renderFrame(0.0, true)
-        } catch (error: Exception) {
-            // TODO: decide how to handle catch case
-        }
+//        } catch (error: Exception) {
+//            // TODO: decide how to handle catch case
+//            throw error
+//        }
     }
 
     public func renderFrame(): Unit {
         if (this.isLoaded == false || !this.hasRenderer) {
             return
         }
-        try {
+//        try {
             //TODO: CanvasRendererBase.renderFrame(num: Int64, forceRender: Bool) 2个参数。
             this.renderer.renderFrame(this.currentFrame + this.firstFrame, false)
-        } catch (error: Exception) {
-            this.triggerRenderFrameError(error)
-        }
+//        } catch (error: Exception) {
+//            this.triggerRenderFrameError(error)
+//            throw error
+//        }
     }
     
     public func play(name!: String = ""): Unit {
@@ -925,28 +928,28 @@ public class AnimationItem <: BaseEvent {
         if (!hasRenderer) {
             return
         }
-        try {
+//        try {
             let element: Option<BaseElement> = this.renderer.getElementByPath(path)
             if (let Some(v) <- element) {
                 v.updateDocumentData(documentData, index)
             }
-        } catch (error: Exception) {
-            // TODO: decide how to handle catch case
-        }
+//        } catch (error: Exception) {
+//            // TODO: decide how to handle catch case
+//        }
     }
 
     public func updateDocumentData(path: Array<String>, documentData: DocumentData, index: Int64): Unit {
         if (!hasRenderer) {
             return
         }
-        try {
+//        try {
             let element: Option<BaseElement> = this.renderer.getElementByPath(path)
             if (let Some(v) <- element) {
                 v.updateDocumentData(documentData, index)
             }
-        } catch (error: Exception) {
-            // TODO: decide how to handle catch case
-        }
+//        } catch (error: Exception) {
+//            // TODO: decide how to handle catch case
+//        }
     }
 
     public func trigger(name: String): Unit {

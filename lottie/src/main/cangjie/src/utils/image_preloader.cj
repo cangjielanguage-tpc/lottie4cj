@@ -252,7 +252,7 @@ public class ImagePreloader {
                 if (assetData.e == 0 || assetData.e == TYPE_IMAGE_SOURCE_RAWFILE) { //rawfile资源图片
                     //拼接rawfile url
                     let res: String = assetData.u + assetData.p       //->common/image/lottie/icon.png
-                    try {
+//                    try {
                         //TODO：AbilityContext 是仓颉 UI 中的系统组件 api，暂时不联合编译
                         //let filePath: String = context.filesDir + "/" + res
                         let filePath: String = "/" + res
@@ -287,8 +287,8 @@ public class ImagePreloader {
                             }
                             */      
                         }
-                    } catch (e: Exception) {
-                    }
+//                    } catch (e: Exception) {
+//                    }
                 } else if (assetData.e == TYPE_IMAGE_SOURCE_BASE64) { //base64图片
                     //generatePixelMapAndRefreshUI的入参ob可能为undefined，所以这里需要每隔一段时间检测一下ob是否实例化好了
                     //let task_id = setInterval(() => , 10)

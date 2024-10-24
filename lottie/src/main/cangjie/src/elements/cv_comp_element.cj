@@ -72,7 +72,7 @@ public class CvCompElement <: ICompElement {
                     //this.canvasContext.closePath()
                     //this.canvasContext.stroke()
 
-        this.elements[9].renderFrame()
+        this.elements[this.layers.size - 1].renderFrame()
         //var len = this.layers.size
         //var index: Int64 = 0
         //for (i in (len - 1)..=0: -1) {
