@@ -254,7 +254,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         } else if (layer.ty == 3) {
             return NullElement(layer, this.globalData)
         } else if (layer.ty == 4) {
-            return CvShapeElement(layer, this.globalData, this.buildElementParenting, layers: this.layers, elements: this.elements)
+            return CvShapeElement(layer, this.globalData, this.buildElementParenting, this.pendingElements, layers: this.layers, elements: this.elements)
         } else if (layer.ty == 5) {
             return CvTextElement(layer, globalData)
         } else if (layer.ty == 6) {
@@ -355,11 +355,15 @@ public open class BaseElement <: Equatable<BaseElement> {
     }
 
     public open func checkPendingElements(): Unit {
+        var index = this.pendingElements.size; //TODO: 测试对比观测
         while (this.pendingElements.size != 0) {
             let element: BaseElement = this.pendingElements.remove(this.pendingElements.size - 1)
 
             //TODO[lp]: - HierarchyElement.checkParenting => element 是 HierarchyElement ？？？
             element.checkParenting()
+
+            //TODO: 测试对比观测
+            index--; //TODO: 测试对比观测
         }
     }
 
@@ -866,6 +870,11 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.prepareLayer()
         //TODO: [已解构--直接调用函数，省去renderer. ]解构 renderer 和 globalData。
         this.globalData.save(forceRealStack)  //CanvasRendererBase
+
+        //Hilog.error(0, "---9--", "----->${currentStyle.preTransforms.finalTransform.props}")
+        var tmps = this.finalTransform.mat.props
+        Hilog.error(0, "---33333--", "[renderFrame]: tmps = ${tmps}")
+
         this.globalData.ctxTransform(this.finalTransform.mat.props) //CanvasRendererBase
         this.globalData.ctxOpacity(Int64(this.finalTransform.mProp.o.v[0]))   //CanvasRendererBase
         this.renderInnerContent() //CVShapeElement

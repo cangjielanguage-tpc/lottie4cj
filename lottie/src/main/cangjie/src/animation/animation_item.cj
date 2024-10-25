@@ -443,9 +443,9 @@ public class AnimationItem <: BaseEvent {
             // 渲染第一帧
             this.gotoFrame()
             // 自动播放
-            //if (this.autoplay) {
-            //    this.play() //播放动画
-            //}
+            if (this.autoplay) {
+                this.play() //播放动画
+            }
         }
     }
     

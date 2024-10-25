@@ -61,7 +61,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
     }
 
     public func createShape(data: Layer): CvShapeElement { 
-        return CvShapeElement(data, this.globalData, this.buildElementParenting)
+        return CvShapeElement(data, this.globalData, this.buildElementParenting, ArrayList<BaseElement>())
     }
 
     public func createText(data: Layer): CvTextElement { 
@@ -129,6 +129,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param op - Type of Int64.
      */
     public func ctxOpacity(op: Int64): Unit {
+        var tmps = this.contextData.getTransform().props;
+        Hilog.error(0, "---1--", "[ctxOpacity]----->tmps = ${tmps}")
+
         var currentOpacity: Int64 = this.contextData.getOpacity()
         if (!this.renderConfig.clearCanvas) { //canvasContext 是画布组件中的 CanvasRenderingContext2D
             if (op < 0) {
@@ -155,6 +158,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         if (this.globalData.currentGlobalAlpha != currentOpacity) {
             this.globalData.currentGlobalAlpha = currentOpacity
         }
+
+        var tmps2 = this.contextData.getTransform().props;
+        Hilog.error(0, "---1--", "[ctxOpacity]----->tmps2 = ${tmps2}")
     }
 
     /**
@@ -174,6 +180,8 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param actionFlag - Type of Bool.
      */
     public func save(actionFlag: Bool): Unit {
+        var tmps = this.contextData.getTransform().props;
+        Hilog.error(0, "---0--", "----->tmps = ${tmps}")
         if (!this.renderConfig.clearCanvas) {
             this.canvasContext.save()
             return
@@ -182,6 +190,8 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             this.canvasContext.save()
         }
         this.contextData.push()
+        var tmps2 = this.contextData.getTransform().props;
+        Hilog.error(0, "---0--", "----->tmps2 = ${tmps2}")
     }
 
     /**

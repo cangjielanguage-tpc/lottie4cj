@@ -75,16 +75,13 @@ public class CvCompElement <: ICompElement {
                     //this.canvasContext.closePath()
                     //this.canvasContext.stroke()
 
-        this.elements[this.elements.size - 1].renderFrame()
-        //var len = this.layers.size
-        //var index: Int64 = 0
+        var indexCOMP: Int64 = 3
+        this.elements[indexCOMP].renderFrame()
+        //let len: Int64 = this.layers.size
+        //var indexCOMP: Int64 = 0
         //for (i in (len - 1)..=0: -1) {
-        //    index = i
+        //    indexCOMP = i
         //    if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
-//
-        //        if (this.elements[i].finalTransform.mProp.o.v.size > 0) {
-        //        }
-
         //        this.elements[i].renderFrame()  //renderFrame
         //    }
         //}
