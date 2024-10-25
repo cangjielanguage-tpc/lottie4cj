@@ -97,7 +97,7 @@ class MyView {
     private var animateItem2: String = "grunt"
 
     //var filePath: String = "/data/storage/el2/base/files/dengdaitu.gif"
-    var sourceId: UInt32 = UInt32(@r(app.media.data2).id)
+    var sourceId: UInt32 = UInt32(@r(app.media.data).id)
 
     func build() {
         Column() {

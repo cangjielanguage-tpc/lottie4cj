@@ -20,6 +20,15 @@ public class ShapeData <: ToString {
     
     public var _maxLength: Int64 = 8
 
+    public init(sd: ShapeData) {
+        this.c = sd.c
+        this.v = sd.v.clone()
+        this.i = sd.i.clone()
+        this.o = sd.o.clone()
+        this._length = sd._length
+        this._maxLength = sd._maxLength
+    }
+
     /**
      * Create a ShapeData instance based on parameters.
      *

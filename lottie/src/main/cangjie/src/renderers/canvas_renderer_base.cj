@@ -117,8 +117,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
 
 
         //在画布上应用新的变换
-        // this.canvasContext.setTransform(trProps[0], trProps[1], trProps[4], trProps[5], trProps[12], trProps[13])
+        this.canvasContext.setTransform(trProps[0], trProps[1], trProps[4], trProps[5], trProps[12], trProps[13])
         //TODO: bug【14】暂不处理，调试用。写成死的。
+
         //this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
     }
 

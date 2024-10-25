@@ -588,8 +588,8 @@ public open class BaseElement <: Equatable<BaseElement> {
         if (this.finalTransform._matMdf) {
             //TODO: [45] TransformElement.renderTransform 中 this.finalTransform.mProp.v.props 的值不正确。
             //TODO: [45] 暂未处理，测试先赋正确的值。
-            this.finalTransform.mProp.v.props[12] = 1311.31103515625
-            this.finalTransform.mProp.v.props[13] = 513.7009887695313
+            //this.finalTransform.mProp.v.props[12] = 1311.31103515625
+            //this.finalTransform.mProp.v.props[13] = 513.7009887695313
             var mat: Array<Float64> = this.finalTransform.mProp.v.props
             finalMat.cloneFromProps(mat)
             for (i in 0..len) {
@@ -866,22 +866,22 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.prepareLayer()
         //TODO: [已解构--直接调用函数，省去renderer. ]解构 renderer 和 globalData。
         this.globalData.save(forceRealStack)  //CanvasRendererBase
-//        this.globalData.ctxTransform(this.finalTransform.mat.props) //CanvasRendererBase
+        this.globalData.ctxTransform(this.finalTransform.mat.props) //CanvasRendererBase
         this.globalData.ctxOpacity(Int64(this.finalTransform.mProp.o.v[0]))   //CanvasRendererBase
         this.renderInnerContent() //CVShapeElement
-//        this.globalData.restore(forceRealStack)
-//        //将两个layer数据分别绘制到两个离屏画布上，通过将离屏绘制数据结合混合模式绘制到当前显示画布上，实现mask效果
-//        this.exitLayer() // CVBaseElement
-//
-//        //恢复高斯模糊的默认值，防止非高斯模糊图层也高斯模糊 shadowBlur(blur: Int64): Unit
-//        this.canvasContext.shadowBlur(0)
-//
-//        if (this.maskManager.hasMasks) {
-//            this.globalData.restore(true)
-//        }
-//        if (this._isFirstFrame) {
-//            this._isFirstFrame = false
-//        }
+        this.globalData.restore(forceRealStack)
+        //将两个layer数据分别绘制到两个离屏画布上，通过将离屏绘制数据结合混合模式绘制到当前显示画布上，实现mask效果
+        this.exitLayer() // CVBaseElement
+
+        //恢复高斯模糊的默认值，防止非高斯模糊图层也高斯模糊 shadowBlur(blur: Int64): Unit
+        this.canvasContext.shadowBlur(0)
+
+        if (this.maskManager.hasMasks) {
+            this.globalData.restore(true)
+        }
+        if (this._isFirstFrame) {
+            this._isFirstFrame = false
+        }
     }
 
     public open func hide(): Unit {
