@@ -16,6 +16,8 @@ internal import lottie.bezier.*
 internal import lottie.inner.*
 internal import lottie.pool.*
 
+import ohos.hilog.*
+
 public type Caching = CachingAtTime
 
 //internal import lottie.model.*
@@ -198,6 +200,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     public func interpolateValue(frameNum: Float64, caching: Caching) {
         var offsetTime: Float64 = this.offsetTime
         var newValue: Array<Float64> = Array<Float64>()
+        //移到后面处理？
         if (this.propType == "multidimensional") {
             newValue = Array<Float64>(this.pv.size, item: 0.0)
         }
@@ -249,10 +252,18 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         } else if (let Some(v: Array<Float64>) <- keyData.s) {
             v
         } else if (let Some(v: PointF) <- keyData.s) {
+            //[v.x, v.y, 0.0]
             [v.x, v.y, 0.0]
         } else {
-            throw Exception()
+            Hilog.error(0, "PropertyFactory", "[interpolateValue]: keyData.s is not Float64/Array<Float64>/PointF")
+            Array<Float64>()
         }
+
+        //TODO: 加一层数组越界拦截处理
+        if (this.pv.size < keyData_s.size && this.propType == "multidimensional") {
+            newValue = Array<Float64>(keyData_s.size, item: 0.0)
+        }
+
 
         let keyData_e: Array<Float64> =
         if (let Some(v: Float64)<- keyData.e) {
@@ -262,7 +273,8 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         } else if (let Some(v: PointF) <- keyData.e) {
             [v.x, v.y, 0.0]
         } else {
-            throw Exception()
+            Hilog.error(0, "PropertyFactory", "[interpolateValue]: keyData.e is not Float64/Array<Float64>/PointF")
+            Array<Float64>()
         }
         let nextKeyData_s: Array<Float64> =
         if (let Some(v: Float64)<- nextKeyData.s) {
@@ -272,7 +284,8 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         } else if (let Some(v: PointF) <- nextKeyData.s) {
             [v.x, v.y, 0.0]
         } else {
-            throw Exception()
+            Hilog.error(0, "PropertyFactory", "[interpolateValue]: nextKeyData.s is not Float64/Array<Float64>/PointF")
+            Array<Float64>()
         }
 
         if (keyData.to.size != 0) { // to: PointF 改为 Array<Float64>
@@ -346,30 +359,35 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             var keyValue: Float64 = 0.0
             len = keyData_s.size
 
-            endValue = nextKeyData_s
             if (nextKeyData_s.size == 0) {
                 endValue = keyData_e
+            } else {
+                endValue = nextKeyData_s
             }
 
             //TODO: 未确认 this.sh 数据类型，为了编译暂定为Bool。--------------------------------------------------------------2024.08.17
             if (this.sh && keyData.h != 1) {
                 if (frameNum >= nextKeyTime) {
-                    newValue[0] = endValue[0]
                     if (endValue.size > 2) {
+                        newValue[0] = endValue[0]
                         newValue[1] = endValue[1]
                         newValue[2] = endValue[2]
                     } else if (endValue.size > 1) {
+                        newValue[0] = endValue[0]
                         newValue[1] = endValue[1]
-                        //newValue[2] = endValue[2]
+                    } else if (endValue.size == 1) {
+                        newValue[0] = endValue[0]
                     }
                 } else if (frameNum <= keyTime) {
-                    newValue[0] = keyData_s[0]
                     if (keyData_s.size > 2) {
+                        newValue[0] = keyData_s[0]
                         newValue[1] = keyData_s[1]
                         newValue[2] = keyData_s[2]
                     } else if (keyData_s.size > 1) {
+                        newValue[0] = keyData_s[0]
                         newValue[1] = keyData_s[1]
-                        //newValue[2] = keyData_s[2]
+                    } else if (keyData_s.size == 1) {
+                        newValue[0] = keyData_s[0]
                     }
                 } else {
                     let quatStart: Array<Float64> = createQuaternion(keyData_s)
@@ -620,7 +638,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     public static func getProp<T>(data: T, dataK: PointF, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>, containerType!: Int8 = 3): PropertyFactory<T, PointF> where T <: ToString {
         //针对json中是[Float64, Float64]，解析后是 PointF的部分。
         //, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1
-        var p: PropertyFactory<T, PointF> = multiDimensionalProperty(data, [dataK.x, dataK.y], mult, container, dataK, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties)
+        var p: PropertyFactory<T, PointF> = multiDimensionalProperty(data, [dataK.x, dataK.y, 0.0], mult, container, dataK, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties)
         p.containerType = containerType
         if (p.effectsSequence.size != 0) {
             //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？----------------------------------------------------------2024.08.17

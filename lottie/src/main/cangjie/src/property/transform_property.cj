@@ -166,16 +166,17 @@ public class TransformProperty <: DynamicPropertyContainer {
                 this.pz.container = [this]
             }
         } else {
+            vLen = 3
             if (data.p.k.size == 1) {//走【分支2】
                 let point: PointF = data.p.k[0].k ?? PointF(x: 0.0, y: 0.0)
                 //, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1
                 //, types: types, dataA: dataA, vLen: vLen
-                this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.p.a, vLen: 2, dynamicProperties: dynamicProperties, containerType: 2)
+                this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.p.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2)
             } else if (data.p.k.size > 1) {//走【分支4】
-                this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, this, elemGlobalData, elemData, dataA: data.p.a, vLen: vLen, dynamicProperties: dynamicProperties, containerType: 2)
+                this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, this, elemGlobalData, elemData, dataA: data.p.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2)
             } else {//走【分支2】  =>   data.p || { k: [0, 0, 0] }
                 let point: PointF = PointF(x: 0.0, y: 0.0)
-                this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.p.a, vLen: 2, dynamicProperties: dynamicProperties, containerType: 2)
+                this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.p.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2)
             }
             this.p.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
             this.p.container = [this]
@@ -232,12 +233,12 @@ public class TransformProperty <: DynamicPropertyContainer {
         //"a": {"a": 0, "k": [0, 0], "ix": 1}  // || { k: [0, 0, 0] }
         if (data.a.k.size == 1) { //获取 translate 相关的参数 => [anchor锚点]  //走【分支2】
             let point: PointF = data.a.k[0].k ?? PointF(x: 0.0, y: 0.0)
-            this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.a.a, vLen: 2, dynamicProperties: dynamicProperties, containerType: 2)
+            this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.a.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2)
         } else if (data.a.k.size > 1) {//走【分支4】
-            this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, data.a.k, 1, 0.0, this, elemGlobalData, elemData, dataA: data.a.a, vLen: vLen, dynamicProperties: dynamicProperties, containerType: 2)
+            this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, data.a.k, 1, 0.0, this, elemGlobalData, elemData, dataA: data.a.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2)
         } else {//走【分支2】  =>   data.a || { k: [0, 0, 0] }
             let point: PointF = PointF(x: 0.0, y: 0.0)
-            this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.a.a, vLen: 2, dynamicProperties: dynamicProperties, containerType: 2)
+            this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.a.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2)
         }
         this.a.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
         this.a.container = [this]

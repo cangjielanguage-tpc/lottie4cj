@@ -226,8 +226,8 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
 
             sp.v.setPathData(sv.c, len)
         }
-        //TODO：调不到shapePool.clone，需要把 shapePool 改为对象？？？  
-        //sp.pv = shapePool.clone(sp.v)
+        //TODO：调不到shapePool.clone，需要把 shapePool 改为对象？？？  //sp.pv = shapePool.clone(sp.v)
+        sp.pv = ShapeData(sp.v)
 
         sp.paths.addShape(sp.v)
         sp.reset = sp.resetShape
@@ -248,19 +248,19 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         
         // 仔细辨别确认调用的是 PropertyFactory.getProp 哪个分支。
         if (data.p.k.size > 1) {//p: AnimatableSplitDimensionPathValue => _k: Array<Keyframe<PointF>>
-            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 2, dynamicProperties: dynamicProperties)
+            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
         } else if (data.p.k.size == 1) {//走【分支2】:  dataK 是数组Array<number>   //json中："p": {"a": 0, "k": [0, 0], "ix": 3}
             let point: PointF = data.p.k[0].k ?? PointF(x: 0.0, y: 0.0)
-            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 1.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 1.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
         }
         sp.p.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
         sp.p.container = [sp]
             
         if (data.s.k.size > 1) {//_s: Array<Keyframe<PointF>>
-            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, data.s.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 2, dynamicProperties: dynamicProperties)
+            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, data.s.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
         } else if (data.s.k.size == 1) {//走【分支2】:  dataK 是数组Array<number>   //json中："s": {"a": 0, "k": [101.414, 91.422], "ix": 2}
             let point: PointF = data.s.k[0].k ?? PointF(x: 0.0, y: 0.0)
-            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, point, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, point, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
         }
         sp.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
         sp.s.container = [sp]
@@ -295,19 +295,19 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         
         /* 仔细辨别确认调用的是 PropertyFactory.getProp 哪个分支。 */
         if (data.p.k.size > 1) {  //p: AnimatableSplitDimensionPathValue => _k: Array<Keyframe<PointF>>
-            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 2, dynamicProperties: dynamicProperties)
+            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
         } else if (data.p.k.size == 1) { //走【分支2】:  dataK 是数组Array<number>   //json中："p": {"a": 0, "k": [0, 0], "ix": 3}
             let point: PointF = data.p.k[0].k ?? PointF(x: 0.0, y: 0.0)
-            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 1.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 1.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
         }
         sp.p.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
         sp.p.container = [sp]
         
         if (data.s.k.size > 1) { //_s: Array<Keyframe<PointF>>
-            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, data.s.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 2, dynamicProperties: dynamicProperties)
+            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, data.s.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
         } else if (data.s.k.size == 1) { //走【分支2】:  dataK 是数组Array<number>   //json中："s": {"a": 0, "k": [332.711, 332.711], "ix": 2}
             let point: PointF = data.s.k[0].k ?? PointF(x: 0.0, y: 0.0)
-            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, point, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, point, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
         }
         sp.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
         sp.s.container = [sp]
@@ -361,7 +361,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         
         //"p":{"a":1,"k":[{"i":{"x":0.833,"y":0.833},"o":{"x":0.167,"y":0.167},"t":0,"s":[0,0],"to":[0.833,1.333],"ti":[-0.833,-1.333]},{"t":59,"s":[5,8]}],"ix":4}
         if (data.p.k.size > 1) {//【分支4】   //p: AnimatableSplitDimensionPathValue => _k: Array<Keyframe<PointF>>
-            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 2, dynamicProperties: dynamicProperties)
+            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
             sp.p.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
             sp.p.container = [sp]
         }
