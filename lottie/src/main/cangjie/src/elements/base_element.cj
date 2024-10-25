@@ -719,6 +719,7 @@ public open class BaseElement <: Equatable<BaseElement> {
      * current frame number in Layer's time   //层时间中的当前帧数
      */
     public func checkLayerLimits(num: Float64): Unit {
+        //TODO：调试用，后续删除
         let a = this.data.ip - this.data.st <= num
         let b = this.data.op - this.data.st > num
         if (this.data.ip - this.data.st <= num && this.data.op - this.data.st > num) {

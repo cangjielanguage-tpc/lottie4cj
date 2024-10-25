@@ -15,6 +15,18 @@ internal import lottie.model.*
 //TODO： DynamicPropertyContainer 是各个 property 的父类？？？
 public open class DynamicPropertyContainer <: ContentModelElement {
 
+    //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property/DynamicPropertyContainer
+    public var containerType: Int8 = 1
+    //public var containerInFP: Array<DynamicPropertyContainer> = Array<DynamicPropertyContainer>()
+    /*
+     * TODO: container 在arkts中是多种数据类型，cangjie没有办法完全兼容。
+     * 【暂时】保存为两类，一类代表各种 Factory，存在成员变量 container[0]中；一个代表各种 Element，通过操作成员变量 dynamicPropertiesInElem达到效果。
+     * 处理方案分为 3 类，参考成员变量 containerType。
+     * containerType：1-FrameElement; 2-TransformPropertyFactory; 3-其他Property/DynamicPropertyContainer
+     * 间接用 addDynamicPropertyContainer 函数进行分别处理。
+     */
+    public var container: Array<DynamicPropertyContainer> = Array<DynamicPropertyContainer>()
+
     //TODO：FrameElement 中编译用。
     public var propType: String = ""
 
@@ -24,6 +36,7 @@ public open class DynamicPropertyContainer <: ContentModelElement {
 
     //TODO: 未确认 dynamicProperties 的数据类型，暂定为 DynamicPropertyContainer
     public var dynamicProperties: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>()
+    public var dynamicPropertiesInElem: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>()
     public var _mdf: Bool = false
     public var _isAnimated: Bool = false
 
@@ -41,7 +54,7 @@ public open class DynamicPropertyContainer <: ContentModelElement {
 
         this.elemGlobalData = elemGlobalData
         this.elemData = elemData
-        this.dynamicProperties = dynamicProperties
+        this.dynamicPropertiesInElem = dynamicProperties
     }
 
     //TODO: 改为函数类型的成员变量？？？
@@ -60,10 +73,26 @@ public open class DynamicPropertyContainer <: ContentModelElement {
         //TODO： BaseElement 中暂时没有实现 addDynamicProperty 函数。
         //TODO：此函数是将TextProperty存入到 ITextElement.dynamicProperties 中。
         //TODO: 【处理方案】传入 ITextElement.dynamicProperties 而非 elem 可以吗？
-        //this.container.addDynamicProperty(this)
+        //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property/DynamicPropertyContainer
+        if (containerType == 2 && this.container.size == 1) {
+            this.container[0].addDynamicProperty(this)
+        } else if (containerType == 1) {
+            this.addDynamicPropertyInElem(this)
+        } else if (containerType == 3 && this.container.size == 1){
+            this.container[0].addDynamicProperty(this)
+        }
         this._isAnimated = true
     }
-    
+
+    public open func addDynamicPropertyInElem(props: DynamicPropertyContainer): Unit {
+        for (i in 0..this.dynamicPropertiesInElem.size) {
+            if (refEq(props, this.dynamicPropertiesInElem[i])) {
+                return
+            }
+        }
+        this.dynamicPropertiesInElem.append(props)
+    }
+
     public func iterateDynamicProperties(): Unit {
         this._mdf = false
         let len: Int64 = this.dynamicProperties.size

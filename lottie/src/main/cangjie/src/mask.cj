@@ -100,13 +100,17 @@ public open class MaskElement <: BaseElement {
             if (properties[i].o.size == 1) {
                 //TODO: PropertyFactory.getProp 传入的参数是 MaskElement，不是 DynamicPropertyContainer？？？
                 //TODO: 暂时先传入 DynamicPropertyContainer。
-                op = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].o, properties[i].o[0].k ?? 0, 0.01, dp, globalData, data, dynamicProperties: dynamicProperties)
+                op = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].o, properties[i].o[0].k ?? 0, 0.01, dp, globalData, data, dynamicProperties: dynamicProperties, containerType: 1)
             } else if (properties[i].o.size > 1) {
-                op = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].o, properties[i].o, 0, 0.01, dp, globalData, data, dynamicProperties: dynamicProperties)
+                op = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].o, properties[i].o, 0, 0.01, dp, globalData, data, dynamicProperties: dynamicProperties, containerType: 1)
             } else {
                 op = PropertyFactory<Array<Keyframe<Int64>>, Int64>(properties[i].o, 0.01, dp, globalData, data, dynamicProperties: dynamicProperties)
             }
+            op.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+
             let props: ShapePropertyFactory = ShapePropertyFactory.getShapeProp(properties[i], 3, globalData, data, dynamicProperties: dynamicProperties)
+            props.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+
 
             path = CreateNS("path")
             if (properties[i].mode == "n") {
@@ -142,7 +146,7 @@ public open class MaskElement <: BaseElement {
                          * TODO: layers[i].masksProperties.x 有几种数据类型？？？   //TODO: 暂定就是 "x":{"k":0}。
                          * TODO: PropertyFactory.getProp 传入的参数是 MaskElement，不是 DynamicPropertyContainer？？？  //TODO: 暂时先传入 DynamicPropertyContainer。
                          */  //TODO: 暂时先传入 DynamicPropertyContainer。
-                        x = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].x, k, 0.0, dp, globalData, data, dynamicProperties: dynamicProperties)
+                        x = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].x, k, 0.0, dp, globalData, data, dynamicProperties: dynamicProperties, containerType: 1)
                         filterID = CreateElementID.createID()
                         expansor = CreateNS("filter")
                         expansor.setAttribute("id", filterID)
@@ -159,9 +163,11 @@ public open class MaskElement <: BaseElement {
                     }
                 } else if (properties[i].x.size > 1) {
                     //TODO: PropertyFactory.getProp 传入的参数是 MaskElement，不是 DynamicPropertyContainer？？？  //TODO: 暂时先传入 DynamicPropertyContainer。
-                    x = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].x, properties[i].x, 0, 0.0, dp, globalData, data, dynamicProperties: dynamicProperties)
+                    x = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].x, properties[i].x, 0, 0.0, dp, globalData, data, dynamicProperties: dynamicProperties, containerType: 1)
                 }
+                x.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
+                        
                 // TODO: 将其移动到工厂或构造函数
                 this.storedData[i] = StoredData(
                     elem: path,

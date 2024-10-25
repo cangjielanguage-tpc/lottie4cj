@@ -82,12 +82,14 @@ public class CvShapeElement <: IShapeElement {
         if (data.ty == "fl" || data.ty == "st") {
 
             if (data.c.size == 1) {
-                elementData.c = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.c, data.c[0].k ?? Array<Float64>(), 255.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
+                elementData.c = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.c, data.c[0].k ?? Array<Float64>(), 255.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
             } else if (data.c.size > 1) {
                 if (data.c.size > 0) { vLen = (data.c[0].s ?? Array<Float64>()).size }
-                elementData.c = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.c, data.c, 1, 255.0, dp, this.globalData, this.data, vLen: vLen, dynamicProperties: this.dynamicProperties)
+                elementData.c = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.c, data.c, 1, 255.0, dp, this.globalData, this.data, vLen: vLen, dynamicProperties: this.dynamicProperties, containerType: 1)
             }
+            elementData.c.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
+        
             if (!elementData.c.k) {
                 //styleElem.co = "rgb(" + "${floor(elementData.c.v[0])}" + "," + "${floor(elementData.c.v[1])}" + "," + "${floor(elementData.c.v[2])}" + ")"
                 styleElem.co = Color(UInt8(floor(elementData.c.v[0])), UInt8(floor(elementData.c.v[1])), UInt8(floor(elementData.c.v[2])))
@@ -95,25 +97,43 @@ public class CvShapeElement <: IShapeElement {
         } else if (data.ty == "gf" || data.ty == "gs") {
 
             if (data.s.size == 1) {
-                elementData.s = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.s, data.s[0].k ?? Array<Float64>(), 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
+                elementData.s = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.s, data.s[0].k ?? Array<Float64>(), 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
             } else if (data.s.size > 1) {
                 if (data.s.size > 0) { vLen = (data.s[0].s ?? Array<Float64>()).size }
-                elementData.s = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.s, data.s, 1, 0.0, dp, this.globalData, this.data, vLen: vLen, dynamicProperties: this.dynamicProperties)
+                elementData.s = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.s, data.s, 1, 0.0, dp, this.globalData, this.data, vLen: vLen, dynamicProperties: this.dynamicProperties, containerType: 1)
             }
+            elementData.s.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
+            
             if (data.e.size == 1) {
-                elementData.e = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.e, data.e[0].k ?? Array<Float64>(), 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
+                elementData.e = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.e, data.e[0].k ?? Array<Float64>(), 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
             } else if (data.e.size > 1) {
                 if (data.e.size > 0) { vLen = (data.e[0].s ?? Array<Float64>()).size }
-                elementData.e = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.e, data.e, 1, 0.0, dp, this.globalData, this.data, vLen: vLen, dynamicProperties: this.dynamicProperties)
+                elementData.e = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.e, data.e, 1, 0.0, dp, this.globalData, this.data, vLen: vLen, dynamicProperties: this.dynamicProperties, containerType: 1)
             }
+            elementData.e.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
+            
             //TODO: h 成员变量暂时是空的。
             // elementData.h = PropertyFactory.getProp(this, data.h || { k: 0 }, 0, 0.01, this)
-            elementData.a = PropertyFactory<AK, Int64>.getProp(data.a, data.a.k, degToRads, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
+            elementData.a = PropertyFactory<AK, Int64>.getProp(data.a, data.a.k, degToRads, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
+            elementData.a.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+
+            
             elementData.g = GradientProperty(data.g, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
+            elementData.g.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+
         }
-        elementData.o = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(data.o, data.o, 0, 0.01, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
+
+        if (data.o.size == 1) {
+            elementData.o = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(data.o, data.o[0].k ?? 0, 0.01, dp, this.globalData, this.data, types: 0, dynamicProperties: this.dynamicProperties, containerType: 1)
+        } else if (data.o.size > 1) {
+            elementData.o = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(data.o, data.o, 0, 0.01, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
+        }
+        //elementData.o = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(data.o, data.o, 0, 0.01, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
+        elementData.o.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+
+            
         if (data.ty == "st" || data.ty == "gs") {
             let lc: Int64 = if (data.lc <= 0){ 2 } else { data.lc }
             styleElem.lc = lineCapEnum[lc]
@@ -122,13 +142,19 @@ public class CvShapeElement <: IShapeElement {
             if (data.lj == 1) { // eslint-disable-line eqeqeq
                 styleElem.ml = data.ml
             }
-            elementData.w = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.w, data.w, 0, 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
+            elementData.w = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.w, data.w, 0, 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
+            elementData.w.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+
+            
             if (!elementData.w.k) {
                 styleElem.wi = elementData.w.v[0]
             }
             if (data.d.size > 0) {
                 var d = DashProperty(data.d, "canvas", this.globalData, this.data, dynamicProperties: this.dynamicProperties)
                 elementData.d = d
+                elementData.d.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+
+            
                 if (!elementData.d.k) {
                     styleElem.da = elementData.d.dashArray
                     //styleElem.do = elementData.d.dashoffset[0]
@@ -158,17 +184,20 @@ public class CvShapeElement <: IShapeElement {
     public func createTransformElement(datas: AnimatableTransform) {
         var op: PropertyFactory<ArrayKeyframeInt64, Int64>
         if (datas.o.k.size == 1) {
-            op = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k[0].k ?? 0, 0.01, dp, this.globalData, this.data, types: 0, dataA: 0, vLen: 1, dynamicProperties: this.dynamicProperties)
+            op = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k[0].k ?? 0, 0.01, dp, this.globalData, this.data, types: 0, dataA: 0, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1)
         } else if (datas.o.k.size > 1){
-            op = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k, 0, 0.01, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
+            op = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k, 0, 0.01, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
         } else {
             op = PropertyFactory<ArrayKeyframeInt64, Int64>(datas.o, 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
         }
+        op.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+
+        
         var elementData = TransformInElement(opacity: 1.0,
             _opMdf: false,
             key: this.transformsManager.getNewKey(),
-            //(data: T, dataK: Array<Keyframe<E>>, types: Int64, mult: Option<Float64>, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer)
-            //op: PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k, 0, 0.01, dp, this.globalData, this.data),
+            //(data: T, dataK: Array<Keyframe<E>>, types: Int64, mult: Option<Float64>, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, containerType: 1)
+            //op: PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k, 0, 0.01, dp, this.globalData, this.data, containerType: 1),
             op: op,
             mProps: TransformPropertyFactory.getTransformProperty(datas, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
         )
@@ -324,11 +353,13 @@ public class CvShapeElement <: IShapeElement {
 
         this.transformHelper().opacity = 1.0
         this.transformHelper()._opMdf = false
+        //TODO：调试用，后续删除
         this.renderModifiers()
         this.canvasContext.fillStyle(Color.BLACK)
         this.canvasContext.fillRect(0, 150, 200, 200)
         this.transformsManager.processSequences(this._isFirstFrame)
         this.renderShape(this.transformHelper(), this.shapesData, this.itemsData, isMain:true)
+        //TODO：调试用，后续删除
         this.canvasContext.fillStyle(Color.GREEN)
         this.canvasContext.fillRect(0, 150, 200, 200)
     }
@@ -428,9 +459,11 @@ public class CvShapeElement <: IShapeElement {
                     for (k in 0..kLen) {
                         if (nodes[k].t == "m") {
 //                            ctx.moveTo(nodes[k].p[0], nodes[k].p[1])
+                            //TODO：调试用，后续删除
                             ctx.moveTo(30, 30)
                         } else if (nodes[k].t == "c") {
 //                            ctx.bezierCurveTo(nodes[k].pts[0], nodes[k].pts[1], nodes[k].pts[2], nodes[k].pts[3], nodes[k].pts[4], nodes[k].pts[5])
+                            //TODO：调试用，后续删除
                             ctx.bezierCurveTo(20, 100, 200, 100, 200, 20)
                         } else {
                             ctx.closePath()
@@ -490,6 +523,7 @@ public class CvShapeElement <: IShapeElement {
             } else if (items[i].ty == "gr") {
                 this.renderShapeColor(color, endColor, (items[i] as ShapeGroup).getOrThrow().it, (data[i] as ShapeGroupElement).getOrThrow().it)
             } else if (items[i].ty == "gf" || items[i].ty == "gs") {
+//                try {
                     //data[i].style.grd = undefined
                     var lens = 3
                     for (j in 0..lens) {
@@ -505,6 +539,8 @@ public class CvShapeElement <: IShapeElement {
 //                            data[i].g.c[j * 4 + 1] = color[0]
 //                          }
                     }
+//                  } catch (e: Exception) {
+//                  }
             }
             i -= 1
         }
@@ -591,6 +627,7 @@ public class CvShapeElement <: IShapeElement {
                 // data[i]------->ShapeGroupElement
                 this.renderShapeColor(color, endColor, (items[i] as ShapeGroup).getOrThrow().it, (data[i] as ShapeGroupElement).getOrThrow().it)
             } else if (items[i].ty == "gf" || items[i].ty == "gs") {
+//                try {
                     let fse: FillStrokeElement = (items[i] as FillStrokeElement).getOrThrow()
                     //data[i].style.grd = undefined
                     var lens = 3
@@ -607,6 +644,8 @@ public class CvShapeElement <: IShapeElement {
                           fse.g.c[j * 4 + 1] = color[0]
                         }
                     }
+//                } catch (e: Exception) {
+//                }
             }
             i -= 1
         }

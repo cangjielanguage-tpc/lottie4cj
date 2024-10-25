@@ -77,7 +77,9 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
         //TODO: s/e 在 json 中暂未找到
         //TODO: 是否将 s/e/o/sm 当成空的 AK 进行初始化？？？
         this.s = PropertyFactory<AK, Int64>.getProp(AK(), 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-
+        this.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.s.container = [this]
+        
         //TODO: 是否将 e 当成空的 PropertyFactory？？？
         this.e.v = [100.0]
         //if ('e' in data) {
@@ -89,17 +91,27 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
         //TODO: o 在 json 中暂未找到
         //TODO: 是否将 s/e/o/sm 当成空的 AK 进行初始化？？？
         this.o = PropertyFactory<AK, Int64>.getProp(AK(), 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-
+        this.o.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.o.container = [this]
+            
         //"xe": {"a": 0, "k": 0} //走【分支1】
         this.xe = PropertyFactory<AK, Int64>.getProp(data.xe, data.xe.k, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.xe.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.xe.container = [this]
         //"ne": {"a": 0, "k": 0} //走【分支1】
         this.ne = PropertyFactory<AK, Int64>.getProp(data.ne, data.ne.k, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.ne.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.ne.container = [this]
         //"a": {"a": 0, "k": 100} //走【分支1】
         this.a = PropertyFactory<AK, Int64>.getProp(data.a, data.a.k, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-
+        this.a.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.a.container = [this]
+        
         //TODO: sm 在 json 中暂未找到
         //TODO: 是否将 s/e/o/sm 当成空的 AK 进行初始化？？？
         this.sm = PropertyFactory.getProp(AK(k: 100), 100, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.sm.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.sm.container = [this]
 
         if (this.dynamicProperties.size == 0) {
             this.getValue()
@@ -220,6 +232,10 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
             }
         }
         return mult * this.a.v[0]
+    }
+
+    public func getValue(): Unit {
+        this.getValue(false)
     }
 
     public func getValue(newCharsFlag: Bool) {

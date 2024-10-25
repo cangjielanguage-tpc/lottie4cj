@@ -39,12 +39,16 @@ public open class ZigZagModifier <: ShapeModifier {
             } else if (sr.r.k.size > 1) {//走【分支3】
                 this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(sr.r, sr.r.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
             }
+            this.frequency.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            this.frequency.container = [this]
             
             if (sr.pt.k.size == 1) {//走【分支1】
                 this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(sr.pt, sr.pt.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
             } else if (sr.pt.k.size > 1) {//走【分支3】
                 this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(sr.pt, sr.pt.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
             }
+            this.pointsType.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            this.pointsType.container = [this]
         }
 
         this._isAnimated = this.amplitude.effectsSequence.size != 0 || this.frequency.effectsSequence.size != 0 || this.pointsType.effectsSequence.size != 0

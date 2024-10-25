@@ -126,7 +126,7 @@ public class TransformProperty <: DynamicPropertyContainer {
      */
     public init(data: AnimatableTransform, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
         super(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.dynamicProperties = dynamicProperties
+        //this.dynamicProperties = dynamicProperties
         this.propType = "transform"
         this.data = data
 
@@ -154,34 +154,44 @@ public class TransformProperty <: DynamicPropertyContainer {
         //TODO: 未在 AnimatableTransform 中找到 data.p.s  =>  has_data_p_s = false，暂无 this.px/this.py/this.px。设置成空的。
         //p => [position位置]
         if (this.has_data_p_s) { //获取 translate 相关的参数
-            this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.x, data.p.x, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-            this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.y, data.p.y, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.x, data.p.x, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties, containerType: 2)
+            this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.y, data.p.y, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties, containerType: 2)
+            this.px.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            this.px.container = [this]
+            this.py.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            this.py.container = [this]
             if (data.p.z.size > 0) {
-                this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.z, data.p.z, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.z, data.p.z, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties, containerType: 2)
+                this.pz.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+                this.pz.container = [this]
             }
         } else {
             if (data.p.k.size == 1) {//走【分支2】
                 let point: PointF = data.p.k[0].k ?? PointF(x: 0.0, y: 0.0)
                 //, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1
                 //, types: types, dataA: dataA, vLen: vLen
-                this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.p.a, vLen: 2, dynamicProperties: dynamicProperties)
+                this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.p.a, vLen: 2, dynamicProperties: dynamicProperties, containerType: 2)
             } else if (data.p.k.size > 1) {//走【分支4】
-                this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, this, elemGlobalData, elemData, dataA: data.p.a, vLen: vLen, dynamicProperties: dynamicProperties)
+                this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, this, elemGlobalData, elemData, dataA: data.p.a, vLen: vLen, dynamicProperties: dynamicProperties, containerType: 2)
             } else {//走【分支2】  =>   data.p || { k: [0, 0, 0] }
                 let point: PointF = PointF(x: 0.0, y: 0.0)
-                this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.p.a, vLen: 2, dynamicProperties: dynamicProperties)
+                this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.p.a, vLen: 2, dynamicProperties: dynamicProperties, containerType: 2)
             }
+            this.p.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            this.p.container = [this]
         }
 
         // r/rz => [rotation旋转]
         // "r": {"a": 0, "k": 0, "ix": 6}  // || { k: 0 }
         if (data.r.k.size == 1) { //获取 rotate 相关的参数  //走【分支1】
-            this.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, data.r.k[0].k ?? 0.0, degToRads, this, elemGlobalData, elemData, types: 0, dataA: data.r.a, dynamicProperties: dynamicProperties)
+            this.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, data.r.k[0].k ?? 0.0, degToRads, this, elemGlobalData, elemData, types: 0, dataA: data.r.a, dynamicProperties: dynamicProperties, containerType: 2)
         } else if (data.r.k.size > 1) { //走【分支3】
-            this.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, data.r.k, 0, degToRads, this, elemGlobalData, elemData, dataA: data.r.a, dynamicProperties: dynamicProperties)
+            this.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, data.r.k, 0, degToRads, this, elemGlobalData, elemData, dataA: data.r.a, dynamicProperties: dynamicProperties, containerType: 2)
         } else { //走【分支1】  =>   data.r || { k: 0 }
-            this.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, 0.0, degToRads, this, elemGlobalData, elemData, types: 0, dataA: data.r.a, dynamicProperties: dynamicProperties)
+            this.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, 0.0, degToRads, this, elemGlobalData, elemData, types: 0, dataA: data.r.a, dynamicProperties: dynamicProperties, containerType: 2)
         }
+        this.r.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.r.container = [this]
         //TODO: 未在 AnimatableTransform 中找到 .rx  => 暂无 this.rx/this.ry/this.rz/this.or
         //if (data.rx) {
         //    this.rx = PropertyFactory.getProp(elem, data.rx, 0, degToRads, this)
@@ -203,50 +213,60 @@ public class TransformProperty <: DynamicPropertyContainer {
 
         if (data.sk.k.size > 0) { //获取 skew 相关的参数
             if (data.sk.k.size == 1) {//走【分支1】
-                this.sk = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.sk, data.sk.k[0].k ?? 0.0, degToRads, this, elemGlobalData, elemData, types: 0, dataA: data.sk.a, dynamicProperties: dynamicProperties)
+                this.sk = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.sk, data.sk.k[0].k ?? 0.0, degToRads, this, elemGlobalData, elemData, types: 0, dataA: data.sk.a, dynamicProperties: dynamicProperties, containerType: 2)
             } else if (data.sk.k.size > 1) {//走【分支3】
-                this.sk = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.sk, data.sk.k, 0, degToRads, this, elemGlobalData, elemData, dataA: data.sk.a, dynamicProperties: dynamicProperties)
+                this.sk = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.sk, data.sk.k, 0, degToRads, this, elemGlobalData, elemData, dataA: data.sk.a, dynamicProperties: dynamicProperties, containerType: 2)
             }
+            this.sk.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            this.sk.container = [this]
 
             if (data.sa.k.size == 1) {//走【分支1】
-                this.sa = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.sa, data.sa.k[0].k ?? 0.0, degToRads, this, elemGlobalData, elemData, types: 0, dataA: data.sa.a, dynamicProperties: dynamicProperties)
+                this.sa = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.sa, data.sa.k[0].k ?? 0.0, degToRads, this, elemGlobalData, elemData, types: 0, dataA: data.sa.a, dynamicProperties: dynamicProperties, containerType: 2)
             } else if (data.sa.k.size > 1) {//走【分支3】
-                this.sa = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.sa, data.sa.k, 0, degToRads, this, elemGlobalData, elemData, dataA: data.sa.a, dynamicProperties: dynamicProperties)
+                this.sa = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.sa, data.sa.k, 0, degToRads, this, elemGlobalData, elemData, dataA: data.sa.a, dynamicProperties: dynamicProperties, containerType: 2)
             }
+            this.sa.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            this.sa.container = [this]
         }
 
         //"a": {"a": 0, "k": [0, 0], "ix": 1}  // || { k: [0, 0, 0] }
         if (data.a.k.size == 1) { //获取 translate 相关的参数 => [anchor锚点]  //走【分支2】
             let point: PointF = data.a.k[0].k ?? PointF(x: 0.0, y: 0.0)
-            this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.a.a, vLen: 2, dynamicProperties: dynamicProperties)
+            this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.a.a, vLen: 2, dynamicProperties: dynamicProperties, containerType: 2)
         } else if (data.a.k.size > 1) {//走【分支4】
-            this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, data.a.k, 1, 0.0, this, elemGlobalData, elemData, dataA: data.a.a, vLen: vLen, dynamicProperties: dynamicProperties)
+            this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, data.a.k, 1, 0.0, this, elemGlobalData, elemData, dataA: data.a.a, vLen: vLen, dynamicProperties: dynamicProperties, containerType: 2)
         } else {//走【分支2】  =>   data.a || { k: [0, 0, 0] }
             let point: PointF = PointF(x: 0.0, y: 0.0)
-            this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.a.a, vLen: 2, dynamicProperties: dynamicProperties)
+            this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.a.a, vLen: 2, dynamicProperties: dynamicProperties, containerType: 2)
         }
+        this.a.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.a.container = [this]
 
         //"s": {"a": 0, "k": [100, 100], "ix": 3}  // || { k: [100, 100, 100] }
         if (data.s.k.size == 1) {//获取 skew 相关的参数 => [scale縮放]   //走【分支2】
             let point: Array<Float64> = data.s.k[0].k ?? [100.0, 100.0, 100.0]
-            this.s = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(data.s, point, 0.01, this, elemGlobalData, elemData, types: 1, dataA: data.s.a, vLen: 3, dynamicProperties: dynamicProperties)
+            this.s = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(data.s, point, 0.01, this, elemGlobalData, elemData, types: 1, dataA: data.s.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2)
         } else if (data.s.k.size > 1) {//走【分支4】
             if (data.s.k.size > 0) { vLen = (data.s.k[0].s ?? Array<Float64>()).size }
-            this.s = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(data.s, data.s.k, 1, 0.01, this, elemGlobalData, elemData, dataA: data.s.a, vLen: vLen, dynamicProperties: dynamicProperties)
+            this.s = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(data.s, data.s.k, 1, 0.01, this, elemGlobalData, elemData, dataA: data.s.a, vLen: vLen, dynamicProperties: dynamicProperties, containerType: 2)
         } else {//走【分支2】  =>   data.s || { k: [100, 100, 100] }
-            this.s = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(data.s, [100.0, 100.0, 100.0], 0.01, this, elemGlobalData, elemData, types: 1, dataA: data.s.a, vLen: 3, dynamicProperties: dynamicProperties)
+            this.s = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(data.s, [100.0, 100.0, 100.0], 0.01, this, elemGlobalData, elemData, types: 1, dataA: data.s.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2)
         }
+        this.s.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.s.container = [this]
 
         //不透明度不是变换属性的一部分，这就是它不会使用this.dynamicProperties的原因。这样，如果不透明度发生变化，变换就不会更新。
         //"o": {"a": 0, "k": 100, "ix": 7 }
         if (data.o.k.size == 1) { // 透明度 => [opacity不透明度]   //走【分支1】
-            this.o = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(data.o, data.o.k[0].k ?? 0, 0.01, this, elemGlobalData, elemData, types: 0, dataA: data.o.a, dynamicProperties: dynamicProperties)
+            this.o = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(data.o, data.o.k[0].k ?? 0, 0.01, this, elemGlobalData, elemData, types: 0, dataA: data.o.a, dynamicProperties: dynamicProperties, containerType: 2)
         } else if (data.o.k.size > 1) {//走【分支3】
-            this.o = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(data.o, data.o.k, 0, 0.01, this, elemGlobalData, elemData, dataA: data.o.a, dynamicProperties: dynamicProperties)
+            this.o = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(data.o, data.o.k, 0, 0.01, this, elemGlobalData, elemData, dataA: data.o.a, dynamicProperties: dynamicProperties, containerType: 2)
         } else {
             this.o._mdf = false
             this.o.v = [1.0]
         }
+        this.o.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.o.container = [this]
 
         this._isDirty = true
         if (this.dynamicProperties.size == 0) {
@@ -401,7 +421,11 @@ public class TransformProperty <: DynamicPropertyContainer {
             mat.translate(this.p.v[0], this.p.v[1])
         }
     }
-    
+
+    public func getValue(): Unit {
+        this.getValue(false)
+    }
+
     public func getValue(forceRender: Bool): Unit {
         this.processKeys(forceRender)
     }
@@ -553,21 +577,31 @@ public class TransformProperty <: DynamicPropertyContainer {
     public open func autoOrient(): Unit { }
 
     //TODO: 未确认 props 数据类型
-    public func addDynamicPropertyInElem(props: DynamicPropertyContainer): Unit {
-        for (i in 0..this.dynamicProperties.size) {
-            if (refEq(props, this.dynamicProperties[i])) {
-                return
-            }
-        }
-        this.dynamicProperties.append(props)
-    }
     public func addDynamicProperty(props: DynamicPropertyContainer): Unit {
         this._addDynamicProperty(props)
         //TODO: this.elem.addDynamicProperty 未实现。需要后续再确认一下 this.elem 的数据类型。
-        this.addDynamicPropertyInElem(props)
+        this.addDynamicPropertyInElemInTransformProperty(props)
 
         this._isDirty = true
     }
+
+    public open func addDynamicPropertyInElemInTransformProperty(props: DynamicPropertyContainer): Unit {
+        for (i in 0..this.dynamicPropertiesInElem.size) {
+            if (refEq(props, this.dynamicPropertiesInElem[i])) {
+                return
+            }
+        }
+        this.dynamicPropertiesInElem.append(props)
+    }
+
+    //public func addDynamicPropertyInElem(props: DynamicPropertyContainer): Unit {
+    //    for (i in 0..this.dynamicPropertiesInElem.size) {
+    //        if (refEq(props, this.dynamicPropertiesInElem[i])) {
+    //            return
+    //        }
+    //    }
+    //    this.dynamicPropertiesInElem.append(this)
+    //}
 
     public func _addDynamicProperty(dpc: DynamicPropertyContainer): Unit {
         super.addDynamicProperty(dpc)

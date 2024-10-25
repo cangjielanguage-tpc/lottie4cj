@@ -33,6 +33,8 @@ public class RoundCornersModifier <: ShapeModifier {
             } else if (rd.r.k.size > 1) {//走【分支3】
                 this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rd.r, rd.r.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
+            this.rd.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            this.rd.container = [this]
         }
         this._isAnimated = this.rd.effectsSequence.size != 0
     }
