@@ -39,20 +39,26 @@ public open class TrimModifier <: ShapeModifier {
             } else if (tm.s.k.size > 1) {//走【分支3】
                 this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.s.k, tm.s.k, 0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
-
+            this.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            this.s.container = [this]
+            
             //"e":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":37,"s":[0],"e":[100]},{"t":58.0000023623884}],"ix":2}
             if (tm.e.k.size == 1) {//走【分支1】  //_e: Array<Keyframe<Float64>>
                 this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.e.k, tm.e.k[0].k ?? 0.0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             } else if (tm.e.k.size > 1) {//走【分支3】
                 this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.e.k, tm.e.k, 0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
-
+            this.e.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            this.e.container = [this]
+            
             //"o":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":37,"s":[18],"e":[0]},{"t":58.0000023623884}],"ix":3}
             if (tm.o.k.size == 1) {//走【分支1】   //_o: Array<Keyframe<Float64>>
                 this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.o.k, tm.o.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             } else if (tm.o.k.size > 1) {//走【分支3】
                 this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.o.k, tm.o.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
+            this.o.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            this.o.container = [this]
             
             this.m = tm.m
         }

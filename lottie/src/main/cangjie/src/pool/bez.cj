@@ -272,7 +272,16 @@ public class Bez {
                 }
                 let empty: PointData = PointData()
                 var bezierData = BezierData(curveSegments, empty)
-                let len: Int64 = pt3.size
+                var len: Int64 = pt3.size
+                if (pt1.size < len) {
+                    len = pt1.size
+                }
+                if (pt2.size < len) {
+                    len = pt2.size
+                }
+                if (pt4.size < len) {
+                    len = pt4.size
+                }
                 for (k in 0..curveSegments) {
                     point = Array<Float64>(len, item: 0.0)
                     perc = Float64(k / (curveSegments - 1))

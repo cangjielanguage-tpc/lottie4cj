@@ -32,7 +32,7 @@ class ExpressionPropertyInterface<T, E> <: ExpressionInterface where T <: ToStri
     //TODO：尽量避免使用此 getter
     func defaultGetter(): () -> ExpressionValue<T, E> {
         func inside(): ExpressionValue<T, E> {
-            let propertyEmpty: PropertyFactory<T, E> = PropertyFactory<T, E>(property.data, 0.0, property.container, GlobalData(), Layer(), dynamicProperties: ArrayList<DynamicPropertyContainer>())
+            let propertyEmpty: PropertyFactory<T, E> = PropertyFactory<T, E>(property.data, 0.0, property.container[0], GlobalData(), Layer(), dynamicProperties: ArrayList<DynamicPropertyContainer>())
             propertyEmpty.isNull = true
             //return defaultUnidimensionalValue
             propertyEmpty.pv = [0.0]

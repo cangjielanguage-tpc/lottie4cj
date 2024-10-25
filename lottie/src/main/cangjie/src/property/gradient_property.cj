@@ -71,7 +71,9 @@ public class GradientProperty <: DynamicPropertyContainer {
         if (data.k.size > 0) { vLen = (data.k[0].s ?? Array<Float64>()).size }
         //"g":{"p":2,"k":{"a":0,"k":[0,1,1,1,1,0,0,0],"ix":9}}  //data.k = ContentModelP.k = Array<Keyframe<Array<Float64>>>
         this.props = PropertyFactory<ContentModelP, Array<Float64>>.getProp(data, data.k, 1, 0.0, this, elemGlobalData, elemData, vLen: vLen, dynamicProperties: dynamicProperties)
-        
+        this.props.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.props.container = [this]
+
         this.k = this.props.k
         this.getValue(true)
     }
@@ -111,7 +113,11 @@ public class GradientProperty <: DynamicPropertyContainer {
         }
         return true
     }
-    
+
+    public func getValue(): Unit {
+        this.getValue(false)
+    }
+
     public func getValue(forceRender: Bool) {
         this.props.getValue()
         this._mdf = false

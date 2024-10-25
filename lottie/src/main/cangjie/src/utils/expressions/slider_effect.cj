@@ -86,3 +86,4 @@ public class NoValueEffect <: SuperEffect {
         super(data, elem, datas, propertyGroup, dynamicProperties: dynamicProperties)
     }
 }
+

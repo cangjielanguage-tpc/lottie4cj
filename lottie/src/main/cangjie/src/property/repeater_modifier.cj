@@ -99,15 +99,21 @@ public class RepeaterModifier <: ShapeModifier {
         } else if (rp.c.k.size > 1) {//走【分支3】
             this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.c, rp.c.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         }
-
+        this.c.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.c.container = [this]
+        
         //"o": {"a": 0, "k": 0, "ix": 2}  //_c: Array<Keyframe<Float64>>
         if (rp.o.k.size == 1) {//走【分支1】
-            this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.o, rp.o.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
+            this.o = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.o, rp.o.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         } else if (rp.o.k.size > 1) {//走【分支3】
-            this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.o, rp.o.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
+            this.o = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.o, rp.o.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         }
-
+        this.o.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.o.container = [this]
+        
         this.tr = TransformPropertyFactory.getTransformProperty(rp.tr, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
+        this.tr.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.tr.container = [this]
         
         //"so": {"a": 0, "k": 100, "ix": 5}  //_so: Array<Keyframe<Float64>>
         if (rp.tr.so.k.size == 1) {//走【分支1】
@@ -115,6 +121,8 @@ public class RepeaterModifier <: ShapeModifier {
         } else if (rp.tr.so.k.size > 1) {//走【分支3】
             this.so = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.tr.so, rp.tr.so.k, 0, 0.01, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         }
+        this.so.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.so.container = [this]
         
         //"eo": {"a": 0, "k": 100, "ix": 6}  //_eo: Array<Keyframe<Float64>>
         if (rp.tr.eo.k.size == 1) {//走【分支1】
@@ -122,6 +130,8 @@ public class RepeaterModifier <: ShapeModifier {
         } else if (rp.tr.eo.k.size > 1) {//走【分支3】
             this.eo = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.tr.eo, rp.tr.eo.k, 0, 0.01, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         }
+        this.eo.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.eo.container = [this]
 
         this.data = rp
         if (this.dynamicProperties.size == 0) {

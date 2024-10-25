@@ -52,7 +52,9 @@ public class OffsetPathModifier <: ShapeModifier {
             this.miterLimit = st.ml
             this.lineJoin = st.lj
         }
-
+        this.amount.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.amount.container = [this]
+        
         this._isAnimated = this.amount.effectsSequence.size != 0
     }
     

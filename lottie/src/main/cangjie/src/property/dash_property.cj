@@ -70,6 +70,8 @@ public class DashProperty <: DynamicPropertyContainer {
             } else {
                 props = PropertyFactory<ContentModelDK, Float64>(data[i].v, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
+            props.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            props.container = [this]
             this.k = props.k || this.k
 
             this.dataProps[i] = DataProp<ContentModelDK, Float64>(n: data[i].n, p: props)
@@ -79,7 +81,11 @@ public class DashProperty <: DynamicPropertyContainer {
         }
         this._isAnimated = this.k
     }
-    
+
+    public func getValue(): Unit {
+        this.getValue(false)
+    }
+
     public func getValue(forceRender: Bool): Unit {
         if (this.elemGlobalData.frameId == this.frameId && !forceRender) {
             return

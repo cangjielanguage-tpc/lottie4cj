@@ -141,7 +141,14 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     
     public var data: T
     //TODO: 暂时没有引入 BaseElement.comp--【不会再直接引入comp，具体用到comp的什么，再单独处理。】
-    public var container: DynamicPropertyContainer
+    /*
+     * TODO: container 在arkts中是多种数据类型，cangjie没有办法完全兼容。
+     * 【暂时】保存为两类，一类代表各种 Factory，存在成员变量 container[0]中；一个代表各种 Element，通过操作成员变量 dynamicPropertiesInElem达到效果。
+     * 处理方案分为 3 类，参考成员变量 containerType。
+     * containerType：1-FrameElement; 2-TransformPropertyFactory; 3-其他Property/DynamicPropertyContainer
+     * 间接用 addDynamicPropertyContainer 函数进行分别处理。
+     */
+    //public var container: DynamicPropertyContainer
     
     //在父类DynamicPropertyContainer中已经定义成员变量 //public var propType: String = ""
     public var mult: Float64 = 1.0
@@ -178,10 +185,10 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     public init(data: T, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, types!: Int64 = -1, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
         super(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.isNull = true
-        this.dynamicProperties = dynamicProperties
+        //this.dynamicProperties = dynamicProperties
         this.data = data
         this.mult = mult
-        this.container = container
+        this.container = [container]
         
         if (types == 0 || types == 1) {
             this.effectsSequence.append(getValueAtCurrentTime)
@@ -204,7 +211,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
 
         while (flag) {
             keyData = this.keyframes[i]
-            nextKeyData = this.keyframes[i + 1] //see
+            nextKeyData = this.keyframes[i + 1]
             if (i == len - 1 && frameNum >= (nextKeyData.t - offsetTime)) {
                 if (keyData.h != 0) {
                     keyData = nextKeyData
@@ -241,6 +248,8 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             [v]
         } else if (let Some(v: Array<Float64>) <- keyData.s) {
             v
+        } else if (let Some(v: PointF) <- keyData.s) {
+            [v.x, v.y, 0.0]
         } else {
             throw Exception()
         }
@@ -248,19 +257,24 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         let keyData_e: Array<Float64> =
         if (let Some(v: Float64)<- keyData.e) {
             [v]
-        } else if (let Some(v: Array<Float64>) <- keyData.s) {
+        } else if (let Some(v: Array<Float64>) <- keyData.e) {
             v
+        } else if (let Some(v: PointF) <- keyData.e) {
+            [v.x, v.y, 0.0]
         } else {
             throw Exception()
         }
         let nextKeyData_s: Array<Float64> =
         if (let Some(v: Float64)<- nextKeyData.s) {
             [v]
-        } else if (let Some(v: Array<Float64>) <- keyData.s) {
+        } else if (let Some(v: Array<Float64>) <- nextKeyData.s) {
             v
+        } else if (let Some(v: PointF) <- nextKeyData.s) {
+            [v.x, v.y, 0.0]
         } else {
             throw Exception()
         }
+
         if (keyData.to.size != 0) { // to: PointF 改为 Array<Float64>
             if (keyframeMetadata.bezierData.isNull()) {
                 var arr: Array<Float64> = nextKeyData_s
@@ -341,15 +355,21 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             if (this.sh && keyData.h != 1) {
                 if (frameNum >= nextKeyTime) {
                     newValue[0] = endValue[0]
-                    if (endValue.size > 1) {
+                    if (endValue.size > 2) {
                         newValue[1] = endValue[1]
                         newValue[2] = endValue[2]
+                    } else if (endValue.size > 1) {
+                        newValue[1] = endValue[1]
+                        //newValue[2] = endValue[2]
                     }
                 } else if (frameNum <= keyTime) {
                     newValue[0] = keyData_s[0]
-                    if (keyData_s.size > 1) {
+                    if (keyData_s.size > 2) {
                         newValue[1] = keyData_s[1]
                         newValue[2] = keyData_s[2]
+                    } else if (keyData_s.size > 1) {
+                        newValue[1] = keyData_s[1]
+                        //newValue[2] = keyData_s[2]
                     }
                 } else {
                     let quatStart: Array<Float64> = createQuaternion(keyData_s)
@@ -495,7 +515,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 this._caching.lastIndex = 0
             }
 
-            var renderResult = this.interpolateValue(frameNum, this._caching)  // See ????
+            var renderResult = this.interpolateValue(frameNum, this._caching)
             this.pv = renderResult
         }
         this._caching.lastFrame = Int64(frameNum)
@@ -555,7 +575,8 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     public func addEffect(effectFunction: () -> Array<Float64>): Unit {
         this.effectsSequence.append(effectFunction)
         // TODO: 暂时不调用 CvShapeData 中 addDynamicProperty 函数
-        this.container.addDynamicProperty(this)
+        this.container[0].addDynamicProperty(this)
+        //addDynamicPropertyContainer(this)
     }
 
     /**
@@ -571,44 +592,52 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
      * 这块的数据解析的结构和json有些不一样，要注意对应。（或者修改之前解析封装的结构）
      */
     //【分支1-变种】: dataK 不是数组，是数值 Int64，进入此分支。
-    public static func getProp<T>(data: T, dataK: Int64, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>): PropertyFactory<T, Int64> where T <: ToString {
+    public static func getProp<T>(data: T, dataK: Int64, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>, containerType!: Int8 = 3): PropertyFactory<T, Int64> where T <: ToString {
         let p: PropertyFactory<T, Int64> = valueProperty(data, Float64(dataK), mult, container, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties)
+        p.containerType = containerType
         if (p.effectsSequence.size != 0) {
             //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？----------------------------------------------------------2024.08.17
-            container.addDynamicProperty(p)
+            //container[0].addDynamicProperty(p)
+            addDynamicPropertyContainer(p)
         }
         getPropInExpressionPropertyDecorator<T, Int64>(p, 1, dataA: dataA, types: types, vLen: vLen)
         return p
     }
     //【分支1】: dataK 不是数组，是数值/对象，进入此分支。
-    public static func getProp<T>(data: T, dataK: Float64, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>): PropertyFactory<T, Float64> where T <: ToString {
+    public static func getProp<T>(data: T, dataK: Float64, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>, containerType!: Int8 = 3): PropertyFactory<T, Float64> where T <: ToString {
         let p: PropertyFactory<T, Float64> = valueProperty(data, dataK, mult, container, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties)
+        p.containerType = containerType
         if (p.effectsSequence.size != 0) {
             //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？----------------------------------------------------------2024.08.17
-            container.addDynamicProperty(p)
+            //container[0].addDynamicProperty(p)
+            addDynamicPropertyContainer(p)
         }
         getPropInExpressionPropertyDecorator<T, Float64>(p, 1, dataA: dataA, types: types, vLen: vLen)
         return p
     }
     
     //【分支2-变种】: dataK 是PointF，但是json中是数组 [number, number]，进入此分支。
-    public static func getProp<T>(data: T, dataK: PointF, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>): PropertyFactory<T, PointF> where T <: ToString {
+    public static func getProp<T>(data: T, dataK: PointF, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>, containerType!: Int8 = 3): PropertyFactory<T, PointF> where T <: ToString {
         //针对json中是[Float64, Float64]，解析后是 PointF的部分。
         //, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1
         var p: PropertyFactory<T, PointF> = multiDimensionalProperty(data, [dataK.x, dataK.y], mult, container, dataK, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties)
+        p.containerType = containerType
         if (p.effectsSequence.size != 0) {
             //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？----------------------------------------------------------2024.08.17
-            container.addDynamicProperty(p)
+            //container[0].addDynamicProperty(p)
+            addDynamicPropertyContainer(p)
         }
         getPropInExpressionPropertyDecorator<T, PointF>(p, 2, dataA: dataA, types: types, vLen: vLen)
         return p
     }
     //【分支2】: dataK 是数组Array<number>，进入此分支。
-    public static func getProp<T>(data: T, dataK: Array<Float64>, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>): PropertyFactory<T, Array<Float64>> where T <: ToString {
+    public static func getProp<T>(data: T, dataK: Array<Float64>, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>, containerType!: Int8 = 3): PropertyFactory<T, Array<Float64>> where T <: ToString {
         var p: PropertyFactory<T, Array<Float64>> = multiDimensionalProperty(data, dataK, mult, container, dataK, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties)
+        p.containerType = containerType
         if (p.effectsSequence.size != 0) {
             //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？----------------------------------------------------------2024.08.17
-            container.addDynamicProperty(p)
+            //container[0].addDynamicProperty(p)
+            addDynamicPropertyContainer(p)
         }
         getPropInExpressionPropertyDecorator<T, Array<Float64>>(p, dataK.size, dataA: dataA, types: types, vLen: vLen)
         return p
@@ -617,12 +646,12 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     //[很重要，赶紧确认]-TODO: dataK 是否保存成 E 泛型结构？还是修改保存为 data_k_xxxProperty ???-----------------------------------2024.08.17
     //【分支3】://TODO：此处传入的 data.k 是一个 Keyframe<E> 对象？？？----------------------------------------------------------2024.08.17
     //【分支4】://此处的 data.k 是一个数组Array<Keyframe<T>>
-    public static func getProp<T, E>(data: T, dataK: Array<Keyframe<E>>, types: Int64, mult: Option<Float64>, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>): PropertyFactory<T, E> where T <: ToString , E <: ToString {
+    public static func getProp<T, E>(data: T, dataK: Array<Keyframe<E>>, types: Int64, mult: Option<Float64>, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>, containerType!: Int8 = 3): PropertyFactory<T, E> where T <: ToString , E <: ToString {
         var vLen2: Int64 = vLen
         var p: PropertyFactory<T, E>
-        if( dataK.size == 1){
-            p = valueProperty<T, E>(data, Float64((dataK[0].k.getOrThrow() as Int64).getOrThrow()), mult, container, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties)
-        } else {
+        //if( dataK.size == 1){//TODO: 这种情况，需要修改上一级调用，否则会产生严重的冲突。
+        //    p = valueProperty<T, E>(data, Float64((dataK[0].k.getOrThrow() as Int64).getOrThrow()), mult, container, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties)
+        //} else {
             if (types == 0) {
                 //dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!
                 p = keyframedValueProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties)
@@ -632,11 +661,13 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             } else {
                 throw Exception("调用分支错误。")
             }
-        }
-
+        //}
+        p.containerType = containerType
+        
         if (p.effectsSequence.size != 0) {
             //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？
-            container.addDynamicProperty(p)
+            //container[0].addDynamicProperty(p)
+            addDynamicPropertyContainer(p)
         }
         getPropInExpressionPropertyDecorator<T, E>(p, dataK.size, dataA: dataA, types: types, vLen: vLen2)
         return p
@@ -813,11 +844,23 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         //TODO: 暂不实现。
         //expressionHelpers.searchExpressions(elem, data, prop)
         if (p.k) {
-            //TODO: 确认是否调用此层级的  addDynamicProperty 函数？？？
-            //container.addDynamicProperty(p)
-            p.addDynamicProperty(p)
+            //TODO: 确认是否调用此层级的  addDynamicProperty 函数？？？--【调用的是上一层级的addDynamicProperty】
+            //container[0].addDynamicProperty(p)
+            addDynamicPropertyContainer(p)
         }
 
+    }
+
+    //TODO：
+    public static func addDynamicPropertyContainer<T, E>(dp: PropertyFactory<T, E>): Unit where T <: ToString , E <: ToString {
+        //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property/DynamicPropertyContainer
+        if (dp.containerType == 2 && dp.container.size == 1) {
+            dp.container[0].addDynamicProperty(dp)
+        } else if (dp.containerType == 1) {
+            dp.addDynamicPropertyInElem(dp)
+        } else if (dp.containerType == 3 && dp.container.size == 1){
+            dp.container[0].addDynamicProperty(dp)
+        }
     }
 
 //----------------------------------------------------------------------------------------------
@@ -917,18 +960,18 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         //var currentFrame: Float64 = this.comp.renderedFrame
         var currentFrame: Float64 = this.renderedFrameInComp()
 
-        var kfs: Array<Keyframe<E>> = this.keyframes
-        var lastKeyFrame: Float64 = kfs[kfs.size - 1].t
+        var keyframes: Array<Keyframe<E>> = this.keyframes
+        var lastKeyFrame: Float64 = keyframes[keyframes.size - 1].t
         if (currentFrame <= lastKeyFrame) {
             return this.pv
         }
         var cycleDuration: Float64 = 0.0
         var firstKeyFrame: Float64 = 0.0
         if (!durationFlag) {
-            if (duration == 0 || duration > kfs.size - 1) {
-                duration = kfs.size - 1
+            if (duration == 0 || duration > keyframes.size - 1) {
+                duration = keyframes.size - 1
             }
-            firstKeyFrame = kfs[kfs.size - 1 - duration].t
+            firstKeyFrame = keyframes[keyframes.size - 1 - duration].t
             cycleDuration = lastKeyFrame - firstKeyFrame
         } else {
             if (duration == 0) {
@@ -990,18 +1033,18 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         //TODO: CanvasRendererBase.renderedFrame = Int64
         var currentFrame: Float64 = this.renderedFrameInComp()
 
-        var kfs: Array<Keyframe<E>> = this.keyframes
-        var firstKeyFrame: Float64 = kfs[0].t
+        var keyframes: Array<Keyframe<E>> = this.keyframes
+        var firstKeyFrame: Float64 = keyframes[0].t
         if (currentFrame >= firstKeyFrame) {
             return this.pv
         }
         var cycleDuration: Float64 = 0.0
         var lastKeyFrame: Float64 = 0.0
         if (!durationFlag) {
-            if (duration == 0 || duration > kfs.size - 1) {
-                duration = kfs.size - 1
+            if (duration == 0 || duration > keyframes.size - 1) {
+                duration = keyframes.size - 1
             }
-            lastKeyFrame = kfs[duration].t
+            lastKeyFrame = keyframes[duration].t
             cycleDuration = lastKeyFrame - firstKeyFrame
         } else {
             if (duration == 0) {

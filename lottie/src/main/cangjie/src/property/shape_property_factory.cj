@@ -174,6 +174,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         if (props.k) {
             //TODO: 需要确认调用的是哪一级父类的 addDynamicProperty 函数。
             //elem.addDynamicProperty(props)
+            props.addDynamicPropertyInElem(props)
         }
         return props
     }
@@ -217,6 +218,8 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         sp.offsetTime = elemData.st
         //data.pt/ks.k 是数组 => pathData 是数组 => pathData = Mask.pt/ShapePath.ks  =>  直接传入 data.pt/ks.k
         sp.keyframes = k
+        sp.k = true
+        sp.kf = true
 
         if (let Some(sv) <- sp.keyframes[0].s) {
             var len: Int64 = sv.i.size
@@ -250,19 +253,25 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
             let point: PointF = data.p.k[0].k ?? PointF(x: 0.0, y: 0.0)
             sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 1.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         }
-        
+        sp.p.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        sp.p.container = [sp]
+            
         if (data.s.k.size > 1) {//_s: Array<Keyframe<PointF>>
             sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, data.s.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 2, dynamicProperties: dynamicProperties)
         } else if (data.s.k.size == 1) {//走【分支2】:  dataK 是数组Array<number>   //json中："s": {"a": 0, "k": [101.414, 91.422], "ix": 2}
             let point: PointF = data.s.k[0].k ?? PointF(x: 0.0, y: 0.0)
             sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, point, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         }
+        sp.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        sp.s.container = [sp]
         
         if (data.r.k.size > 1) {//_r: Array<Keyframe<Float64>>
             sp.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, data.r.k, 0, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         } else if (data.r.k.size == 1) {//走【分支1】:  dataK 是数值  //json中："r": {"a": 0, "k": 0, "ix": 4}
             sp.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, (data.r.k[0].k ?? 0.0), 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         }
+        sp.r.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        sp.r.container = [sp]
 
         if (sp.dynamicProperties.size != 0) {
             sp.k = true
@@ -291,6 +300,8 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
             let point: PointF = data.p.k[0].k ?? PointF(x: 0.0, y: 0.0)
             sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 1.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         }
+        sp.p.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        sp.p.container = [sp]
         
         if (data.s.k.size > 1) { //_s: Array<Keyframe<PointF>>
             sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, data.s.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 2, dynamicProperties: dynamicProperties)
@@ -298,7 +309,9 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
             let point: PointF = data.s.k[0].k ?? PointF(x: 0.0, y: 0.0)
             sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, point, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         }
-
+        sp.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        sp.s.container = [sp]
+        
         if (sp.dynamicProperties.size != 0) {
             sp.k = true
         } else {
@@ -323,11 +336,15 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
             //"ir":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[54.99]},{"t":59,"s":[61.99]}],"ix":6}
             if (data.ir.k.size > 1) {//【分支3】
                 sp.ir = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.ir, data.ir.k, 0, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                sp.ir.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+                sp.ir.container = [sp]
             }
             
             //"is":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[0]},{"t":59,"s":[5]}],"ix":8}
             if (data.is2.k.size > 1) {//【分支3】
                 sp.is2 = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.is2, data.is2.k, 0, 0.01, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                sp.is2.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+                sp.is2.container = [sp]
             }
             
             sp.convertToPath = sp.convertStarToPath
@@ -338,26 +355,36 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         //"pt":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[5]},{"t":59,"s":[6]}],"ix":3}
         if (data.pt.k.size > 1) {//【分支3】 //_pt: Array<Keyframe<Float64>>
             sp.pt = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.pt, data.pt.k, 0, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.pt.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            sp.pt.container = [sp]
         }
         
         //"p":{"a":1,"k":[{"i":{"x":0.833,"y":0.833},"o":{"x":0.167,"y":0.167},"t":0,"s":[0,0],"to":[0.833,1.333],"ti":[-0.833,-1.333]},{"t":59,"s":[5,8]}],"ix":4}
         if (data.p.k.size > 1) {//【分支4】   //p: AnimatableSplitDimensionPathValue => _k: Array<Keyframe<PointF>>
             sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 2, dynamicProperties: dynamicProperties)
+            sp.p.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            sp.p.container = [sp]
         }
         
         //"r":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[187.839]},{"t":59,"s":[204.839]}],"ix":5}
         if (data.r.k.size > 1) {//【分支3】   //_r: Array<Keyframe<Float64>>
             sp.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, data.r.k, 0, degToRads, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.r.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            sp.r.container = [sp]
         }
         
         //"or":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[109.981]},{"t":59,"s":[123.981]}],"ix":7}
         if (data.or.k.size > 1) {//【分支3】  //_or: Array<Keyframe<Float64>> 
             sp.or = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.or, data.or.k, 0, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.or.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            sp.or.container = [sp]
         }
         
         //"os":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[0]},{"t":59,"s":[40]}],"ix":9}
         if (data.os.k.size > 1) {//【分支3】  //_os: Array<Keyframe<Float64>>
             sp.os = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.os, data.os.k, 0, 0.01, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.os.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            sp.os.container = [sp]
         }
         
         sp.localShapeCollection.addShape(sp.v)

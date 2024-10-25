@@ -30,14 +30,19 @@ public class PuckerAndBloatModifier <: ShapeModifier {
          * 只在 GradientStroke-"gs"/GradientFill-"gf" 中找到成员变量 a（已新增） 
          * "a": {"a": 0, "k": 0, "ix": 7} => 走【分支1】
          */
+        var a: AK = AK()
         if (data.ty == "gf") {
             let gf: GradientFill = (data as GradientFill).getOrThrow()
+            a = gf.a
             //TODO: 传入的 tr.a 必须存在，否则代码运行异常。
             this.amount = PropertyFactory<AK, Float64>.getProp(gf.a, Float64(gf.a.k), 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         } else if (data.ty == "gs") {
             let gs: GradientStroke = (data as GradientStroke).getOrThrow()
+            a = gs.a
             this.amount = PropertyFactory<AK, Float64>.getProp(gs.a, Float64(gs.a.k), 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         }
+        this.amount.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.amount.container = [this]
 
         this._isAnimated = this.amount.effectsSequence.size != 0
     }
