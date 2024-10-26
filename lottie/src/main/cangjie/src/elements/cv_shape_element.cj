@@ -22,11 +22,14 @@ public class CvShapeElement <: IShapeElement {
     let dp: DynamicPropertyContainer
 
     public init(data: Layer, globalData: GlobalData, buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
-        pendingElements: ArrayList<BaseElement>,
-        layers!: Array<Layer> = Array<Layer>(), elements!: Array<BaseElement> = Array<BaseElement>()
+        //pendingElements: ArrayList<BaseElement>,
+        layers!: Array<Layer> = Array<Layer>(), elements!: Array<BaseElement> = Array<BaseElement>(),
+        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()
     ) {
         super(data, globalData)
-        this.pendingElements = pendingElements
+        this.compType = compType
+        this.comp = comp
+        //this.pendingElements = pendingElements
         this.layers = layers
         this.elements = elements
         this.buildElementParentingInComp = buildElementParentingInComp

@@ -60,8 +60,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.rendererType = "canvas"
     }
 
-    public func createShape(data: Layer): CvShapeElement { 
-        return CvShapeElement(data, this.globalData, this.buildElementParenting, ArrayList<BaseElement>())
+    public func createShape(data: Layer): CvShapeElement {
+        //return CvShapeElement(data, this.globalData, this.buildElementParenting, ArrayList<BaseElement>())
+        return CvShapeElement(data, this.globalData, this.buildElementParenting)
     }
 
     public func createText(data: Layer): CvTextElement { 
@@ -547,18 +548,18 @@ public abstract class CanvasRendererBase <: BaseRenderer {
 
             //TODO: 暂时不定位 CVShapeElement 的渲染逻辑。先注掉，先测试 this.elements[0] 即 CVCompElement。//this.elements[0].renderFrame()
             var index: Int64 = 0
-            this.elements[0].renderFrame(false)
-            //for (i in (len - 1)..=0:-1) {
-            //    index = i
-            //    if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
-            //    //if (this.completeLayers || this.elements.size > i) {
+            //this.elements[0].renderFrame(false)
+            for (i in (len - 1)..=0:-1) {
+                index = i
+                if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
+                //if (this.completeLayers || this.elements.size > i) {
 
-            //        //this.elements[i].renderFrame()
-            //        //TODO: 暂时先将 CvBaseElement 和 BaseElement 合并。避免后面 CVXXXElement 多继承 XXXElement和 CVBaseElement。
-            //        //TODO：renderFrame 在 canvas元素 相关中，是带有参数的。此处直接改为带参调用。
-            //        this.elements[i].renderFrame(false)
-            //    }
-            //}
+                    //this.elements[i].renderFrame()
+                    //TODO: 暂时先将 CvBaseElement 和 BaseElement 合并。避免后面 CVXXXElement 多继承 XXXElement和 CVBaseElement。
+                    //TODO：renderFrame 在 canvas元素 相关中，是带有参数的。此处直接改为带参调用。
+                    this.elements[i].renderFrame(false)
+                }
+            }
 
             if (!this.renderConfig.clearCanvas) {
                 //this.restore()

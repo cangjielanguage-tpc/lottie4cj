@@ -5,8 +5,10 @@ package lottie.elements
 
 //TODO
 public class CvSolidElement <: ISolidElement {
-    public init(data:Layer, globalData: GlobalData) {
+    public init(data:Layer, globalData: GlobalData, compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()) {
         super(data, globalData)
+        this.compType = compType
+        this.comp = comp
         this.initElement(data, globalData) //RenderableDOMElement
     }
 
