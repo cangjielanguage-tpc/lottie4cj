@@ -522,7 +522,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     //只在 getProp【分支2】相关中使用；data.k是复杂架构，不能是数组或者空。  // data == ContentModel.s/e/h/a等
     func getValueAtCurrentTime(): Array<Float64> {
         //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInComp】间接获取当时值。
-        let frameNum: Float64 = this.renderedFrameInComp() - this.offsetTime
+        let frameNum: Float64 = this.elemGlobalData.renderedFrameInComp() - this.offsetTime
         let initTime: Float64 = this.keyframes[0].t - this.offsetTime
         let endTime: Float64 = this.keyframes[this.keyframes.size - 1].t - this.offsetTime
         if (!(frameNum == Float64(this._caching.lastFrame) || (this._caching.lastFrame != initFrame &&
@@ -976,7 +976,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         //TODO: 暂时没有引入 BaseElement.comp
         //TODO: CanvasRendererBase.renderedFrame = Int64
         //var currentFrame: Float64 = this.comp.renderedFrame
-        var currentFrame: Float64 = this.renderedFrameInComp()
+        var currentFrame: Float64 = this.elemGlobalData.renderedFrameInComp()
 
         var keyframes: Array<Keyframe<E>> = this.keyframes
         var lastKeyFrame: Float64 = keyframes[keyframes.size - 1].t
@@ -1049,7 +1049,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
 
         //TODO: 暂时没有引入 BaseElement.comp
         //TODO: CanvasRendererBase.renderedFrame = Int64
-        var currentFrame: Float64 = this.renderedFrameInComp()
+        var currentFrame: Float64 = this.elemGlobalData.renderedFrameInComp()
 
         var keyframes: Array<Keyframe<E>> = this.keyframes
         var firstKeyFrame: Float64 = keyframes[0].t
@@ -1136,7 +1136,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         if (samples <= 1.0) {
             return this.pv
         }
-        let currentTime: Float64 = this.renderedFrameInComp() / this.elemGlobalData.frameRate
+        let currentTime: Float64 = this.elemGlobalData.renderedFrameInComp() / this.elemGlobalData.frameRate
         let initFrame: Float64 = currentTime - width
         let endFrame: Float64 = currentTime + width
         //var sampleFrequency = samples > 1.0 ? (endFrame - initFrame) / (samples - 1) : 1

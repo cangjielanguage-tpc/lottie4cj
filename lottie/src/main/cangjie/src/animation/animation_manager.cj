@@ -392,6 +392,7 @@ public class AnimationManager {
                 }
 
                 //TODO：数据类型需要再确认，是时间格式还是数值格式？？？  //initTime = Date.now()
+                initTime = DateTime.now().toUnixTimeStamp().toMilliseconds()
                 let options: AnimatorOptions = AnimatorOptions(
                     duration: 20000,
                     easing: "linear",
