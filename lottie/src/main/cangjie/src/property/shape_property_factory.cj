@@ -208,6 +208,9 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         //TODO：调不到shapePool.clone，需要把 shapePool 改为对象？？？  //sp.pv = shapePool.clone(sp.v)
         sp.v = ShapeData(pathDatas)
         sp.pv = ShapeData(sp.v)
+        //TODO: 【陈文龙】需要再调试 shapePool.clone 函数--【陈文龙】
+        //sp.v = clone(pathDatas)
+        //sp.pv = clone(sp.v)
 
         sp.paths.addShape(sp.v)
         sp.reset = sp.resetShape
@@ -231,6 +234,8 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         }
         //TODO：调不到shapePool.clone，需要把 shapePool 改为对象？？？  //sp.pv = shapePool.clone(sp.v)
         sp.pv = ShapeData(sp.v)
+        //TODO: 【陈文龙】需要再调试 shapePool.clone 函数--【陈文龙】
+        //sp.pv = clone(sp.v)
 
         sp.paths.addShape(sp.v)
         sp.reset = sp.resetShape
@@ -776,9 +781,11 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
 
     func setVValue(newPath: ShapeData): Unit {
         if (!shapesEqual(this.v, newPath)) {
-            //TODO：调不到shapePool.clone，需要把 shapePool 改为对象？？？  
-            //this.v = shapePool.clone(newPath)
+            //TODO：调不到shapePool.clone，需要把 shapePool 改为对象？？？  //this.v = shapePool.clone(newPath)
             this.v = ShapeData(newPath)
+            //TODO: 【陈文龙】需要再调试 shapePool.clone 函数--【陈文龙】
+            //this.v = clone(newPath)
+
             this.localShapeCollection.releaseShapes()
             this.localShapeCollection.addShape(this.v)
             this._mdf = true

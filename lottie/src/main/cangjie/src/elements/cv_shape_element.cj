@@ -270,7 +270,7 @@ public class CvShapeElement <: IShapeElement {
         var processedPos: Int64 = 0
         //var modifier
         var currentTransform: AnimatableTransformElement
-        var ownTransforms: ArrayList<AnimatableTransformElement> = transforms
+        var ownTransforms: ArrayList<AnimatableTransformElement> = transforms.clone()
         var index = len
         for (i in len..=0: -1) {
             index = i
