@@ -36,7 +36,7 @@ public class Matrix {
             return this
         }
         var mCos = cos(angle)
-        var mSin = cos(angle)
+        var mSin = sin(angle)
         return transform(mCos, -mSin, 0.0, 0.0, mSin, mCos, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 1.0)
     }
 

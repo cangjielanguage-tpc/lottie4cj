@@ -11,8 +11,12 @@ public class CvCompElement <: ICompElement {
     //protected var pendingElements: ArrayList<String>
 
     //使用了data.layers暂时使用AnimationData
-    public init(data: Layer, globalData: GlobalData, createItem: (Layer) -> BaseElement, buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit) {
+    public init(data: Layer, globalData: GlobalData, createItem: (Layer) -> BaseElement, buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
+        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()
+    ) {
         super(data, globalData)
+        this.compType = compType
+        this.comp = comp
         this.createItem = createItem
         this.buildElementParentingInComp = buildElementParentingInComp
         this.canvasContext = this.globalData.canvasContext
@@ -26,6 +30,9 @@ public class CvCompElement <: ICompElement {
         //this.buildAllItemsElement = globalData.buildAllItemsElement
         //this.checkLayers = globalData.checkLayers
         //this.createItem = globalData.createItem
+        
+        //空初始化编译用
+        //this.tm = PropertyFactory<ContentModelDK, Float64>(ContentModelDK(), 0.0, DynamicPropertyContainer(), GlobalData(), Layer(), types: 0, dynamicProperties: ArrayList<DynamicPropertyContainer>())
 
         //tm暂时不是data属性
         this.initElement(data, globalData)
@@ -33,11 +40,11 @@ public class CvCompElement <: ICompElement {
         dp.dynamicProperties = this.dynamicProperties
 
         if (data.tm.k.size == 1) {
-            this.tm = PropertyFactory<ContentModelDK, Int64>.getProp(data.tm, data.tm.k[0].k ?? 0.0, globalData.frameRate, dp, globalData, data, types: 0, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1)
+            this.tm = PropertyFactory<ContentModelDK, Float64>.getProp(data.tm, data.tm.k[0].k ?? 0.0, globalData.frameRate, dp, globalData, data, types: 0, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1)
         } else if (data.tm.k.size > 1) {
-            this.tm = PropertyFactory<ContentModelDK, Int64>.getProp(data.tm, data.tm.k, 0, globalData.frameRate, dp, globalData, data, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1)
+            this.tm = PropertyFactory<ContentModelDK, Float64>.getProp(data.tm, data.tm.k, 0, globalData.frameRate, dp, globalData, data, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1)
         }
-        this.tm.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        //this.tm.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
         
         if(data.tm.k.size == 0) {
@@ -75,16 +82,16 @@ public class CvCompElement <: ICompElement {
                     //this.canvasContext.closePath()
                     //this.canvasContext.stroke()
 
-        var indexCOMP: Int64 = 3
-        this.elements[indexCOMP].renderFrame()
-        //let len: Int64 = this.layers.size
-        //var indexCOMP: Int64 = 0
-        //for (i in (len - 1)..=0: -1) {
-        //    indexCOMP = i
-        //    if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
-        //        this.elements[i].renderFrame()  //renderFrame
-        //    }
-        //}
+        //var indexCOMP: Int64 = 3
+        //this.elements[indexCOMP].renderFrame()
+        let len: Int64 = this.layers.size
+        var indexCOMP: Int64 = 0
+        for (i in (len - 1)..=0: -1) {
+            indexCOMP = i
+            if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
+                this.elements[i].renderFrame()  //renderFrame
+            }
+        }
     }
 
     public override func renderShapeColor(color: Array<Int64>, endColor: Array<Int64>, index: Int64): Unit {

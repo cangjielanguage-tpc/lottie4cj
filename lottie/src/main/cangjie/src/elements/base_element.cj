@@ -86,6 +86,19 @@ public type HierarchyElement = BaseElement
 //TODO: 暂时先将 CvBaseElement 和 BaseElement 合并。避免后面 CVXXXElement 多继承 XXXElement和 CVBaseElement
 public open class BaseElement <: Equatable<BaseElement> {
 
+    //comp数据类型：1-Element; 2-Renderer；3-其他
+    public var compType: Int8 = 0
+    //public var containerInFP: Array<DynamicPropertyContainer> = Array<DynamicPropertyContainer>()
+    /*
+     * TODO: comp 在arkts中是多种数据类型，cangjie没有办法完全兼容。
+     * 【暂时】保存为两类，一类代表各种 Element；另一类是 Renderer，用到那个单独处理。
+     * 处理方案分为 3 类，参考成员变量 compType。
+     * comp数据类型：1-Element; 2-Renderer；3-其他。
+     */
+    public var comp: Array<BaseElement> = Array<BaseElement>()
+
+
+
 //FrameElement-1-----------------------------------------------------------------------------
     /* 渲染inpoint时设置为true */
     public var _isFirstFrame: Bool = false
@@ -246,17 +259,18 @@ public open class BaseElement <: Equatable<BaseElement> {
             throw Exception("Non canvas cannot call this function。")
         }
         if (layer.ty == 2) {
-            return CvImageElement(layer, globalData)
+            return CvImageElement(layer, globalData, compType: 1, comp: [this])
         } else if (layer.ty == 0) {
-            return CvCompElement(layer, this.globalData, this.createItem, this.buildElementParenting)
+            return CvCompElement(layer, this.globalData, this.createItem, this.buildElementParenting, compType: 1, comp: [this])
         } else if (layer.ty == 1) {
-            return CvSolidElement(layer, globalData)
+            return CvSolidElement(layer, globalData, compType: 1, comp: [this])
         } else if (layer.ty == 3) {
             return NullElement(layer, this.globalData)
         } else if (layer.ty == 4) {
-            return CvShapeElement(layer, this.globalData, this.buildElementParenting, this.pendingElements, layers: this.layers, elements: this.elements)
+            //return CvShapeElement(layer, this.globalData, this.buildElementParenting, this.pendingElements, layers: this.layers, elements: this.elements)
+            return CvShapeElement(layer, this.globalData, this.buildElementParenting, layers: this.layers, elements: this.elements, compType: 1, comp: [this])
         } else if (layer.ty == 5) {
-            return CvTextElement(layer, globalData)
+            return CvTextElement(layer, globalData, compType: 1, comp: [this])
         } else if (layer.ty == 6) {
             //TODO: 暂不实现  //return this.createAudio(layer)
             return NullElement(layer, this.globalData)
@@ -280,7 +294,11 @@ public open class BaseElement <: Equatable<BaseElement> {
             //let be: BaseElement = this.changeToBaseElement()
             // BaseRenderer.buildElementParenting
             //this.buildElementParentingInComp(be, this.data.parent, ArrayList<BaseElement>())
-            this.buildElementParenting(this, this.data.parent, ArrayList<BaseElement>())
+            if (this.compType == 1 && this.comp.size == 1) {
+                this.comp[0].buildElementParenting(this, this.data.parent, ArrayList<BaseElement>())
+            } else {
+                this.buildElementParenting(this, this.data.parent, ArrayList<BaseElement>())
+            }
         }
     }
     //HierarchyElement.prototype.checkParenting----------------------------------------------------------------

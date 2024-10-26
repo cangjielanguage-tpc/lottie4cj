@@ -31,8 +31,10 @@ public class CvTextElement <: ITextElement {
 
     //TODO comp
 
-    public init(data: Layer, globalData: GlobalData) {
+    public init(data: Layer, globalData: GlobalData, compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()) {
         super(data, globalData)
+        this.compType = compType
+        this.comp = comp
         this.textSpans = ArrayList<TextSpans>()
         this.yOffset = 0
         this.fillColorAnim = false

@@ -7,8 +7,10 @@ import ohos.image.*
 public class CvImageElement <: IImageElement {
 
     var img =ImgOB()
-    public init(data: Layer, globalData: GlobalData) {
+    public init(data: Layer, globalData: GlobalData, compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()) {
         super(data, globalData)
+        this.compType = compType
+        this.comp = comp
         this.assetData = globalData.getAssetData(data.refId)
         this.img = globalData.imageLoader.getAsset(this.assetData)
         this.initElement(data, globalData)  //RenderableDOMElement
