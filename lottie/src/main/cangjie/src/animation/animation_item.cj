@@ -142,6 +142,8 @@ public class AnimationItem <: BaseEvent {
             //cvRenderer.globalData.buildAllItemsElement = cvRenderer.buildAllItemsElement
             //cvRenderer.globalData.checkLayers = cvRenderer.checkLayers
 
+            cvRenderer.globalData.renderedFrameInComp = cvRenderer.getRenderedFrame
+
             this.renderer = cvRenderer
             this.hasRenderer = true
         } else if (animTypes == "svg") {

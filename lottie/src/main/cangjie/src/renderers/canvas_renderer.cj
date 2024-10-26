@@ -55,6 +55,10 @@ public class CanvasRenderer <: CanvasRendererBase {
         */
     }
 
+    public func getRenderedFrame(): Float64{
+        return this.renderedFrame
+    }
+
     /**
      * Create Comp Element.
      *

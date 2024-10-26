@@ -56,9 +56,14 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             canvasContext: container
         )
         this.globalData.hasCanvasRenderingContext2D = true
+        //this.globalData.renderedFrameInComp = getRenderedFrame
 
         this.rendererType = "canvas"
     }
+
+    //public func getRenderedFrame(): Float64{
+    //    return this.renderedFrame
+    //}
 
     public func createShape(data: Layer): CvShapeElement {
         //return CvShapeElement(data, this.globalData, this.buildElementParenting, ArrayList<BaseElement>())
