@@ -120,6 +120,7 @@ public class CvMaskElement <: RenderableElement {
             }
           }
           //this.element.globalData.renderer.save(true);
+          this.element.globalData.save(true);
           ctx.clip();
     }
 

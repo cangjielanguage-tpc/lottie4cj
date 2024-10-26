@@ -22,9 +22,11 @@ public class CvShapeElement <: IShapeElement {
     let dp: DynamicPropertyContainer
 
     public init(data: Layer, globalData: GlobalData, buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
+        pendingElements: ArrayList<BaseElement>,
         layers!: Array<Layer> = Array<Layer>(), elements!: Array<BaseElement> = Array<BaseElement>()
     ) {
         super(data, globalData)
+        this.pendingElements = pendingElements
         this.layers = layers
         this.elements = elements
         this.buildElementParentingInComp = buildElementParentingInComp
@@ -371,6 +373,9 @@ public class CvShapeElement <: IShapeElement {
     }
 
     public func drawLayer() {
+        //Hilog.error(0, "---9--", "----->${currentStyle.preTransforms.finalTransform.props}")
+        //var tmps = currentStyle.preTransforms.finalTransform.props
+
         var len = this.stylesList.size
         //TODO: this.globalData.renderer数据类型是什么？
         //var renderer = this.globalData.renderer
@@ -388,6 +393,7 @@ public class CvShapeElement <: IShapeElement {
                 currentStyle.coOp == 0.0 || this.globalData.currentGlobalAlpha == 0)) {
                 //TODO: this.globalData.renderer数据类型是什么？
                 this.globalData.save(false)
+
                 var elems = currentStyle.elements
                 if (types == "st" || types == "gs") {
                     if (types == "st") {
@@ -395,7 +401,7 @@ public class CvShapeElement <: IShapeElement {
                     }else {
                         ctx.strokeStyle(currentStyle.grd.getOrThrow())
                     }
-//                    ctx.lineWidth(currentStyle.wi)
+                    ctx.lineWidth(currentStyle.wi)
                     //  1: "butt",
                     //  2: "round",
                     //  3: "square",
@@ -761,9 +767,18 @@ public class CvShapeElement <: IShapeElement {
         var styleElem = itemData.style
         if (itemData.c._mdf || this._isFirstFrame) {
             //styleElem.co = "rgb(" + "${floor(itemData.c.v[0])}" + "," + "${floor(itemData.c.v[1])}" + "," + "${floor(itemData.c.v[2])}" + ")"
+            //TODO: 测试观察用，后续删除
+            let a = floor(itemData.c.v[0])
+            let b = floor(itemData.c.v[1])
+            let c = floor(itemData.c.v[2])
+            Hilog.error(0, "", "[renderFill]: itemData.c.v = ${itemData.c.v}")
+            Hilog.error(0, "", "[renderFill]: a = ${a}, b = ${b}, c = ${c}")
             styleElem.co = Color(UInt8(floor(itemData.c.v[0])), UInt8(floor(itemData.c.v[1])), UInt8(floor(itemData.c.v[2])))
         }
         if (itemData.o._mdf || groupTransform._opMdf || this._isFirstFrame) {
+            //TODO: 测试观察用，后续删除
+            Hilog.error(0, "", "[renderFill]: itemData.o.v[0] = ${itemData.o.v[0]}")
+            Hilog.error(0, "", "[renderFill]: groupTransform.opacity = ${groupTransform.opacity}")
             styleElem.coOp = Float64(itemData.o.v[0]) * groupTransform.opacity
         }
     }

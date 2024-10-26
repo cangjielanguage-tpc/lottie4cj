@@ -203,8 +203,11 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         let sp: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
 
         //data.pt/ks.k 是对象 => pathData 是对象 => pathData = Mask.pt[0]/ShapePath.ks[0]  =>  直接传入 pathData(data.pt/ks.k)
+        let pathDatas: ShapeData = pathData.k ?? ShapeData()
         //TODO：调不到shapePool.clone，需要把 shapePool 改为对象？？？  //sp.v = shapePool.clone(pathData)
         //TODO：调不到shapePool.clone，需要把 shapePool 改为对象？？？  //sp.pv = shapePool.clone(sp.v)
+        sp.v = ShapeData(pathDatas)
+        sp.pv = ShapeData(sp.v)
 
         sp.paths.addShape(sp.v)
         sp.reset = sp.resetShape
@@ -775,6 +778,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         if (!shapesEqual(this.v, newPath)) {
             //TODO：调不到shapePool.clone，需要把 shapePool 改为对象？？？  
             //this.v = shapePool.clone(newPath)
+            this.v = ShapeData(newPath)
             this.localShapeCollection.releaseShapes()
             this.localShapeCollection.addShape(this.v)
             this._mdf = true

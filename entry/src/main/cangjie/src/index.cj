@@ -101,7 +101,7 @@ class MyView {
 
     func build() {
         Column() {
-            Canvas(this.canvasRenderingContext).width(100.percent).height(20.percent).backgroundColor(0xffff00)
+            Canvas(this.canvasRenderingContext).width(100.percent).height(20.percent).backgroundColor(Color.WHITE)
             .onReady({ =>
 //                    this.animateItem?.resize()
                 }
