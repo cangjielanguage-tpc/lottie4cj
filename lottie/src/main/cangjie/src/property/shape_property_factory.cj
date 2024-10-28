@@ -34,8 +34,8 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
 
     //TODO: 暂时没有引入 BaseElement.comp--【不会再直接引入comp，具体用到comp的什么，再单独处理。】
     //public var comp: RendererBase = elem.comp
-    //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInComp】间接获取当时值。
-    public var renderedFrameInComp: () -> Float64 = { => 0.0}
+    //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInElemComp】间接获取当时值。
+    public var renderedFrameInElemComp: () -> Float64 = { => 0.0}
     
     //public var elem: BaseElement  //this.container = elem
     //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
@@ -736,8 +736,8 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
 
     func interpolateShapeCurrentTime(): ShapeData {
         //let frameNum: Float64 = this.comp.renderedFrame - this.offsetTime
-        //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInComp】间接获取当时值。
-        let frameNum: Float64 = renderedFrameInComp() - this.offsetTime
+        //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInElemComp】间接获取当时值。
+        let frameNum: Float64 = renderedFrameInElemComp() - this.offsetTime
         let initTime: Float64 = this.keyframes[0].t - this.offsetTime
         let endTime: Float64 = this.keyframes[this.keyframes.size - 1].t - this.offsetTime
         let lastFrame: Float64 = Float64(this._caching.lastFrame)

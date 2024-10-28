@@ -20,7 +20,7 @@ public func default_addDynamicProperty(tp: TextProperty): Unit {}
 /*
  * 初始化后需要传入2个函数：
  * 1. addDynamicProperty    => 传入 TextElement 中的这个函数；（在TextElement.init传入编译失败，只能init之后传入。）
- * 2. renderedFrameInComp() => 间接获取 this.elem.comp.renderedFrame 可变的当时的值。
+ * 2. renderedFrameInElemComp() => 间接获取 this.elem.comp.renderedFrame 可变的当时的值。
  */
 public class TextProperty {
 
@@ -41,8 +41,8 @@ public class TextProperty {
     //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
     public var addDynamicPropertyInTextElement: (TextProperty) -> Unit = default_addDynamicProperty
     let elemGlobalData: GlobalData
-    //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInComp】间接获取当时值。
-    public var renderedFrameInComp: () -> Float64 = { => 0.0}
+    //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInElemComp】间接获取当时值。
+    public var renderedFrameInElemComp: () -> Float64 = { => 0.0}
     //TODO: 暂时没有引入 BaseElement.comp--【不会再直接引入comp，具体用到comp的什么，再单独处理。】  //var comp = this.elem.comp
 
     var keysIndex: Int64 = 0
@@ -200,8 +200,8 @@ public class TextProperty {
         //数据来源分析： this.data.d.k => layer.t.d.k => Layer.t(LayerT).d(LayerTD).k(Array<Keyframe<DocumentData>>)
         let textKeys: Array<Keyframe<DocumentData>> = this.data.d.k
 
-        //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInComp】间接获取当时值。
-        var frameNum: Float64 = this.renderedFrameInComp()
+        //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInElemComp】间接获取当时值。
+        var frameNum: Float64 = this.renderedFrameInElemComp()
 
         var i: Int64 = 0
         let len: Int64 = textKeys.size

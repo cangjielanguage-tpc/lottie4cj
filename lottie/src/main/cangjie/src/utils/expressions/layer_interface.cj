@@ -42,7 +42,7 @@ public class LayerExpressionInterface <: ExpressionInterface {
     /*
      * 初始化后需要传入2个函数：
      * 1. isInRangeInElem(): Bool => 间接获取 this.elem.isInRange 可变的当时的值。
-     * 2. renderedFrameInComp() => 间接获取 this.elem.comp.renderedFrame 可变的当时的值。
+     * 2. renderedFrameInElemComp() => 间接获取 this.elem.comp.renderedFrame 可变的当时的值。
      */
     //TODO: 解构 BaseElement 和 LayerExpressionInterface
     var elemData: Layer

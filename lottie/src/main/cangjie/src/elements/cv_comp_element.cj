@@ -39,10 +39,15 @@ public class CvCompElement <: ICompElement {
         let dp = DynamicPropertyContainer(globalData, data, dynamicProperties: this.dynamicProperties)
         dp.dynamicProperties = this.dynamicProperties
 
+        var renderedFrame: Array<() -> Float64> = Array<() -> Float64>()
+        if (compType == 1 && comp.size >= 1){
+            renderedFrame = [comp[0].getRenderedFrameInElemComp]
+        }
+
         if (data.tm.k.size == 1) {
-            this.tm = PropertyFactory<ContentModelDK, Float64>.getProp(data.tm, data.tm.k[0].k ?? 0.0, globalData.frameRate, dp, globalData, data, types: 0, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1)
+            this.tm = PropertyFactory<ContentModelDK, Float64>.getProp(data.tm, data.tm.k[0].k ?? 0.0, globalData.frameRate, dp, globalData, data, types: 0, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: renderedFrame)
         } else if (data.tm.k.size > 1) {
-            this.tm = PropertyFactory<ContentModelDK, Float64>.getProp(data.tm, data.tm.k, 0, globalData.frameRate, dp, globalData, data, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1)
+            this.tm = PropertyFactory<ContentModelDK, Float64>.getProp(data.tm, data.tm.k, 0, globalData.frameRate, dp, globalData, data, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: renderedFrame)
         }
         //this.tm.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
@@ -82,8 +87,10 @@ public class CvCompElement <: ICompElement {
                     //this.canvasContext.closePath()
                     //this.canvasContext.stroke()
 
-        //var indexCOMP: Int64 = 3
-        //this.elements[indexCOMP].renderFrame()
+        //var indexCOMP: Int64 = 29
+        //if (this.completeLayers || (this.elements.size > indexCOMP && !this.elements[indexCOMP].isNull)) {
+        //    this.elements[indexCOMP].renderFrame()
+        //}
         let len: Int64 = this.layers.size
         var indexCOMP: Int64 = 0
         for (i in (len - 1)..=0: -1) {

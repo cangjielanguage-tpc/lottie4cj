@@ -87,10 +87,10 @@ public class CvShapeElement <: IShapeElement {
         if (data.ty == "fl" || data.ty == "st") {
 
             if (data.c.size == 1) {
-                elementData.c = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.c, data.c[0].k ?? Array<Float64>(), 255.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
+                elementData.c = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.c, data.c[0].k ?? Array<Float64>(), 255.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
             } else if (data.c.size > 1) {
                 if (data.c.size > 0) { vLen = (data.c[0].s ?? Array<Float64>()).size }
-                elementData.c = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.c, data.c, 1, 255.0, dp, this.globalData, this.data, vLen: vLen, dynamicProperties: this.dynamicProperties, containerType: 1)
+                elementData.c = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.c, data.c, 1, 255.0, dp, this.globalData, this.data, vLen: vLen, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
             }
             elementData.c.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
@@ -102,26 +102,26 @@ public class CvShapeElement <: IShapeElement {
         } else if (data.ty == "gf" || data.ty == "gs") {
 
             if (data.s.size == 1) {
-                elementData.s = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.s, data.s[0].k ?? Array<Float64>(), 0.0, dp, this.globalData, this.data, types: 1, dynamicProperties: this.dynamicProperties, containerType: 1)
+                elementData.s = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.s, data.s[0].k ?? Array<Float64>(), 0.0, dp, this.globalData, this.data, types: 1, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
             } else if (data.s.size > 1) {
                 if (data.s.size > 0) { vLen = (data.s[0].s ?? Array<Float64>()).size }
-                elementData.s = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.s, data.s, 1, 0.0, dp, this.globalData, this.data, vLen: vLen, dynamicProperties: this.dynamicProperties, containerType: 1)
+                elementData.s = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.s, data.s, 1, 0.0, dp, this.globalData, this.data, vLen: vLen, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
             }
             elementData.s.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
             
             if (data.e.size == 1) {
-                elementData.e = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.e, data.e[0].k ?? Array<Float64>(), 0.0, dp, this.globalData, this.data, types: 1, dynamicProperties: this.dynamicProperties, containerType: 1)
+                elementData.e = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.e, data.e[0].k ?? Array<Float64>(), 0.0, dp, this.globalData, this.data, types: 1, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
             } else if (data.e.size > 1) {
                 if (data.e.size > 0) { vLen = (data.e[0].s ?? Array<Float64>()).size }
-                elementData.e = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.e, data.e, 1, 0.0, dp, this.globalData, this.data, vLen: vLen, dynamicProperties: this.dynamicProperties, containerType: 1)
+                elementData.e = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(data.e, data.e, 1, 0.0, dp, this.globalData, this.data, vLen: vLen, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
             }
             elementData.e.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
             
             //TODO: h 成员变量暂时是空的。
             // elementData.h = PropertyFactory.getProp(this, data.h || { k: 0 }, 0, 0.01, this)
-            elementData.a = PropertyFactory<AK, Int64>.getProp(data.a, data.a.k, degToRads, dp, this.globalData, this.data, types: 0, dynamicProperties: this.dynamicProperties, containerType: 1)
+            elementData.a = PropertyFactory<AK, Int64>.getProp(data.a, data.a.k, degToRads, dp, this.globalData, this.data, types: 0, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
             elementData.a.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
             
@@ -131,9 +131,9 @@ public class CvShapeElement <: IShapeElement {
         }
 
         if (data.o.size == 1) {
-            elementData.o = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(data.o, data.o[0].k ?? 0, 0.01, dp, this.globalData, this.data, types: 0, dynamicProperties: this.dynamicProperties, containerType: 1)
+            elementData.o = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(data.o, data.o[0].k ?? 0, 0.01, dp, this.globalData, this.data, types: 0, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
         } else if (data.o.size > 1) {
-            elementData.o = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(data.o, data.o, 0, 0.01, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
+            elementData.o = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(data.o, data.o, 0, 0.01, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
         }
         //elementData.o = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(data.o, data.o, 0, 0.01, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
         elementData.o.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
@@ -149,11 +149,11 @@ public class CvShapeElement <: IShapeElement {
             }
 
             if (data.w.size == 1) {
-                elementData.w = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.w, data.w[0].k ?? 0.0, 0.0, dp, this.globalData, this.data, types: 0, dynamicProperties: this.dynamicProperties, containerType: 1)
+                elementData.w = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.w, data.w[0].k ?? 0.0, 0.0, dp, this.globalData, this.data, types: 0, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
             } else if (data.w.size > 1) {
-                elementData.w = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.w, data.w, 0, 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
+                elementData.w = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.w, data.w, 0, 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
             }
-            //elementData.w = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.w, data.w, 0, 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
+            //elementData.w = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.w, data.w, 0, 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
             elementData.w.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
             
@@ -195,9 +195,9 @@ public class CvShapeElement <: IShapeElement {
     public func createTransformElement(datas: AnimatableTransform) {
         var op: PropertyFactory<ArrayKeyframeInt64, Int64>
         if (datas.o.k.size == 1) {
-            op = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k[0].k ?? 0, 0.01, dp, this.globalData, this.data, types: 0, dataA: 0, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1)
+            op = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k[0].k ?? 0, 0.01, dp, this.globalData, this.data, types: 0, dataA: 0, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
         } else if (datas.o.k.size > 1){
-            op = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k, 0, 0.01, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
+            op = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k, 0, 0.01, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
         } else {
             op = PropertyFactory<ArrayKeyframeInt64, Int64>(datas.o, 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
         }
@@ -207,10 +207,10 @@ public class CvShapeElement <: IShapeElement {
         var elementData = TransformInElement(opacity: 1.0,
             _opMdf: false,
             key: this.transformsManager.getNewKey(),
-            //(data: T, dataK: Array<Keyframe<E>>, types: Int64, mult: Option<Float64>, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, containerType: 1)
-            //op: PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k, 0, 0.01, dp, this.globalData, this.data, containerType: 1),
+            //(data: T, dataK: Array<Keyframe<E>>, types: Int64, mult: Option<Float64>, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
+            //op: PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k, 0, 0.01, dp, this.globalData, this.data, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp]),
             op: op,
-            mProps: TransformPropertyFactory.getTransformProperty(datas, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
+            mProps: TransformPropertyFactory.getTransformProperty(datas, this.globalData, this.data, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
         )
         return AnimatableTransformElement(elementData)
     }
@@ -318,11 +318,11 @@ public class CvShapeElement <: IShapeElement {
                     itemsData[i] = this.createShapeElement(arr[i]) // CVShapeData
                 }
             } else if (arr[i].ty == "tm" || arr[i].ty == "rd" || arr[i].ty == "pb" || arr[i].ty == "zz" || arr[i].ty == "op") {
-                var modifier: ShapeModifier = ShapeModifier(arr[i], this.globalData, this.data, dynamicProperties: this.dynamicProperties)
+                var modifier: ShapeModifier = ShapeModifier(arr[i], this.globalData, this.data, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
                 if (processedPos == 0) {
                     //modifier = ShapeModifiers.getModifier(arr[i].ty)
                     //modifier.init(this, arr[i])
-                    modifier = ShapeModifier(arr[i], this.globalData, this.data, dynamicProperties: this.dynamicProperties)
+                    modifier = ShapeModifier(arr[i], this.globalData, this.data, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
                     itemsData[i] = modifier
                     this.shapeModifiers.append(modifier)
                 } else {
@@ -335,7 +335,9 @@ public class CvShapeElement <: IShapeElement {
                 if (processedPos == 0) {
                     //modifier = ShapeModifiers.getModifier(arr[i].ty)
                     //modifier.init(this, arr, i, itemsData)
-                    var modifier = RepeaterModifier(arr, i, itemsData, this.globalData, this.data, reloadShapes, dynamicProperties: this.dynamicProperties)
+                    var modifier = RepeaterModifier(arr, i, itemsData, this.globalData, this.data, reloadShapes, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
+                    //modifier.compType = 1
+                    //modifier.getRenderedFrame = [this.getRenderedFrameInElemComp]
                     itemsData[i] = modifier
                     this.shapeModifiers.append(modifier)
                     shouldRender = false
@@ -463,6 +465,7 @@ public class CvShapeElement <: IShapeElement {
                     }
                     var nodes = elems[j].trNodes
                     var kLen = nodes.size
+                    Hilog.error(0, "", "测试【trNodes】-- kLen = ${kLen} ------------------------------------------")
                     for (k in 0..kLen) {
                         if (nodes[k].t == "m") {
                             ctx.moveTo(nodes[k].p[0], nodes[k].p[1])
@@ -716,6 +719,7 @@ public class CvShapeElement <: IShapeElement {
                 var pathNodesos: Option<ShapeData> = paths.shapes.get(j)
                 if (let Some(pathNodes) <- pathNodesos) {
                     if (pathNodes.v.size > 0) {
+                        Hilog.error(0, "", "测试【trNodes】-2-- pathNodes._length = ${pathNodes._length} ------------------------------------------")
                         len = pathNodes._length
                         for (index in 1..len) {
                             if (index == 1) {
@@ -732,11 +736,11 @@ public class CvShapeElement <: IShapeElement {
                             shapeNodes.append(StyledShapeTrNodes("m", p: groupTransformMat.applyToPointArray(pathNodes.v[0].x, pathNodes.v[0].y, 0.0)))
                         }
                         if (pathNodes.c  && len > 0) {
-                            let aaa = groupTransformMat.applyToTriplePoints(
-                                                                            [pathNodes.o[i].x,pathNodes.o[i].y],
-                                                                            [pathNodes.i[0].x,pathNodes.i[0].y],
-                                                                            [pathNodes.v[0].x,pathNodes.v[0].y]
-                                                                            )
+                            //let aaa = groupTransformMat.applyToTriplePoints(
+                            //                                                [pathNodes.o[i].x,pathNodes.o[i].y],
+                            //                                                [pathNodes.i[0].x,pathNodes.i[0].y],
+                            //                                                [pathNodes.v[0].x,pathNodes.v[0].y]
+                            //                                                )
                             shapeNodes.append(StyledShapeTrNodes("c",
                                 pts: groupTransformMat.applyToTriplePoints(
                                                                             [pathNodes.o[i].x,pathNodes.o[i].y],
@@ -751,6 +755,7 @@ public class CvShapeElement <: IShapeElement {
 
             }
             styledShape.trNodes = shapeNodes
+            Hilog.error(0, "", "测试【trNodes】-3-- shapeNodes.size = ${shapeNodes.size} ------------------------------------------")
         }
     }
 

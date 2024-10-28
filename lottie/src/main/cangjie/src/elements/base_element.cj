@@ -97,6 +97,8 @@ public open class BaseElement <: Equatable<BaseElement> {
      */
     public var comp: Array<BaseElement> = Array<BaseElement>()
 
+    public var renderedFrame: Float64 = 0.0
+
 
 
 //FrameElement-1-----------------------------------------------------------------------------
@@ -252,8 +254,13 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.isNull = isNull
         this.data = data
         this.globalData = globalData
+        //this.globalData.renderedFrameInElemComp = getRenderedFrameInElem
         this.canvasContext = this.globalData.canvasContext
         //this.maskManager = CvMaskElement(data, element: RenderableElement)
+    }
+
+    public func getRenderedFrameInElemComp(): Float64{
+        return this.renderedFrame
     }
 
     //BaseRenderer.prototype.createItem----------------------------------------------------------------
@@ -366,6 +373,12 @@ public open class BaseElement <: Equatable<BaseElement> {
         //if (this.elements.size > pos || this.layers[pos].ty == 99) {
             return
         }
+
+        //TODO:测试用，后续删除
+        if (pos == 43) {
+            Hilog.error(0, "", "进入[buildItem]-- pos = ${pos} ------------------------------------------")
+        }
+
         //TODO: 函数参数不一致，有 2 个参数暂时未传递。
         //let element: BaseElement = this.createItem(this.layers[pos])
         let element: BaseElement = createItemChildren(this.layers[pos], "canvas")
@@ -576,7 +589,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
         this.finalTransform.isNull = false
         if (!this.data.ks.isNull()) {
-            this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties)
+            this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
             //this.finalTransform.mProp.addDynamicPropertyInElem = this.addDynamicProperty
         } else {
             this.finalTransform.mProp.o.v = [0.0]

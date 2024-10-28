@@ -27,6 +27,17 @@ public open class DynamicPropertyContainer <: ContentModelElement {
      */
     public var container: Array<DynamicPropertyContainer> = Array<DynamicPropertyContainer>()
 
+    //comp数据类型：1-Element; 2-Renderer；3-其他
+    public var compType: Int8 = 0
+    /*
+     * TODO: comp 在arkts中是多种数据类型，cangjie没有办法完全兼容。
+     * 【暂时】保存为两类，一类代表各种 Element；另一类是 Renderer，用到那个单独处理。
+     * 处理方案分为 3 类，参考成员变量 compType。
+     * comp数据类型：1-Element; 2-Renderer；3-其他。
+     * renderedFrame[0]中函数 => 间接获取 this.elem.comp.renderedFrame 可变的当时的值。
+     */
+    public var getRenderedFrame: Array<() -> Float64> = Array<() -> Float64>()
+
     //TODO：FrameElement 中编译用。
     public var propType: String = ""
 
@@ -55,6 +66,14 @@ public open class DynamicPropertyContainer <: ContentModelElement {
         this.elemGlobalData = elemGlobalData
         this.elemData = elemData
         this.dynamicPropertiesInElem = dynamicProperties
+    }
+
+    public func getRenderedFrameInElemComp(): Float64 {
+        if (this.compType == 1 && this.getRenderedFrame.size >= 1) {
+            return this.getRenderedFrame[0]()
+        } else {
+            return this.elemGlobalData.renderedFrameInRendered()
+        }
     }
 
     //TODO: 改为函数类型的成员变量？？？

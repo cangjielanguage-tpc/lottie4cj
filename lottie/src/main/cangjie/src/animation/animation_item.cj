@@ -148,7 +148,7 @@ public class AnimationItem <: BaseEvent {
             //cvRenderer.globalData.buildAllItemsElement = cvRenderer.buildAllItemsElement
             //cvRenderer.globalData.checkLayers = cvRenderer.checkLayers
 
-            cvRenderer.globalData.renderedFrameInComp = cvRenderer.getRenderedFrame
+            cvRenderer.globalData.renderedFrameInRendered = cvRenderer.getRenderedFrame
 
             this.renderer = cvRenderer
             this.hasRenderer = true
@@ -831,7 +831,8 @@ public class AnimationItem <: BaseEvent {
     }
 
     public func setCurrentRawFrameValue(value: Float64): Unit {
-        if (value >= 98.0) {
+        Hilog.error(0, "liyanqing", "----> value = ${value}")
+        if (value > 15.0) {
             Hilog.error(0, "liyanqing", "----> ${value}")
         }
         this.currentRawFrame = value

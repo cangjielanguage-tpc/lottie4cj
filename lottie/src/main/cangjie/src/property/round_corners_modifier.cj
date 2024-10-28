@@ -106,6 +106,7 @@ public class RoundCornersModifier <: ShapeModifier {
                     vY = oY
                     iX = vX - (vX - currentV.x) * roundCorner
                     iY = vY - (vY - currentV.y) * roundCorner
+
                     clonedPath.setTripleAt(vX, vY, oX, oY, iX, iY, index)
                     index += 1
                 }

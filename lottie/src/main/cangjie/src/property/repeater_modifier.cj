@@ -49,10 +49,16 @@ public class RepeaterModifier <: ShapeModifier {
     var _groups: Array<ShapeGroup> = Array<ShapeGroup>()
     //在父类中已经定义成员变量elem  //var frameId: Int64 = -1
 
-    public init(data: Repeater, elemGlobalData: GlobalData, elemData: Layer, reloadShapes: () -> Unit, dynamicProperties!: ArrayList<DynamicPropertyContainer>){
+    public init(data: Repeater, elemGlobalData: GlobalData, elemData: Layer,
+        reloadShapes: () -> Unit, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<() -> Float64> = Array<() -> Float64>()
+    ){
         super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.reloadShapesInShapeElement = reloadShapes
-        
+
+        this.compType = compType
+        this.getRenderedFrame = renderedFrame
+
         let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.o = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
@@ -60,12 +66,16 @@ public class RepeaterModifier <: ShapeModifier {
         this.eo = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
 
         //(data: AnimatableTransform, elemGlobalData: GlobalData, elemData: Layer)
-        this.tr = TransformPropertyFactory.getTransformProperty(data.tr, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
+        this.tr = TransformPropertyFactory.getTransformProperty(data.tr, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties, compType: compType, renderedFrame: renderedFrame)
     }
 
     //TODO: 注意 怎么实现无参的初始化？？？
-    public init(arr: Array<ContentModel>, pos: Int64, elemsData: Array<ContentModelElement>, elemGlobalData: GlobalData, elemData: Layer, reloadShapes: () -> Unit, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
-        this((arr[pos] as Repeater).getOrThrow(), elemGlobalData, elemData, reloadShapes, dynamicProperties: dynamicProperties)
+    public init(arr: Array<ContentModel>, pos: Int64, elemsData: Array<ContentModelElement>,
+        elemGlobalData: GlobalData, elemData: Layer,
+        reloadShapes: () -> Unit, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<() -> Float64> = Array<() -> Float64>()
+    ) {
+        this((arr[pos] as Repeater).getOrThrow(), elemGlobalData, elemData, reloadShapes, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame)
         this.arr = arr
         this.pos = pos
         this.elemsData = elemsData
@@ -111,7 +121,7 @@ public class RepeaterModifier <: ShapeModifier {
         this.o.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
         this.o.container = [this]
         
-        this.tr = TransformPropertyFactory.getTransformProperty(rp.tr, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
+        this.tr = TransformPropertyFactory.getTransformProperty(rp.tr, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: this.getRenderedFrame)
         this.tr.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
         this.tr.container = [this]
         
