@@ -39,6 +39,12 @@ public func clone(shape: ShapeData): ShapeData {
     var cloned: ShapeData = shapePool.newElement()
 
     //var len = shape._length === undefined ? shape.v.length : shape._length
+    if(cloned._length > cloned.v.size) {
+        cloned._length = cloned.v.size
+    }
+    if(cloned._maxLength > cloned.v.size) {
+        cloned._maxLength = cloned.v.size
+    }
     var len: Int64 = shape._length
     if (shape._length == 0) {
         len = shape.v.size
