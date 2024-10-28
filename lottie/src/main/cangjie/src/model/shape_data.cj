@@ -208,10 +208,10 @@ public class ShapeData <: ToString {
 
         var point: PointF = arr[pos]
         if (point.isNull || (!point.isNull && !replace)) {
-            point = PointF(x: x, y: y)
+            arr[pos] = PointF(x: x, y: y)
         }
-        point.x = x
-        point.y = y
+        arr[pos].x = x
+        arr[pos].y = y
     }
 
     /**
