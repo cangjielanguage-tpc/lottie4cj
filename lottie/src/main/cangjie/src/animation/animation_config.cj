@@ -43,8 +43,9 @@ public class AnimationConfig {
      * 定为 Int64 数据类型，<= 1 表示不循环
      * //TODO: 是否需要再增加一个成员变量，表示是否循环？？？和循环次数分开？？？
      */
-    public var loop: Bool = false
-    public var loopNum: Int64 = 0
+//    public var loop: Bool = false
+//    public var loopNum: Int64 = 0
+    public var loop: Int64 = 0
 
     /**
      * 自动播放设置
@@ -108,7 +109,7 @@ public class AnimationConfig {
         //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
         container!: CanvasRenderingContext2D,
         renderer!: String = "canvas",
-        loop!: Bool = true,
+        loop!: Int64 = -1,
         autoplay!: Bool = true,
         name!: String = "",
         contentMode!: String = "",

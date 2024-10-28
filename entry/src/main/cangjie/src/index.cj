@@ -129,7 +129,7 @@ class MyView {
                                         wrapper_ns: CreateNS("doc"),
                                         container: this.canvasRenderingContext,
                                         renderer: "canvas", // canvas 渲染模式
-                                        loop: true,
+//                                        loop: TEUE,
                                         autoplay: true,
                                         name: "2016",
                                         contentMode: "Contain",

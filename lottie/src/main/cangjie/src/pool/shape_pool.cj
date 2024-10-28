@@ -40,9 +40,12 @@ public func clone(shape: ShapeData): ShapeData {
 
     //var len = shape._length === undefined ? shape.v.length : shape._length
     var len: Int64 = shape._length
-    if (shape.v.size > shape._length) {
+    if (shape._length == 0) {
         len = shape.v.size
     }
+    //if (shape.v.size > shape._length) {
+    //    len = shape.v.size
+    //}
     cloned.setLength(len)
     cloned.c = shape.c
 

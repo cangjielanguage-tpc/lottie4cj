@@ -30,10 +30,16 @@ public class AnimationItem <: BaseEvent {
     /**
      * 动画播放结束后, 是否循环播放，默认值true, 值为true时无限循环播放 值类型为number, 且>=1时为设置重复播放的次数
      * 定为 Int64 数据类型，<= 1 表示不循环，相当于 false。
+     * 定为 Int64 数据类型，-1 表示true，-2 表示false。
      */
-    public var loop: Bool = false
+//    public var loop: Bool = false
     //TODO: 是否需要再增加一个成员变量，表示是否循环？？？和循环次数分开？？？
-    public var loopNum: Int64 = 0
+//    public var loopNum: Int64 = 0
+    public var loop: Int64 = -2
+
+    let TRUE = -1
+    let FALSE = -2
+
 
     //是否已经初始化指定的渲染器。
     var hasRenderer: Bool = false
@@ -186,7 +192,7 @@ public class AnimationItem <: BaseEvent {
         //TODO: 未实现 renderer.setProjectInterface  //this.renderer.setProjectInterface(this.projectInterface)
         this.animType = animTypes
         this.loop = params.loop
-        this.loopNum = params.loopNum
+//        this.loopNum = params.loopNum
 
         this.contentMode = params.contentMode
         this.packageName = params.packageName
@@ -442,6 +448,8 @@ public class AnimationItem <: BaseEvent {
             //TODO：即刻运行的定时器，是否可以改为，按照顺序执行代码逻辑？？？   //setTimeout(function () { this.trigger("DOMLoaded") }.bind(this), 0)
             this.trigger("DOMLoaded")
 
+            Hilog.error(0, "liyanqing", "this.trigger")
+
             // 渲染第一帧
             this.gotoFrame()
             // 自动播放
@@ -654,8 +662,10 @@ public class AnimationItem <: BaseEvent {
         var _isComplete: Bool = false
         //检查nextValue>totalFrames-1是否用于处理非循环和循环动画。
         //如果动画不循环，它应该停止在totalFrames-1。如果它要循环，它应该完成最后一帧，然后循环。
+        //TODO: arkts中 nextValue 不是恰好为 98,仓颉是98
         if (nextValue >= this.totalFrames - 1.0 && this.frameModifier > 0.0) {
-            if (!this.loop || this.playCount == this.loopNum) {
+            //if (!this.loop || this.playCount == this.loopNum ) {
+            if (!(this.loop == TRUE)  || this.playCount == this.loop) {
                 var num: Int64 = 0
                 if (nextValue > this.totalFrames) {
                     num = Int64(nextValue) % Int64(this.totalFrames)
@@ -680,7 +690,7 @@ public class AnimationItem <: BaseEvent {
             if (!this.checkSegments(num)) {
                 //loop 表示是否循环; loopNum 定为 Int64 数据类型，<= 1 表示不循环，相当于 false。
                 this.playCount--
-                if (this.loop && !(this.playCount <= 0 && this.loopNum <= 1)) { // eslint-disable-line no-plusplus
+                if ((this.loop == TRUE) && !(this.playCount <= 0 && this.loop != TRUE)) { // eslint-disable-line no-plusplus
                     this.setCurrentRawFrameValue(this.totalFrames + Float64(num))
                     if (!this._completedLoop) {
                         this._completedLoop = true
@@ -821,6 +831,9 @@ public class AnimationItem <: BaseEvent {
     }
 
     public func setCurrentRawFrameValue(value: Float64): Unit {
+        if (value >= 98.0) {
+            Hilog.error(0, "liyanqing", "----> ${value}")
+        }
         this.currentRawFrame = value
         this.gotoFrame()
     }
@@ -840,7 +853,11 @@ public class AnimationItem <: BaseEvent {
     }
 
     public func setLoop(isLooping: Bool): Unit {
-        this.loop = isLooping
+        this.loop = if (isLooping) {
+            TRUE
+        } else {
+            FALSE
+        }
     }
     
     public func setVolume(val: Int64, name: String): Unit {
@@ -964,7 +981,7 @@ public class AnimationItem <: BaseEvent {
                 this.drawnFrameEvent.direction = this.frameModifier
                 this.triggerEvent(name, this.drawnFrameEvent)
             } else if (name == "loopComplete") {
-                this.triggerEvent(name, BMCompleteLoopEvent(name, this.loopNum, this.playCount, this.frameMult))
+                this.triggerEvent(name, BMCompleteLoopEvent(name, this.loop, this.playCount, this.frameMult))
             } else if (name == "complete") {
                 this.triggerEvent(name, BMCompleteEvent(name, this.frameMult))
             } else if (name == "segmentStart") {
@@ -980,7 +997,7 @@ public class AnimationItem <: BaseEvent {
             this.onEnterFrame(BMEnterFrameEvent(name, this.currentFrame, this.totalFrames, this.frameMult))
         }
         if (name == "loopComplete" && this.hasOnLoopComplete) {
-            this.onLoopComplete(BMCompleteLoopEvent(name, this.loopNum, this.playCount, this.frameMult))
+            this.onLoopComplete(BMCompleteLoopEvent(name, this.loop, this.playCount, this.frameMult))
         }
         if (name == "complete") {
             if (this.hasOnComplete) {

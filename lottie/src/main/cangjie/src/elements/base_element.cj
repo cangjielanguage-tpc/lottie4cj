@@ -151,7 +151,9 @@ public open class BaseElement <: Equatable<BaseElement> {
     public var hidden: Bool = false
     //如果层的透明度等于0，则可以将其隐藏
     public var isTransparent: Bool = false
-    public var maskManager: CvMaskElement = unsafe {zeroValue<CvMaskElement>()}
+    //public var maskManager: CvMaskElement = unsafe {zeroValue<CvMaskElement>()}
+    public var maskManager: Array<CvMaskElement> = Array<CvMaskElement>()
+
     //动画组件列表
     //TODO: component: CVEffects/SVGEffects/MaskElement/CVMaskElement，数据类型暂未确认，暂定为 RenderableElement。
     //public var renderableComponents: ArrayList<RenderableElement> = ArrayList<RenderableElement>()
@@ -251,6 +253,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.data = data
         this.globalData = globalData
         this.canvasContext = this.globalData.canvasContext
+        //this.maskManager = CvMaskElement(data, element: RenderableElement)
     }
 
     //BaseRenderer.prototype.createItem----------------------------------------------------------------
@@ -786,7 +789,7 @@ public open class BaseElement <: Equatable<BaseElement> {
     }
 
     public open func createRenderableComponents() {
-        this.maskManager = CvMaskElement(this.data, this)
+        this.maskManager = [CvMaskElement(this.data, this)]
     }
 
     public func initBaseData(data: Layer, globalData: GlobalData): Unit {
@@ -903,7 +906,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         //恢复高斯模糊的默认值，防止非高斯模糊图层也高斯模糊 shadowBlur(blur: Int64): Unit
         this.canvasContext.shadowBlur(0)
 
-        if (this.maskManager.hasMasks) {
+        if (this.maskManager.size > 0 && this.maskManager[0].hasMasks) {
             this.globalData.restore(true)
         }
         if (this._isFirstFrame) {
@@ -921,7 +924,9 @@ public open class BaseElement <: Equatable<BaseElement> {
         if (this.isInRange && !this.isTransparent) {
             this.hidden = false;
             this._isFirstFrame = true;
-            this.maskManager._isFirstFrame = true;
+            if (this.maskManager.size > 0) {
+                this.maskManager[0]._isFirstFrame = true;
+            }
         }
     }
 
@@ -974,7 +979,8 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.canvasContext = unsafe {zeroValue<LottieCanvasRenderingContext2D>()}
         this.data = Layer()
         this.globalData = unsafe {zeroValue<GlobalData>()}
-        this.maskManager.destroy()
+        //this.maskManager.destroy()
+        this.maskManager = Array<CvMaskElement>()
     }
 
     public func mHelper() {
