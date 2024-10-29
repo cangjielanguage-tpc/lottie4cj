@@ -375,9 +375,9 @@ public open class BaseElement <: Equatable<BaseElement> {
         }
 
         //TODO:测试用，后续删除
-        if (pos == 43) {
-            Hilog.error(0, "", "进入[buildItem]-- pos = ${pos} ------------------------------------------")
-        }
+//        if (pos == 43) {
+//            Hilog.error(0, "", "进入[buildItem]-- pos = ${pos} ------------------------------------------")
+//        }
 
         //TODO: 函数参数不一致，有 2 个参数暂时未传递。
         //let element: BaseElement = this.createItem(this.layers[pos])
@@ -907,7 +907,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
         //Hilog.error(0, "---9--", "----->${currentStyle.preTransforms.finalTransform.props}")
         var tmps = this.finalTransform.mat.props
-        Hilog.error(0, "---33333--", "[renderFrame]: tmps = ${tmps}")
+//        Hilog.error(0, "---33333--", "[renderFrame]: tmps = ${tmps}")
 
         this.globalData.ctxTransform(this.finalTransform.mat.props) //CanvasRendererBase
         this.globalData.ctxOpacity(Int64(this.finalTransform.mProp.o.v[0]))   //CanvasRendererBase

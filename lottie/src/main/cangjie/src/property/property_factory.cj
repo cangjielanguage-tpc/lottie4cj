@@ -251,16 +251,21 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         var keyTime: Float64 = keyData.t - offsetTime
         var endValue: Array<Float64> = Array<Float64>()
 
-        let keyData_s: Array<Float64> =
-        if (let Some(v: Float64)<- keyData.s) {
-            [v]
-        } else if (let Some(v: Array<Float64>) <- keyData.s) {
-            v
-        } else if (let Some(v: PointF) <- keyData.s) {
-            //[v.x, v.y, 0.0]
-            [v.x, v.y, 0.0]
+        let keyData_s: Array<Float64> = if (let Some(v)<- keyData.s) {
+            match (v) {
+                case w: Float64 => [w]
+                case w: Array<Float64> => w
+                case w: PointF => [w.x, w.y, 0.0]
+                case w: Int64 => [Float64(w)]
+                case w: Array<Int64> =>
+                    let temp = Array<Float64>(w.size, item: 0.0)
+                    for(tempIndex in 0..temp.size) {
+                        temp[tempIndex] = Float64(w[tempIndex])
+                    }
+                    temp
+                case _ => throw IllegalArgumentException()
+            }
         } else {
-            Hilog.error(0, "PropertyFactory", "[interpolateValue]: keyData.s is not Float64/Array<Float64>/PointF")
             Array<Float64>()
         }
 
@@ -271,25 +276,39 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
 
 
         let keyData_e: Array<Float64> =
-        if (let Some(v: Float64)<- keyData.e) {
-            [v]
-        } else if (let Some(v: Array<Float64>) <- keyData.e) {
-            v
-        } else if (let Some(v: PointF) <- keyData.e) {
-            [v.x, v.y, 0.0]
+        if (let Some(v) <- keyData.e) {
+            match (v) {
+                case w: Float64 => [w]
+                case w: Array<Float64> => w
+                case w: PointF => [w.x, w.y, 0.0]
+                case w: Int64 => [Float64(w)]
+                case w: Array<Int64> =>
+                    let temp = Array<Float64>(w.size, item: 0.0)
+                    for(tempIndex in 0..temp.size) {
+                        temp[tempIndex] = Float64(w[tempIndex])
+                    }
+                    temp
+                case _ => throw IllegalArgumentException()
+            }
         } else {
-            Hilog.error(0, "PropertyFactory", "[interpolateValue]: keyData.e is not Float64/Array<Float64>/PointF")
             Array<Float64>()
         }
         let nextKeyData_s: Array<Float64> =
-        if (let Some(v: Float64)<- nextKeyData.s) {
-            [v]
-        } else if (let Some(v: Array<Float64>) <- nextKeyData.s) {
-            v
-        } else if (let Some(v: PointF) <- nextKeyData.s) {
-            [v.x, v.y, 0.0]
+        if (let Some(v) <- nextKeyData.s) {
+            match (v) {
+                case w: Float64 => [w]
+                case w: Array<Float64> => w
+                case w: PointF => [w.x, w.y, 0.0]
+                case w: Int64 => [Float64(w)]
+                case w: Array<Int64> =>
+                    let temp = Array<Float64>(w.size, item: 0.0)
+                    for(tempIndex in 0..temp.size) {
+                        temp[tempIndex] = Float64(w[tempIndex])
+                    }
+                    temp
+                case _ => throw IllegalArgumentException()
+            }
         } else {
-            Hilog.error(0, "PropertyFactory", "[interpolateValue]: nextKeyData.s is not Float64/Array<Float64>/PointF")
             Array<Float64>()
         }
 
