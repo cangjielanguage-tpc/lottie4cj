@@ -23,11 +23,20 @@ public open class ShapeModifier <: DynamicPropertyContainer {
     
     // 只在 CvShapeElement/SVGShapeElement 中调用， elem = CvShapeElement/SVGShapeElement，data = ContentModel
     // data类型：tm/rd/pb/zz/op / rp /ms
-    public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
+    public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer,
+        dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<() -> Float64> = Array<() -> Float64>()
+    ) {
         super(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+
+        this.compType = compType
+        this.getRenderedFrame = renderedFrame
     }
-    public static func initShapeModifier(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>): ShapeModifier {
-        let sm: ShapeModifier = ShapeModifier(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+    public static func initShapeModifier(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer,
+        dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<() -> Float64> = Array<() -> Float64>()
+    ): ShapeModifier {
+        let sm: ShapeModifier = ShapeModifier(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame)
         //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
         sm.initDynamicPropertyContainer(elemGlobalData, elemData)
         //TODO: 直接调用的 DynamicPropertyContainer.initModifierProperties。

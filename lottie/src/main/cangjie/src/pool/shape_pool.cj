@@ -8,6 +8,8 @@
 //package lottie.utils.pooling
 package lottie.pool
 
+internal import ohos.hilog.*
+
 /**
  * The shape pool.
  */
@@ -37,6 +39,14 @@ func releaseShapePool(shapePath: ShapeData): Unit {
 //TODO: 怎么和 [PoolFactory]factory.clone 关联？？？----------------------------------------------------------------------2024.07.12
 public func clone(shape: ShapeData): ShapeData {
     var cloned: ShapeData = shapePool.newElement()
+    //var cloned: ShapeData = ShapeData()
+
+    if (cloned._length > cloned.v.size) {
+        cloned._length = cloned.v.size
+    }
+    if (cloned._maxLength > cloned.v.size) {
+        cloned._maxLength = cloned.v.size
+    }
 
     //var len = shape._length === undefined ? shape.v.length : shape._length
     if(cloned._length > cloned.v.size) {
@@ -71,4 +81,3 @@ public func clone(shape: ShapeData): ShapeData {
 //factory.clone = clone
 
 //return factory
-

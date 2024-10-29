@@ -178,7 +178,9 @@ public class GlobalData {
     //TODO: 循环引用。
     //public var createItem: (Layer) -> BaseElement = { m => return BaseElement(Layer(), GlobalData(), isNull: true) }
 
-    public var renderedFrameInComp: () -> Float64 = { => 0.0}
+    public var getRenderedFrameInElemComp: () -> Float64 = { => 0.0}
+
+    public var renderedFrameInRendered: () -> Float64 = { => 0.0}
 
     public var isNull: Bool = false
 

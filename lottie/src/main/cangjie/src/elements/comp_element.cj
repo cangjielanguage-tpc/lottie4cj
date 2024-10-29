@@ -38,7 +38,9 @@ public open class ICompElement <: BaseElement {
 
     //TODO: 未实现,初拟定了一个数据类型TM.
     public var tm: PropertyFactory<ContentModelDK, Float64> // = unsafe {zeroValue<PropertyFactory<ContentModelDK, Float64>>()}
-    var renderedFrame: Float64 = 0.0
+    //var renderedFrame: Float64 = 0.0
+
+
     //var completeLayers: Bool = false
     //public var layers: Array<Layer> = Array<Layer>()
     //TODO: 未确认数据类型，暂定为 BaseElement。

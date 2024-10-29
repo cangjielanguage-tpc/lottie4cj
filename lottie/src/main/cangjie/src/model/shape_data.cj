@@ -192,7 +192,6 @@ public class ShapeData <: ToString {
      * @param replace - Type of Bool, whether to generate a new element for replacement.
      */
     public func setXYAt(x: Float64, y: Float64, types: String, pos: Int64, replace!: Bool = false): Unit {
-        //TODO: 需要设置扩容逻辑么？？？-----------------------------------------------------------------------2024.07.12
         this._length = max(this._length, pos + 1)
         if (this._length >= this._maxLength) {
             this.doubleArrayLength(this._length)
@@ -209,9 +208,10 @@ public class ShapeData <: ToString {
         var point: PointF = arr[pos]
         if (point.isNull || (!point.isNull && !replace)) {
             arr[pos] = PointF(x: x, y: y)
+        } else {
+            arr[pos].x = x
+            arr[pos].y = y
         }
-        arr[pos].x = x
-        arr[pos].y = y
     }
 
     /**

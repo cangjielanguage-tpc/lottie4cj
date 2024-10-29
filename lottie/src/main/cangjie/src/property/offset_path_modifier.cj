@@ -120,7 +120,7 @@ public class OffsetPathModifier <: ShapeModifier {
                         outputBezier.length()
                     )
                 }
-    
+
                 outputBezier.setTripleAt(
                     segment.points[3][0],
                     segment.points[3][1],
