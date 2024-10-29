@@ -136,7 +136,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      */
     public func ctxOpacity(op: Int64): Unit {
         var tmps = this.contextData.getTransform().props;
-        Hilog.error(0, "---1--", "[ctxOpacity]----->tmps = ${tmps}")
+//        Hilog.error(0, "---1--", "[ctxOpacity]----->tmps = ${tmps}")
 
         var currentOpacity: Int64 = this.contextData.getOpacity()
         if (!this.renderConfig.clearCanvas) { //canvasContext 是画布组件中的 CanvasRenderingContext2D
@@ -166,7 +166,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         }
 
         var tmps2 = this.contextData.getTransform().props;
-        Hilog.error(0, "---1--", "[ctxOpacity]----->tmps2 = ${tmps2}")
+//        Hilog.error(0, "---1--", "[ctxOpacity]----->tmps2 = ${tmps2}")
     }
 
     /**
@@ -187,7 +187,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      */
     public func save(actionFlag: Bool): Unit {
         var tmps = this.contextData.getTransform().props;
-        Hilog.error(0, "---0--", "----->tmps = ${tmps}")
+//        Hilog.error(0, "---0--", "----->tmps = ${tmps}")
         if (!this.renderConfig.clearCanvas) {
             this.canvasContext.save()
             return
@@ -197,7 +197,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         }
         this.contextData.push()
         var tmps2 = this.contextData.getTransform().props;
-        Hilog.error(0, "---0--", "----->tmps2 = ${tmps2}")
+//        Hilog.error(0, "---0--", "----->tmps2 = ${tmps2}")
     }
 
     /**

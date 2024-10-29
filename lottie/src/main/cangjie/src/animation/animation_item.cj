@@ -448,8 +448,6 @@ public class AnimationItem <: BaseEvent {
             //TODO：即刻运行的定时器，是否可以改为，按照顺序执行代码逻辑？？？   //setTimeout(function () { this.trigger("DOMLoaded") }.bind(this), 0)
             this.trigger("DOMLoaded")
 
-            Hilog.error(0, "liyanqing", "this.trigger")
-
             // 渲染第一帧
             this.gotoFrame()
             // 自动播放
@@ -831,10 +829,6 @@ public class AnimationItem <: BaseEvent {
     }
 
     public func setCurrentRawFrameValue(value: Float64): Unit {
-        Hilog.error(0, "liyanqing", "----> value = ${value}")
-        if (value > 15.0) {
-            Hilog.error(0, "liyanqing", "----> ${value}")
-        }
         this.currentRawFrame = value
         this.gotoFrame()
     }
