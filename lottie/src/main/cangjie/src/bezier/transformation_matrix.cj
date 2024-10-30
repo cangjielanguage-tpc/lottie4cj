@@ -5,6 +5,8 @@ package lottie.bezier
 
 internal import std.math.*
 
+internal import ohos.hilog.*
+
 public class Matrix {
     public var props: Array<Float64> = Array<Float64>(16, item: 0.0)
 
@@ -123,16 +125,26 @@ public class Matrix {
         p2: Float64) {
         var _p = this.props
 
+        //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p = ${_p}")
+
         if (a2 == 1.0 && b2 == 0.0 && c2 == 0.0 && d2 == 0.0 && e2 == 0.0 && f2 == 1.0 && g2 == 0.0 && h2 == 0.0 &&
             i2 == 0.0 && j2 == 0.0 && k2 == 1.0 && l2 == 0.0) {
             // NOTE: commenting this condition because TurboFan deoptimizes code when present
             // if(m2 !== 0 || n2 !== 0 || o2 !== 0){
+            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[12] = ${_p[12]}")
             _p[12] = _p[12] * a2 + _p[15] * m2
+            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[12] = ${_p[12]}")
+            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[13]= ${_p[13]}")
             _p[13] = _p[13] * f2 + _p[15] * n2
+            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[13]= ${_p[13]}")
+            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[14] = ${_p[14]}")
             _p[14] = _p[14] * k2 + _p[15] * o2
+            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[14] = ${_p[14]}")
+            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[15] = ${_p[15]}")
             _p[15] *= p2
             // }
             this._identityCalculated = false
+            //Hilog.error(0, "--Renderer--", "[transform]--[2]----> _p = ${_p}")
             return this
         }
 

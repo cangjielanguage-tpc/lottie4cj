@@ -52,8 +52,8 @@ public var operationsMap: HashMap<Int64, String> = HashMap<Int64, String>([
 public class FinalTransform {
 
     public var mProp: TransformProperty
-    var _matMdf: Bool
-    var _opMdf: Bool
+    public var _matMdf: Bool
+    public var _opMdf: Bool
     public var mat: Matrix
     public var isNull: Bool = false
 
@@ -260,6 +260,12 @@ public open class BaseElement <: Equatable<BaseElement> {
     }
 
     public func getRenderedFrameInElemComp(): Float64{
+        if (this.compType == 1 && this.comp.size >= 1){
+            //Hilog.error(0, "--29--", "[Element][getRenderedFrameInElemComp]--[1]--------------------------------layerId = ${layerId}")
+            this.comp[0].getRenderedFrameInElemComp()
+        }
+        //Hilog.error(0, "--29--", "[Element][getRenderedFrameInElemComp]--[2]--------------------------------layerId = ${layerId}")
+        //Hilog.error(0, "--29--", "[Element][getRenderedFrameInElemComp]--[2]--------------------------------layerId = this.renderedFrame = ${this.renderedFrame}")
         return this.renderedFrame
     }
 
@@ -490,6 +496,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
         for (i in 0..len) {
             if (isVisible || (this._isParent && this.dynamicProperties[i].propType == "transform")) {
+                ////Hilog.error(0, "--29--", "[processKeys]--[1]----> this.p.v = ${this.dynamicProperties[i].p.v}")
                 this.dynamicProperties[i].getValue()
                 if (this.dynamicProperties[i]._mdf) {
                     this.globalData._mdf = true
@@ -589,7 +596,12 @@ public open class BaseElement <: Equatable<BaseElement> {
 
         this.finalTransform.isNull = false
         if (!this.data.ks.isNull()) {
-            this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
+            //TODO:[lp]--会影响最外层的CvCompElement吗？？？
+            if (this.compType == 1 && this.comp.size >= 1){
+                this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: compType, renderedFrame: [comp[0].getRenderedFrameInElemComp])
+            } else {
+                this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
+            }
             //this.finalTransform.mProp.addDynamicPropertyInElem = this.addDynamicProperty
         } else {
             this.finalTransform.mProp.o.v = [0.0]
@@ -606,8 +618,15 @@ public open class BaseElement <: Equatable<BaseElement> {
     }
 
     public func renderTransform() {
+        //Hilog.error(0, "--Element--", "[renderTransform]----> this._isFirstFrame = ${this._isFirstFrame}")
+        //Hilog.error(0, "--Element--", "[renderTransform]----> this.finalTransform.mProp.o._mdf = ${this.finalTransform.mProp.o._mdf}")
+        //Hilog.error(0, "--Element--", "[renderTransform]----> this.finalTransform.mProp._mdf = ${this.finalTransform.mProp._mdf}")
+
         this.finalTransform._opMdf = this.finalTransform.mProp.o._mdf || this._isFirstFrame
         this.finalTransform._matMdf = this.finalTransform.mProp._mdf || this._isFirstFrame
+
+        //Hilog.error(0, "--Element--", "[renderTransform]----> this.finalTransform._opMdf = ${this.finalTransform._opMdf}")
+        //Hilog.error(0, "--Element--", "[renderTransform]----> this.finalTransform._matMdf = ${this.finalTransform._matMdf}")
 
         //TODO：[44] TransformElement.renderTransform 中 this.hierarchy 为空数组时，进入if (this.hierarchy) 分支，执行代码逻辑。
         //if (this.hierarchy.size > 0) {
@@ -629,6 +648,7 @@ public open class BaseElement <: Equatable<BaseElement> {
             //this.finalTransform.mProp.v.props[12] = 1311.31103515625
             //this.finalTransform.mProp.v.props[13] = 513.7009887695313
             var mat: Array<Float64> = this.finalTransform.mProp.v.props
+            //Hilog.error(0, "--Element--", "[renderTransform]----> this.finalTransform.mProp.v.props = ${mat}")
             finalMat.cloneFromProps(mat)
             for (i in 0..len) {
                 mat = this.hierarchy[i].finalTransform.mProp.v.props
@@ -890,6 +910,8 @@ public open class BaseElement <: Equatable<BaseElement> {
     public open func renderInnerContent() {}
 
     public open func renderFrame(forceRender: Bool): Unit {
+        var tmps1 = this.finalTransform.mat.props
+        //Hilog.error(0, "---33333--", "[renderFrame]: tmps1 = ${tmps1}")
         if (this.hidden || this.data.hd) {
             return
         }
@@ -905,9 +927,9 @@ public open class BaseElement <: Equatable<BaseElement> {
         //TODO: [已解构--直接调用函数，省去renderer. ]解构 renderer 和 globalData。
         this.globalData.save(forceRealStack)  //CanvasRendererBase
 
-        //Hilog.error(0, "---9--", "----->${currentStyle.preTransforms.finalTransform.props}")
+        ////Hilog.error(0, "---9--", "----->${currentStyle.preTransforms.finalTransform.props}")
         var tmps = this.finalTransform.mat.props
-//        Hilog.error(0, "---33333--", "[renderFrame]: tmps = ${tmps}")
+        //Hilog.error(0, "---33333--", "[renderFrame]: tmps = ${tmps}")
 
         this.globalData.ctxTransform(this.finalTransform.mat.props) //CanvasRendererBase
         this.globalData.ctxOpacity(Int64(this.finalTransform.mProp.o.v[0]))   //CanvasRendererBase

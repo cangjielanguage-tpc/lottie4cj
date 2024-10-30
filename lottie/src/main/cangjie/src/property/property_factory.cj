@@ -48,7 +48,7 @@ public class CachingAtTime {
     //public var value: Array<Float64> = Array<Float64>()
     public var _lastKeyframeIndex: Int64 = 0
 
-    public var _lastAddedLength: Int64 = 0
+    public var _lastAddedLength: Float64 = 0.0
     public var _lastPoint: Int64 = 0
 
     public init(shapeValue!: ShapeData = ShapeData(), lastIndex!: Int64 = 0, lastTime!: Float64 = initialDefaultFrameFloat64,
@@ -266,6 +266,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 case _ => throw IllegalArgumentException()
             }
         } else {
+            //Hilog.error(0, "PropertyFactory", "[interpolateValue]: keyData.s is not Float64/Array<Float64>/PointF")
             Array<Float64>()
         }
 
@@ -291,6 +292,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 case _ => throw IllegalArgumentException()
             }
         } else {
+            //Hilog.error(0, "PropertyFactory", "[interpolateValue]: keyData.e is not Float64/Array<Float64>/PointF")
             Array<Float64>()
         }
         let nextKeyData_s: Array<Float64> =
@@ -309,6 +311,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 case _ => throw IllegalArgumentException()
             }
         } else {
+            //Hilog.error(0, "PropertyFactory", "[interpolateValue]: nextKeyData.s is not Float64/Array<Float64>/PointF")
             Array<Float64>()
         }
 
@@ -318,6 +321,10 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 if (nextKeyData_s.size == 0) {
                     arr = keyData_e
                 }
+                //Hilog.error(0, "--29--", "[interpolateValue]--[1]--------------------------------keyData_s = ${keyData_s}")
+                //Hilog.error(0, "--29--", "[interpolateValue]--[1]--------------------------------arr = ${arr}")
+                //Hilog.error(0, "--29--", "[interpolateValue]--[1]--------------------------------keyData.to = ${keyData.to}")
+                //Hilog.error(0, "--29--", "[interpolateValue]--[1]--------------------------------keyData.ti = ${keyData.ti}")
                 keyframeMetadata.bezierData = Bez.buildBezierData(keyData_s, arr, keyData.to, keyData.ti)
             }
             var bezierData: BezierData = keyframeMetadata.bezierData
@@ -337,12 +344,14 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 }
                 perc = fnc((frameNum - keyTime) / (nextKeyTime - keyTime))
                 var distanceInLine: Float64 = Float64(bezierData.segmentLength) * perc
+                //Hilog.error(0, "--29--", "[interpolateValue]--[1]----> distanceInLine = ${distanceInLine}")
 
                 var segmentPerc: Float64 = 0.0
-                var addedLength: Int64 = 0
+                var addedLength: Float64 = 0.0
                 if (Float64(caching.lastFrame) < frameNum && caching._lastKeyframeIndex == i) {
                     addedLength = caching._lastAddedLength
                 }
+                //Hilog.error(0, "--29--", "[interpolateValue]--[1]----> addedLength = ${addedLength}")
                 j = 0
                 if (Float64(caching.lastFrame) < frameNum && caching._lastKeyframeIndex == i) {
                     j = caching._lastPoint
@@ -357,8 +366,8 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                             newValue[k] = bezierData.points[j].point[k]
                         }
                         break
-                    } else if (distanceInLine >= Float64(addedLength) && distanceInLine < Float64(addedLength + bezierData.points[j + 1].partialLength)) {
-                        segmentPerc = (distanceInLine - Float64(addedLength) / Float64(bezierData.points[j + 1].partialLength))
+                    } else if (distanceInLine >= addedLength && distanceInLine < (addedLength + bezierData.points[j + 1].partialLength)) {
+                        segmentPerc = (distanceInLine - addedLength / bezierData.points[j + 1].partialLength)
                         kLen = bezierData.points[j].point.size
                         for (k in 0..kLen) {
                             newValue[k] = bezierData.points[j].point[k] + (bezierData.points[j + 1].point[k] - bezierData.points[j].point[k]) * segmentPerc
@@ -547,7 +556,11 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     func getValueAtCurrentTime(): Array<Float64> {
         //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInElemComp】间接获取当时值。
         //let frameNum: Float64 = this.elemGlobalData.renderedFrameInElemComp() - this.offsetTime
-        let frameNum: Float64 = this.getRenderedFrameInElemComp() - this.offsetTime
+        //Hilog.error(0, "--29--", "[getValueAtCurrentTime]--[3]--------------------------------layerId = ")
+        let renderedFrameNum: Float64 = this.getRenderedFrameInElemComp()
+        let frameNum: Float64 = renderedFrameNum - this.offsetTime
+        //Hilog.error(0, "--29--", "[getValueAtCurrentTime]--[3]--------------------------------layerId = this.comp.renderedFrame = ${renderedFrameNum}")
+        //let frameNum: Float64 = this.getRenderedFrameInElemComp() - this.offsetTime
 
         let initTime: Float64 = this.keyframes[0].t - this.offsetTime
         let endTime: Float64 = this.keyframes[this.keyframes.size - 1].t - this.offsetTime
@@ -606,9 +619,11 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         if (!this.kf) { //当 this.kf = false 时，this.data.k 是【分支1/2】对应的，数据类型是 number/Array<number>。
             finalValue = this.dataK_Number
         }
+        //Hilog.error(0, "--29--", "[processEffectsSequence]--[1]----> finalValue = ${finalValue}")
         for (i in 0..len) {
             //TODO： 确认此处用法。finalValue = this.effectsSequence[i](finalValue)
             finalValue = this.effectsSequence[i]()
+            //Hilog.error(0, "--29--", "[processEffectsSequence]--[2]----> finalValue = ${finalValue}")
         }
         this.setVValue(finalValue)
         this._isFirstFrame = false

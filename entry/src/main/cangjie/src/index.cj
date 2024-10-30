@@ -18,13 +18,17 @@ import ohos.state_macro_manage.Entry
 import ohos.state_macro_manage.Component
 import ohos.state_macro_manage.State
 import ohos.state_macro_manage.r
+
 import ohos.hilog.*
+
 internal import ohos.ability.*
 internal import ohos.resource_manager.*
 internal import ohos.bundle_manager.*
+
 internal import lottie.utils.helpers.*
 internal import lottie.model.*
 internal import lottie.parser.*
+
 internal import ohos.file_fs.*
 internal import std.sync.*
 
@@ -45,7 +49,7 @@ private func readFileWithError(path: String, err: String): Array<Byte> {
     try {
         fd = FileFs.open(path, mode: READ_WRITE.mode).fd
     } catch (e: Exception) {
-        //Hilog.error(0, "", err + e.message)
+        ////Hilog.error(0, "", err + e.message)
         return buf
     }
     try {
@@ -53,7 +57,7 @@ private func readFileWithError(path: String, err: String): Array<Byte> {
         buf = Array<Byte>(len, item: 0)
         FileFs.read(fd, buf)
     } catch (e: Exception) {
-    //Hilog.error(0, "", err + e.message)
+        ////Hilog.error(0, "", err + e.message)
     } finally {
         FileFs.close(fd)
     }
@@ -71,7 +75,7 @@ public func loadMedia(resId: Int32, context: Option<AbilityContext>): Array<UInt
         //            return Array<UInt8>()
         //        }
     }
-    //Hilog.error(0, "", "[loadMedia]: the globalAbilityContext is None.")
+    ////Hilog.error(0, "", "[loadMedia]: the globalAbilityContext is None.")
     return Array<UInt8>()
 }
 

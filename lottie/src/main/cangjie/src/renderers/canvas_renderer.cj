@@ -56,6 +56,7 @@ public class CanvasRenderer <: CanvasRendererBase {
     }
 
     public func getRenderedFrame(): Float64{
+        //Hilog.error(0, "--29--", "[rendered][getRenderedFrame]--[1]--------------------------------")
         return this.renderedFrame
     }
 

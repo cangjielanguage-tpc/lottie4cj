@@ -136,14 +136,14 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         var pathInfo: PathInfo = PathInfo()
         var currentLength: Float64 = 0.0
         var currentPoint: PointData = PointData()
-        var segmentLength: Int64 = 0
+        var segmentLength: Float64 = 0.0
         var flag: Bool = false
         var pointInd: Int64 = 0
         var segmentInd: Int64 = 0
         var prevPoint: PointData = PointData()
         var points: Array<PointData> = Array<PointData>()
         var segments: ArrayList<BezierData> = ArrayList<BezierData>(24)
-        var partialLength: Int64 = 0
+        var partialLength: Float64 = 0.0
         var totalLength: Float64 = 0.0
         var perc: Float64 = 0.0
         var tanAngle: Float64 = 0.0
@@ -192,7 +192,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
             currentLength = this._pathData.f.v[0]
             segmentInd = 0
             pointInd = 1
-            segmentLength = 0
+            segmentLength = 0.0
             flag = true
             segments = pathInfo.segments
             if (currentLength < 0.0 && mask.v.c) {
@@ -203,7 +203,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                 points = segments[segmentInd].points
                 pointInd = points.size - 1
                 while (currentLength < 0.0) {
-                    currentLength += Float64(points[pointInd].partialLength)
+                    currentLength += points[pointInd].partialLength
                     pointInd -= 1
                     if (pointInd < 0) {
                         segmentInd -= 1
@@ -324,7 +324,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                     prevPoint = points[pointInd - 1]
                     currentPoint = points[pointInd]
                     partialLength = currentPoint.partialLength
-                    segmentLength = 0
+                    segmentLength = 0.0
                 }
                 letterM = ""
                 letterFc = Color(0,0,0)
@@ -383,8 +383,8 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                         currentLength += this._pathData.f.v[0]
                     }
                     while (flag) {
-                        if (Float64(segmentLength + partialLength) >= currentLength + animatorOffset || points.size == 0) {
-                            perc = (currentLength + animatorOffset - Float64(segmentLength)) / Float64(currentPoint.partialLength)
+                        if ((segmentLength + partialLength) >= currentLength + animatorOffset || points.size == 0) {
+                            perc = (currentLength + animatorOffset - segmentLength) / currentPoint.partialLength
                             xPathPos = prevPoint.point[0] + (currentPoint.point[0] - prevPoint.point[0]) * perc
                             yPathPos = prevPoint.point[1] + (currentPoint.point[1] - prevPoint.point[1]) * perc
                             matrixHelper.translate((-alignment[0] * letters[i].an) * 0.005, -(alignment[1] * yOff) * 0.01)
