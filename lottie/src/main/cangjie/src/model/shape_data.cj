@@ -205,8 +205,7 @@ public class ShapeData <: ToString {
             arr = this.o
         }
 
-        var point: PointF = arr[pos]
-        if (point.isNull || (!point.isNull && !replace)) {
+        if (arr[pos].isNull || (!arr[pos].isNull && !replace)) {
             arr[pos] = PointF(x: x, y: y)
         } else {
             arr[pos].x = x

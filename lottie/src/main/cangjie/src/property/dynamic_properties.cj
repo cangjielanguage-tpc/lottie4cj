@@ -70,9 +70,19 @@ public open class DynamicPropertyContainer <: ContentModelElement {
 
     public func getRenderedFrameInElemComp(): Float64 {
         if (this.compType == 1 && this.getRenderedFrame.size >= 1) {
-            return this.getRenderedFrame[0]()
+            //Hilog.error(0, "--29--", "[getRenderedFrameInElemComp]--[1]--------------------------------")
+            //return this.getRenderedFrame[0]()
+
+            let num = this.getRenderedFrame[0]()
+            //Hilog.error(0, "--29--", "[getRenderedFrameInElemComp]--[1]--------------------------------num = ${num}")
+            return num
         } else {
-            return this.elemGlobalData.renderedFrameInRendered()
+            //Hilog.error(0, "--29--", "[getRenderedFrameInElemComp]--[2]--------------------------------")
+            //return this.elemGlobalData.renderedFrameInRendered()
+
+            let num = this.elemGlobalData.renderedFrameInRendered()
+            //Hilog.error(0, "--29--", "[getRenderedFrameInElemComp]--[2]--------------------------------num = ${num}")
+            return num
         }
     }
 

@@ -91,24 +91,6 @@ public class CvCompElement <: ICompElement {
         //if (this.completeLayers || (this.elements.size > indexCOMP && !this.elements[indexCOMP].isNull)) {
         //    this.elements[indexCOMP].renderFrame()
         //}
-//        this.elements[0].renderFrame()
-//        this.elements[1].renderFrame()
-//        this.elements[2].renderFrame()
-//        this.elements[3].renderFrame()
-//        this.elements[4].renderFrame()// Nothing
-//        this.elements[5].renderFrame()
-//        this.elements[6].renderFrame() // 没有显示
-//        this.elements[7].renderFrame()
-//        this.elements[8].renderFrame()
-//        this.elements[9].renderFrame()
-//        this.elements[10].renderFrame()
-//        this.elements[11].renderFrame()// Nothing
-//        this.elements[12].renderFrame()// Nothing
-//        this.elements[13].renderFrame()
-//        this.elements[14].renderFrame() // Nothing
-//        this.elements[15].renderFrame()// Nothing
-//        this.elements[16].renderFrame()
-//        this.elements[17].renderFrame()
         let len: Int64 = this.layers.size
         var indexCOMP: Int64 = 0
         for (i in (len - 1)..=0: -1) {

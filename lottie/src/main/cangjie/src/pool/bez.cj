@@ -84,7 +84,7 @@ public class BezierData {
 }
 
 public class PointData {
-    public var partialLength: Int64 = 0
+    public var partialLength: Float64 = 0.0
     public var point: Array<Float64> = Array<Float64>()
 
     /**
@@ -98,7 +98,7 @@ public class PointData {
      * @param partialLength - Type of Int64, the partialLength value.
      * @param point - Type of Array<Float64>, the point value.
      */
-    public init(partialLength: Int64, point: Array<Float64>){
+    public init(partialLength: Float64, point: Array<Float64>){
         this.partialLength = partialLength
         this.point = point
     }
@@ -228,7 +228,7 @@ public class Bez {
         return bd
     }
 
-    static func getPointData(partial: Int64, point: Array<Float64>): PointData {
+    static func getPointData(partial: Float64, point: Array<Float64>): PointData {
         return PointData(partial, point)
     }
 
@@ -255,6 +255,11 @@ public class Bez {
                 pt2[0].toString() + "_" + pt2[1].toString() + "_" + pt3[0].toString() + "_" + pt3[1].toString() + "_" +
                 pt4[0].toString() + "_" + pt4[1].toString()
             let bezierName: String = key.replace(".", "p")
+            //Hilog.error(0, "--29--", "[buildBezierData]--[1]--------------------------------bezierName = ${bezierName}")
+            for ((k, v) in storedData) {
+            	//Hilog.error(0, "--29--", "[buildBezierData]--[1]--------------------------------k = ${k}")
+            }
+
             if (!storedData.contains(bezierName)) {
                 var curveSegments: Int64 = defaultCurveSegments
 
@@ -284,7 +289,7 @@ public class Bez {
                 }
                 for (k in 0..curveSegments) {
                     point = Array<Float64>(len, item: 0.0)
-                    perc = Float64(k / (curveSegments - 1))
+                    perc = Float64(k) / (Float64(curveSegments) - 1.0)
                     ptDistance = 0.0
                     for (i in 0..len) {
                         ptCoord = pow(1.0 - perc, 3) * pt1[i] + 3.0 * pow(1.0 - perc, 2) * perc * (pt1[i] + pt3[i]) +
@@ -296,7 +301,7 @@ public class Bez {
                     }
                     ptDistance = sqrt(ptDistance)
                     addedLength += ptDistance
-                    bezierData.points[k] = PointData(Int64(ptDistance), point)
+                    bezierData.points[k] = PointData(ptDistance, point)
                     lastPoint = point
                 }
                 bezierData.segmentLength = addedLength

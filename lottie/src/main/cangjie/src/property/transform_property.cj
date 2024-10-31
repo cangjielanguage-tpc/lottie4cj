@@ -440,6 +440,7 @@ public class TransformProperty <: DynamicPropertyContainer {
     }
  
     func processKeys(forceRender: Bool): Unit {
+        //Hilog.error(0, "--29--", "[processKeys]--[1]----> this.p.v = ${this.p.v}")
         if (this.elemGlobalData.frameId == this.frameId) {
             return
         }
@@ -533,6 +534,7 @@ public class TransformProperty <: DynamicPropertyContainer {
                     this.v.translate(this.px.v[0], this.py.v[0], tz: 0.0)
                 }
             } else {
+                //Hilog.error(0, "--29--", "[processKeys]--[2]----> this.p.v = ${this.p.v}")
                 //this.v.translate(this.p.v[0], this.p.v[1], tz: -this.p.v[2])
                 this.v.translate(this.p.v[0], this.p.v[1])
             }
