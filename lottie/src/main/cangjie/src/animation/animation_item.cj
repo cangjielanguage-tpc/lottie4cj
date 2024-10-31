@@ -387,8 +387,8 @@ public class AnimationItem <: BaseEvent {
             this.assets = this.animationData.assets
             this.frameRate = this.animationData.fr
             //TODO: [40]. Float64 30/1000 = 0.29999999999999
-            //this.frameMult = this.animationData.fr / 1000.0
-            this.frameMult = 0.03
+            this.frameMult = this.animationData.fr / 1000.0
+//            this.frameMult = 0.03
 
             this.renderer.searchExtraCompositions(animData.assets)
             this.markers = markerParser(animData.markers)
@@ -446,7 +446,9 @@ public class AnimationItem <: BaseEvent {
             this.renderer.initItems()//初始化所有图层
 
             //TODO：即刻运行的定时器，是否可以改为，按照顺序执行代码逻辑？？？   //setTimeout(function () { this.trigger("DOMLoaded") }.bind(this), 0)
-            this.trigger("DOMLoaded")
+            Timer.once(Duration.second * 0, {=>
+                    this.trigger("DOMLoaded")
+                    })
 
             //Hilog.error(0, "liyanqing", "this.trigger")
 

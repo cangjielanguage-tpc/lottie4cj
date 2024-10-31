@@ -11,6 +11,192 @@ import ohos.image.*
 import ohos.component.*
 import ohos.state_manage.*
 import ohos.state_macro_manage.*
+import std.core.Object
+
+enum MultiType {
+    | INT(Int64)
+    | FLOAT(Float64)
+    | BOOL(Bool)
+    | STR(String)
+    | CHAR(Rune)
+    | ARRAY1(Array<Int64>)
+    | ARRAY2(Array<Float64>)
+    | ARRAY3(Array<String>)
+    | NULL
+}
+
+public struct UnionType <: Equatable<UnionType> &
+                            Equatable<Int64> &
+                            Equatable<Float64> &
+                            Equatable<Bool> &
+                            Equatable<String> &
+                            Equatable<Array<Int64>> &
+                            Equatable<Array<Float64>> &
+                            Equatable<Array<String>> &
+                            Equatable<Rune> & ToString & Hashable {
+    private var value: MultiType
+    public init(v: Int64) { this.value = INT(v) }
+    public init(v: Float64) { this.value = FLOAT(v) }
+    public init(v: Bool) { this.value = BOOL(v) }
+    public init(v: String) { this.value = STR(v) }
+    public init(v: Rune) { this.value = CHAR(v) }
+    public init(v: Array<Int64>) { this.value = ARRAY1(v) }
+    public init(v: Array<Float64>) { this.value = ARRAY2(v) }
+    public init(v: Array<String>) { this.value = ARRAY3(v) }
+    public init() { this.value = NULL }
+
+    public mut func setValue(v: UnionType) { this.value = v.value }
+    public mut func setValue(v: Int64) { this.value = INT(v) }
+    public mut func setValue(v: Float64) { this.value = FLOAT(v) }
+    public mut func setValue(v: Bool) { this.value = BOOL(v) }
+    public mut func setValue(v: String) { this.value = STR(v) }
+    public mut func setValue(v: Rune) { this.value = CHAR(v) }
+    public mut func setValue(v: Array<Int64>) { this.value = ARRAY1(v) }
+    public mut func setValue(v: Array<Float64>) { this.value = ARRAY2(v) }
+    public mut func setValue(v: Array<String>) { this.value = ARRAY3(v) }
+
+    public operator func == (that: Array<Float64>): Bool {
+        match (this.value) {
+            case ARRAY2(a) => a == that
+            case _ => false
+        }
+    }
+    public operator func != (that: Array<Float64>): Bool {
+        !(this == that)
+    }
+    public operator func == (that: Array<String>): Bool {
+        match (this.value) {
+            case ARRAY3(a) => a == that
+            case _ => false
+        }
+    }
+    public operator func != (that: Array<String>): Bool {
+        !(this == that)
+    }
+    public operator func == (that: Array<Int64>): Bool {
+        match (this.value) {
+            case ARRAY1(a) => a == that
+            case _ => false
+        }
+    }
+    public operator func != (that: Array<Int64>): Bool {
+        !(this == that)
+    }
+    public operator func == (that: Int64): Bool {
+        match (this.value) {
+            case INT(v) => v == that
+            case _ => false
+        }
+    }
+    public operator func != (that: Int64): Bool {
+        !(this == that)
+    }
+
+    public operator func == (that: Float64): Bool {
+        match (this.value) {
+            case FLOAT(v) => v == that
+           case _ => false
+        }
+    }
+    public operator func != (that: Float64): Bool {
+        !(this == that)
+    }
+    public operator func == (that: Bool): Bool {
+        match (this.value) {
+            case BOOL(v) => v == that
+            case _ => false
+        }
+    }
+    public operator func != (that: Bool): Bool {
+        !(this == that)
+    }
+    public operator func == (that: String): Bool {
+        match (this.value) {
+            case STR(v) => v == that
+            case _ => false
+        }
+    }
+    public operator func != (that: String): Bool {
+        !(this == that)
+    }
+    public operator func == (that: Rune): Bool {
+        match (this.value) {
+            case CHAR(v) => v == that
+            case _ => false
+        }
+    }
+    public operator func != (that: Rune): Bool {
+        !(this == that)
+    }
+    public operator func == (that: UnionType): Bool {
+        match ((this.value, that.value)) {
+            case (NULL, NULL) => true
+            case (INT(v), INT(w)) => v == w
+            case (FLOAT(v), FLOAT(w)) => v == w
+            case (BOOL(v), BOOL(w)) => v == w
+            case (STR(v), STR(w)) => v == w
+            case (CHAR(v), CHAR(w)) => v == w
+            case _ => false
+        }
+    }
+    public operator func != (that: UnionType): Bool {
+        return !(this == that)
+    }
+    public func toString(): String {
+        match (value) {
+            case INT(v) => v.toString()
+            case FLOAT(v) => v.toString()
+            case BOOL(v) => v.toString()
+            case STR(v) => v.toString()
+            case CHAR(v) => v.toString()
+            case ARRAY1(v) => v.toString()
+            case ARRAY2(v) => v.toString()
+            case ARRAY3(v) => v.toString()
+            case NULL => throw Exception("NULL value")
+        }
+    }
+
+    public func hashCode(): Int64 {
+        match (value) {
+            case INT(v) => v.hashCode()
+            case FLOAT(v) => v.hashCode()
+            case BOOL(v) => v.hashCode()
+            case STR(v) => v.hashCode()
+            case CHAR(v) => v.hashCode()
+            case _ => throw Exception("NULL value")
+        }
+    }
+
+    public func getValue<T>(): T {
+        match (value) {
+            case INT(v) => if (let Some(w) <- (v as T)) { return w }
+            case FLOAT(v) => if (let Some(w) <- (v as T)) { return w }
+            case BOOL(v) => if (let Some(w) <- (v as T)) { return w }
+            case STR(v) => if (let Some(w) <- (v as T)) { return w }
+            case CHAR(v) => if (let Some(w) <- (v as T)) { return w }
+            case ARRAY1(v) => if (let Some(w) <- (v as T)) { return w }
+            case ARRAY2(v) => if (let Some(w) <- (v as T)) { return w }
+            case ARRAY3(v) => if (let Some(w) <- (v as T)) { return w }
+            case _ => ()
+        }
+        throw Exception("NULL value")
+    }
+    public func getValue<T>(t: T): T  {
+        match (value) {
+            case INT(v) => if (let Some(w) <- (v as T)) { return w }
+            case FLOAT(v) => if (let Some(w) <- (v as T)) { return w }
+            case BOOL(v) => if (let Some(w) <- (v as T)) { return w }
+            case STR(v) => if (let Some(w) <- (v as T)) { return w }
+            case CHAR(v) => if (let Some(w) <- (v as T)) { return w }
+            case ARRAY1(v) => if (let Some(w) <- (v as T)) { return w }
+            case ARRAY2(v) => if (let Some(w) <- (v as T)) { return w }
+            case ARRAY3(v) => if (let Some(w) <- (v as T)) { return w }
+            case _ => ()
+        }
+        return t
+    }
+}
+
 public class LottieCanvasRenderingContext2D {
     public let ctx2d: CanvasRenderingContext2D
     public init(ctx: CanvasRenderingContext2D) {

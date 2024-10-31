@@ -7,6 +7,8 @@
  */
 package lottie.model
 
+import lottie.utils.helpers.UnionType
+
 public class Layer <: ToString {
 
     //TODO: ICompElement编译用。
@@ -58,7 +60,7 @@ public class Layer <: ToString {
     public let cl: String                            // 21 = cl
     public let hd: Bool                              // 22 = hidden
     public let ao: Int64                             // 23 = autoOrient
-    public let bm: Int64                             // 24 = blendMode
+    public let bm: UnionType                             // 24 = blendMode
 
     /**
      * Create a Layer instance based on parameters.
@@ -142,7 +144,7 @@ public class Layer <: ToString {
         this.cl              = cl
         this.hd              = hd
         this.ao              = ao
-        this.bm              = bm
+        this.bm              = UnionType()
         this.hasMask         = hasMask
         this.ddd             = ddd
     }

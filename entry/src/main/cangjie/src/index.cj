@@ -98,9 +98,19 @@ class MyView {
     private var mainCanvasRenderingContext: CanvasRenderingContext2D = CanvasRenderingContext2D(
         this.mainRenderingSettings)
 
+    private var navidadRenderingSettings: RenderingContextSettings = RenderingContextSettings(antialias: true)
+    private var navidadCanvasRenderingContext: CanvasRenderingContext2D = CanvasRenderingContext2D(
+        this.navidadRenderingSettings)
+
+    private var markus2RenderingSettings: RenderingContextSettings = RenderingContextSettings(antialias: true)
+    private var markus2CanvasRenderingContext: CanvasRenderingContext2D = CanvasRenderingContext2D(
+        this.markus2RenderingSettings)
+
     private var lottie: AnimationManager = AnimationManager(this.canvasRenderingContext)
     private var animateItem: Option<AnimationItem> = None //AnimationItem(animationManager)
     private var animateItem2: Option<AnimationItem> = None //AnimationItem(animationManager)
+    private var animateItem3: Option<AnimationItem> = None //AnimationItem(animationManager)
+    private var animateItem4: Option<AnimationItem> = None //AnimationItem(animationManager)
 //    private var animateName: String = "grunt"
 //    private var animateItem2: String = "grunt"
 
@@ -109,97 +119,130 @@ class MyView {
 
     func build() {
         Column() {
-            Canvas(this.canvasRenderingContext).width(100.percent).height(20.percent).backgroundColor(Color.WHITE).
-                onReady({
-                =>
-            //                    this.animateItem?.resize()
-            }).onDisAppear({
-                =>
-            // 组件移除时，可销毁动画资源
-            //            lottie.destroy("2016")
-            })
-            Flex(FlexParams(direction: FlexDirection.Row, alignItems: ItemAlign.Start, justifyContent: FlexAlign.Start)) {
-                Row() {
-                    Button("播放").onClick {
-                        evt => //Hilog.error(0, "", "Hello Cangjie")
-                        lottie.play("2016")
-                    }.fontSize(40).height(80)
-                }.margin(top: 10)
-
+            Row {
+                Canvas(this.canvasRenderingContext).width(45.percent).height(20.percent).backgroundColor(Color.WHITE)
+                Canvas(this.mainCanvasRenderingContext).width(45.percent).height(20.percent).backgroundColor(Color.WHITE)
+            }
+            Row {
                 Button("加载2016-ui").onClick {
-                    evt => if (this.animateItem.isNone()) {
-                        let buffer: Array<UInt8> = loadMedia(Int32(sourceId), globalAbilityContext)
-                        let str: String = String.fromUtf8(buffer)
-                        let animationData: AnimationData = AnimationDataParser.parse(str)
-                        let ai: AnimationItem = lottie.loadAnimation(
-                            AnimationConfig(
-                                wrapper_ns: CreateNS("doc"),
-                                container: this.canvasRenderingContext,
-                                renderer: "canvas", // canvas 渲染模式
-                                //                                        loop: TEUE,
-                                autoplay: true,
-                                name: "2016",
-                                contentMode: "Contain",
-                                //path: "common/lottie/data.json", // 路径加载动画只支持entry/src/main/ets 文件夹下的相对路径
-                                // path: "common/lottie/data_rawfile.json"
-                                // path: "common/lottie/data_base64.json"
-                                path: "",
-                                animationData: animationData,
-                                context: globalAbilityContext
-                            )
-                        )
-                        this.animateItem = ai
-                    } else {
-                        println(123)
-                    }
-                }.fontSize(40).height(80)
-            }.width(100.percent).height(10.percent)
-            Canvas(this.mainCanvasRenderingContext).width(100.percent).height(20.percent).backgroundColor(Color.WHITE).
-                onReady({
-                =>
-            //                    this.animateItem?.resize()
-            }).onDisAppear({
-                =>
-            // 组件移除时，可销毁动画资源
-            //            lottie.destroy("2016")
-            })
-            Flex(FlexParams(direction: FlexDirection.Row, alignItems: ItemAlign.Start, justifyContent: FlexAlign.Start)) {
-                Row() {
-                    Button("播放").onClick {
-                        evt => //Hilog.error(0, "", "Hello Cangjie")
-                        lottie.play("2016")
-                    }.fontSize(40).height(80)
-                }.margin(top: 10)
-
+                    evt =>
+                        spawn {
+                            if (this.animateItem.isNone()) {
+                                let buffer: Array<UInt8> = loadMedia(Int32(sourceId), globalAbilityContext)
+                                let str: String = String.fromUtf8(buffer)
+                                let animationData: AnimationData = AnimationDataParser.parse(str)
+                                let ai: AnimationItem = lottie.loadAnimation(
+                                    AnimationConfig(
+                                        wrapper_ns: CreateNS("doc"),
+                                        container: this.canvasRenderingContext,
+                                        renderer: "canvas", // canvas 渲染模式
+                                        loop: 1,
+                                        autoplay: true,
+                                        name: "2016",
+                                        contentMode: "Contain",
+                                        //path: "common/lottie/data.json", // 路径加载动画只支持entry/src/main/ets 文件夹下的相对路径
+                                        // path: "common/lottie/data_rawfile.json"
+                                        // path: "common/lottie/data_base64.json"
+                                        path: "",
+                                        animationData: animationData,
+                                        context: globalAbilityContext
+                                    )
+                                )
+                                this.animateItem = ai
+                            }
+                        }
+                }
                 Button("加载牛").onClick {
-                    evt => if (this.animateItem2.isNone()) {
-                        let buffer: Array<UInt8> = loadMedia(Int32(@r(app.media.grunt).id), globalAbilityContext)
-                        let str: String = String.fromUtf8(buffer)
-                        let animationData: AnimationData = AnimationDataParser.parse(str)
-                        let ai: AnimationItem = lottie.loadAnimation(
-                            AnimationConfig(
-                                wrapper_ns: CreateNS("doc"),
-                                container: this.mainCanvasRenderingContext,
-                                renderer: "canvas", // canvas 渲染模式
-                                //                                        loop: TEUE,
-                                autoplay: true,
-                                name: "grunt",
-                                contentMode: "Contain",
-                                //path: "common/lottie/data.json", // 路径加载动画只支持entry/src/main/ets 文件夹下的相对路径
-                                // path: "common/lottie/data_rawfile.json"
-                                // path: "common/lottie/data_base64.json"
-                                path: "",
-                                animationData: animationData,
-                                context: globalAbilityContext
-                            )
-                        )
-                        this.animateItem2 = ai
-                    } else {
-                        println(123)
-                    }
-                }.fontSize(40).height(80)
-            }.width(100.percent).height(10.percent)
-
-}
+                    evt =>
+                        spawn {
+                            if (this.animateItem2.isNone()) {
+                                let buffer: Array<UInt8> = loadMedia(Int32(@r(app.media.grunt).id), globalAbilityContext)
+                                let str: String = String.fromUtf8(buffer)
+                                let animationData: AnimationData = AnimationDataParser.parse(str)
+                                let ai: AnimationItem = lottie.loadAnimation(
+                                    AnimationConfig(
+                                        wrapper_ns: CreateNS("doc"),
+                                        container: this.mainCanvasRenderingContext,
+                                        renderer: "canvas", // canvas 渲染模式
+                                        //                                        loop: TEUE,
+                                        autoplay: true,
+                                        name: "grunt",
+                                        contentMode: "Contain",
+                                        //path: "common/lottie/data.json", // 路径加载动画只支持entry/src/main/ets 文件夹下的相对路径
+                                        // path: "common/lottie/data_rawfile.json"
+                                        // path: "common/lottie/data_base64.json"
+                                        path: "",
+                                        animationData: animationData,
+                                        context: globalAbilityContext
+                                    )
+                                )
+                                this.animateItem2 = ai
+                            }
+                        }
+                }
+            }
+            Row {
+                Canvas(this.navidadCanvasRenderingContext).width(45.percent).height(20.percent).backgroundColor(Color.WHITE)
+                Canvas(this.markus2CanvasRenderingContext).width(45.percent).height(20.percent).backgroundColor(Color.WHITE)
+            }
+            Row {
+                Button("加载navidad").onClick {
+                    evt =>
+                        spawn {
+                            if (this.animateItem3.isNone()) {
+                                let buffer: Array<UInt8> = loadMedia(Int32(@r(app.media.navidad).id), globalAbilityContext)
+                                let str: String = String.fromUtf8(buffer)
+                                let animationData: AnimationData = AnimationDataParser.parse(str)
+                                let ai: AnimationItem = lottie.loadAnimation(
+                                    AnimationConfig(
+                                        wrapper_ns: CreateNS("doc"),
+                                        container: this.navidadCanvasRenderingContext,
+                                        renderer: "canvas", // canvas 渲染模式
+                                        //                                        loop: TEUE,
+                                        autoplay: true,
+                                        name: "navidad",
+                                        contentMode: "Contain",
+                                        //path: "common/lottie/data.json", // 路径加载动画只支持entry/src/main/ets 文件夹下的相对路径
+                                        // path: "common/lottie/data_rawfile.json"
+                                        // path: "common/lottie/data_base64.json"
+                                        path: "",
+                                        animationData: animationData,
+                                        context: globalAbilityContext
+                                    )
+                                )
+                                this.animateItem3 = ai
+                            }
+                        }
+                }
+                Button("加载markus2").onClick {
+                    evt =>
+                        spawn {
+                            if (this.animateItem4.isNone()) {
+                                let buffer: Array<UInt8> = loadMedia(Int32(@r(app.media.markus2).id), globalAbilityContext)
+                                let str: String = String.fromUtf8(buffer)
+                                let animationData: AnimationData = AnimationDataParser.parse(str)
+                                let ai: AnimationItem = lottie.loadAnimation(
+                                    AnimationConfig(
+                                        wrapper_ns: CreateNS("doc"),
+                                        container: this.markus2CanvasRenderingContext,
+                                        renderer: "canvas", // canvas 渲染模式
+                                        //                                        loop: TEUE,
+                                        autoplay: true,
+                                        name: "markus2",
+                                        contentMode: "Contain",
+                                        //path: "common/lottie/data.json", // 路径加载动画只支持entry/src/main/ets 文件夹下的相对路径
+                                        // path: "common/lottie/data_rawfile.json"
+                                        // path: "common/lottie/data_base64.json"
+                                        path: "",
+                                        animationData: animationData,
+                                        context: globalAbilityContext
+                                    )
+                                )
+                                this.animateItem4 = ai
+                            }
+                        }
+                }
+            }
+        }
     }
 }

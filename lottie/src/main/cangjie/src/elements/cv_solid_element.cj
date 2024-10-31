@@ -2,7 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
  */
 package lottie.elements
-
+import std.convert.*
 //TODO
 public class CvSolidElement <: ISolidElement {
     public init(data:Layer, globalData: GlobalData, compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()) {
@@ -22,8 +22,9 @@ public class CvSolidElement <: ISolidElement {
 
     public override func renderInnerContent() {
        var ctx = this.canvasContext;
-        //ctx.fillStyle = this.data.sc
-      ctx.fillStyle(0)
+        let tmps = this.data.sc.replace("#","0x")
+        let tmps1 = UInt32.parse(tmps)
+      ctx.fillStyle(Color(tmps1))
       ctx.fillRect(0, 0, this.data.sw, this.data.sh);
       //
     }

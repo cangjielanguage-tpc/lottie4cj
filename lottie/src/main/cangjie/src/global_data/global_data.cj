@@ -129,7 +129,7 @@ public class GlobalData {
     public var currentGlobalAlpha: Int64 = -1
     
     //TODO： 数据类型需要再确认 //public var blendMode: Int64 = 0
-    public var blendMode: String = ""
+    public var blendMode: UnionType = UnionType()
     //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //public var canvasContext: Option<CanvasRenderingContext2D>
     //TODO：未完全实现 CanvasRendererBase  //public var renderer: CanvasRendererBase =
     public var isDashed: Bool = false

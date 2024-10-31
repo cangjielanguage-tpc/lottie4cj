@@ -9,9 +9,11 @@ package lottie.parser
 
 internal import std.math.*
 internal import encoding.json.*
+internal import encoding.json.stream.*
 internal import std.collection.*
 internal import std.convert.*
 internal import std.log.*
+internal import std.io.InputStream
 
 internal import lottie.model.*
 import ohos.hilog.*
@@ -47,6 +49,17 @@ public class AnimationDataParser {
      * @param reader - Type of String, animated json data string.
      * @return Type of AnimationData, an instance of the json data that encapsulates the animation.
      */
+    static func loopParse(r: JsonReader): Unit {
+
+    }
+    public static func parse(input: InputStream): AnimationData {
+        let j = JsonReader(input)
+
+
+
+        throw Exception()
+    }
+
     public static func parse(reader: String): AnimationData {
 
         var startFrame: Float64 = 0.0
