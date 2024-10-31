@@ -313,7 +313,7 @@ public open class BaseElement <: Equatable<BaseElement> {
             if (this.compType == 1 && this.comp.size == 1) {
                 this.comp[0].buildElementParenting(this, this.data.parent, ArrayList<BaseElement>())
             } else {
-                this.buildElementParenting(this, this.data.parent, ArrayList<BaseElement>())
+                this.buildElementParentingInComp(this, this.data.parent, ArrayList<BaseElement>())
             }
         }
     }
@@ -868,9 +868,9 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     public open func setBlendMode() {
         var globalData = this.globalData
-        if (globalData.blendMode != this.data.bm.toString()) {
-            globalData.blendMode = this.data.bm.toString()
-            var blendModeValue = getBlendMode(this.data.bm)
+        if (this.data.bm != globalData.blendMode) {
+            globalData.blendMode.setValue(this.data.bm)
+            var blendModeValue = getBlendMode(this.data.bm.getValue<Int64>(0))
             match (blendModeValue) {
                 case "source-over" => canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
                 case _ => canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)

@@ -35,17 +35,14 @@ public open class BaseEvent <: BMEvent {
     }
     
     public func addEventListener(eventName: String, callback: AnimationEventCallback): () -> Unit {
-        //if (this._cbs.size > 0) {
-            var callbacks: ArrayList<AnimationEventCallback> = ArrayList<AnimationEventCallback>()
-            //if (!this._cbs.contains(eventName)) {
-            if (this._cbs.contains(eventName)) {
-                //TODO: 未确定 this._cbs 的 value 中的数据类型。
-                callbacks = this._cbs[eventName]
-                //callbacks.clear()
-            }
-            callbacks.append(callback)
-            this._cbs.put(eventName, callbacks)
-        //}
+        var view = this._cbs.entryView(eventName)
+        if (let Some(v) <- view.getValue()) {
+            v
+        } else {
+            let arr = ArrayList<AnimationEventCallback>()
+            view.setValue(arr)
+            arr
+        }.append(callback)
 
         return { => this.removeEventListener(eventName, callback) }
     }

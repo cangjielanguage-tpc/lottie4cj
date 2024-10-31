@@ -165,7 +165,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             this.globalData.currentGlobalAlpha = currentOpacity
         }
 
-        var tmps2 = this.contextData.getTransform().props;
+//        var tmps2 = this.contextData.getTransform().props;
         //Hilog.error(0, "---1--", "[ctxOpacity]----->tmps2 = ${tmps2}")
     }
 
@@ -196,7 +196,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             this.canvasContext.save()
         }
         this.contextData.push()
-        var tmps2 = this.contextData.getTransform().props;
+//        var tmps2 = this.contextData.getTransform().props;
         //Hilog.error(0, "---0--", "----->tmps2 = ${tmps2}")
     }
 
@@ -212,7 +212,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         }
         if (actionFlag) {
             this.canvasContext.restore()
-            this.globalData.blendMode = "source-over"
+            this.globalData.blendMode.setValue("source-over")
         }
 
         let popped: (Array<Float64>,Int64) = this.contextData.pop()
@@ -278,9 +278,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         //this.elements.size = 0
         this.elements = Array<BaseElement>(animData.layers.size, item: emptyBaseElement)
         //this.elements = Array<BaseElement>(animData.layers.size)
-
-
-        this.updateContainerSize(0, 0)
+        this.updateContainerSize()
 
     }
 
@@ -314,45 +312,35 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param width - Type of Int64.
      * @param height - Type of Int64.
      */
-    public func updateContainerSize(width: Int64, height: Int64): Unit {
+    public func updateContainerSize(): Unit {
+        updateContainerSize(Option<Int64>.None, Option<Int64>.None)
+    }
+    public func updateContainerSize(width: ?Int64, height: ?Int64): Unit {
 
-//        this.canvasContext.restore()
-//        this.canvasContext.setTransform(1, 0, 0, 1, 0, 0) //resetting the transform
-//        this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h) //清空之前画布
+        this.canvasContext.restore()
+        this.canvasContext.setTransform(1, 0, 0, 1, 0, 0) //resetting the transform
+        this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h) //清空之前画布
 //        //TODO:怎么获取之前的画布 width 和 height？？？
-//        //this.canvasContext.clearRect(0, 0, this.canvasContext.width, this.canvasContext.height) //清空之前画布
+        this.canvasContext.clearRect(0, 0, 0, 0) //清空之前画布
 //        //TODO:[39]- 先按照 arkts 中 数据写死 this.canvasContext.width 和 this.canvasContext.height
-//        let ccw = 174.46153846153845
-//        let cch = 200.0
+////        let ccw = 174.46153846153845
+////        let cch = 200.0
 //        this.canvasContext.clearRect(0.0, 0.0, ccw, cch) //清空之前画布
-//        this.canvasContext.save()
+        this.canvasContext.save()
 
         this.reset()
-        var elementWidth: Float64 = 0.0
-        var elementHeight: Float64 = 0.0
-        if (width != 0) {
-            elementWidth = Float64(width)
-            elementHeight = Float64(height)
-        } else {
-
-            //TODO：this.canvasContext 需要增加判空处理吗？？？
-            //if (this.canvasContext) {
-                //TODO:怎么获取之前的画布 width 和 height？？？
-                //elementHeight = this.canvasContext.height
-                //elementWidth = this.canvasContext.width
-                //TODO:[39]- 先按照 arkts 中 数据写死 this.canvasContext.width 和 this.canvasContext.height
-                elementWidth = 174.46153846153845
-                elementHeight = 200.0
-
-                if (elementHeight == 0.0) {
-                    elementHeight = 360.0
-                }
-                if (elementWidth == 0.0) {
-                    elementWidth = 540.0
-                }
-            //}
-
-        }
+        let elementWidth = 174.46153846153845
+        let elementHeight = 200.0
+//        var elementWidth: Float64 = if (let Some(v) <- width) {
+//            Float64(v)
+//        } else {
+//            540.0
+//        }
+//        var elementHeight: Float64 = if (let Some(v) <- height) {
+//            Float64(v)
+//        } else {
+//            360.0
+//        }
 
         var elementRel: Float64 = 0.0
         var animationRel: Float64 = 0.0
@@ -360,18 +348,19 @@ public abstract class CanvasRendererBase <: BaseRenderer {
 
         if (this.renderConfig.preserveAspectRatio.contains("meet") || this.renderConfig.preserveAspectRatio.contains("slice")) {
             let par: Array<String> = this.renderConfig.preserveAspectRatio.split(" ")
-            var fillType: String = "meet"
-            if (par.size >= 2){
-                fillType = par[1]
+            var fillType: String = if (par.size >= 2){
+                par[1]
+            } else {
+                "meet"
             }
-
-            var pos: String = "xMidYMid"
-            if (par.size >= 1){
-                pos = par[0]
+            var pos: String = if (par.size >= 1){
+                par[0]
+            } else {
+                "xMidYMid"
             }
 
             let xPos: String = pos[0..4]
-            let yPos: String = pos.trimLeft(xPos)
+            let yPos: String = pos[4..]
             //TODO: 被除数 elementHeight = 0。
             elementRel = elementWidth / elementHeight
             animationRel = Float64(this.transformCanvas.w / this.transformCanvas.h)
@@ -523,21 +512,21 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param forceRender - Type of Bool, whether to force rendering..
      */
     public func renderFrame(num: Float64, forceRender: Bool): Unit {
-        if (this.elements.size > 0 && this.elements[0].elements.size > 0) {
-            let opMdf: Bool = this.elements[0].elements[29].finalTransform.mProp.o._mdf
-            let matMdf: Bool = this.elements[0].elements[29].finalTransform.mProp._mdf
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> opMdf = ${opMdf}")
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> matMdf = ${matMdf}")
-            let opMdf2: Bool = this.elements[0].elements[29].finalTransform._opMdf
-            let matMdf2: Bool = this.elements[0].elements[29].finalTransform._matMdf
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> opMdf2 = ${opMdf2}")
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> matMdf2 = ${matMdf2}")
-
-            let arrs = this.elements[0].elements[29].finalTransform.mat.props
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> arrs = ${arrs}")
-            let varrs = this.elements[0].elements[29].finalTransform.mProp.v.props
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> varrs = ${varrs}")
-        }
+//        if (this.elements.size > 0 && this.elements[0].elements.size > 0) {
+//            let opMdf: Bool = this.elements[0].elements[29].finalTransform.mProp.o._mdf
+//            let matMdf: Bool = this.elements[0].elements[29].finalTransform.mProp._mdf
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> opMdf = ${opMdf}")
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> matMdf = ${matMdf}")
+//            let opMdf2: Bool = this.elements[0].elements[29].finalTransform._opMdf
+//            let matMdf2: Bool = this.elements[0].elements[29].finalTransform._matMdf
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> opMdf2 = ${opMdf2}")
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> matMdf2 = ${matMdf2}")
+//
+//            let arrs = this.elements[0].elements[29].finalTransform.mat.props
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> arrs = ${arrs}")
+//            let varrs = this.elements[0].elements[29].finalTransform.mProp.v.props
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> varrs = ${varrs}")
+//        }
 
         if ((this.renderedFrame == num && this.renderConfig.clearCanvas == true && !forceRender) || this.destroyed || num == -1.0) {
             return
@@ -553,9 +542,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             this.checkLayers(num)
         }
 
-        if (num > 15.0) {
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> num = ${num}")
-        }
+//        if (num > 15.0) {
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> num = ${num}")
+//        }
 
 
         for (i in 0..len) {
@@ -565,21 +554,21 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             }
         }
 
-        if (this.elements.size > 0 && this.elements[0].elements.size > 0) {
-            let opMdf: Bool = this.elements[0].elements[29].finalTransform.mProp.o._mdf
-            let matMdf: Bool = this.elements[0].elements[29].finalTransform.mProp._mdf
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> opMdf = ${opMdf}")
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> matMdf = ${matMdf}")
-            let opMdf2: Bool = this.elements[0].elements[29].finalTransform._opMdf
-            let matMdf2: Bool = this.elements[0].elements[29].finalTransform._matMdf
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> opMdf2 = ${opMdf2}")
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> matMdf2 = ${matMdf2}")
-
-            let arrs = this.elements[0].elements[29].finalTransform.mat.props
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> arrs = ${arrs}")
-            let varrs = this.elements[0].elements[29].finalTransform.mProp.v.props
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> varrs = ${varrs}")
-        }
+//        if (this.elements.size > 0 && this.elements[0].elements.size > 0) {
+//            let opMdf: Bool = this.elements[0].elements[29].finalTransform.mProp.o._mdf
+//            let matMdf: Bool = this.elements[0].elements[29].finalTransform.mProp._mdf
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> opMdf = ${opMdf}")
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> matMdf = ${matMdf}")
+//            let opMdf2: Bool = this.elements[0].elements[29].finalTransform._opMdf
+//            let matMdf2: Bool = this.elements[0].elements[29].finalTransform._matMdf
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> opMdf2 = ${opMdf2}")
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> matMdf2 = ${matMdf2}")
+//
+//            let arrs = this.elements[0].elements[29].finalTransform.mat.props
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> arrs = ${arrs}")
+//            let varrs = this.elements[0].elements[29].finalTransform.mProp.v.props
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> varrs = ${varrs}")
+//        }
 
         //TODO: this.globalData._mdf = false 为什么会是false？是之前那块赋值出错了么？？？//if (true) {
         if (this.globalData._mdf) {
@@ -597,7 +586,22 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             //if (this.completeLayers || (this.elements.size > ind && !this.elements[ind].isNull)) {
             //    this.elements[ind].renderFrame(false)
             //}
-            //this.elements[0].renderFrame(false)
+//            let test14 = this.elements[14].hidden
+//            let test13 = this.elements[13].hidden
+//            let test12 = this.elements[12].hidden
+//            let test11 = this.elements[11].hidden
+//            let test10 = this.elements[10].hidden
+//            let test9  = this.elements[9 ].hidden
+//            let test8  = this.elements[8 ].hidden
+//            let test7  = this.elements[7 ].hidden
+//            let test6  = this.elements[6 ].hidden
+//            let test5  = this.elements[5 ].hidden
+//            let test4  = this.elements[4 ].hidden
+//            let test3  = this.elements[3 ].hidden
+//            let test2  = this.elements[2 ].hidden
+//            let test1  = this.elements[1 ].hidden
+//            let test0  = this.elements[0 ].hidden
+//            this.elements[13].renderFrame(false)
 
             for (i in (len - 1)..=0:-1) {
                 index = i
@@ -611,21 +615,21 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             }
 
 
-        if (this.elements.size > 0 && this.elements[0].elements.size > 0) {
-            let opMdf: Bool = this.elements[0].elements[29].finalTransform.mProp.o._mdf
-            let matMdf: Bool = this.elements[0].elements[29].finalTransform.mProp._mdf
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> opMdf = ${opMdf}")
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> matMdf = ${matMdf}")
-            let opMdf2: Bool = this.elements[0].elements[29].finalTransform._opMdf
-            let matMdf2: Bool = this.elements[0].elements[29].finalTransform._matMdf
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> opMdf2 = ${opMdf2}")
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> matMdf2 = ${matMdf2}")
-
-            let arrs = this.elements[0].elements[29].finalTransform.mat.props
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> arrs = ${arrs}")
-            let varrs = this.elements[0].elements[29].finalTransform.mProp.v.props
-            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> varrs = ${varrs}")
-        }
+//        if (this.elements.size > 0 && this.elements[0].elements.size > 0) {
+//            let opMdf: Bool = this.elements[0].elements[29].finalTransform.mProp.o._mdf
+//            let matMdf: Bool = this.elements[0].elements[29].finalTransform.mProp._mdf
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> opMdf = ${opMdf}")
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> matMdf = ${matMdf}")
+//            let opMdf2: Bool = this.elements[0].elements[29].finalTransform._opMdf
+//            let matMdf2: Bool = this.elements[0].elements[29].finalTransform._matMdf
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> opMdf2 = ${opMdf2}")
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> matMdf2 = ${matMdf2}")
+//
+//            let arrs = this.elements[0].elements[29].finalTransform.mat.props
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> arrs = ${arrs}")
+//            let varrs = this.elements[0].elements[29].finalTransform.mProp.v.props
+//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> varrs = ${varrs}")
+//        }
 
             if (!this.renderConfig.clearCanvas) {
                 //this.restore()
