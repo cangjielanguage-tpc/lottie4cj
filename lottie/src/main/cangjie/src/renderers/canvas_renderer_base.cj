@@ -67,19 +67,19 @@ public abstract class CanvasRendererBase <: BaseRenderer {
 
     public func createShape(data: Layer): CvShapeElement {
         //return CvShapeElement(data, this.globalData, this.buildElementParenting, ArrayList<BaseElement>())
-        return CvShapeElement(data, this.globalData, this.buildElementParenting)
+        return CvShapeElement(data, this.globalData, this.buildElementParenting, compType: 2)
     }
 
     public func createText(data: Layer): CvTextElement { 
-        return CvTextElement(data, globalData)
+        return CvTextElement(data, globalData, this.buildElementParenting, compType: 2)
     }
 
     public func createImage(data: Layer): CvImageElement { 
-        return CvImageElement(data, globalData)
+        return CvImageElement(data, globalData, this.buildElementParenting, compType: 2)
     }
 
     public func createSolid(data: Layer): CvSolidElement { 
-        return CvSolidElement(data, globalData)
+        return CvSolidElement(data, globalData, this.buildElementParenting, compType: 2)
     }
 
     /**
@@ -512,21 +512,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param forceRender - Type of Bool, whether to force rendering..
      */
     public func renderFrame(num: Float64, forceRender: Bool): Unit {
-//        if (this.elements.size > 0 && this.elements[0].elements.size > 0) {
-//            let opMdf: Bool = this.elements[0].elements[29].finalTransform.mProp.o._mdf
-//            let matMdf: Bool = this.elements[0].elements[29].finalTransform.mProp._mdf
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> opMdf = ${opMdf}")
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> matMdf = ${matMdf}")
-//            let opMdf2: Bool = this.elements[0].elements[29].finalTransform._opMdf
-//            let matMdf2: Bool = this.elements[0].elements[29].finalTransform._matMdf
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> opMdf2 = ${opMdf2}")
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> matMdf2 = ${matMdf2}")
-//
-//            let arrs = this.elements[0].elements[29].finalTransform.mat.props
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> arrs = ${arrs}")
-//            let varrs = this.elements[0].elements[29].finalTransform.mProp.v.props
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[0]----> varrs = ${varrs}")
-//        }
 
         if ((this.renderedFrame == num && this.renderConfig.clearCanvas == true && !forceRender) || this.destroyed || num == -1.0) {
             return
@@ -554,22 +539,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             }
         }
 
-//        if (this.elements.size > 0 && this.elements[0].elements.size > 0) {
-//            let opMdf: Bool = this.elements[0].elements[29].finalTransform.mProp.o._mdf
-//            let matMdf: Bool = this.elements[0].elements[29].finalTransform.mProp._mdf
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> opMdf = ${opMdf}")
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> matMdf = ${matMdf}")
-//            let opMdf2: Bool = this.elements[0].elements[29].finalTransform._opMdf
-//            let matMdf2: Bool = this.elements[0].elements[29].finalTransform._matMdf
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> opMdf2 = ${opMdf2}")
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> matMdf2 = ${matMdf2}")
-//
-//            let arrs = this.elements[0].elements[29].finalTransform.mat.props
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> arrs = ${arrs}")
-//            let varrs = this.elements[0].elements[29].finalTransform.mProp.v.props
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> varrs = ${varrs}")
-//        }
-
         //TODO: this.globalData._mdf = false 为什么会是false？是之前那块赋值出错了么？？？//if (true) {
         if (this.globalData._mdf) {
             if (this.renderConfig.clearCanvas) {
@@ -586,22 +555,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             //if (this.completeLayers || (this.elements.size > ind && !this.elements[ind].isNull)) {
             //    this.elements[ind].renderFrame(false)
             //}
-//            let test14 = this.elements[14].hidden
-//            let test13 = this.elements[13].hidden
-//            let test12 = this.elements[12].hidden
-//            let test11 = this.elements[11].hidden
-//            let test10 = this.elements[10].hidden
-//            let test9  = this.elements[9 ].hidden
-//            let test8  = this.elements[8 ].hidden
-//            let test7  = this.elements[7 ].hidden
-//            let test6  = this.elements[6 ].hidden
-//            let test5  = this.elements[5 ].hidden
-//            let test4  = this.elements[4 ].hidden
-//            let test3  = this.elements[3 ].hidden
-//            let test2  = this.elements[2 ].hidden
-//            let test1  = this.elements[1 ].hidden
-//            let test0  = this.elements[0 ].hidden
-//            this.elements[13].renderFrame(false)
 
             for (i in (len - 1)..=0:-1) {
                 index = i
@@ -613,23 +566,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
                     this.elements[i].renderFrame(false)
                 }
             }
-
-
-//        if (this.elements.size > 0 && this.elements[0].elements.size > 0) {
-//            let opMdf: Bool = this.elements[0].elements[29].finalTransform.mProp.o._mdf
-//            let matMdf: Bool = this.elements[0].elements[29].finalTransform.mProp._mdf
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> opMdf = ${opMdf}")
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> matMdf = ${matMdf}")
-//            let opMdf2: Bool = this.elements[0].elements[29].finalTransform._opMdf
-//            let matMdf2: Bool = this.elements[0].elements[29].finalTransform._matMdf
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> opMdf2 = ${opMdf2}")
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> matMdf2 = ${matMdf2}")
-//
-//            let arrs = this.elements[0].elements[29].finalTransform.mat.props
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> arrs = ${arrs}")
-//            let varrs = this.elements[0].elements[29].finalTransform.mProp.v.props
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[2]----> varrs = ${varrs}")
-//        }
 
             if (!this.renderConfig.clearCanvas) {
                 //this.restore()

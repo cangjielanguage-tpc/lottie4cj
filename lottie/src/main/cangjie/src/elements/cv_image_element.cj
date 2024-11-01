@@ -7,8 +7,12 @@ import ohos.image.*
 public class CvImageElement <: IImageElement {
 
     var img =ImgOB()
-    public init(data: Layer, globalData: GlobalData, compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()) {
+    public init(data: Layer, globalData: GlobalData,
+        buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
+        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()
+    ) {
         super(data, globalData)
+        this.buildElementParentingInComp = buildElementParentingInComp
         this.compType = compType
         this.comp = comp
         this.assetData = globalData.getAssetData(data.refId)

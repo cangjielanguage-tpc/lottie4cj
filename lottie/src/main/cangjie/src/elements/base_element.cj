@@ -275,18 +275,18 @@ public open class BaseElement <: Equatable<BaseElement> {
             throw Exception("Non canvas cannot call this function。")
         }
         if (layer.ty == 2) {
-            return CvImageElement(layer, globalData, compType: 1, comp: [this])
+            return CvImageElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this])
         } else if (layer.ty == 0) {
             return CvCompElement(layer, this.globalData, this.createItem, this.buildElementParenting, compType: 1, comp: [this])
         } else if (layer.ty == 1) {
-            return CvSolidElement(layer, globalData, compType: 1, comp: [this])
+            return CvSolidElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this])
         } else if (layer.ty == 3) {
             return NullElement(layer, this.globalData)
         } else if (layer.ty == 4) {
             //return CvShapeElement(layer, this.globalData, this.buildElementParenting, this.pendingElements, layers: this.layers, elements: this.elements)
             return CvShapeElement(layer, this.globalData, this.buildElementParenting, layers: this.layers, elements: this.elements, compType: 1, comp: [this])
         } else if (layer.ty == 5) {
-            return CvTextElement(layer, globalData, compType: 1, comp: [this])
+            return CvTextElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this])
         } else if (layer.ty == 6) {
             //TODO: 暂不实现  //return this.createAudio(layer)
             return NullElement(layer, this.globalData)

@@ -17,6 +17,8 @@ public class AnimatableTransform <: ContentModel {
      * 5. "layers"."shapes".{"ty": "tr"} = AnimatableTransformParser
      */
     public let a: ArrayKeyframePointF                    // 0 = anchorPoint    // k: Array<Keyframe<PointF>>
+    //"ks": {..., "p":{"a":0,"k":[374.75,43,0],"ix":2,"l":2},... }
+    //"p":{"s":true,"x":{"a":0,"k":59.05,"ix":3},"y":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[171]},{...}],"ix":4}}
     public let p: AnimatableSplitDimensionPathValue      // 1 = position       // k: ArrayKeyframePointF
     public let s: ArrayKeyframeArrayFloat64              // 2 = scale          // k: Array<Keyframe<Array<Float64>>>
     public let r: ArrayKeyframeFloat64                   // 4 = rotation       // k: Array<Keyframe<Float64>>

@@ -58,9 +58,6 @@ public class CvCompElement <: ICompElement {
 
     }
     public func renderInnerContent() {
-        //this.canvasContext.fillStyle(Color.RED)
-        //this.canvasContext.fillRect(0, 30, 100, 100)
-
         var ctx = this.canvasContext
 
         ctx.beginPath()
@@ -68,29 +65,16 @@ public class CvCompElement <: ICompElement {
         ctx.lineTo(this.data.w, 0.0)  //1920
         ctx.lineTo(this.data.w, this.data.h)////1920  1080
         ctx.lineTo(0.0, this.data.h)//1080
-
-//        ctx.lineTo(20, 0)
-//        ctx.lineTo(90, 20)
-//        ctx.lineTo(0, 100)
-
         ctx.lineTo(0, 0)
         ctx.clip()
 
-        //TODO:用于测试
-//        ctx.closePath()
-//        ctx.stroke()
-                    //this.canvasContext.beginPath()
-                    //this.canvasContext.moveTo(30, 30)
-                    //this.canvasContext.lineTo(300, 30)
-                    //this.canvasContext.lineTo(70, 90)
-                    //this.canvasContext.clip()
-                    //this.canvasContext.closePath()
-                    //this.canvasContext.stroke()
-
-        //var indexCOMP: Int64 = 29
+        //let len: Int64 = this.layers.size
+        //var indexCOMP: Int64 = 0
+        ////var indexCOMP: Int64 = 29
         //if (this.completeLayers || (this.elements.size > indexCOMP && !this.elements[indexCOMP].isNull)) {
         //    this.elements[indexCOMP].renderFrame()
         //}
+
         let len: Int64 = this.layers.size
         var indexCOMP: Int64 = 0
         for (i in (len - 1)..=0: -1) {

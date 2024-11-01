@@ -7,10 +7,13 @@
  */
 package lottie.utils
 
-internal import std.fs.*
+//internal import std.fs.*
 internal import std.convert.*
 
 import lottie.parser.*
+
+import ohos.resource_manager.*
+internal import ohos.ability.*
 
 
 class WorkerProxy {
@@ -45,7 +48,7 @@ class WorkerProxy {
 
 //TODO:未实现
 public class DataManager {
-
+    var context:?AbilityContext = Option<AbilityContext>.None
     var _counterId: Int64 = 1
     var processes: HashMap<String, Processes> = HashMap<String, Processes>(24)
     //TODO: 未确认 e 的数据类型
@@ -137,6 +140,7 @@ public class DataManager {
             //TODO：assetLoader 只在 workerStart 函数内部调用，是否将 assetLoader 融入到 DataManager 中？？？
             //[1]-在此函数调用时，拿到解析 json 后封装好的 AnimationData，结果在回调函数 callback 中。
             animationData = assetLoader.load(
+                this.context,
                 //TODO：context2D 在 cj 的 assetLoader.load 函数中用不上。
                 //data.context2D,
                 data.path,
@@ -165,6 +169,7 @@ public class DataManager {
             }
             
             animationData = assetLoader.load(
+                this.context,
                 data.path,
                 data.fullPath,
                 callback,
@@ -428,8 +433,8 @@ public class DataManager {
     //[7]-解析 json 后封装好的 AnimationData，结果在回调函数 onComplete 参数中。
     //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
     //public func loadAnimation(context2D: CanvasRenderingContext2D, path: String, onComplete: (AnimationData) -> Unit, onError: () -> Unit) {
-    public func loadAnimation(path: String, onComplete: (AnimationData) -> Unit, onError: () -> Unit) {
-
+    public func loadAnimation(context: Option<AbilityContext>, path: String, onComplete: (AnimationData) -> Unit, onError: () -> Unit) {
+        this.context = context
         setupWorker()
         let processId: String = createProcess(onComplete, onError)
         //TODO: 把 workerInstance.postMessage 改为多参函数？？？
@@ -492,10 +497,10 @@ class AssetLoader {
     //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
     //TODO：context2D 在 cj 的此函数中用不上。
     //func loadAsset(context2D: CanvasRenderingContext2D, path: String, fullPath: String, callback: (AnimationData) -> Unit, errorCallback: () -> Unit) {
-    func loadAsset(path: String, fullPath: String, callback: (AnimationData) -> Unit, errorCallback: () -> Unit): AnimationData {
+    func loadAsset(context: Option<AbilityContext>, path: String, fullPath: String, callback: (AnimationData) -> Unit, errorCallback: () -> Unit): AnimationData {
         //根据 path 获取 json 文件中信息，转为 String 类型
-        //var jsonString = context2D.getJsonData(path)
-        let jsonString: String = readFile(path)
+//        var jsonString = context2D.getJsonData(path)
+        let jsonString: String = readFile(context, path)
         var jsonData: AnimationData = AnimationData(isNull: true)
         if (jsonString != "") {
             /**
@@ -515,20 +520,34 @@ class AssetLoader {
         return jsonData
     }
     
-    func readFile(path: String): String {
-        let file: File = File(path, OpenOption.Open(true, true))
-        let len: Int64 = file.length
-        var buf: Array<Byte> = Array<Byte>(len, item: 0)
-        file.read(buf)
-        file.close()
+    func readFile(context: Option<AbilityContext>, path: String): String {
+        var buf: Array<Byte> = Array<Byte>(1024, item: 0)
+        if(path.startsWith("file://") || path.startsWith("https:")) {
+            //通过URL.openStream获取数据
+        } else {
+            let stageContext = getStageContext(context.getOrThrow())
+            let resMgr = ResourceManager.getResourceManager(stageContext)
+            try {
+                buf = resMgr.getRawFileContent(path)
+            } catch (e: Exception) {
+                let message = e.message
+//                Hilog.info("getRawFileContent failed, error code: ${code}, message: ${message}.")
+            }
+        }
+
+//        let file: File = File(path, OpenOption.Open(true, true))
+//        let len: Int64 = file.length
+//        var buf: Array<Byte> = Array<Byte>(len, item: 0)
+//        file.read(buf)
+//        file.close()
         return String.fromUtf8(buf)
     }
     
     //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
     //TODO：context2D 在 cj 的此函数中用不上。
     //func load(context2D!: CanvasRenderingContext2D, path!: String, fullPath!: String, callback!: (AnimationData) -> Unit, errorCallback!: () -> Unit) {
-    func load(path: String, fullPath: String, callback: (AnimationData) -> Unit, errorCallback: () -> Unit): AnimationData {
-        return this.loadAsset(path, fullPath, callback, errorCallback)
+    func load(context: Option<AbilityContext>, path: String, fullPath: String, callback: (AnimationData) -> Unit, errorCallback: () -> Unit): AnimationData {
+        return this.loadAsset(context, path, fullPath, callback, errorCallback)
     }
 
     //return {

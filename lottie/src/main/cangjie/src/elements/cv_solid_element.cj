@@ -5,8 +5,12 @@ package lottie.elements
 import std.convert.*
 //TODO
 public class CvSolidElement <: ISolidElement {
-    public init(data:Layer, globalData: GlobalData, compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()) {
+    public init(data:Layer, globalData: GlobalData,
+        buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
+        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()
+    ) {
         super(data, globalData)
+        this.buildElementParentingInComp = buildElementParentingInComp
         this.compType = compType
         this.comp = comp
         this.initElement(data, globalData) //RenderableDOMElement

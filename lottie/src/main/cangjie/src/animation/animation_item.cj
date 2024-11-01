@@ -188,6 +188,7 @@ public class AnimationItem <: BaseEvent {
         //TODO：AbilityContext 是仓颉 UI 中的系统组件 api，暂时不联合编译
         //this.imagePreloader.setCacheType(animTypes, this.renderer.globalData.defs, this.context)
         this.imagePreloader.setCacheType(animTypes, this.renderer.globalData.defs)
+        this.imagePreloader.context = params.context
 
         //TODO: 未实现 renderer.setProjectInterface  //this.renderer.setProjectInterface(this.projectInterface)
         this.animType = animTypes
@@ -232,6 +233,7 @@ public class AnimationItem <: BaseEvent {
             }
 
             let animationData: AnimationData = dataManager.loadAnimation(
+                params.context,
                 //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.wrapper,--【传入后无具体应用，改为不传入此参数】
                 params.path,
                 this.configAnimation,
@@ -446,9 +448,9 @@ public class AnimationItem <: BaseEvent {
             this.renderer.initItems()//初始化所有图层
 
             //TODO：即刻运行的定时器，是否可以改为，按照顺序执行代码逻辑？？？   //setTimeout(function () { this.trigger("DOMLoaded") }.bind(this), 0)
-            Timer.once(Duration.second * 0, {=>
-                    this.trigger("DOMLoaded")
-                    })
+            //Timer.once(Duration.second * 0, {=>
+            //        this.trigger("DOMLoaded")
+            //        })
 
             //Hilog.error(0, "liyanqing", "this.trigger")
 

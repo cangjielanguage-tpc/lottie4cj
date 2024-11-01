@@ -9,8 +9,8 @@ package lottie.model
 
 public class AnimatableSplitDimensionPathValue <: ToString {
     
-    public var a: Int64 = 0
-    public var ix: Int64 = 0
+    public var a: Int64
+    public var ix: Int64
 
     private let _k: Array<Keyframe<PointF>>
     private let _x: Array<Keyframe<Float64>>
@@ -18,7 +18,7 @@ public class AnimatableSplitDimensionPathValue <: ToString {
 
     //TODO: 暂未在 json 中找到 z。暂定为 Array<Keyframe<Float64>>。TransformProperty中编译用。
     public var z: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
-    public var s: Bool = false
+    public var s: Bool
 
     /**
      * Create a AnimatableSplitDimensionPathValue instance based on parameters.
@@ -29,13 +29,14 @@ public class AnimatableSplitDimensionPathValue <: ToString {
      * @param x - Type of Array<Keyframe<Float64>>, the value of x.
      * @param y - Type of Array<Keyframe<Float64>>, the value of y.
      */
-    public init(a!: Int64 = 0, ix!: Int64 = 0,
+    public init(a!: Int64 = 0, ix!: Int64 = 0, s!: Bool = false,
         k!: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>(),
         x!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
         y!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
     ) {
         this.a = a
         this.ix = ix
+        this.s = s
         this._k = k
         this._x = x
         this._y = y

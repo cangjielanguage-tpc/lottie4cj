@@ -240,6 +240,8 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         }
         if (this.keyframesMetadata.size > i) {
             keyframeMetadata = this.keyframesMetadata[i]
+        } else {
+            keyframeMetadata = KeyframeMetadata()
         }
 
         var kLen: Int64 = 0
@@ -343,19 +345,21 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                     keyframeMetadata.__fnct = fnc
                 }
                 perc = fnc((frameNum - keyTime) / (nextKeyTime - keyTime))
-                var distanceInLine: Float64 = Float64(bezierData.segmentLength) * perc
+                var distanceInLine: Float64 = bezierData.segmentLength * perc
                 //Hilog.error(0, "--29--", "[interpolateValue]--[1]----> distanceInLine = ${distanceInLine}")
 
                 var segmentPerc: Float64 = 0.0
                 var addedLength: Float64 = 0.0
-                if (Float64(caching.lastFrame) < frameNum && caching._lastKeyframeIndex == i) {
-                    addedLength = caching._lastAddedLength
-                }
-                //Hilog.error(0, "--29--", "[interpolateValue]--[1]----> addedLength = ${addedLength}")
                 j = 0
                 if (Float64(caching.lastFrame) < frameNum && caching._lastKeyframeIndex == i) {
+                    addedLength = caching._lastAddedLength
                     j = caching._lastPoint
                 }
+                //Hilog.error(0, "--29--", "[interpolateValue]--[1]----> addedLength = ${addedLength}")
+                //j = 0
+                //if (Float64(caching.lastFrame) < frameNum && caching._lastKeyframeIndex == i) {
+                //    j = caching._lastPoint
+                //}
                 flag = true
                 jLen = bezierData.points.size
                 while (flag) {
@@ -367,7 +371,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                         }
                         break
                     } else if (distanceInLine >= addedLength && distanceInLine < (addedLength + bezierData.points[j + 1].partialLength)) {
-                        segmentPerc = (distanceInLine - addedLength / bezierData.points[j + 1].partialLength)
+                        segmentPerc = (distanceInLine - addedLength) / bezierData.points[j + 1].partialLength
                         kLen = bezierData.points[j].point.size
                         for (k in 0..kLen) {
                             newValue[k] = bezierData.points[j].point[k] + (bezierData.points[j + 1].point[k] - bezierData.points[j].point[k]) * segmentPerc
@@ -458,9 +462,10 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                         endValue = keyData_e
                     }
 
-                    keyValue = keyData_s[i] + (endValue[i] - keyData_s[i]) * perc
                     if (keyData.h == 1) {
                         keyValue =  keyData_s[i]
+                    } else {
+                        keyValue = keyData_s[i] + (endValue[i] - keyData_s[i]) * perc
                     }
 
                     if (this.propType == "multidimensional") {
