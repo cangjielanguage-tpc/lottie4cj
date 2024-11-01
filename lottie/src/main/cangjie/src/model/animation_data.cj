@@ -8,7 +8,6 @@
 package lottie.model
 
 internal import std.collection.*
-internal import encoding.json.stream.*
 
 /**
  * After Effects/Bodymovin composite model. This is the serialization model that the animation will create from.
@@ -141,69 +140,4 @@ public class AnimationData <: ToString {
         "markers.size = ${_markers.size}\n}"   // 10 = markers
     }
 
-}
-
-extend AnimationData <: JsonDeserilizable<AnimationData> {
-    public static func fromJson(reader: JsonReader): AnimationData {
-        var startFrame: Float64 = 0.0
-        var endFrame: Float64 = 0.0
-        var frameRate: Float64 = 0.0
-        var version: String = ""
-
-        let layerMap: HashMap<Int64, Layer> = HashMap<Int64, Layer>()
-        var layers: Array<Layer> = Array<Layer>()
-        var assets: Array<Asset> = Array<Asset>()
-
-        var width: Int64 = 0
-        var height: Int64 = 0
-
-        var fonts: Fonts = Fonts()
-        var markers: Array<Marker> = Array<Marker>()
-        var chars: Array<FontCharacter> = Array<FontCharacter>()
-
-        var nm: String = ""
-        var ddd: Int64 = 0
-        
-        reader.startObject()
-        while(let Some(token)<- reader.peek()) {
-            let name = reader.readName()
-            match(name) {
-                case "w" => width = reader.readValue<Int64>()
-                case "h" => height = reader.readValue<Int64>()
-                case "ip" => startFrame = reader.readValue<Float64>()
-                case "op" => endFrame = reader.readValue<Float64>()
-                case "fr" => frameRate = reader.readValue<Float64>()
-                case "v" => version = reader.readValue<String>()
-                            let versions: Array<String> = version.split(".")
-
-                            let majorVersion: Int32 = Int32.parse(versions[0])
-                            let minorVersion: Int32 = Int32.parse(versions[1])
-                            let patchVersion: Int32 = Int32.parse(versions[2])
-                            if (!Utils.isAtLeastVersion(majorVersion, minorVersion, patchVersion, 4, 0, 0)) {
-                                throw Exception("Lottie only supports bodymovin >= 4.4.0")
-                            }
-                case "layers" => layers = reader.readValue<Array<Layer>>() // Layer 需要实现JsonDeserilizable接口
-                case "assets" => assets = reader.readValue<Array<Asset>>()
-
-                ... //省略，待补充
-                case _ => reader.skip()
-            }
-        reader.endObject()
-
-        return AnimationData(
-            w: width,
-            h: height,
-            ip: startFrame,
-            op: endFrame,
-            fr: frameRate,
-            v: version,
-            layers: layers,
-            assets: assets,
-            fonts: fonts,
-            chars: chars,
-            markers: markers,
-            nm: nm,
-            ddd: ddd
-        )
-    }
 }

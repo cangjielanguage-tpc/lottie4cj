@@ -53,10 +53,11 @@ public class AnimationDataParser {
 
     }
     public static func parse(input: InputStream): AnimationData {
-        let reader = JsonReader(input)
-        return AnimationData.fromJson(reader)
-        // or 
-        // return JsonReader.readValue<AnimationData>()
+        let j = JsonReader(input)
+
+
+
+        throw Exception()
     }
 
     public static func parse(reader: String): AnimationData {
