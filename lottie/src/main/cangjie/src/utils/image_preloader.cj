@@ -12,8 +12,21 @@ internal import std.time.*
 internal import lottie.inner.*
 
 //TODO：image 是系统 api，暂时不联合编译
-//import ohos.image.*
+internal import ohos.image.Image as MultiImage
+internal import ohos.image.Component as ImageComponent
+internal import ohos.image.PixelMap
+internal import ohos.image.createImageSource
+internal import ohos.image.DecodingOptions
+internal import ohos.image.Size
+internal import ohos.image.PixelMapFormat
+internal import ohos.image.Region
+internal import ohos.image.ImageInfo
+internal import ohos.image.InitializationOptions
+internal import ohos.image.createPixelMap
+internal import ohos.file_fs.*
 
+internal import ohos.resource_manager.*
+internal import ohos.ability.*
 
 public class ImagePreloader {
 
@@ -44,7 +57,7 @@ public class ImagePreloader {
     //var images: ArrayList<(Asset) -> OB<CreateNS>> = ArrayList<(Asset) -> OB<CreateNS>>(24)
     var images: ArrayList<OB> = ArrayList<OB>(24)
     //TODO：AbilityContext 是仓颉 UI 中的系统组件 api，暂时不联合编译
-    //var context: Option<AbilityContext> = Option<AbilityContext>.None
+    public var context: Option<AbilityContext> = Option<AbilityContext>.None
     
     //TODO: this._elementHelper 未确认成员变量中数据类型
     var _elementHelper: CreateNS = CreateNS("")
@@ -138,13 +151,12 @@ public class ImagePreloader {
     //TODO: ob 未确认数据类型
     func generatePixelMapAndRefreshUI2(data: Array<UInt8>, ob: OB, callback: () -> Unit) {
         //TODO：image 系统 api 函数，暂时不联合编译
-        /*
         this.isOB = true
-        let imageSource = image.createImageSource(data)
+        let imageSource = createImageSource(data)
         //piexlmap 改成不可编辑状态，优化图形图像端读取速度
-        let opts: image.DecodingOptions = DecodingOptions(
+        let opts: DecodingOptions = DecodingOptions(
             editable: false,
-            desiredPixelFormat: image.PixelMapFormat.RGBA_8888
+            desiredPixelFormat: PixelMapFormat.RGBA_8888
         )
         //创建 pixel_map
         let pixelMap: PixelMap = imageSource.createPixelMap(options: opts)
@@ -152,30 +164,47 @@ public class ImagePreloader {
         ob.img.pixel_map = pixelMap
         //获取解析出来的 pixel_map 的宽、高
         let imageInfo: ImageInfo = pixelMap.getImageInfo()
-        ob.img.width = imageInfo.size.width
-        ob.img.height = imageInfo.size.height
+        ob.img.width = Int64(imageInfo.size.width)
+        ob.img.height = Int64(imageInfo.size.height)
         callback()
-        */
     }
-    func generatePixelMapAndRefreshUI2(uri: String, ob: OB, callback: () -> Unit) {
+
+    func generatePixelMapAndRefreshUI2(fid: Int32, ob: OB, callback: () -> Unit) {
         //TODO：image 系统 api 函数，暂时不联合编译
-        /*
         this.isOB = true
-        let imageSource = image.createImageSource(uri)
+        let imageSource = createImageSource(fid)
         //piexlmap 改成不可编辑状态，优化图形图像端读取速度
-        let opts: image.DecodingOptions = DecodingOptions(
+        let opts: DecodingOptions = DecodingOptions(
             editable: false,
-            desiredPixelFormat: image.PixelMapFormat.RGBA_8888
+            desiredPixelFormat: PixelMapFormat.RGBA_8888
         )
         //创建 pixel_map
         let pixelMap: PixelMap = imageSource.createPixelMap(options: opts)
         ob.img.pixel_map = pixelMap
         //获取解析出来的 pixel_map 的宽、高
         let imageInfo: ImageInfo = pixelMap.getImageInfo()
-        ob.img.width = imageInfo.size.width
-        ob.img.height = imageInfo.size.height
+        ob.img.width = Int64(imageInfo.size.width)
+        ob.img.height = Int64(imageInfo.size.height)
         callback()
-        */
+    }
+
+    func generatePixelMapAndRefreshUI2(uri: String, ob: OB, callback: () -> Unit) {
+        //TODO：image 系统 api 函数，暂时不联合编译
+        this.isOB = true
+        let imageSource = createImageSource(uri)
+        //piexlmap 改成不可编辑状态，优化图形图像端读取速度
+        let opts: DecodingOptions = DecodingOptions(
+            editable: false,
+            desiredPixelFormat: PixelMapFormat.RGBA_8888
+        )
+        //创建 pixel_map
+        let pixelMap: PixelMap = imageSource.createPixelMap(options: opts)
+        ob.img.pixel_map = pixelMap
+        //获取解析出来的 pixel_map 的宽、高
+        let imageInfo: ImageInfo = pixelMap.getImageInfo()
+        ob.img.width = Int64(imageInfo.size.width)
+        ob.img.height = Int64(imageInfo.size.height)
+        callback()
     }
 
     /**
@@ -255,16 +284,31 @@ public class ImagePreloader {
                     try {
                         //TODO：AbilityContext 是仓颉 UI 中的系统组件 api，暂时不联合编译
                         //let filePath: String = context.filesDir + "/" + res
-                        let filePath: String = "/" + res
-                        
-                        //let isExist = fs.accessSync(filePath) //判断图片资源是否存在
-                        let isExist: Bool = File.exists(filePath)
+                        let filePath: String =
+                        if (let Some(v) <- context) {
+                            v.filesDir + "/" + res
+                        } else {
+                            "/" + res
+                        }
+
+                        let isExist = FileFs.access(filePath) //判断图片资源是否存在
+                        //let isExist: Bool = File.exists(filePath)
                         
                         if (isExist) {
                             /* 直接读取文件中所有数据 */
                             try {
-                                let arrayBuffer: Array<Byte> = File.readFrom(filePath)
+                                //let arrayBuffer: Array<Byte> = File.readFrom(filePath)
+                                let file = FileFs.open(filePath, mode: READ_ONLY.mode)
+                                let stat = FileFs.stat(filePath)
+                                let arrayBuffer: Array<Byte> = Array<Byte>(stat.size, item: 0)
+                                FileFs.read(file.fd, arrayBuffer)
+                                FileFs.close(file)
+
+                                //TODO: 模拟器调试暂时注掉，因为调用 createPixelMap 会崩掉--------------------
+                                //callback()  //TODO: 测试用，后续删除。
+
                                 generatePixelMapAndRefreshUI2(arrayBuffer, ob, callback)
+                                //generatePixelMapAndRefreshUI2(file.fd, ob, callback)
                             } catch (e: Exception) {
                                 //加载依赖图片异常时，默认动画加载正常
                                 callback()
@@ -272,20 +316,23 @@ public class ImagePreloader {
                         } else {
                             //获取rawfile的字节数组数据
                             //TODO: 参考 gifdrawable 库 ResourceLoader.loadMedia
-                            /*
                             if (let Some(v) <- context) {
                                 //AppLog.info("get globalAbilityContext successfully")
                                 let stageContext = getStageContext(v)
                                 let rm: ResourceManager = ResourceManager.getResourceManager(stageContext)
                                 try {
+                                    //TODO: 模拟器调试暂时注掉，因为调用 createPixelMap 会崩掉--------------------
+                                    //callback()  //TODO: 测试用，后续删除。
                                     let buffer: Array<UInt8> = rm.getRawFileContent(res)
                                     generatePixelMapAndRefreshUI2(buffer, ob, callback)
                                 } catch (e: Exception) {
+                                    let message = e.message
+                                    //Hilog.info("getRawFileContent failed, error code: ${code}, message: ${message}.")
                                     //加载依赖图片异常时，默认动画加载正常
                                     callback()
                                 }
                             }
-                            */      
+
                         }
                     } catch (e: Exception) {
                     }
@@ -296,7 +343,9 @@ public class ImagePreloader {
                         if (!this.isOB) {
                             return
                         }
+                        //TODO: 模拟器调试暂时注掉，因为调用 createPixelMap 会崩掉--------------------
                         generatePixelMapAndRefreshUI2(assetData.p, ob, callback)
+
                         //取消循环检测
                         //clearInterval(task_id)
                         if (let Some(v) <- this.timer) {
@@ -308,12 +357,13 @@ public class ImagePreloader {
                 }
             }
         }
-        
+
         imgCreateNS.addEventListener = addEventListener
 
         imgCreateNS.crossOrigin = "anonymous"
         //imgCreateNS.addEventListener("load", this._imageLoaded, false)
         imgCreateNS.addEventListener("load", this.imageLoaded, false)
+
         
         func insideError(){
             //TODO: 需要确认空对象问题-------------------------------------------------------------------------2024.07.10
@@ -363,13 +413,13 @@ public class ImagePreloader {
         for (i in 0..len) {
             if (assets[i].layers.size <= 0) {
                 //TODO: 在 json 中找不到 assets[i].t----------------------------------------------------------2024.07.11
-                //if (assets[i].t == "" || assets[i].t == "seq") {
-                //    this.totalImages += 1
-                //    this.images.append(this._createImageData(assets[i]))
-                //} else if (assets[i].t == "3") {
-                //    this.totalFootages += 1
-                //    this.images.append(this.createFootageData(assets[i]))
-                //}
+                if (assets[i].t == "" || assets[i].t == "seq") {
+                    this.totalImages += 1
+                    this.images.append(this._createImageData(assets[i]))
+                } else if (assets[i].t == "3") {
+                    this.totalFootages += 1
+                    this.images.append(this.createFootageData(assets[i]))
+                }
             }
         }
     }

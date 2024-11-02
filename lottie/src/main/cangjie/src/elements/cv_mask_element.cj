@@ -34,7 +34,7 @@ public class CvMaskElement <: RenderableElement {
             if (this.masksProperties[i].mode != "n") {
                 hasMasks = true
             }
-            this.viewData[i] = ShapePropertyFactory.getShapeProp(this.masksProperties[i], 3,element.globalData,this.data, dynamicProperties: dynamicProperties)
+            this.viewData[i] = ShapePropertyFactory.getShapeProp(this.masksProperties[i], 3, element.globalData,this.data, dynamicProperties: element.dynamicProperties)
         }
         this.hasMasks = hasMasks
         if (hasMasks) {

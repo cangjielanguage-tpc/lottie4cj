@@ -161,15 +161,29 @@ public class TransformProperty <: DynamicPropertyContainer {
 
         //TODO: 未在 AnimatableTransform 中找到 data.p.s  =>  has_data_p_s = false，暂无 this.px/this.py/this.px。设置成空的。
         //p => [position位置]
-        if (this.has_data_p_s) { //获取 translate 相关的参数
-            this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.x, data.p.x, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
-            this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.y, data.p.y, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+        if (!data.p.isNull() && data.p.s) { //获取 translate 相关的参数
+            if (data.p.x.size == 1) {//走【分支1】
+                this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.x, data.p.x[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, types: 0, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+            } else if (data.p.x.size > 1) {//走【分支4】
+                this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.x, data.p.x, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+            }
+            if (data.p.y.size == 1) {//走【分支1】
+                this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.y, data.p.y[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, types: 0, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+            } else if (data.p.y.size > 1) {//走【分支4】
+                this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.y, data.p.y, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+            }
+
             this.px.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
             this.px.container = [this]
             this.py.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
             this.py.container = [this]
             if (data.p.z.size > 0) {
-                this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.z, data.p.z, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+                if (data.p.z.size == 1) {//走【分支1】
+                    this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.z, data.p.z[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, types: 0, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+                } else if (data.p.z.size > 1) {//走【分支4】
+                    this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.z, data.p.z, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+                }
+
                 this.pz.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
                 this.pz.container = [this]
             }
@@ -177,8 +191,6 @@ public class TransformProperty <: DynamicPropertyContainer {
             vLen = 3
             if (data.p.k.size == 1) {//走【分支2】
                 let point: PointF = data.p.k[0].k ?? PointF(x: 0.0, y: 0.0)
-                //, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1
-                //, types: types, dataA: dataA, vLen: vLen
                 this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.p.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
             } else if (data.p.k.size > 1) {//走【分支4】
                 this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, this, elemGlobalData, elemData, dataA: data.p.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
@@ -419,7 +431,8 @@ public class TransformProperty <: DynamicPropertyContainer {
         // this.a 是 PointF，v 数组长度只能是 2。
         //mat.translate(this.p.v[0], this.p.v[1], tz: -this.p.v[2])
         mat.translate(this.p.v[0], this.p.v[1])
-        if (this.has_data_p_s) {
+        //if (this.has_data_p_s) {
+        if (this.data.p.s) {
             if (this.data.p.z.size > 0) {
                 mat.translate(this.px.v[0], this.py.v[0], tz: -this.pz.v[0])
             } else {
@@ -495,7 +508,8 @@ public class TransformProperty <: DynamicPropertyContainer {
                         v1 = this.p.pv
                         v2 = this.p.getValueAtTime((Float64(this.p._caching.lastFrame) + this.p.offsetTime - 0.01) / frameRate, this.p.offsetTime)
                     }
-                } else if (this.has_data_p_s && !this.px.isNull && this.px.keyframes.size > 0 && this.py.keyframes.size > 0 && this.px.hasGetValueAtTime && this.py.hasGetValueAtTime) {
+                //} else if (this.has_data_p_s && !this.px.isNull && this.px.keyframes.size > 0 && this.py.keyframes.size > 0 && this.px.hasGetValueAtTime && this.py.hasGetValueAtTime) {
+                } else if (this.data.p.s && !this.px.isNull && this.px.keyframes.size > 0 && this.py.keyframes.size > 0 && this.px.hasGetValueAtTime && this.py.hasGetValueAtTime) {
                     //TODO: 未在 AnimatableTransform 中找到 .p.s  => 暂无 this.px/this.py/this.px
                     let px = this.px
                     let py = this.py
@@ -527,7 +541,8 @@ public class TransformProperty <: DynamicPropertyContainer {
                 this.v.rotate(-atan((v1[1] - v2[1]) / (v1[0] - v2[0])))
             }
             //TODO: 未在 AnimatableTransform 中找到 .p.s  => 暂无 this.px/this.py/this.px
-            if (!this.data.p.isNull() && this.has_data_p_s) {
+            //if (!this.data.p.isNull() && this.has_data_p_s) {
+            if (!this.data.p.isNull() && this.data.p.s) {
                 if (this.data.p.z.size > 0) {
                     this.v.translate(this.px.v[0], this.py.v[0], tz: -this.pz.v[0])
                 } else {

@@ -30,6 +30,8 @@ public class NullElement <: BaseElement {
         this.prepareProperties(num, true)
     }
     
+    public func renderFrame(forceRender: Bool) {}
+    
     public func renderFrame() {}
     
     public func changeColor() {}

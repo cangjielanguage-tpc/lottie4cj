@@ -269,7 +269,8 @@ public open class BaseRenderer {
         for (i in 0..len) {
             if (layers[i].ind == parentName) {                   // eslint-disable-line eqeqeq
                 //if (!elements[i] || elements[i] == true)
-                if (elements.size <= i) {
+                //(this.elements.size > i && !this.elements[i].isNull)
+                if (elements.size <= i || elements[i].isNull) {
                     //在子类 CanvasRendererBase 中具体实现
                     this.buildItem(i)
                     this.addPendingElement(element)

@@ -104,11 +104,6 @@ public open class ICompElement <: BaseElement {
         }
         //由于表达式之间的连接方式，此迭代需要向后进行
         for (i in (len - 1)..=0:-1) {
-
-            if (i == 29) {
-                //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> i = ${i}")
-            }
-
             if (this.completeLayers || this.elements.size > i) {
                 let a = this.renderedFrame
                 let b = this.layers[i].st

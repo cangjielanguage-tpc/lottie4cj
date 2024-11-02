@@ -16,8 +16,9 @@ public class AnimatablePathValueParser {
         "y"
     ]
     private static let NAMES_AIX: Array<String> = [
-        "a",  // 0
-        "ix"  // 1
+        "a",   // 0
+        "ix",  // 1
+        "s"    // 2
     ]
 
     /**
@@ -59,6 +60,7 @@ public class AnimatablePathValueParser {
 
         var a: Int64 = 0
         var ix: Int64 = 0
+        var s: Bool = false
 
         var pathAnimation: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
         var xAnimation: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
@@ -73,6 +75,9 @@ public class AnimatablePathValueParser {
         }
         if (let Some(v) <- jsonObject.get(NAMES_AIX[1])) { // "ix"
             ix = v.asInt().getValue()
+        }
+        if (let Some(v) <- jsonObject.get(NAMES_AIX[2])) { // "s"
+            s = v.asBool().getValue()
         }
         
         if (let Some(v) <- jsonObject.get(NAMES[0])) { //"k"
@@ -102,6 +107,7 @@ public class AnimatablePathValueParser {
         let aspv: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(
             a: a,
             ix: ix,
+            s: s,
             k: pathAnimation,
             x: xAnimation,
             y: yAnimation
