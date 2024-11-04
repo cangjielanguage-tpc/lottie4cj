@@ -836,7 +836,7 @@ public class AnimationItem <: BaseEvent {
 
     public func setCurrentRawFrameValue(value: Float64): Unit {
         //Hilog.error(0, "liyanqing", "----> value = ${value}")
-        if (value > 25.0) {
+        if (value > 2.0) {
             //Hilog.error(0, "liyanqing", "----> ${value}")
         }
         this.currentRawFrame = value

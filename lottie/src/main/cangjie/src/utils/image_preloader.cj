@@ -308,7 +308,7 @@ public class ImagePreloader {
                                 //callback()  //TODO: 测试用，后续删除。
 
                                 generatePixelMapAndRefreshUI2(arrayBuffer, ob, callback)
-                                //generatePixelMapAndRefreshUI2(file.fd, ob, callback)
+                                //generatePixelMapAndRefreshUI2(file.fd, ob, callback)  //TODO: 测试用，后续删除。
                             } catch (e: Exception) {
                                 //加载依赖图片异常时，默认动画加载正常
                                 callback()

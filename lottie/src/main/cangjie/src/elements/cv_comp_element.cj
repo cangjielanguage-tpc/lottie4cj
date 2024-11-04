@@ -69,7 +69,7 @@ public class CvCompElement <: ICompElement {
         ctx.clip()
 
         //let len: Int64 = this.layers.size
-        //var indexCOMP: Int64 = 0
+        //var indexCOMP: Int64 = 16
         ////var indexCOMP: Int64 = 29
         //if (this.completeLayers || (this.elements.size > indexCOMP && !this.elements[indexCOMP].isNull)) {
         //    this.elements[indexCOMP].renderFrame()

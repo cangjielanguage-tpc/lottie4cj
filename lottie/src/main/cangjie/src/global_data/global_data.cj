@@ -126,7 +126,7 @@ public class GlobalData {
     public var frameNum: Float64 = -1.0
     public var _mdf: Bool = false
     public var renderConfig: RenderConfig= RenderConfig()
-    public var currentGlobalAlpha: Int64 = -1
+    public var currentGlobalAlpha: Float64 = -1.0
     
     //TODO： 数据类型需要再确认 //public var blendMode: Int64 = 0
     public var blendMode: UnionType = UnionType()
@@ -167,7 +167,7 @@ public class GlobalData {
     //this.globalData.renderer.restore(true);
     public var save: (Bool) -> Unit = { m => () }
     public var ctxTransform: (Array<Float64>) -> Unit = { m => () }
-    public var ctxOpacity: (Int64) -> Unit = { m => () }
+    public var ctxOpacity: (Float64) -> Unit = { m => () }
     public var restore: (Bool) -> Unit = { m => () }
     public var hasRenderer: Bool = false
 
@@ -191,7 +191,7 @@ public class GlobalData {
         this.canvasContext = canvasContext
     }
     
-    public init(frameNum!: Float64, _mdf!: Bool, renderConfig!: RenderConfig, currentGlobalAlpha!: Int64,
+    public init(frameNum!: Float64, _mdf!: Bool, renderConfig!: RenderConfig, currentGlobalAlpha!: Float64,
         canvasContext!: LottieCanvasRenderingContext2D
         //save!: (Bool) -> Unit = { m => () },
         //ctxTransform!: (Array<Float64>) -> Unit = { m => () },

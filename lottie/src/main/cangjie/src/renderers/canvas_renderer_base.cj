@@ -52,7 +52,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             frameNum: -1.0,
             _mdf: false,
             renderConfig: this.renderConfig,
-            currentGlobalAlpha: -1,
+            currentGlobalAlpha: -1.0,
             canvasContext: container
         )
         this.globalData.hasCanvasRenderingContext2D = true
@@ -134,13 +134,13 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      *
      * @param op - Type of Int64.
      */
-    public func ctxOpacity(op: Int64): Unit {
+    public func ctxOpacity(op: Float64): Unit {
         var tmps = this.contextData.getTransform().props;
         //Hilog.error(0, "---1--", "[ctxOpacity]----->tmps = ${tmps}")
 
-        var currentOpacity: Int64 = this.contextData.getOpacity()
+        var currentOpacity: Float64 = this.contextData.getOpacity()
         if (!this.renderConfig.clearCanvas) { //canvasContext 是画布组件中的 CanvasRenderingContext2D
-            if (op < 0) {
+            if (op < 0.0) {
                 this.canvasContext.globalAlpha(0)
             } else {
                 //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
@@ -152,8 +152,8 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             return
         }
 
-        if (op < 0) {
-            currentOpacity *= 0
+        if (op < 0.0) {
+            currentOpacity = 0.0
         } else {
             currentOpacity *= op
         }
@@ -215,9 +215,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             this.globalData.blendMode.setValue("source-over")
         }
 
-        let popped: (Array<Float64>,Int64) = this.contextData.pop()
+        let popped: (Array<Float64>, Float64) = this.contextData.pop()
         let transform: Array<Float64> = popped[0]
-        let opacity: Int64 = popped[1]
+        let opacity: Float64 = popped[1]
         this.canvasContext.setTransform(transform[0], transform[1], transform[4], transform[5], transform[12], transform[13])
 
         if (this.globalData.currentGlobalAlpha != opacity) {
@@ -527,12 +527,16 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             this.checkLayers(num)
         }
 
-//        if (num > 15.0) {
-//            //Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> num = ${num}")
-//        }
+        //if (num > 4.0) {
+        //    Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> num = ${num}")
+        //}
 
 
         for (i in 0..len) {
+            //if (i == 18) {
+            //    Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> i = ${i}")
+            //}
+
             if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
             //if (this.completeLayers || this.elements.size > i) {
                 this.elements[i].prepareFrame(num - this.layers[i].st)
@@ -551,7 +555,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             var index: Int64 = 0
 
             //todo: 测试用。后续删除。
-            //var ind = 1;
+            //var ind = 24
             //if (this.completeLayers || (this.elements.size > ind && !this.elements[ind].isNull)) {
             //    this.elements[ind].renderFrame(false)
             //}
