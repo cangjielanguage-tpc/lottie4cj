@@ -10,14 +10,14 @@ public class CvContextData {
     private var saved: Array<Array<Float64>>
     private var cArrPos: Int64
     private var cTr: Matrix
-    private var cO: Int64
+    private var cO: Float64
     private var _length: Int64
     private var savedOp: Array<Float64>
 
     public init() {
         this.cArrPos = 0
         this.cTr = Matrix()
-        this.cO = 1
+        this.cO = 1.0
         var len: Int64 = 15
         this.saved = Array<Array<Float64>>(len, item: [])
         this.savedOp = Array<Float64>(len,item: 0.0)
@@ -44,7 +44,7 @@ public class CvContextData {
     public func reset() {
         this.cArrPos = 0
         this.cTr.reset()
-        this.cO = 1
+        this.cO = 1.0
     }
 
     public func popTransform(): Array<Float64> {
@@ -56,13 +56,13 @@ public class CvContextData {
         return popped
     }
 
-    public func popOpacity(): Int64 {
+    public func popOpacity(): Float64 {
         var popped = this.savedOp[this.cArrPos]
-        this.cO = Int64(popped)
-        return Int64(popped)
+        this.cO = popped
+        return popped
     }
 
-    public func pop(): (Array<Float64>,Int64) {
+    public func pop(): (Array<Float64>, Float64) {
         this.cArrPos -= 1
         var transform = this.popTransform()
         var opacity = this.popOpacity()
@@ -84,7 +84,7 @@ public class CvContextData {
         for (i in 0..16) {
             arr[i] = props[i]
         }
-        this.savedOp[this.cArrPos] = Float64(this.cO)
+        this.savedOp[this.cArrPos] = this.cO
         this.cArrPos += 1
     }
 
@@ -92,11 +92,11 @@ public class CvContextData {
         return this.cTr
     }
 
-    public func getOpacity(): Int64 {
+    public func getOpacity(): Float64 {
         return this.cO
     }
 
-    public func setOpacity(value: Int64) {
+    public func setOpacity(value: Float64) {
         this.cO = value
     }
 

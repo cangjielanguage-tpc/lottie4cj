@@ -395,7 +395,7 @@ public class CvShapeElement <: IShapeElement {
             // current opacity equals 0
             // global opacity equals 0
             if (!(((types == "st" || types == "gs") && currentStyle.wi == 0.0) || !currentStyle.data._shouldRender ||
-                currentStyle.coOp == 0.0 || this.globalData.currentGlobalAlpha == 0)) {
+                currentStyle.coOp == 0.0 || this.globalData.currentGlobalAlpha == 0.0)) {
                 //TODO: this.globalData.renderer数据类型是什么？
                 this.globalData.save(false)
 
@@ -437,7 +437,7 @@ public class CvShapeElement <: IShapeElement {
                         ctx.fillStyle(currentStyle.grd.getOrThrow())
                     }
                 }
-                this.globalData.ctxOpacity(Int64(currentStyle.coOp))
+                this.globalData.ctxOpacity(currentStyle.coOp)
                 if (types != "st" && types != "gs") {
                     ctx.beginPath()
                 }

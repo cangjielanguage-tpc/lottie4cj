@@ -598,9 +598,9 @@ public open class BaseElement <: Equatable<BaseElement> {
         if (!this.data.ks.isNull()) {
             //TODO:[lp]--会影响最外层的CvCompElement吗？？？
             if (this.compType == 1 && this.comp.size >= 1){
-                this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: compType, renderedFrame: [comp[0].getRenderedFrameInElemComp])
+                this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [comp[0].getRenderedFrameInElemComp])
             } else {
-                this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
+                this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [this.getRenderedFrameInElemComp])
             }
             //this.finalTransform.mProp.addDynamicPropertyInElem = this.addDynamicProperty
         } else {
@@ -627,6 +627,8 @@ public open class BaseElement <: Equatable<BaseElement> {
 
         //Hilog.error(0, "--Element--", "[renderTransform]----> this.finalTransform._opMdf = ${this.finalTransform._opMdf}")
         //Hilog.error(0, "--Element--", "[renderTransform]----> this.finalTransform._matMdf = ${this.finalTransform._matMdf}")
+        //Hilog.error(0, "--Element--", "[renderTransform]----> this.layerId = ${this.layerId}")
+        //Hilog.error(0, "--Element--", "[renderTransform]----> this.data.ind = ${this.data.ind}")
 
         //TODO：[44] TransformElement.renderTransform 中 this.hierarchy 为空数组时，进入if (this.hierarchy) 分支，执行代码逻辑。
         //if (this.hierarchy.size > 0) {
@@ -932,13 +934,15 @@ public open class BaseElement <: Equatable<BaseElement> {
         //Hilog.error(0, "---33333--", "[renderFrame]: tmps = ${tmps}")
 
         this.globalData.ctxTransform(this.finalTransform.mat.props) //CanvasRendererBase
-        this.globalData.ctxOpacity(Int64(this.finalTransform.mProp.o.v[0]))   //CanvasRendererBase
+        //Hilog.error(0, "---33333--", "[renderFrame]: this.finalTransform.mProp.o.v[0] = ${this.finalTransform.mProp.o.v[0]}")
+
+        this.globalData.ctxOpacity(this.finalTransform.mProp.o.v[0])   //CanvasRendererBase
         this.renderInnerContent() //CVShapeElement
         this.globalData.restore(forceRealStack)
         //将两个layer数据分别绘制到两个离屏画布上，通过将离屏绘制数据结合混合模式绘制到当前显示画布上，实现mask效果
         this.exitLayer() // CVBaseElement
 
-        //恢复高斯模糊的默认值，防止非高斯模糊图层也高斯模糊 shadowBlur(blur: Int64): Unit
+        //恢复高斯模糊的默认值，防止非高斯模糊图层也高斯模糊 shadowBlur(blur: Int64): UnitHilog.error(0, "--Renderer--", "[buildAllItems]--[1]----> i = ${i}")
         this.canvasContext.shadowBlur(0)
 
         if (this.maskManager.size > 0 && this.maskManager[0].hasMasks) {

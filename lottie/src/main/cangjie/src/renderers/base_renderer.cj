@@ -203,6 +203,11 @@ public open class BaseRenderer {
     public func buildAllItems(): Unit {
         let len: Int64 = this.layers.size
         for (i in 0..len) {
+
+            //if (i == 14) {
+            //    Hilog.error(0, "--Renderer--", "[buildAllItems]--[1]----> i = ${i}")
+            //}
+
             //在子类 CanvasRendererBase 中具体实现
             this.buildItem(i)
         }
