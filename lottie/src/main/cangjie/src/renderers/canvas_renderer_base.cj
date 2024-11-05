@@ -67,19 +67,19 @@ public abstract class CanvasRendererBase <: BaseRenderer {
 
     public func createShape(data: Layer): CvShapeElement {
         //return CvShapeElement(data, this.globalData, this.buildElementParenting, ArrayList<BaseElement>())
-        return CvShapeElement(data, this.globalData, this.buildElementParenting, compType: 2)
+        return CvShapeElement(data, this.globalData, this.buildElementParenting, compType: 2, getElementByIdInRender: this.getElementById)
     }
 
     public func createText(data: Layer): CvTextElement { 
-        return CvTextElement(data, globalData, this.buildElementParenting, compType: 2)
+        return CvTextElement(data, globalData, this.buildElementParenting, compType: 2, getElementByIdInRender: this.getElementById)
     }
 
     public func createImage(data: Layer): CvImageElement { 
-        return CvImageElement(data, globalData, this.buildElementParenting, compType: 2)
+        return CvImageElement(data, globalData, this.buildElementParenting, compType: 2, getElementByIdInRender: this.getElementById)
     }
 
     public func createSolid(data: Layer): CvSolidElement { 
-        return CvSolidElement(data, globalData, this.buildElementParenting, compType: 2)
+        return CvSolidElement(data, globalData, this.buildElementParenting, compType: 2, getElementByIdInRender: this.getElementById)
     }
 
     /**
@@ -102,7 +102,8 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             return
         }
         if (!this.renderConfig.clearCanvas) {//canvasContext 是画布组件中的 CanvasRenderingContext2D
-            this.canvasContext.transform(props[0], props[1], props[4], props[5], props[12], props[13])
+            //this.canvasContext.transform(props[0], props[1], props[4], props[5], props[12], props[13])
+            this.canvasContext.transform(props[0], props[4], props[1], props[5], props[12], props[13])
             return
         }
 
@@ -121,12 +122,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         currentTransform.cloneFromProps(this.transformMat.props)
         var trProps = currentTransform.props
 
-
         //在画布上应用新的变换
-        this.canvasContext.setTransform(trProps[0], trProps[1], trProps[4], trProps[5], trProps[12], trProps[13])
-        //TODO: bug【14】暂不处理，调试用。写成死的。
-
-        //this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
+        //this.canvasContext.setTransform(trProps[0], trProps[1], trProps[4], trProps[5], trProps[12], trProps[13])
+        this.canvasContext.setTransform(trProps[0], trProps[4], trProps[1], trProps[5], trProps[12], trProps[13])
     }
 
     /**
@@ -218,7 +216,8 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         let popped: (Array<Float64>, Float64) = this.contextData.pop()
         let transform: Array<Float64> = popped[0]
         let opacity: Float64 = popped[1]
-        this.canvasContext.setTransform(transform[0], transform[1], transform[4], transform[5], transform[12], transform[13])
+        //this.canvasContext.setTransform(transform[0], transform[1], transform[4], transform[5], transform[12], transform[13])
+        this.canvasContext.setTransform(transform[0], transform[4], transform[1], transform[5], transform[12], transform[13])
 
         if (this.globalData.currentGlobalAlpha != opacity) {
             this.canvasContext.globalAlpha(opacity)
@@ -527,9 +526,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             this.checkLayers(num)
         }
 
-        //if (num > 4.0) {
-        //    Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> num = ${num}")
-        //}
+        if (num > 89.5) {
+            Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> num = ${num}")
+        }
 
 
         for (i in 0..len) {
@@ -555,7 +554,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             var index: Int64 = 0
 
             //todo: 测试用。后续删除。
-            //var ind = 24
+            //var ind = 12  //红包json
             //if (this.completeLayers || (this.elements.size > ind && !this.elements[ind].isNull)) {
             //    this.elements[ind].renderFrame(false)
             //}

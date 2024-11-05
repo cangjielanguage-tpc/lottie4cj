@@ -24,11 +24,13 @@ public class CvShapeElement <: IShapeElement {
     public init(data: Layer, globalData: GlobalData, buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
         //pendingElements: ArrayList<BaseElement>,
         layers!: Array<Layer> = Array<Layer>(), elements!: Array<BaseElement> = Array<BaseElement>(),
-        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()
+        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>(),
+        getElementByIdInRender!: (Int64) -> Option<BaseElement> = { m => Option<BaseElement>.None }
     ) {
         super(data, globalData)
         this.compType = compType
         this.comp = comp
+        this.getElementByIdInRender = getElementByIdInRender
         //this.pendingElements = pendingElements
         this.layers = layers
         this.elements = elements

@@ -11,6 +11,8 @@ import lottie.utils.helpers.UnionType
 
 public class Layer <: ToString {
 
+    public var tp: Int64 = -1
+
     //TODO: ICompElement编译用。
     public var xt: Bool = false //不确认xt数据类型，暂定为Bool。
     //TODO: 当 layer.ty == 101 && isAsset == true 时，此 Layer 实际代表的是 Asset。兼容 BaseRenderer.searchExtraCompositions 中 createComp 函数应用。

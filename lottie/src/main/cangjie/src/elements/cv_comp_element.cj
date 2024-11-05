@@ -12,11 +12,13 @@ public class CvCompElement <: ICompElement {
 
     //使用了data.layers暂时使用AnimationData
     public init(data: Layer, globalData: GlobalData, createItem: (Layer) -> BaseElement, buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
-        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()
+        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>(),
+        getElementByIdInRender!: (Int64) -> Option<BaseElement> = { m => Option<BaseElement>.None }
     ) {
         super(data, globalData)
         this.compType = compType
         this.comp = comp
+        this.getElementByIdInRender = getElementByIdInRender
         this.createItem = createItem
         this.buildElementParentingInComp = buildElementParentingInComp
         this.canvasContext = this.globalData.canvasContext
@@ -70,7 +72,7 @@ public class CvCompElement <: ICompElement {
 
         //let len: Int64 = this.layers.size
         //var indexCOMP: Int64 = 16
-        ////var indexCOMP: Int64 = 29
+        //var indexCOMP: Int64 = 4
         //if (this.completeLayers || (this.elements.size > indexCOMP && !this.elements[indexCOMP].isNull)) {
         //    this.elements[indexCOMP].renderFrame()
         //}

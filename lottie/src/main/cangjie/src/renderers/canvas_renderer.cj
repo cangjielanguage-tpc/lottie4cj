@@ -67,7 +67,7 @@ public class CanvasRenderer <: CanvasRendererBase {
      * @return Type of CvCompElement.
      */
     public func createComp(data: Layer): CvCompElement { 
-        let cvCompElement: CvCompElement = CvCompElement(data, this.globalData, this.createItem, this.buildElementParenting, compType: 2)
+        let cvCompElement: CvCompElement = CvCompElement(data, this.globalData, this.createItem, this.buildElementParenting, compType: 2, getElementByIdInRender: this.getElementById)
 
         return cvCompElement
     }
