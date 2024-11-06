@@ -42,7 +42,8 @@ public class LayerParser {
         "ao",     // 23   // Automatic tracking or not
         "bm",     // 24   // Mixed mode
         "hasMask",  // 25   // has "masksProperties"
-        "ddd" // 26   // has "masksProperties"
+        "ddd",     // 26   // has "masksProperties"
+        "tp"       // 27
     ]
 
     private static let TEXT_NAMES: Array<String> = [
@@ -328,6 +329,10 @@ public class LayerParser {
             hasMask: hasMask,
             ddd: ddd
         )
+        
+        if (let Some(v) <- jo.get(NAMES[27])) {"tp"
+            layer.tp = v.asInt().getValue()
+        }
         return layer
     }
 

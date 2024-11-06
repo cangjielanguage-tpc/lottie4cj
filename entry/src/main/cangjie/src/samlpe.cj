@@ -87,25 +87,6 @@ class LottieSample {
 
                 }.height(30.percent).width(100.percent)
 
-                    Button("测试-PixelMap").onClick {
-                        evt => //Hilog.error(0, "", "Hello Cangjie")
-                            //let buffer: Array<UInt8> = loadMedia(fId, globalAbilityContext)
-                            let buffer: Array<UInt8> = loadMedia(Int32(fId), globalAbilityContext)
-                            let imageSource = createImageSource(buffer)
-                            //piexlmap 改成不可编辑状态，优化图形图像端读取速度
-                            let opts: DecodingOptions = DecodingOptions(
-                                //editable: false,
-                                //desiredPixelFormat: PixelMapFormat.RGBA_8888
-
-                                    sampleSize: 1,
-                                    rotate: 0,
-                                    editable: true
-                            )
-                            //创建 pixel_map
-                            let pixelMap: PixelMap = imageSource.createPixelMap(options: opts)
-                            Hilog.error(0, "", "------------------------------------测试-PixelMap")
-                    }.fontSize(40).height(80)
-
                 Scroll() {
                     Column() {
                         Row() {
@@ -128,6 +109,7 @@ class LottieSample {
                                 }
                          }
                         }.margin(top: 5)
+
                         Row() {
                             Button("加载phonemony").onClick {
                                 evt =>
@@ -135,7 +117,7 @@ class LottieSample {
                                 if (this.animateItem2.isNone()) {
                                      this.animateItem2 = lottie.loadAnimation(AnimationConfig(
                                         wrapper_ns: CreateNS("doc"),
-                                        container: this.canvasRenderingContext,
+                                        container: this.mainCanvasRenderingContext,
                                         renderer: "canvas", // canvas 渲染模式
                                         //loop: true,
                                         autoplay: true,

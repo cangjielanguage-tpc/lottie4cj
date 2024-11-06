@@ -13,6 +13,7 @@ internal import ohos.state_manage.*
 import ohos.state_macro_manage.*
 
 internal import ohos.hilog.*
+internal import ohos.image.PixelMap
 
 internal import lottie.elements.helpers.*
 
@@ -26,15 +27,12 @@ internal import lottie.global_data.*
 internal import lottie.property.*
 
 
-internal import ohos.hilog.*
 internal import lottie.model.*
 internal import std.collection.ArrayList
 
 
 internal import lottie.bezier.*
 
-
-internal import lottie.utils.helpers.*
 
 public func emptyCreateItem(layer: Layer): BaseElement {
     return BaseElement(Layer(), GlobalData(), isNull: true)
@@ -86,18 +84,20 @@ public type HierarchyElement = BaseElement
 //TODO: 暂时先将 CvBaseElement 和 BaseElement 合并。避免后面 CVXXXElement 多继承 XXXElement和 CVBaseElement
 public open class BaseElement <: Equatable<BaseElement> {
 
-    //comp数据类型：1-Element; 2-Renderer；3-其他
+    //comp数据类型：1-Element；2-Renderer；3-其他
     public var compType: Int8 = 0
     //public var containerInFP: Array<DynamicPropertyContainer> = Array<DynamicPropertyContainer>()
     /*
      * TODO: comp 在arkts中是多种数据类型，cangjie没有办法完全兼容。
      * 【暂时】保存为两类，一类代表各种 Element；另一类是 Renderer，用到那个单独处理。
      * 处理方案分为 3 类，参考成员变量 compType。
-     * comp数据类型：1-Element; 2-Renderer；3-其他。
+     * comp数据类型：1-Element；2-Renderer；3-其他。
      */
     public var comp: Array<BaseElement> = Array<BaseElement>()
 
     public var renderedFrame: Float64 = 0.0
+    
+    public var getElementByIdInRender: (Int64) -> Option<BaseElement> = { m => Option<BaseElement>.None }
 
 
 
@@ -219,7 +219,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     /**
      * //TODO：comp可能是 RendererBase，也可能是 BaseElement =>
-     * extendPrototype([CanvasRendererBase, ICompElement, CVBaseElement], CVCompElement);
+     * extendPrototype([CanvasRendererBase, ICompElement, CVBaseElement], CVCompElement)
      * //TODO：CVCompElement 可以继承 CanvasRendererBase ？？？
      */
 
@@ -275,18 +275,18 @@ public open class BaseElement <: Equatable<BaseElement> {
             throw Exception("Non canvas cannot call this function。")
         }
         if (layer.ty == 2) {
-            return CvImageElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this])
+            return CvImageElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender)
         } else if (layer.ty == 0) {
-            return CvCompElement(layer, this.globalData, this.createItem, this.buildElementParenting, compType: 1, comp: [this])
+            return CvCompElement(layer, this.globalData, this.createItem, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender)
         } else if (layer.ty == 1) {
-            return CvSolidElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this])
+            return CvSolidElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender)
         } else if (layer.ty == 3) {
             return NullElement(layer, this.globalData)
         } else if (layer.ty == 4) {
             //return CvShapeElement(layer, this.globalData, this.buildElementParenting, this.pendingElements, layers: this.layers, elements: this.elements)
-            return CvShapeElement(layer, this.globalData, this.buildElementParenting, layers: this.layers, elements: this.elements, compType: 1, comp: [this])
+            return CvShapeElement(layer, this.globalData, this.buildElementParenting, layers: this.layers, elements: this.elements, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender)
         } else if (layer.ty == 5) {
-            return CvTextElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this])
+            return CvTextElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender)
         } else if (layer.ty == 6) {
             //TODO: 暂不实现  //return this.createAudio(layer)
             return NullElement(layer, this.globalData)
@@ -395,7 +395,7 @@ public open class BaseElement <: Equatable<BaseElement> {
     }
 
     public open func checkPendingElements(): Unit {
-        var index = this.pendingElements.size; //TODO: 测试对比观测
+        var index = this.pendingElements.size //TODO: 测试对比观测
         while (this.pendingElements.size != 0) {
             let element: BaseElement = this.pendingElements.remove(this.pendingElements.size - 1)
 
@@ -403,7 +403,7 @@ public open class BaseElement <: Equatable<BaseElement> {
             element.checkParenting()
 
             //TODO: 测试对比观测
-            index--; //TODO: 测试对比观测
+            index-- //TODO: 测试对比观测
         }
     }
 
@@ -843,7 +843,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         if (this.data.tt >= 1) {
             //恢复图层
             //this.canvasContext.restoreLayer()
-            this.canvasContext.restore();
+            this.canvasContext.restore()
             //将递归图层和mask动效图层进行指定混合
             match (operationsMap[this.data.tt]) {
                case "destination-in" => this.canvasContext.globalCompositeOperation(CompositeOperation.DestinationIn)
@@ -852,18 +852,25 @@ public open class BaseElement <: Equatable<BaseElement> {
             }
             //保存mask动效层
             //this.canvasContext.saveLayer()
-            this.canvasContext.save();
+            this.canvasContext.save()
+            
             //对之前的混合模式还原成默认模式
-            // this.canvasContext.globalCompositeOperation = "source-over"
             this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)// We draw the mask
-//            const mask = this.comp.getElementById('tp' in this.data ? this.data.tp : this.data.ind - 1);*
-//            mask.renderFrame(true);
+
+            var tp: Int64 = this.data.tp
+            if (tp == -1){
+                tp = this.data.ind - 1
+            }
+            let mask: Option<BaseElement> = this.getElementByIdInRender(tp)
+            if (let Some(v) <- mask) {
+                v.renderFrame(true)
+            }
             //恢复图层
             //this.canvasContext.restoreLayer()
             //this.canvasContext.restoreLayer()
             this.canvasContext.restore()
             this.canvasContext.restore()
-            //this.canvasContext.globalCompositeOperation = 'source-over';
+
             this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
         }
     }
@@ -961,17 +968,17 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     public open func show(): Unit {
         if (this.isInRange && !this.isTransparent) {
-            this.hidden = false;
-            this._isFirstFrame = true;
+            this.hidden = false
+            this._isFirstFrame = true
             if (this.maskManager.size > 0) {
-                this.maskManager[0]._isFirstFrame = true;
+                this.maskManager[0]._isFirstFrame = true
             }
         }
     }
 
     public open func createContainerElements() {
-        this.canvasContext = this.globalData.canvasContext;
-        this.transformCanvas = this.globalData.transformCanvas;
+        this.canvasContext = this.globalData.canvasContext
+        this.transformCanvas = this.globalData.transformCanvas
         this.renderableEffectsManager = CvEffects(this)
     }
 
@@ -987,7 +994,7 @@ public open class BaseElement <: Equatable<BaseElement> {
              this.transformCanvas.ty,
              this.transformCanvas.w * this.transformCanvas.sx,
              this.transformCanvas.h * this.transformCanvas.sy
-         );
+         )
     }
 
     public open func changeColor(color: Array<Int64>, endColor: Array<Int64>, index: Int64) {

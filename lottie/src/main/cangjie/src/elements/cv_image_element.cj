@@ -9,12 +9,14 @@ public class CvImageElement <: IImageElement {
     var img =ImgOB()
     public init(data: Layer, globalData: GlobalData,
         buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
-        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()
+        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>(),
+        getElementByIdInRender!: (Int64) -> Option<BaseElement> = { m => Option<BaseElement>.None }
     ) {
         super(data, globalData)
         this.buildElementParentingInComp = buildElementParentingInComp
         this.compType = compType
         this.comp = comp
+        this.getElementByIdInRender = getElementByIdInRender
         this.assetData = globalData.getAssetData(data.refId)
         this.img = globalData.imageLoader.getAsset(this.assetData)
         this.initElement(data, globalData)  //RenderableDOMElement

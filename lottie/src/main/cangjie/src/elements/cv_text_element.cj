@@ -33,12 +33,14 @@ public class CvTextElement <: ITextElement {
 
     public init(data: Layer, globalData: GlobalData,
         buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
-        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>()
+        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>(),
+        getElementByIdInRender!: (Int64) -> Option<BaseElement> = { m => Option<BaseElement>.None }
     ) {
         super(data, globalData)
         this.compType = compType
         this.comp = comp
         this.buildElementParentingInComp = buildElementParentingInComp
+        this.getElementByIdInRender = getElementByIdInRender
         this.textSpans = ArrayList<TextSpans>()
         this.yOffset = 0
         this.fillColorAnim = false
