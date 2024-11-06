@@ -43,7 +43,8 @@ public class LayerParser {
         "bm",     // 24   // Mixed mode
         "hasMask",  // 25   // has "masksProperties"
         "ddd",     // 26   // has "masksProperties"
-        "tp"       // 27
+        "tp" ,
+        "td" // 28
     ]
 
     private static let TEXT_NAMES: Array<String> = [
@@ -91,6 +92,7 @@ public class LayerParser {
 
         var autoOrient: Int64 = 0
         var ddd: Int64 = 0
+        var tdss: Int64 = 0
         var matteType: Int64 = 0
         var blendMode: Int64 = 0
         var transform: AnimatableTransform = AnimatableTransform()
@@ -299,6 +301,9 @@ public class LayerParser {
         if (let Some(v) <- jo.get(NAMES[26])) {
             ddd = v.asInt().getValue()
         }
+        if (let Some(v) <- jo.get(NAMES[28])) {
+            tdss = v.asInt().getValue()
+        }
 
         let layer: Layer = Layer(
             nm: layerName,
@@ -327,7 +332,8 @@ public class LayerParser {
             ao: autoOrient,
             bm: blendMode,
             hasMask: hasMask,
-            ddd: ddd
+            ddd: ddd,
+            td: tdss
         )
         
         if (let Some(v) <- jo.get(NAMES[27])) {"tp"

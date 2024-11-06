@@ -839,6 +839,16 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.effectsManager = EffectsManager(this.data, this.globalData, dynamicProperties: dynamicProperties)
     }
 
+    public func getElementById(ind: Int64): Option<BaseElement> {
+        let len: Int64 = this.elements.size
+        for (i in 0..len) {
+            if (this.elements[i].data.ind == ind) {
+                return this.elements[i]
+            }
+        }
+        return None
+    }
+
     public open func exitLayer () {
         if (this.data.tt >= 1) {
             //恢复图层
@@ -861,8 +871,13 @@ public open class BaseElement <: Equatable<BaseElement> {
             if (tp == -1){
                 tp = this.data.ind - 1
             }
-            let mask: Option<BaseElement> = this.getElementByIdInRender(tp)
-            if (let Some(v) <- mask) {
+            var mask: Option<BaseElement>
+            if (this.compType == 1 && this.comp.size == 1) {
+                mask = this.comp[0].getElementById(tp)
+            } else {
+                mask = this.getElementByIdInRender(tp)
+            }
+            if(let Some(v) <- mask) {
                 v.renderFrame(true)
             }
             //恢复图层
@@ -879,7 +894,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         var globalData = this.globalData
         if (this.data.bm != globalData.blendMode) {
             globalData.blendMode.setValue(this.data.bm)
-            var blendModeValue = getBlendMode(this.data.bm.getValue<Int64>(0))
+            var blendModeValue = getBlendMode(this.data.bm.getValue<Int64>(-1))
             match (blendModeValue) {
                 case "source-over" => canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
                 case _ => canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
