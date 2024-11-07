@@ -26,7 +26,7 @@ public class Layer <: ToString {
     public var ddd: Int64 = 0
 
     public var hasMask: Bool = false
-    public var td: Int64 = 0
+    public var td: Int64
     
     //TODO: this.layers[j].id 是 Layer.ind ？？？
     //public var refId: Int64 = 0
@@ -120,7 +120,8 @@ public class Layer <: ToString {
         ao!: Int64 = 0,
         bm!: Int64 = 0,
         hasMask!: Bool = false,
-        ddd!: Int64 = 0
+        ddd!: Int64 = 0,
+        td!: Int64 = 0
     ){
         this.nm              = nm
         this.ind             = ind
@@ -149,6 +150,7 @@ public class Layer <: ToString {
         this.bm              = UnionType()
         this.hasMask         = hasMask
         this.ddd             = ddd
+        this.td              = td
     }
 
     /**
