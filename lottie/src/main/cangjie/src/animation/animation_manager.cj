@@ -33,6 +33,7 @@ internal import ohos.resource_manager.*
 internal import ohos.bundle_manager.*
 
 internal import ohos.hilog.*
+internal import ohos.system_date_time.*
 
 public class AnimationManager {
 
@@ -392,7 +393,8 @@ public class AnimationManager {
                 }
 
                 //TODO：数据类型需要再确认，是时间格式还是数值格式？？？  //initTime = Date.now()
-                initTime = DateTime.now().toUnixTimeStamp().toMilliseconds()
+                //initTime = DateTime.now().toUnixTimeStamp().toMilliseconds()
+                initTime = SystemDateTime.getCurrentTime()
                 let options: AnimatorOptions = AnimatorOptions(
                     duration: 20000,
                     easing: "linear",
@@ -410,7 +412,7 @@ public class AnimationManager {
                 backAnimator.onframe = { value: Float64  =>
                     AppLog.info("onframe called ${value}")
                     // js 中 Date.now()：返回自1970年1月1日午夜（UTC）以来经过的毫秒数  //resume(Date.now())
-                    resume(DateTime.now().toUnixTimeStamp().toMilliseconds())
+                    resume(SystemDateTime.getCurrentTime())
                 }
                 backAnimator.play()
                 this._animator = backAnimator

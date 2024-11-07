@@ -20,17 +20,17 @@ class WorkerProxy {
 
     //TODO：参数 e 没有直接用，一直用的是 e.data，参数直接改成 e.data-----------------------------------------------2024.07.08
     //var workerFn: (e) -> Unit
-    var workerFn: (Data) -> AnimationData = default_Data_To_AnimationData
+    var workerFn: (Data) -> Unit = default_Data_To_AnimationData
     
     //workerProxy.onmessage 实际的逻辑代码在后面 setupWorker 中 workerInstance.onmessage
     //TODO: 需要和 workerInstance 关联
     var onmessage: (Data) -> Unit = default_Data_To_Unit
     
     init(){}
-    init(workerFn: (Data) -> AnimationData){
+    init(workerFn: (Data) -> Unit){
         this.workerFn = workerFn
     }
-    init(workerFn: (Data) -> AnimationData, onmessage: (Data) -> Unit){
+    init(workerFn: (Data) -> Unit, onmessage: (Data) -> Unit){
         this.workerFn = workerFn
         this.onmessage = onmessage
     }
@@ -53,7 +53,7 @@ public class DataManager {
     var processes: HashMap<String, Processes> = HashMap<String, Processes>(24)
     //TODO: 未确认 e 的数据类型
     //TODO：参数 e 没有直接用，一直用的是 e.data，参数直接改成 e.data-----------------------------------------------2024.07.08
-    var workerFn: (Data) -> AnimationData = default_Data_To_AnimationData
+    var workerFn: (Data) -> Unit = default_Data_To_AnimationData
     
     //TODO：需要增加一个 WorkerProxy 的无参构造 -- 调整后不需要无参构造
     var workerInstance: WorkerProxy = WorkerProxy()
@@ -78,7 +78,7 @@ public class DataManager {
 
     //4.
     //TODO：createWorker 和 init 合并？？？
-    func createWorker(fn: (Data) -> AnimationData): WorkerProxy {
+    func createWorker(fn: (Data) -> Unit): WorkerProxy {
         this.workerFn = fn   //workerFn = func workerStart
         //5.
         //TODO: workerProxy 独立成一个对象，还是拆开融入到 DataManager 中 ？？？
@@ -123,8 +123,8 @@ public class DataManager {
 
     //在开发此函数--20240708
     //TODO：参数 e 没有直接用，一直用的是 e.data，参数直接改成 e.data-----------------------------------------------2024.07.08
-    func workerStart(data: Data): AnimationData {
-        var animationData: AnimationData = AnimationData(isNull: true)
+    func workerStart(data: Data): Unit {
+        //var animationData: AnimationData = AnimationData(isNull: true)
         if (data.types == "loadAnimation") {
 
             //[3]-回调函数 callback 的参数 animationData，就是拿到解析 json 后封装好的 AnimationData。
@@ -139,7 +139,7 @@ public class DataManager {
             
             //TODO：assetLoader 只在 workerStart 函数内部调用，是否将 assetLoader 融入到 DataManager 中？？？
             //[1]-在此函数调用时，拿到解析 json 后封装好的 AnimationData，结果在回调函数 callback 中。
-            animationData = assetLoader.load(
+            assetLoader.load(
                 this.context,
                 //TODO：context2D 在 cj 的 assetLoader.load 函数中用不上。
                 //data.context2D,
@@ -158,7 +158,7 @@ public class DataManager {
               animation: animation,
               status: "success"
             ))
-            animationData = animation
+            //animationData = animation
         } else if (data.types == "loadData") {
             func callback(animationData: AnimationData): Unit {
                 //postMessage(Data(id: e.data.id, payload: animationData, status: "success"))
@@ -168,7 +168,7 @@ public class DataManager {
                 postMessage(Data(id: data.id, status: "error"))
             }
             
-            animationData = assetLoader.load(
+            assetLoader.load(
                 this.context,
                 data.path,
                 data.fullPath,
@@ -176,7 +176,7 @@ public class DataManager {
                 errorCallback
             )
         }
-        return animationData
+        //return animationData
     }
 
     func completeLayers(layers: Array<Layer>, comps: Array<Asset>): Unit {
@@ -497,27 +497,29 @@ class AssetLoader {
     //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
     //TODO：context2D 在 cj 的此函数中用不上。
     //func loadAsset(context2D: CanvasRenderingContext2D, path: String, fullPath: String, callback: (AnimationData) -> Unit, errorCallback: () -> Unit) {
-    func loadAsset(context: Option<AbilityContext>, path: String, fullPath: String, callback: (AnimationData) -> Unit, errorCallback: () -> Unit): AnimationData {
+    func loadAsset(context: Option<AbilityContext>, path: String, fullPath: String, callback: (AnimationData) -> Unit, errorCallback: () -> Unit): Unit {
         //根据 path 获取 json 文件中信息，转为 String 类型
 //        var jsonString = context2D.getJsonData(path)
-        let jsonString: String = readFile(context, path)
-        var jsonData: AnimationData = AnimationData(isNull: true)
-        if (jsonString != "") {
-            /**
-             * 将字符串转为 json 对象.
-             * cj 直接调用 AnimationDataParser.parse(reader: String): AnimationData
-             */
-            //var jsonData = JSON.parse(jsonString)
-            jsonData = AnimationDataParser.parse(jsonString)
-            //不用判断 jsonData 是否是 null，cj中如果解析封装失败会抛出异常。
-            //if (jsonData) {
-                callback(jsonData)
-            //}
-        } else {
-            //errorCallback("Lottie4cj: the path has no data!")
-            errorCallback()
-        }
-        return jsonData
+        Timer.once(Duration.Zero, { =>
+            let jsonString: String = readFile(context, path)
+            var jsonData: AnimationData = AnimationData(isNull: true)
+            if (jsonString != "") {
+                /**
+                 * 将字符串转为 json 对象.
+                 * cj 直接调用 AnimationDataParser.parse(reader: String): AnimationData
+                 */
+                //var jsonData = JSON.parse(jsonString)
+                jsonData = AnimationDataParser.parse(jsonString)
+                //不用判断 jsonData 是否是 null，cj中如果解析封装失败会抛出异常。
+                //if (jsonData) {
+                    callback(jsonData)
+                //}
+            } else {
+                //errorCallback("Lottie4cj: the path has no data!")
+                errorCallback()
+            }
+            //return jsonData
+        })
     }
     
     func readFile(context: Option<AbilityContext>, path: String): String {
@@ -546,8 +548,8 @@ class AssetLoader {
     //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
     //TODO：context2D 在 cj 的此函数中用不上。
     //func load(context2D!: CanvasRenderingContext2D, path!: String, fullPath!: String, callback!: (AnimationData) -> Unit, errorCallback!: () -> Unit) {
-    func load(context: Option<AbilityContext>, path: String, fullPath: String, callback: (AnimationData) -> Unit, errorCallback: () -> Unit): AnimationData {
-        return this.loadAsset(context, path, fullPath, callback, errorCallback)
+    func load(context: Option<AbilityContext>, path: String, fullPath: String, callback: (AnimationData) -> Unit, errorCallback: () -> Unit): Unit {
+        this.loadAsset(context, path, fullPath, callback, errorCallback)
     }
 
     //return {
