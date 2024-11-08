@@ -187,8 +187,8 @@ public class AnimationItem <: BaseEvent {
         //数据来源分析：SVGRenderer  =>  var defs = createNS("defs")
         //TODO：AbilityContext 是仓颉 UI 中的系统组件 api，暂时不联合编译
         //this.imagePreloader.setCacheType(animTypes, this.renderer.globalData.defs, this.context)
-        this.imagePreloader.setCacheType(animTypes, this.renderer.globalData.defs)
-        this.imagePreloader.context = params.context
+        this.imagePreloader.setCacheType(animTypes, this.renderer.globalData.defs, params.context)
+        //this.imagePreloader.context = params.context
 
         //TODO: 未实现 renderer.setProjectInterface  //this.renderer.setProjectInterface(this.projectInterface)
         this.animType = animTypes
@@ -232,7 +232,7 @@ public class AnimationItem <: BaseEvent {
                 this.fileName = this.fileName[0 .. index3]
             }
 
-            let animationData: AnimationData = dataManager.loadAnimation(
+            dataManager.loadAnimation(
                 params.context,
                 //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.wrapper,--【传入后无具体应用，改为不传入此参数】
                 params.path,
@@ -359,6 +359,7 @@ public class AnimationItem <: BaseEvent {
     
     public func imagesLoaded(): Unit {
         this.trigger("loaded_images")
+        Hilog.error(0, "----lp-------", "[imagesLoaded]: --------------------------------")
         this.checkLoaded()
     }
 
@@ -396,6 +397,7 @@ public class AnimationItem <: BaseEvent {
             this.markers = markerParser(animData.markers)
 
             this.trigger("config_ready")
+            Hilog.error(0, "lipei", "[configAnimation]begin preloadImages------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
             this.preloadImages()
             this.loadSegments()
             this.updaFrameModifier()
@@ -421,11 +423,12 @@ public class AnimationItem <: BaseEvent {
         } else {
             //TODO：setTimeout 第二个参数：延迟的时间，单位是毫秒。
             //TODO: 此处需要不停触发吗？？？
-            //Timer.once(Duration.millisecond * 20, this.waitForFontsLoaded)
+            Timer.once(Duration.millisecond * 20, this.waitForFontsLoaded)
         }
     }
     
     public func checkLoaded(): Unit {
+        Hilog.error(0, "lipei", "---come in checkLoaded----------------------------1")
         if (!hasRenderer) {
             return
         }
@@ -435,6 +438,8 @@ public class AnimationItem <: BaseEvent {
               && (this.imagePreloader.loadedImages() || this.renderer.rendererType != "canvas")
               && (this.imagePreloader.loadedFootages())
         ) {
+            Hilog.error(0, "lipei", "---come in checkLoaded-----------------------------------------------------------2")
+            Hilog.error(0, "lipei", "[checkLoaded]------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
             this.isLoaded = true
             //TODO：暂未实现 getExpressionsPlugin
             /*
@@ -444,18 +449,23 @@ public class AnimationItem <: BaseEvent {
                 expressionsPlugin.initExpressions(this)
             }
             */
+            Hilog.error(0, "lipei", "[checkLoaded] begin initItems------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
             // 初始化所有元素
             this.renderer.initItems()//初始化所有图层
+            Hilog.error(0, "lipei", "[checkLoaded] end initItems------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
 
             //TODO：即刻运行的定时器，是否可以改为，按照顺序执行代码逻辑？？？   //setTimeout(function () { this.trigger("DOMLoaded") }.bind(this), 0)
-            //Timer.once(Duration.second * 0, {=>
-            //        this.trigger("DOMLoaded")
-            //        })
+            Timer.once(Duration.second * 0, {=>
+                this.trigger("DOMLoaded")
+            })
 
             //Hilog.error(0, "liyanqing", "this.trigger")
+            Hilog.error(0, "lipei", "[checkLoaded] start gotoFrame------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
 
             // 渲染第一帧
             this.gotoFrame()
+
+            Hilog.error(0, "lipei", "[checkLoaded] end gotoFrame------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
             // 自动播放
             if (this.autoplay) {
                 this.play() //播放动画

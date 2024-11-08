@@ -22,6 +22,7 @@ internal import ohos.image.ImageInfo
 internal import ohos.image.InitializationOptions
 internal import ohos.image.createPixelMap
 
+
 @Entry
 @Component
 class LottieSample {
@@ -92,7 +93,8 @@ class LottieSample {
                         Row() {
                             Button("加载2016").onClick {
                                 evt =>
-                                //lottie.destroy("phonemoney")
+                                Hilog.error(0, "lipei", "begin------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
+                                    //lottie.destroy("phonemoney")
                                 if (this.animateItem.isNone()) {
                                      this.animateItem = lottie.loadAnimation(AnimationConfig(
                                         wrapper_ns: CreateNS("doc"),

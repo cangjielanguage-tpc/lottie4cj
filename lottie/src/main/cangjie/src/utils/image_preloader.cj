@@ -5,6 +5,7 @@
 package lottie.utils
 
 internal import ohos.hilog.*
+internal import ohos.system_date_time.*
 
 internal import std.sync.*
 internal import std.time.*
@@ -48,8 +49,8 @@ public class ImagePreloader {
     var path: String = ""
     var totalImages: Int64 = 0
     var totalFootages: Int64 = 0
-    var loadedAssets: Int64 = 0
-    var loadedFootagesCount: Int64 = 0
+    let loadedAssets: AtomicInt64 = AtomicInt64(0)
+    let loadedFootagesCount: AtomicInt64 = AtomicInt64(0)
     
     //TODO: 未确认成员变量中数据类型
     var imagesLoadedCb: () -> Unit = default_Unit_To_Unit
@@ -69,6 +70,8 @@ public class ImagePreloader {
     //generatePixelMapAndRefreshUI的入参ob可能为undefined，所以这里需要每隔一段时间检测一下ob是否实例化好了
     var isOB: Bool = false
 
+    static let mtx = ReentrantMutex()
+
     /**
      * Create a ImagePreloader instance.
      */
@@ -81,10 +84,15 @@ public class ImagePreloader {
      * The image has been loaded.
      */
     public func imageLoaded(): Unit {
-        this.loadedAssets += 1
-        if (this.loadedAssets == this.totalImages && this.loadedFootagesCount == this.totalFootages) {
-            if (this.imagesLoadedCbFlag) {
-                this.imagesLoadedCb()
+        //this.loadedAssets += 1
+        synchronized(mtx) {
+            this.loadedAssets.fetchAdd(1)
+            if (this.loadedAssets.load() == this.totalImages && this.loadedFootagesCount.load() == this.totalFootages) {
+                if (this.imagesLoadedCbFlag) {
+                    Hilog.error(0, "-----------", "[imageLoaded]: this.loadedAssets.load() = ${this.loadedAssets.load()}")
+                    Hilog.error(0, "-----------", "[imageLoaded]: this.totalImages = ${this.totalImages}")
+                    this.imagesLoadedCb()
+                }
             }
         }
     }
@@ -93,8 +101,9 @@ public class ImagePreloader {
      * The footage has been loaded.
      */
     public func footageLoaded(): Unit {
-        this.loadedFootagesCount += 1
-        if (this.loadedAssets == this.totalImages && this.loadedFootagesCount == this.totalFootages) {
+        //this.loadedFootagesCount += 1
+        this.loadedFootagesCount.fetchAdd(1)
+        if (this.loadedAssets.load() == this.totalImages && this.loadedFootagesCount.load() == this.totalFootages) {
             if (this.imagesLoadedCbFlag) {
                 this.imagesLoadedCb()
             }
@@ -159,14 +168,16 @@ public class ImagePreloader {
             desiredPixelFormat: PixelMapFormat.RGBA_8888
         )
         //创建 pixel_map
-        let pixelMap: PixelMap = imageSource.createPixelMap(options: opts)
-        //TODO: OB.img 从元组改为对象？？？
-        ob.img.pixel_map = pixelMap
-        //获取解析出来的 pixel_map 的宽、高
-        let imageInfo: ImageInfo = pixelMap.getImageInfo()
-        ob.img.width = Int64(imageInfo.size.width)
-        ob.img.height = Int64(imageInfo.size.height)
-        callback()
+        spawn {
+            let pixelMap: PixelMap = imageSource.createPixelMap(options: opts)
+            //TODO: OB.img 从元组改为对象？？？
+            ob.img.pixel_map = pixelMap
+            //获取解析出来的 pixel_map 的宽、高
+            let imageInfo: ImageInfo = pixelMap.getImageInfo()
+            ob.img.width = Int64(imageInfo.size.width)
+            ob.img.height = Int64(imageInfo.size.height)
+            callback()
+        }
     }
 
     func generatePixelMapAndRefreshUI2(fid: Int32, ob: OB, callback: () -> Unit) {
@@ -179,13 +190,15 @@ public class ImagePreloader {
             desiredPixelFormat: PixelMapFormat.RGBA_8888
         )
         //创建 pixel_map
-        let pixelMap: PixelMap = imageSource.createPixelMap(options: opts)
-        ob.img.pixel_map = pixelMap
-        //获取解析出来的 pixel_map 的宽、高
-        let imageInfo: ImageInfo = pixelMap.getImageInfo()
-        ob.img.width = Int64(imageInfo.size.width)
-        ob.img.height = Int64(imageInfo.size.height)
-        callback()
+        spawn {
+            let pixelMap: PixelMap = imageSource.createPixelMap(options: opts)
+            ob.img.pixel_map = pixelMap
+            //获取解析出来的 pixel_map 的宽、高
+            let imageInfo: ImageInfo = pixelMap.getImageInfo()
+            ob.img.width = Int64(imageInfo.size.width)
+            ob.img.height = Int64(imageInfo.size.height)
+            callback()
+        }
     }
 
     func generatePixelMapAndRefreshUI2(uri: String, ob: OB, callback: () -> Unit) {
@@ -198,13 +211,15 @@ public class ImagePreloader {
             desiredPixelFormat: PixelMapFormat.RGBA_8888
         )
         //创建 pixel_map
-        let pixelMap: PixelMap = imageSource.createPixelMap(options: opts)
-        ob.img.pixel_map = pixelMap
-        //获取解析出来的 pixel_map 的宽、高
-        let imageInfo: ImageInfo = pixelMap.getImageInfo()
-        ob.img.width = Int64(imageInfo.size.width)
-        ob.img.height = Int64(imageInfo.size.height)
-        callback()
+        spawn {
+            let pixelMap: PixelMap = imageSource.createPixelMap(options: opts)
+            ob.img.pixel_map = pixelMap
+            //获取解析出来的 pixel_map 的宽、高
+            let imageInfo: ImageInfo = pixelMap.getImageInfo()
+            ob.img.width = Int64(imageInfo.size.width)
+            ob.img.height = Int64(imageInfo.size.height)
+            callback()
+        }
     }
 
     /**
@@ -295,23 +310,27 @@ public class ImagePreloader {
                         //let isExist: Bool = File.exists(filePath)
                         
                         if (isExist) {
-                            /* 直接读取文件中所有数据 */
-                            try {
-                                //let arrayBuffer: Array<Byte> = File.readFrom(filePath)
-                                let file = FileFs.open(filePath, mode: READ_ONLY.mode)
-                                let stat = FileFs.stat(filePath)
-                                let arrayBuffer: Array<Byte> = Array<Byte>(stat.size, item: 0)
-                                FileFs.read(file.fd, arrayBuffer)
-                                FileFs.close(file)
+                            spawn {
+                                /* 直接读取文件中所有数据 */
+                                try {
+                                    //let arrayBuffer: Array<Byte> = File.readFrom(filePath)
+                                    let file = FileFs.open(filePath, mode: READ_ONLY.mode)
+                                    let stat = FileFs.stat(filePath)
+                                    let arrayBuffer: Array<Byte> = Array<Byte>(stat.size, item: 0)
 
-                                //TODO: 模拟器调试暂时注掉，因为调用 createPixelMap 会崩掉--------------------
-                                //callback()  //TODO: 测试用，后续删除。
+                                    FileFs.read(file.fd, arrayBuffer)
+                                    FileFs.close(file)
 
-                                generatePixelMapAndRefreshUI2(arrayBuffer, ob, callback)
-                                //generatePixelMapAndRefreshUI2(file.fd, ob, callback)  //TODO: 测试用，后续删除。
-                            } catch (e: Exception) {
-                                //加载依赖图片异常时，默认动画加载正常
-                                callback()
+                                    //TODO: 模拟器调试暂时注掉，因为调用 createPixelMap 会崩掉--------------------
+                                    //callback()  //TODO: 测试用，后续删除。
+
+                                    generatePixelMapAndRefreshUI2(arrayBuffer, ob, callback)
+                                    //generatePixelMapAndRefreshUI2(file.fd, ob, callback)  //TODO: 测试用，后续删除。
+
+                                } catch (e: Exception) {
+                                    //加载依赖图片异常时，默认动画加载正常
+                                    callback()
+                                }
                             }
                         } else {
                             //获取rawfile的字节数组数据
@@ -320,16 +339,18 @@ public class ImagePreloader {
                                 //AppLog.info("get globalAbilityContext successfully")
                                 let stageContext = getStageContext(v)
                                 let rm: ResourceManager = ResourceManager.getResourceManager(stageContext)
-                                try {
-                                    //TODO: 模拟器调试暂时注掉，因为调用 createPixelMap 会崩掉--------------------
-                                    //callback()  //TODO: 测试用，后续删除。
-                                    let buffer: Array<UInt8> = rm.getRawFileContent(res)
-                                    generatePixelMapAndRefreshUI2(buffer, ob, callback)
-                                } catch (e: Exception) {
-                                    let message = e.message
-                                    //Hilog.info("getRawFileContent failed, error code: ${code}, message: ${message}.")
-                                    //加载依赖图片异常时，默认动画加载正常
-                                    callback()
+                                spawn {
+                                    try {
+                                        //TODO: 模拟器调试暂时注掉，因为调用 createPixelMap 会崩掉--------------------
+                                        //callback()  //TODO: 测试用，后续删除。
+                                        let buffer: Array<UInt8> = rm.getRawFileContent(res)
+                                        generatePixelMapAndRefreshUI2(buffer, ob, callback)
+                                    } catch (e: Exception) {
+                                        let message = e.message
+                                        //Hilog.info("getRawFileContent failed, error code: ${code}, message: ${message}.")
+                                        //加载依赖图片异常时，默认动画加载正常
+                                        callback()
+                                    }
                                 }
                             }
 
@@ -409,6 +430,7 @@ public class ImagePreloader {
     //TODO: 在 json 中找不到 assets[i].t,此步执行无意义！--------------------------------------------------------2024.07.11
     public func loadAssets(assets: Array<Asset>, cb: () -> Unit): Unit {
         this.imagesLoadedCb = cb
+        this.imagesLoadedCbFlag = true
         let len: Int64 = assets.size
         for (i in 0..len) {
             if (assets[i].layers.size <= 0) {
@@ -478,7 +500,7 @@ public class ImagePreloader {
      * @return Type of Bool.
      */
     public func loadedImages(): Bool {
-        return this.totalImages == this.loadedAssets
+        return this.totalImages == this.loadedAssets.load()
     }
 
     /**
@@ -487,7 +509,7 @@ public class ImagePreloader {
      * @return Type of Bool.
      */
     public func loadedFootages(): Bool {
-        return this.totalFootages == this.loadedFootagesCount
+        return this.totalFootages == this.loadedFootagesCount.load()
     }
 
     /**
@@ -498,9 +520,9 @@ public class ImagePreloader {
      * @param context - Type of AbilityContext.
      */
     //TODO：AbilityContext 是仓颉 UI 中的系统组件 api，暂时不联合编译
-    //public func setCacheType(types: String, elementHelper: CreateNS, context: AbilityContext) {
-    public func setCacheType(types: String, elementHelper: CreateNS): Unit {
-        //this.context = context
+    public func setCacheType(types: String, elementHelper: CreateNS, context: Option<AbilityContext>) {
+    //public func setCacheType(types: String, elementHelper: CreateNS): Unit {
+        this.context = context
         if (types == "svg") {
             this._elementHelper = elementHelper
             this._createImageData = this.createImageData

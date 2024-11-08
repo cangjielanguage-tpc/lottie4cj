@@ -55,7 +55,7 @@ class Data <: ToString {
 }
 
 func default_Data_To_Unit(data: Data): Unit {}
-func default_Data_To_AnimationData(data: Data): AnimationData { return AnimationData() }
+func default_Data_To_AnimationData(data: Data): Unit { return () }
 
 func checkVersion(minimum: Array<Int64>, animVersionString: String): Bool {
     //var animVersion = animVersionString ? animVersionString.split('.') : [100, 100, 100]
