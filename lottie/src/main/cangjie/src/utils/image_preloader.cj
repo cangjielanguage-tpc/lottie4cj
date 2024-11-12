@@ -66,9 +66,6 @@ public class ImagePreloader {
     // 使用空对象替代不支持动态创建的Canvas组件
     //let proxyImage: CreateNS = CreateNS("")
     let proxyImage: ImgOB = ImgOB(isNull: true)
-    
-    //generatePixelMapAndRefreshUI的入参ob可能为undefined，所以这里需要每隔一段时间检测一下ob是否实例化好了
-    var isOB: Bool = false
 
     static let mtx = ReentrantMutex()
 
@@ -160,7 +157,6 @@ public class ImagePreloader {
     //TODO: ob 未确认数据类型
     func generatePixelMapAndRefreshUI2(data: Array<UInt8>, ob: OB, callback: () -> Unit) {
         //TODO：image 系统 api 函数，暂时不联合编译
-        this.isOB = true
         let imageSource = createImageSource(data)
         //piexlmap 改成不可编辑状态，优化图形图像端读取速度
         let opts: DecodingOptions = DecodingOptions(
@@ -182,7 +178,6 @@ public class ImagePreloader {
 
     func generatePixelMapAndRefreshUI2(fid: Int32, ob: OB, callback: () -> Unit) {
         //TODO：image 系统 api 函数，暂时不联合编译
-        this.isOB = true
         let imageSource = createImageSource(fid)
         //piexlmap 改成不可编辑状态，优化图形图像端读取速度
         let opts: DecodingOptions = DecodingOptions(
@@ -201,9 +196,12 @@ public class ImagePreloader {
         }
     }
 
-    func generatePixelMapAndRefreshUI2(uri: String, ob: OB, callback: () -> Unit) {
+    func generatePixelMapAndRefreshUI2(uri: String, ob: OB, callback: (isOB: Bool) -> Unit) {
         //TODO：image 系统 api 函数，暂时不联合编译
-        this.isOB = true
+        if (ob.isNull) {
+        	callback(false)
+        }
+
         let imageSource = createImageSource(uri)
         //piexlmap 改成不可编辑状态，优化图形图像端读取速度
         let opts: DecodingOptions = DecodingOptions(
@@ -218,7 +216,7 @@ public class ImagePreloader {
             let imageInfo: ImageInfo = pixelMap.getImageInfo()
             ob.img.width = Int64(imageInfo.size.width)
             ob.img.height = Int64(imageInfo.size.height)
-            callback()
+            callback(true)
         }
     }
 
@@ -360,21 +358,19 @@ public class ImagePreloader {
                 } else if (assetData.e == TYPE_IMAGE_SOURCE_BASE64) { //base64图片
                     //generatePixelMapAndRefreshUI的入参ob可能为undefined，所以这里需要每隔一段时间检测一下ob是否实例化好了
                     //let task_id = setInterval(() => , 10)
-                    func inside() {
-                        if (!this.isOB) {
-                            return
-                        }
+                    func inside(): Unit {
                         //TODO: 模拟器调试暂时注掉，因为调用 createPixelMap 会崩掉--------------------
-                        generatePixelMapAndRefreshUI2(assetData.p, ob, callback)
+                        generatePixelMapAndRefreshUI2(assetData.p, ob, {
+                           isOB  =>
+                             if (!isOB) { // 加载失败，重新触发
+                                Timer.once(Duration.millisecond * 20, inside)
+                             } else {
+                             	callback()
+                             }
+                        })
 
-                        //取消循环检测
-                        //clearInterval(task_id)
-                        if (let Some(v) <- this.timer) {
-                            v.cancel()
-                        }
                     }
-                    
-                    this.timer = Timer.repeat(Duration.millisecond, Duration.millisecond * 10, inside)
+                    Timer.once(Duration.millisecond * 20, inside)
                 }
             }
         }

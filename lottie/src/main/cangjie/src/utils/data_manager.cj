@@ -529,12 +529,7 @@ class AssetLoader {
         } else {
             let stageContext = getStageContext(context.getOrThrow())
             let resMgr = ResourceManager.getResourceManager(stageContext)
-            try {
-                buf = resMgr.getRawFileContent(path)
-            } catch (e: Exception) {
-                let message = e.message
-//                Hilog.info("getRawFileContent failed, error code: ${code}, message: ${message}.")
-            }
+            buf = resMgr.getRawFileContent(path)
         }
 
 //        let file: File = File(path, OpenOption.Open(true, true))
