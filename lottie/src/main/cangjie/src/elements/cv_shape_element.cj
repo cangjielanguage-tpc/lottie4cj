@@ -763,8 +763,7 @@ public class CvShapeElement <: IShapeElement {
     }
 
     //public func renderPath(pathData: ShapeDataInCV, itemData: Object) {
-    public func renderPath(pathDatas: ContentModel, itemDatas: ContentModelElement) {
-        var pathData = (pathDatas as ShapePath).getOrThrow()
+    public func renderPath(pathData: ContentModel, itemDatas: ContentModelElement) {
         var itemData = (itemDatas as CvShapeData).getOrThrow()
         if (pathData.hd != true && pathData._shouldRender) {
             var len = itemData.styledShapes.size
