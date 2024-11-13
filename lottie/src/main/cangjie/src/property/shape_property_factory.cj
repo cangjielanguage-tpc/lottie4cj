@@ -245,7 +245,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
 
         sp.v.c = true
         sp.localShapeCollection.addShape(sp.v)
-        
+        sp.paths = sp.localShapeCollection
         //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
         sp.initDynamicPropertyContainer(elemGlobalData, elemData)
         
@@ -292,7 +292,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         sp.v.setPathData(true, 4)
         sp.localShapeCollection.addShape(sp.v)
         sp.d = data.d
-
+        sp.paths = sp.localShapeCollection
         //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
         sp.initDynamicPropertyContainer(elemGlobalData, elemData)
         
@@ -391,7 +391,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         }
         
         sp.localShapeCollection.addShape(sp.v)
-        
+        sp.paths=sp.localShapeCollection
         if (sp.dynamicProperties.size != 0) {
             sp.k = true
         } else {
