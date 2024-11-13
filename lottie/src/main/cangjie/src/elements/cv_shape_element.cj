@@ -39,8 +39,8 @@ public class CvShapeElement <: IShapeElement {
         this.shapes = ArrayList<CvShapeData>()
         this.shapesData = data.shapes   //原生的 Layer.shapes
         this.stylesList = ArrayList<StyleElem>()
-        this.itemsData = Array<ContentModelElement>(this.shapesData.size, item: ContentModelElement())  //储存的是处理后的 Layer.shapes
-        this.prevViewData = Array<ContentModelElement>(this.shapesData.size, item: ContentModelElement())
+        this.itemsData = Array<ContentModelElement>(this.shapesData.size, item: empty_ContentModelElement)  //储存的是处理后的 Layer.shapes
+        this.prevViewData = Array<ContentModelElement>(this.shapesData.size, item: empty_ContentModelElement)
         this.shapeModifiers = ArrayList<ShapeModifier>()
         this.processedElements = ArrayList<ProcessedElement>()
         this.transformsManager = ShapeTransformManager()
@@ -52,12 +52,13 @@ public class CvShapeElement <: IShapeElement {
 //    }
 
     //初始化一个空的 TransformInElement。
-    public func transformHelper(): TransformInElement {
-        return TransformInElement(opacity: 1.0, _opMdf: false,
-            op: PropertyFactory<ArrayKeyframeInt64, Int64>(ArrayKeyframeInt64(), 0.0, dp, GlobalData(), Layer(), dynamicProperties: this.dynamicProperties),
-            mProps: TransformProperty(isNull: true, dynamicProperties: this.dynamicProperties)
-        )
-    }
+    public let transformHelper: TransformInElement = TransformInElement(opacity: 1.0, _opMdf: false, op: empty_pf_ArrayKeyframeInt64_Int64, mProps: empty_tp)
+    //public func transformHelper(): TransformInElement {
+    //    return TransformInElement(opacity: 1.0, _opMdf: false,
+    //        op: PropertyFactory<ArrayKeyframeInt64, Int64>(ArrayKeyframeInt64(), 0.0, dp, GlobalData(), Layer(), dynamicProperties: this.dynamicProperties),
+    //        mProps: TransformProperty(isNull: true, dynamicProperties: this.dynamicProperties)
+    //    )
+    //}
 
     public func dashResetter() {
         Array<Float64>()
@@ -189,8 +190,8 @@ public class CvShapeElement <: IShapeElement {
     public func createGroupElement(datas: ShapeGroup): ShapeGroupElement {
         let elementData = ShapeGroupElement()
         let len: Int64 = datas.it.size
-        elementData.it = Array<ContentModelElement>(len, item: ContentModelElement())
-        elementData.prevViewData = Array<ContentModelElement>(len, item: ContentModelElement())
+        elementData.it = Array<ContentModelElement>(len, item: empty_ContentModelElement)
+        elementData.prevViewData = Array<ContentModelElement>(len, item: empty_ContentModelElement)
         return elementData
     }
 
@@ -363,12 +364,12 @@ public class CvShapeElement <: IShapeElement {
     }
 
     public override func renderInnerContent() {
-        this.transformHelper().opacity = 1.0
-        this.transformHelper()._opMdf = false
+        this.transformHelper.opacity = 1.0
+        this.transformHelper._opMdf = false
         this.renderModifiers()
 
         this.transformsManager.processSequences(this._isFirstFrame)
-        this.renderShape(this.transformHelper(), this.shapesData, this.itemsData, isMain:true)
+        this.renderShape(this.transformHelper, this.shapesData, this.itemsData, isMain:true)
     }
 
     public func renderShapeTransform(parentTransform: TransformInElement, groupTransform: TransformInElement) {

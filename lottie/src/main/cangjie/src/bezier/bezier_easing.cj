@@ -21,9 +21,9 @@ public class BezierEasing {
     let kSampleStepSize: Float64 = 1.0 / (Float64(kSplineTableSize) - 1.0)
 
 
-    var _p: Array<Float64> = Array<Float64>()
-    var _mSampleValues: Array<Float64> = Array<Float64>()
-    var _precomputed: Bool = false
+    var _p: Array<Float64>
+    var _mSampleValues: Array<Float64>
+    var _precomputed: Bool
 
     //var beziers: HashMap<String, BezierEasing> = HashMap<String, BezierEasing>(24)
 
@@ -169,5 +169,3 @@ public class BezierEasing {
     }
 
 }
-
-

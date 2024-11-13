@@ -5,7 +5,7 @@
 package lottie.property
 
 class DataProp<T, E> where T <: ToString , E <: ToString { 
-    var n: String = ""
+    var n: String
     var p: PropertyFactory<T, E>
 
     init(n!: String, p!: PropertyFactory<T, E>){

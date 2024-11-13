@@ -8,17 +8,21 @@ public open class ZigZagModifier <: ShapeModifier {
     //TODO：拆分多继承问题 -- extendPrototype([ShapeModifier], ZigZagModifier)
 
     //TODO: 暂定ZigZagModifier 对应 PolystarShape 数据类型。
-    var amplitude: PropertyFactory<ArrayKeyframeFloat64, Float64>
-    var frequency: PropertyFactory<ArrayKeyframeFloat64, Float64>
-    var pointsType: PropertyFactory<ArrayKeyframeFloat64, Float64>
+    var amplitude: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>>
+    var frequency: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>>
+    var pointsType: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>>
 
     public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>){
         super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.amplitude = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+
+        this.amplitude = None
+        this.frequency = None
+        this.pointsType = None
+
+//        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+//        this.amplitude = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+//        this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+//        this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
     }
     
     public func getValue(): Unit {
@@ -39,19 +43,42 @@ public open class ZigZagModifier <: ShapeModifier {
             } else if (sr.r.k.size > 1) {//走【分支3】
                 this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(sr.r, sr.r.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
             }
-            this.frequency.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-            this.frequency.container = [this]
+
+            if (let Some(value) <- frequency) {
+            	value.containerType = 3
+                value.container = [this]
+            }
+//            this.frequency.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+//            this.frequency.container = [this]
             
             if (sr.pt.k.size == 1) {//走【分支1】
                 this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(sr.pt, sr.pt.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
             } else if (sr.pt.k.size > 1) {//走【分支3】
                 this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(sr.pt, sr.pt.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
             }
-            this.pointsType.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-            this.pointsType.container = [this]
-        }
 
-        this._isAnimated = this.amplitude.effectsSequence.size != 0 || this.frequency.effectsSequence.size != 0 || this.pointsType.effectsSequence.size != 0
+            if (let Some(value) <- pointsType) {
+            	value.containerType = 3
+                value.container = [this]
+            }
+
+//            this.pointsType.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+//            this.pointsType.container = [this]
+        }
+        this._isAnimated = (if (let Some(value) <- amplitude) {
+            value.effectsSequence.size != 0
+        } else {
+        	false
+        }) || (if (let Some(value) <- frequency) {
+            value.effectsSequence.size != 0
+        } else {
+        	false
+        }) || (if (let Some(value) <- pointsType) {
+            value.effectsSequence.size != 0
+        } else {
+        	false
+        })
+//        this._isAnimated = this.amplitude.effectsSequence.size != 0 || this.frequency.effectsSequence.size != 0 || this.pointsType.effectsSequence.size != 0
     }
 
     public func processPath(path: ShapeData, amplitude: Float64, frequency: Float64, pointType: Float64): ShapeData {
@@ -91,12 +118,30 @@ public open class ZigZagModifier <: ShapeModifier {
         var shapePaths: ArrayList<ShapeData> = ArrayList<ShapeData>()
         var len: Int64 = this.shapes.size
         var jLen: Int64 = 0
+
+        var amplitude_v: Array<Float64> = if (let Some(value) <- amplitude) {
+            value.v
+        } else {
+        	Array<Float64>()
+        }
+
+        var frequency_v: Float64 = max(0.0, round(if (let Some(value) <- frequency) {
+            value.v[0]
+        } else {
+        	0.0
+        }))
+
+        var pointType_v: Array<Float64> = if (let Some(value) <- pointsType) {
+            value.v
+        } else {
+        	Array<Float64>()
+        }
+
+//        var amplitude_v: Array<Float64> = this.amplitude.v
         
-        var amplitude_v: Array<Float64> = this.amplitude.v
+//        let frequency_v: Float64 = max(0.0, round(this.frequency.v[0]))
         
-        let frequency_v: Float64 = max(0.0, round(this.frequency.v[0]))
-        
-        var pointType_v: Array<Float64> = this.pointsType.v
+//        var pointType_v: Array<Float64> = this.pointsType.v
     
         if (amplitude_v.size > 0 && amplitude_v[0] != 0.0) {
 

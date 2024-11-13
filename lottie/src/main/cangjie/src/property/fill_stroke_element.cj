@@ -41,21 +41,19 @@ public class FillStrokeElement <: ContentModelElement {
 
     public init(isNull!: Bool, dynamicProperties!: ArrayList<DynamicPropertyContainer>){
         this.isNull = isNull
-        this.style = StyleElem(isNull: true)
-        
-        let elemGlobalData: GlobalData = GlobalData()
-        let elemData: Layer = Layer()
-        let container: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.style = empty_styleElem
+
+        let container: DynamicPropertyContainer = DynamicPropertyContainer(GlobalData(), Layer(), dynamicProperties: dynamicProperties)
         this.g = GradientProperty(isNull: true, dynamicProperties: dynamicProperties)
-        let arr: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
-        this.c = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>(arr, 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.o = PropertyFactory<Array<Keyframe<Int64>>, Int64>(Array<Keyframe<Int64>>(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.s = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>(arr, 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.e = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>(arr, 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.w = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.d = DashProperty(Array<ContentModelD>(), "", elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        //let arr: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
+        this.c = empty_pf_Array_Keyframe_Array_Float64
+        this.o = empty_pf_Array_Keyframe_Int64
+        this.s = empty_pf_Array_Keyframe_Array_Float64
+        this.e = empty_pf_Array_Keyframe_Array_Float64
+        this.w = empty_pf_Array_Keyframe_Float64
+        this.d = empty_dp_Array_ContentModelD
         //TODO: h 成员变量暂时是空的。
-        this.a = PropertyFactory<AK, Int64>(AK(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.a = empty_pf_ak
     }
 
 }

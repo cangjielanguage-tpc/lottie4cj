@@ -9,14 +9,14 @@ package lottie.model
 
 
 public class Letter <: Equatable<Letter> {
-    public var l: Float64 = 0.0
-    public var an: Float64 = 0.0
-    public var add: Float64 = 0.0
-    public var n: Bool = false
-    public var anIndexes: Array<Int64> = Array<Int64>()
-    public var val: String = ""
-    public var line: Int64 = 0
-    public var animatorJustifyOffset: Float64 = 0.0
+    public var l: Float64
+    public var an: Float64
+    public var add: Float64
+    public var n: Bool
+    public var anIndexes: Array<Int64>
+    public var val: String
+    public var line: Int64
+    public var animatorJustifyOffset: Float64
 
     public var ind: Int64 = 0
     public var extra: Float64 = 0.0

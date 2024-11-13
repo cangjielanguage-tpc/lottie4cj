@@ -32,7 +32,7 @@ public class StyleElem {
     protected var wi: Float64 = 0.0
     protected var coOp: Float64 = 0.0
     protected var r: String = ""
-    protected var da: Array<Float64> = Array<Float64>()
+    protected var da: Array<Float64> = empty_Array_Float64
     public var dos: Float64 = 0.0
     public var ml: Float64 = 0.0
     public var lc: String = ""

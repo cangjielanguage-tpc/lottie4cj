@@ -48,10 +48,10 @@ public class Layer <: ToString {
     public let sc: String                            // 7 = solidColor
     public let ks: AnimatableTransform               // 8 = transform
     public let tt: Int64                             // 9 = matteType
-    private let _masksProperties: Array<Mask>        // 10 = masks
-    private let _shapes: Array<ContentModel>         // 11 = shapes
+    public let masksProperties: Array<Mask>        // 10 = masks
+    public let shapes: Array<ContentModel>         // 11 = shapes
     public let t: LayerT                             // 12 = t
-    private let _ef: Array<LayerEF>                  // 13 = ef
+    public let ef: Array<LayerEF>                  // 13 = ef
     public var sr: Float64                           // 14 = timeStretch
     public let st: Float64                           // 15 = startFrame
     public let w: Float64                            // 16 = preCompWidth
@@ -133,10 +133,10 @@ public class Layer <: ToString {
         this.sc              = sc
         this.ks              = ks
         this.tt              = tt
-        this._masksProperties = masksProperties
-        this._shapes         = shapes
+        this.masksProperties = masksProperties
+        this.shapes         = shapes
         this.t               = t
-        this._ef             = ef
+        this.ef             = ef
         this.sr              = sr
         this.st              = st
         this.w               = w
@@ -156,23 +156,23 @@ public class Layer <: ToString {
     /**
      * Obtain the masksProperties of Layer.
      */
-    public prop masksProperties: Array<Mask> {
-        get() { this._masksProperties.clone() }
-    }
+    //public prop masksProperties: Array<Mask> {
+    //    get() { this._masksProperties.clone() }
+    //}
 
     /**
      * Obtain the shapes of Layer.
      */
-    public prop shapes: Array<ContentModel> {
-        get() { this._shapes.clone() }
-    }
+    //public prop shapes: Array<ContentModel> {
+    //    get() { this._shapes.clone() }
+    //}
 
     /**
      * Obtain the ef of Layer.
      */
-    public prop ef: Array<LayerEF> {
-        get() { this._ef.clone() }
-    }
+    //public prop ef: Array<LayerEF> {
+    //    get() { this._ef.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -191,10 +191,10 @@ public class Layer <: ToString {
         "sc     = ${sc}\n" +            // 7 = solidColor
         "ks     = ${ks}\n" +            // 8 = transform
         "tt     = ${tt}\n" +            // 9 = matteType
-        "masksProperties.size = ${_masksProperties.size}\n" +  // 10 = masks
-        "shapes.size = ${_shapes.size}\n" +                    // 11 = shapes
+        "masksProperties.size = ${masksProperties.size}\n" +  // 10 = masks
+        "shapes.size = ${shapes.size}\n" +                    // 11 = shapes
         "t = ${t}\n" +                                        // 12 = t
-        "ef.size = ${_ef.size}\n" +                            // 13 = ef
+        "ef.size = ${ef.size}\n" +                            // 13 = ef
         "sr = ${sr}\n" +                // 14 = timeStretch
         "st = ${st}\n" +                // 15 = startFrame
         "w  = ${w}\n"  +                // 16 = preCompWidth
@@ -212,7 +212,7 @@ public class Layer <: ToString {
 }
 
 public class LayerTD <: ToString {
-    private let _k: Array<Keyframe<DocumentData>>
+    public let k: Array<Keyframe<DocumentData>>
 
     /**
      * Create a LayerTD instance based on the parameter.
@@ -220,15 +220,15 @@ public class LayerTD <: ToString {
      * @param k - Type of Array<Keyframe<DocumentData>>, the value of k.
      */
     public init(k!: Array<Keyframe<DocumentData>> = Array<Keyframe<DocumentData>>()){
-        this._k = k
+        this.k = k
     }
 
     /**
      * Obtain the k of LayerTD.
      */
-    public prop k: Array<Keyframe<DocumentData>> {
-        get() { this._k.clone() }
-    }
+    //public prop k: Array<Keyframe<DocumentData>> {
+    //    get() { this._k.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -236,7 +236,7 @@ public class LayerTD <: ToString {
      * @return Type of String, converted String.
      */
     public func toString(): String {
-        return "LayerTD: {\n k = ${_k}\n}"
+        return "LayerTD: {\n k = ${k}\n}"
     }
 }
 
@@ -277,7 +277,7 @@ public class LayerT <: ToString {
     public var p: String = ""
 
     public let d: LayerTD
-    private let _a: Array<AnimatableTextPropertiesA>
+    public let a: Array<AnimatableTextPropertiesA>
 
     public let m: LayerTM
 
@@ -291,16 +291,16 @@ public class LayerT <: ToString {
                 m!: LayerTM = LayerTM()
     ){
         this.d = d
-        this._a = a
+        this.a = a
         this.m = m
     }
 
     /**
      * Obtain the a of LayerT.
      */
-    public prop a: Array<AnimatableTextPropertiesA> {
-        get() { this._a.clone() }
-    }
+    //public prop a: Array<AnimatableTextPropertiesA> {
+    //    get() { this._a.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -310,7 +310,7 @@ public class LayerT <: ToString {
     public func toString(): String {
         return "LayerT-t: {\n" +
                "d = ${d},\n" +
-               "a = ${_a},\n" +
+               "a = ${a},\n" +
                "m = ${m}\n}"
     }
 }

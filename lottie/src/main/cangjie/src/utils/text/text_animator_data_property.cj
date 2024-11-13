@@ -106,7 +106,8 @@ public class TextAnimatorDataProperty {
         let sw: PropertyFactory<Array<Keyframe<Float64>>, Float64>
         //TODO: sw/sc 为空数组时，需单独处理。
         if (textAnimatorAnimatables.sw.size == 0) {
-            sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            //sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sw = empty_pf_Array_Keyframe_Float64
             //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。
             //sw.propType = false
         } else if (textAnimatorAnimatables.sw.size == 1) {//走【分支1】
@@ -117,7 +118,8 @@ public class TextAnimatorDataProperty {
         let sc: PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>
         //TODO: sw/sc 为空数组时，需单独处理。
         if (textAnimatorAnimatables.sw.size == 0) {
-            sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>(Array<Keyframe<Array<Float64>>>(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            //sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>(Array<Keyframe<Array<Float64>>>(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sc = empty_pf_Array_Keyframe_Array_Float64
             //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。
             //sc.propType = false
         } else if (textAnimatorAnimatables.sw.size == 1) {//走【分支2】

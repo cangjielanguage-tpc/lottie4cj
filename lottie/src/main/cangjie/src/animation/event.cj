@@ -7,8 +7,10 @@
  */
 package lottie.animation
 
+func onErrorEmpty(m: BMEvent): Unit { }
+
 public open class BMEvent {
-    public var types: String = ""
+    public var types: String
     public init(types: String) {
         this.types = types
     }
@@ -16,9 +18,9 @@ public open class BMEvent {
 
 //类型：type = enterFrame  /drawnFrame
 public class BMEnterFrameEvent <: BMEvent {
-    var currentTime: Float64 = 0.0
-    var totalTime: Float64 = 0.0
-    var direction: Float64 = 0.0
+    var currentTime: Float64
+    var totalTime: Float64
+    var direction: Float64
 
     init(types: String, currentTime: Float64, totalTime: Float64, frameMultiplier: Float64) {
         super(types)
@@ -34,7 +36,7 @@ public class BMEnterFrameEvent <: BMEvent {
 
 //类型：type = complete
 public class BMCompleteEvent <: BMEvent {
-    var direction: Float64 = 0.0
+    var direction: Float64
 
     init(types: String, frameMultiplier: Float64) {
         super(types)
@@ -48,9 +50,9 @@ public class BMCompleteEvent <: BMEvent {
 
 //类型：type = loopComplete
 public class BMCompleteLoopEvent <: BMEvent {
-    var currentLoop: Int64 = 0
-    var totalLoops: Int64 = 0
-    var direction: Float64 = 0.0
+    var currentLoop: Int64
+    var totalLoops: Int64
+    var direction: Float64
 
     init(types: String, totalLoops: Int64, currentLoop: Int64, frameMultiplier: Float64) {
         super(types)
@@ -66,8 +68,8 @@ public class BMCompleteLoopEvent <: BMEvent {
 
 //类型：type = types = "segmentStart"
 public class BMSegmentStartEvent <: BMEvent {
-    var firstFrame: Float64 = 0.0
-    var totalFrames: Float64 = 0.0
+    var firstFrame: Float64
+    var totalFrames: Float64
 
     init(types: String, firstFrame: Float64, totalFrames: Float64) {
         super(types)

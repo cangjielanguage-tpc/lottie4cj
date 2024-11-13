@@ -9,7 +9,7 @@ package lottie.model
 
 public class Fonts <: ToString {
 
-    private let _list: Array<Font>
+    public let list: Array<Font>
 
     /**
      * Create a Fonts instance based on the parameter.
@@ -17,15 +17,15 @@ public class Fonts <: ToString {
      * @param list - Type of Array<Font>, the value of list.
      */
     public init(list!: Array<Font> = Array<Font>()){
-        this._list = list
+        this.list = list
     }
 
     /**
      * Obtain the list of Fonts.
      */
-    public prop list: Array<Font> {
-        get() { this._list.clone() }
-    }
+    //public prop list: Array<Font> {
+    //    get() { this._list.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -33,7 +33,7 @@ public class Fonts <: ToString {
      * @return Type of String, converted String.
      */
     public func toString(): String {
-        "Fonts: {\n list = ${_list}\n }"
+        "Fonts: {\n list = ${list}\n }"
     }
 
     /**
@@ -42,7 +42,7 @@ public class Fonts <: ToString {
      * @return Type of Bool, if the Fonts is empty, return true.
      */
     public func isEmpty(): Bool {
-        return this._list.size <= 0
+        return this.list.size <= 0
     }
 }
 

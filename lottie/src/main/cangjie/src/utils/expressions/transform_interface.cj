@@ -9,6 +9,7 @@ package lottie.utils.expressions
 
 //TODO：position 是已经执行了，相当于 ExpressionPropertyInterface(x)()
 //TODO：其余都是未执行了，相当于 ExpressionPropertyInterface(x)
+/*
 class TransformExpressionInterface {
 
     var transform: TransformProperty
@@ -26,15 +27,17 @@ class TransformExpressionInterface {
 
     public init(transform: TransformProperty) {
         this.transform = transform
-        if (!transform.p.isNull) {
+        if (let Some(v) <- transform.p) {
+        //if (!transform.p.isNull) {
             this.hasP = true
-        } else if (!transform.pz.isNull) {
+        //} else if (!transform.pz.isNull) {
+        } else if (let Some(k) <- transform.pz) {
             this.hasZ = true
         }
-        this._transformFactory = ExpressionPropertyInterface<AnimatableSplitDimensionPathValue, PointF>(transform.p)
-        this._px = ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.px)
-        this._py = ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.py)
-        this._pz = ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.pz)
+        this._transformFactory = ExpressionPropertyInterface<AnimatableSplitDimensionPathValue, PointF>(transform.p.getOrThrow())
+        this._px = ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.px.getOrThrow())
+        this._py = ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.py.getOrThrow())
+        this._pz = ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.pz.getOrThrow())
     }
 
     public func selfCalling(value: Int64, name: String, isString!: Bool = false): ExpressionInterface {
@@ -86,7 +89,7 @@ class TransformExpressionInterface {
 
     public prop rotation: ExpressionPropertyInterface<ArrayKeyframeFloat64, Float64> {
         //TODO: TransformProperty 中 this.rx/this.ry/this.rz/this.or 为空。
-        get() { ExpressionPropertyInterface<ArrayKeyframeFloat64, Float64>(transform.r) }
+        get() { ExpressionPropertyInterface<ArrayKeyframeFloat64, Float64>(transform.r.getOrThrow()) }
     }
 
     //TODO: TransformProperty 中 this.rx/this.ry/this.rz/this.or 为空。
@@ -105,7 +108,7 @@ class TransformExpressionInterface {
     //}
 
     public prop scale: ExpressionPropertyInterface<ArrayKeyframeArrayFloat64, Array<Float64>> {
-        get() { ExpressionPropertyInterface<ArrayKeyframeArrayFloat64, Array<Float64>>(transform.s) }
+        get() { ExpressionPropertyInterface<ArrayKeyframeArrayFloat64, Array<Float64>>(transform.s.getOrThrow()) }
     }
 
     //TODO：已经执行了，相当于 ExpressionPropertyInterface(x)()
@@ -126,31 +129,31 @@ class TransformExpressionInterface {
 
     //TODO: [TransformProperty]： p 和 px/py/pz 两者存其一, has_data_p_s = false 表示 p 存在，px/py/pz 为空。
     public prop xPosition: ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64> {
-        get() { ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.px) }
+        get() { ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.px.getOrThrow()) }
     }
 
     public prop yPosition: ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64> {
-        get() { ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.py) }
+        get() { ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.py.getOrThrow()) }
     }
 
     public prop zPosition: ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64> {
-        get() { ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.pz) }
+        get() { ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.pz.getOrThrow()) }
     }
 
     public prop anchorPoint: ExpressionPropertyInterface<ArrayKeyframePointF, PointF> {
-        get() { ExpressionPropertyInterface<ArrayKeyframePointF, PointF>(transform.a) }
+        get() { ExpressionPropertyInterface<ArrayKeyframePointF, PointF>(transform.a.getOrThrow()) }
     }
 
     public prop opacity: ExpressionPropertyInterface<ArrayKeyframeInt64, Int64> {
-        get() { ExpressionPropertyInterface<ArrayKeyframeInt64, Int64>(transform.o) }
+        get() { ExpressionPropertyInterface<ArrayKeyframeInt64, Int64>(transform.o.getOrThrow()) }
     }
 
     public prop skew: ExpressionPropertyInterface<ArrayKeyframeFloat64, Float64> {
-        get() { ExpressionPropertyInterface<ArrayKeyframeFloat64, Float64>(transform.sk) }
+        get() { ExpressionPropertyInterface<ArrayKeyframeFloat64, Float64>(transform.sk.getOrThrow()) }
     }
 
     public prop skewAxis: ExpressionPropertyInterface<ArrayKeyframeFloat64, Float64> {
-        get() { ExpressionPropertyInterface<ArrayKeyframeFloat64, Float64>(transform.sa) }
+        get() { ExpressionPropertyInterface<ArrayKeyframeFloat64, Float64>(transform.sa.getOrThrow()) }
     }
 
     //TODO: TransformProperty 中 this.rx/this.ry/this.rz/this.or 为空。
@@ -159,3 +162,4 @@ class TransformExpressionInterface {
     //}
 
 }
+*/

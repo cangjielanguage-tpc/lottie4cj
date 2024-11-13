@@ -8,9 +8,9 @@ package lottie.property
 public open class TrimModifier <: ShapeModifier {
     //TODO：拆分多继承问题 -- extendPrototype([ShapeModifier], TrimModifier)
 
-    public var s: PropertyFactory<Array<Keyframe<Float64>>, Float64>
-    public var e: PropertyFactory<Array<Keyframe<Float64>>, Float64>
-    public var o: PropertyFactory<Array<Keyframe<Float64>>, Float64>
+    public var s: Option<PropertyFactory<Array<Keyframe<Float64>>, Float64>>
+    public var e: Option<PropertyFactory<Array<Keyframe<Float64>>, Float64>>
+    public var o: Option<PropertyFactory<Array<Keyframe<Float64>>, Float64>>
 
     var sValue: Float64 = 0.0
     var eValue: Float64 = 0.0
@@ -18,11 +18,13 @@ public open class TrimModifier <: ShapeModifier {
 
     public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>){
         super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
-        this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.s = None
+        this.e = None
+        this.o = None
+//        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
+//        this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+//        this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+//        this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
     }
 
     public func getValue(): Unit {
@@ -39,8 +41,12 @@ public open class TrimModifier <: ShapeModifier {
             } else if (tm.s.k.size > 1) {//走【分支3】
                 this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.s.k, tm.s.k, 0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
-            this.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-            this.s.container = [this]
+            if (let Some(value) <- s) {
+            	value.containerType = 3
+                value.container = [this]
+            }
+//            this.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+//            this.s.container = [this]
             
             //"e":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":37,"s":[0],"e":[100]},{"t":58.0000023623884}],"ix":2}
             if (tm.e.k.size == 1) {//走【分支1】  //_e: Array<Keyframe<Float64>>
@@ -48,8 +54,12 @@ public open class TrimModifier <: ShapeModifier {
             } else if (tm.e.k.size > 1) {//走【分支3】
                 this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.e.k, tm.e.k, 0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
-            this.e.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-            this.e.container = [this]
+            if (let Some(value) <- e) {
+            	value.containerType = 3
+                value.container = [this]
+            }
+//            this.e.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+//            this.e.container = [this]
             
             //"o":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":37,"s":[18],"e":[0]},{"t":58.0000023623884}],"ix":3}
             if (tm.o.k.size == 1) {//走【分支1】   //_o: Array<Keyframe<Float64>>
@@ -57,8 +67,12 @@ public open class TrimModifier <: ShapeModifier {
             } else if (tm.o.k.size > 1) {//走【分支3】
                 this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.o.k, tm.o.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
-            this.o.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-            this.o.container = [this]
+            if (let Some(value) <- o) {
+            	value.containerType = 3
+                value.container = [this]
+            }
+//            this.o.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+//            this.o.container = [this]
             
             this.m = tm.m
         }
@@ -68,7 +82,21 @@ public open class TrimModifier <: ShapeModifier {
         
         //TODO: 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
 
-        this._isAnimated = this.s.effectsSequence.size != 0 || this.e.effectsSequence.size != 0 || this.o.effectsSequence.size != 0
+        this._isAnimated = (if (let Some(value) <- s) {
+            value.effectsSequence.size != 0
+        } else {
+        	false
+        }) || (if (let Some(value) <- e) {
+            value.effectsSequence.size != 0
+        } else {
+        	false
+        }) || (if (let Some(value) <- o) {
+            value.effectsSequence.size != 0
+        } else {
+        	false
+        })
+
+//        this._isAnimated = this.s.effectsSequence.size != 0 || this.e.effectsSequence.size != 0 || this.o.effectsSequence.size != 0
     }
     
     public func addShapeToModifier(shapeData: ShapeDataShapeModifiers): Unit {
@@ -142,23 +170,59 @@ public open class TrimModifier <: ShapeModifier {
         var s_v: Float64 = 0.0
         var e_v: Float64 = 0.0
         if (this._mdf || _isFirstFrame) {
-            var o_v: Float64 = Float64(Int64(this.o.v[0]) % 360) / 360.0
+//            var o_v: Float64 = Float64(Int64(this.o.v[0]) % 360) / 360.0
+//            if (o_v < 0.0) {
+//                o_v += 1.0
+//            }
+//            if (this.s.v[0] > 1.0) {
+//                s_v = 1.0 + o_v
+//            } else if (this.s.v[0] < 0.0) {
+//                s_v = 0.0 + o_v
+//            } else {
+//                s_v = this.s.v[0] + o_v
+//            }
+//            if (this.e.v[0] > 1.0) {
+//                e_v = 1.0 + o_v
+//            } else if (this.e.v[0] < 0.0) {
+//                e_v = 0.0 + o_v
+//            } else {
+//                e_v = this.e.v[0] + o_v
+//            }
+
+            var o_v: Float64 = Float64(Int64(if (let Some(value) <- this.o) {
+                    value.v[0]
+                } else {
+                    0.0
+                }) % 360) / 360.0
             if (o_v < 0.0) {
                 o_v += 1.0
             }
-            if (this.s.v[0] > 1.0) {
+
+            var tmp = if (let Some(value) <- this.s) {
+                    value.v[0]
+                } else {
+                    0.0
+                }
+            if (tmp > 1.0) {
                 s_v = 1.0 + o_v
-            } else if (this.s.v[0] < 0.0) {
+            } else if (tmp < 0.0) {
                 s_v = 0.0 + o_v
             } else {
-                s_v = this.s.v[0] + o_v
+                s_v = tmp + o_v
             }
-            if (this.e.v[0] > 1.0) {
+
+            tmp = if (let Some(value) <- this.e) {
+                    value.v[0]
+                } else {
+                    0.0
+                }
+
+            if (tmp > 1.0) {
                 e_v = 1.0 + o_v
-            } else if (this.e.v[0] < 0.0) {
+            } else if (tmp < 0.0) {
                 e_v = 0.0 + o_v
             } else {
-                e_v = this.e.v[0] + o_v
+                e_v = tmp + o_v
             }
     
             if (s_v > e_v) {

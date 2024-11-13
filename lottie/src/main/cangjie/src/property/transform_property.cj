@@ -9,12 +9,13 @@
 package lottie.property
 
 internal import ohos.hilog.*
+//import std.ast.Node
 
 public class TransformCachingAtTime {
 
-    var v: Matrix = Matrix()
-    
-    var isNull: Bool = true
+    var v: Matrix
+
+    var isNull: Bool
 
     public init(v!: Matrix = Matrix(), isNull!: Bool = false){
         this.v = v
@@ -35,7 +36,7 @@ public class TransformPropertyFactory {
      * //TODO：是否将 CVShapeData 和 DynamicPropertyContainer 进行关联？？？或者创建提取继承关系？？？--------------------------------2024.08.22
      * //TODO: 提取的父类 ElementData：elementData是多种情况自定义结构/CVShapeData/ShapeModifier及子类
      * //TODO: ShapeModifier <: DynamicPropertyContainer，让 DynamicPropertyContainer <: ElementData ???----------------------2024.08.22
-     * 
+     *
      * //TODO: BaseElement/CVShapeData/DynamicPropertyContainer/ElementData 怎么创建关联关系？？？怎么串联继承？？？-----------------------------------2024.08.22
      * //TODO: 让 BaseElement <: CVShapeData <: DynamicPropertyContainer <: ElementData ？？？----------------------------------------------------2024.08.22
      */
@@ -58,7 +59,7 @@ public class TransformProperty <: DynamicPropertyContainer {
     //TODO：初始化后传入 this.elem.addDynamicProperty 中的这个函数；（在TransformElement.init传入编译失败，只能init之后传入。）
     //public var addDynamicPropertyInElem: (DynamicPropertyContainer) -> Unit = { m => ()}
 
-    var defaultVector: Array<Float64> = [0.0, 0.0]
+    let defaultVector: Array<Float64> = [0.0, 0.0]
 
     public var autoOriented: Bool = false
     public var frameId: Int64 = -1
@@ -67,33 +68,35 @@ public class TransformProperty <: DynamicPropertyContainer {
     //具有非动画属性的预计算矩阵
     public var pre: Matrix = Matrix()
     public var appliedTransformations: Int64 = 0
-    
+
     public var _isDirty: Bool = true
 
     //TODO: p 和 px/py/pz 两者存其一, has_data_p_s = false 表示 p 存在，px/py/pz 为空。
-    var has_data_p_s: Bool = false
+    //var has_data_p_s: Bool = false
     // this.p 是 PointF，this.p.v 数组长度只能是 2。
-    public var p: PropertyFactory<AnimatableSplitDimensionPathValue, PointF>
+    public var p: Option<PropertyFactory<AnimatableSplitDimensionPathValue, PointF>> = None
     //TODO: 未在 AnimatableTransform 中找到 data.p.s  =>  has_data_p_s = false，暂无 this.px/this.py/this.px。设置成空的。
-    public var px: PropertyFactory<Array<Keyframe<Float64>>, Float64>
-    public var py: PropertyFactory<Array<Keyframe<Float64>>, Float64>
-    public var pz: PropertyFactory<Array<Keyframe<Float64>>, Float64>
+    public var px: Option<PropertyFactory<Array<Keyframe<Float64>>, Float64>> = None
+    public var py: Option<PropertyFactory<Array<Keyframe<Float64>>, Float64>> = None
+    public var pz: Option<PropertyFactory<Array<Keyframe<Float64>>, Float64>> = None
 
-    public var r: PropertyFactory<ArrayKeyframeFloat64, Float64>
+    public var r: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>> = None
     //TODO: 未在 AnimatableTransform 中找到 .rx  => 暂无 this.rx/this.ry/this.rz/this.or
 
-    public var sk: PropertyFactory<ArrayKeyframeFloat64, Float64>
-    public var sa: PropertyFactory<ArrayKeyframeFloat64, Float64>
+    public var sk: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>> = None
+    public var sa: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>> = None
 
     // this.a 是 PointF，this.a.v 数组长度只能是 2。
-    public var a: PropertyFactory<ArrayKeyframePointF, PointF>
-    public var s: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>
+    public var a: Option<PropertyFactory<ArrayKeyframePointF, PointF>> = None
+    public var s: Option<PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>> = None
 
-    public var o: PropertyFactory<ArrayKeyframeInt64, Int64>
+    public var o: Option<PropertyFactory<ArrayKeyframeInt64, Int64>> = None
 
     public var data: AnimatableTransform
 
     //public var isNull: Bool = false
+    //是不是初始化一部分，给 BaseElement.finalTransform 用的。
+    //public var isMini: Bool = false
 
     public init(isNull!: Bool, dynamicProperties!: ArrayList<DynamicPropertyContainer>){
         super()
@@ -101,23 +104,7 @@ public class TransformProperty <: DynamicPropertyContainer {
         this.propType = "transform"
         this.data = AnimatableTransform()
         let elemGlobalData: GlobalData = GlobalData()
-        let elemData: Layer = Layer()
-
-        //TODO：为实现初始化，编译用。
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer()
-        this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>(AnimatableSplitDimensionPathValue(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-
-        this.r = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-
-        this.sk = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.sa = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.a = PropertyFactory<ArrayKeyframePointF, PointF>(ArrayKeyframePointF(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.s = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>(ArrayKeyframeArrayFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.o = PropertyFactory<ArrayKeyframeInt64, Int64>(ArrayKeyframeInt64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-
+        let elemData: Layer = empty_layer
     }
 
     /*
@@ -140,18 +127,6 @@ public class TransformProperty <: DynamicPropertyContainer {
 
         //TODO：为实现初始化，编译用。
         let dp: DynamicPropertyContainer = DynamicPropertyContainer()
-        this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>(AnimatableSplitDimensionPathValue(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-
-        this.r = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-
-        this.sk = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.sa = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.a = PropertyFactory<ArrayKeyframePointF, PointF>(ArrayKeyframePointF(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.s = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>(ArrayKeyframeArrayFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.o = PropertyFactory<ArrayKeyframeInt64, Int64>(ArrayKeyframeInt64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
 
         //直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
         this.initDynamicPropertyContainer(elemGlobalData, elemData)
@@ -161,31 +136,38 @@ public class TransformProperty <: DynamicPropertyContainer {
 
         //TODO: 未在 AnimatableTransform 中找到 data.p.s  =>  has_data_p_s = false，暂无 this.px/this.py/this.px。设置成空的。
         //p => [position位置]
+        //let dp: DynamicPropertyContainer = DynamicPropertyContainer()
         if (!data.p.isNull() && data.p.s) { //获取 translate 相关的参数
             if (data.p.x.size == 1) {//走【分支1】
                 this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.x, data.p.x[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, types: 0, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
             } else if (data.p.x.size > 1) {//走【分支4】
                 this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.x, data.p.x, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+            } else {
+                this.px = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
             if (data.p.y.size == 1) {//走【分支1】
                 this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.y, data.p.y[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, types: 0, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
             } else if (data.p.y.size > 1) {//走【分支4】
                 this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.y, data.p.y, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+            } else {
+                this.py = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
 
-            this.px.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-            this.px.container = [this]
-            this.py.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-            this.py.container = [this]
+            //this.px.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            //this.px.container = [this]
+            //this.py.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            //this.py.container = [this]
             if (data.p.z.size > 0) {
                 if (data.p.z.size == 1) {//走【分支1】
                     this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.z, data.p.z[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, types: 0, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
                 } else if (data.p.z.size > 1) {//走【分支4】
                     this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.p.z, data.p.z, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+                } else {
+                    this.pz = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
                 }
 
-                this.pz.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-                this.pz.container = [this]
+                //this.pz.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+                //this.pz.container = [this]
             }
         } else {
             vLen = 3
@@ -198,8 +180,8 @@ public class TransformProperty <: DynamicPropertyContainer {
                 let point: PointF = PointF(x: 0.0, y: 0.0)
                 this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.p.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
             }
-            this.p.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-            this.p.container = [this]
+            //this.p.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            //this.p.container = [this]
         }
 
         // r/rz => [rotation旋转]
@@ -211,8 +193,8 @@ public class TransformProperty <: DynamicPropertyContainer {
         } else { //走【分支1】  =>   data.r || { k: 0 }
             this.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, 0.0, degToRads, this, elemGlobalData, elemData, types: 0, dataA: data.r.a, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
         }
-        this.r.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-        this.r.container = [this]
+        //this.r.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        //this.r.container = [this]
         //TODO: 未在 AnimatableTransform 中找到 .rx  => 暂无 this.rx/this.ry/this.rz/this.or
         //if (data.rx) {
         //    this.rx = PropertyFactory.getProp(elem, data.rx, 0, degToRads, this)
@@ -237,17 +219,21 @@ public class TransformProperty <: DynamicPropertyContainer {
                 this.sk = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.sk, data.sk.k[0].k ?? 0.0, degToRads, this, elemGlobalData, elemData, types: 0, dataA: data.sk.a, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
             } else if (data.sk.k.size > 1) {//走【分支3】
                 this.sk = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.sk, data.sk.k, 0, degToRads, this, elemGlobalData, elemData, dataA: data.sk.a, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+            } else {
+                this.sk = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
-            this.sk.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-            this.sk.container = [this]
+            //this.sk.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            //this.sk.container = [this]
 
             if (data.sa.k.size == 1) {//走【分支1】
                 this.sa = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.sa, data.sa.k[0].k ?? 0.0, degToRads, this, elemGlobalData, elemData, types: 0, dataA: data.sa.a, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
             } else if (data.sa.k.size > 1) {//走【分支3】
                 this.sa = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.sa, data.sa.k, 0, degToRads, this, elemGlobalData, elemData, dataA: data.sa.a, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
+            } else {
+                this.sa = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
-            this.sa.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-            this.sa.container = [this]
+            //this.sa.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            //this.sa.container = [this]
         }
 
         //"a": {"a": 0, "k": [0, 0], "ix": 1}  // || { k: [0, 0, 0] }
@@ -260,8 +246,8 @@ public class TransformProperty <: DynamicPropertyContainer {
             let point: PointF = PointF(x: 0.0, y: 0.0)
             this.a = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.a, point, 0.0, this, elemGlobalData, elemData, types: 1, dataA: data.a.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
         }
-        this.a.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-        this.a.container = [this]
+        //this.a.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        //this.a.container = [this]
 
         //"s": {"a": 0, "k": [100, 100], "ix": 3}  // || { k: [100, 100, 100] }
         if (data.s.k.size == 1) {//获取 skew 相关的参数 => [scale縮放]   //走【分支2】
@@ -273,8 +259,8 @@ public class TransformProperty <: DynamicPropertyContainer {
         } else {//走【分支2】  =>   data.s || { k: [100, 100, 100] }
             this.s = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(data.s, [100.0, 100.0, 100.0], 0.01, this, elemGlobalData, elemData, types: 1, dataA: data.s.a, vLen: 3, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
         }
-        this.s.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-        this.s.container = [this]
+        //this.s.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        //this.s.container = [this]
 
         //不透明度不是变换属性的一部分，这就是它不会使用this.dynamicProperties的原因。这样，如果不透明度发生变化，变换就不会更新。
         //"o": {"a": 0, "k": 100, "ix": 7 }
@@ -283,11 +269,13 @@ public class TransformProperty <: DynamicPropertyContainer {
         } else if (data.o.k.size > 1) {//走【分支3】
             this.o = PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(data.o, data.o.k, 0, 0.01, this, elemGlobalData, elemData, dataA: data.o.a, dynamicProperties: dynamicProperties, containerType: 2, compType: this.compType, renderedFrame: this.getRenderedFrame)
         } else {
-            this.o._mdf = false
-            this.o.v = [1.0]
+            let o = PropertyFactory<ArrayKeyframeInt64, Int64>(ArrayKeyframeInt64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            o._mdf = false
+            o.v = [1.0]
+            this.o = o
         }
-        this.o.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-        this.o.container = [this]
+        //this.o.containerType = 2  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        //this.o.container = [this]
 
         this._isDirty = true
         if (this.dynamicProperties.size == 0) {
@@ -317,72 +305,92 @@ public class TransformProperty <: DynamicPropertyContainer {
         //TODO：TransformPropertyFactory 增加成员变量 this._transformCachingAtTime ？？？
         //TODO: 需要判空么？？？成员变量 this._transformCachingAtTime 初始化就直接打到 if 中的效果了。
         if (this._transformCachingAtTime.isNull) {
-            this._transformCachingAtTime = TransformCachingAtTime(
-                v: Matrix()
-            )
+            //this._transformCachingAtTime = TransformCachingAtTime(
+            //    v: Matrix()
+            //)
             this._transformCachingAtTime.isNull = false
         }
         /// /
         let matrix: Matrix = this._transformCachingAtTime.v
         matrix.cloneFromProps(this.pre.props)
         if (this.appliedTransformations < 1) {
-            let anchor: Array<Float64> = this.a.getValueAtTime(time)
-            matrix.translate(
-                -anchor[0] * this.a.mult,
-                -anchor[1] * this.a.mult,
-                tz: anchor[2] * this.a.mult
-            )
+            if (let Some(v) <- this.a) {
+                let anchor: Array<Float64> = v.getValueAtTime(time)
+                matrix.translate(
+                    -anchor[0] * v.mult,
+                    -anchor[1] * v.mult,
+                    tz: anchor[2] * v.mult
+                )
+            }
         }
         if (this.appliedTransformations < 2) {
-            let scale: Array<Float64> = this.s.getValueAtTime(time)
-            matrix.scale(
-                scale[0] * this.s.mult,
-                scale[1] * this.s.mult,
-                sz: scale[2] * this.s.mult
-            )
-        }
-        if (!this.sk.isNull && this.appliedTransformations < 3) {
-            let skew: Array<Float64> = this.sk.getValueAtTime(time)
-            let skewAxis: Array<Float64> = this.sa.getValueAtTime(time)
-            matrix.skewFromAxis(-skew[0] * this.sk.mult, skewAxis[0] * this.sa.mult)
-        }
-        if (!this.r.isNull && this.appliedTransformations < 4) {
-            let rotation: Array<Float64> = this.r.getValueAtTime(time)
-            matrix.rotate(-rotation[0] * this.r.mult)
-        } else if (this.r.isNull && this.appliedTransformations < 4) {
-            //TODO: 未在 AnimatableTransform 中找到 .rx  => 暂无 this.rx/this.ry/this.rz/this.or
-            //let rotationZ: Array<Float64> = this.rz.getValueAtTime(time)
-            //let rotationY: Array<Float64> = this.ry.getValueAtTime(time)
-            //let rotationX: Array<Float64> = this.rx.getValueAtTime(time)
-            //let orientation: Array<Float64> = this.or.getValueAtTime(time)
-
-            //matrix.rotateZ(-rotationZ[0] * this.rz.mult)
-            //.rotateY(rotationY * this.ry.mult)
-            //.rotateX(rotationX * this.rx.mult)
-            //.rotateZ(-orientation[2] * this.or.mult)
-            //.rotateY(orientation[1] * this.or.mult)
-            //.rotateX(orientation[0] * this.or.mult)
-        }
-        if (!this.data.p.isNull() && this.data.p.s) {
-            let positionX: Array<Float64> = this.px.getValueAtTime(time)
-            let positionY: Array<Float64> = this.py.getValueAtTime(time)
-            if (!this.data.p.z.size <= 0) {
-                let positionZ: Array<Float64> = this.pz.getValueAtTime(time)
-                matrix.translate(
-                    positionX[0] * this.px.mult,
-                    positionY[0] * this.py.mult,
-                    tz: -positionZ[0] * this.pz.mult
+            if (let Some(v) <- this.s) {
+                let scale: Array<Float64> = v.getValueAtTime(time)
+                matrix.scale(
+                    scale[0] * v.mult,
+                    scale[1] * v.mult,
+                    sz: scale[2] * v.mult
                 )
-            } else {
-                matrix.translate(positionX[0] * this.px.mult, positionY[0] * this.py.mult, tz: 0.0)
+            }
+        }
+        if (let Some(v) <- this.sk) {
+            if (!v.isNull && this.appliedTransformations < 3) {
+                let skew: Array<Float64> = v.getValueAtTime(time)
+                if (let Some(sav) <- this.sa) {
+                    let skewAxis: Array<Float64> = sav.getValueAtTime(time)
+                    matrix.skewFromAxis(-skew[0] * v.mult, skewAxis[0] * sav.mult)
+                }
+            }
+        }
+
+        if (let Some(rv) <- this.r) {
+            if (!rv.isNull && this.appliedTransformations < 4) {
+                let rotation: Array<Float64> = rv.getValueAtTime(time)
+                matrix.rotate(-rotation[0] * rv.mult)
+            } else if (rv.isNull && this.appliedTransformations < 4) {
+                //TODO: 未在 AnimatableTransform 中找到 .rx  => 暂无 this.rx/this.ry/this.rz/this.or
+                //let rotationZ: Array<Float64> = this.rz.getValueAtTime(time)
+                //let rotationY: Array<Float64> = this.ry.getValueAtTime(time)
+                //let rotationX: Array<Float64> = this.rx.getValueAtTime(time)
+                //let orientation: Array<Float64> = this.or.getValueAtTime(time)
+
+                //matrix.rotateZ(-rotationZ[0] * this.rz.mult)
+                //.rotateY(rotationY * this.ry.mult)
+                //.rotateX(rotationX * this.rx.mult)
+                //.rotateZ(-orientation[2] * this.or.mult)
+                //.rotateY(orientation[1] * this.or.mult)
+                //.rotateX(orientation[0] * this.or.mult)
+            }
+        }
+
+        if (!this.data.p.isNull() && this.data.p.s) {
+            if (let Some(pxv) <- this.px) {
+                if (let Some(pyv) <- this.py) {
+                    let positionX: Array<Float64> = pxv.getValueAtTime(time)
+                    let positionY: Array<Float64> = pyv.getValueAtTime(time)
+                    if (!this.data.p.z.size <= 0) {
+                        if (let Some(pzv) <- this.pz) {
+                            let positionZ: Array<Float64> = pzv.getValueAtTime(time)
+                            matrix.translate(
+                                positionX[0] * pxv.mult,
+                                positionY[0] * pyv.mult,
+                                tz: -positionZ[0] * pzv.mult
+                            )
+                        }
+                    } else {
+                        matrix.translate(positionX[0] * pxv.mult, positionY[0] * pyv.mult, tz: 0.0)
+                    }
+                }
             }
         } else {
-            let position: Array<Float64> = this.p.getValueAtTime(time)
-            matrix.translate(
-                position[0] * this.p.mult,
-                position[1] * this.p.mult,
-                tz: -position[2] * this.p.mult
-            )
+            if (let Some(pv) <- this.p) {
+                let position: Array<Float64> = pv.getValueAtTime(time)
+                matrix.translate(
+                    position[0] * pv.mult,
+                    position[1] * pv.mult,
+                    tz: -position[2] * pv.mult
+                )
+            }
         }
         return matrix
     }
@@ -402,45 +410,58 @@ public class TransformProperty <: DynamicPropertyContainer {
         //TODO: 是 DynamicPropertyContainer.iterateDynamicProperties ???
         this.iterateDynamicProperties()
         this._mdf = this._mdf || _mdf
-        
-        if (!this.a.isNull) {
+
+        if (let Some(av) <- this.a) {
             // this.a 是 PointF，v 数组长度只能是 2。
             //mat.translate(-this.a.v[0], -this.a.v[1], tz: this.a.v[2])
-            mat.translate(-this.a.v[0], -this.a.v[1])
+            mat.translate(-av.v[0], -av.v[1])
         }
-        if (!this.s.isNull) {
-            if (this.s.v.size == 3) {
-                mat.scale(this.s.v[0], this.s.v[1], sz: this.s.v[2])
+        if (let Some(sv) <- this.s) {
+            if (sv.v.size == 3) {
+                mat.scale(sv.v[0], sv.v[1], sz: sv.v[2])
             } else {
-                mat.scale(this.s.v[0], this.s.v[1])
+                mat.scale(sv.v[0], sv.v[1])
             }
         }
-        if (!this.sk.isNull) {
-            mat.skewFromAxis(-this.sk.v[0], this.sa.v[0])
+        if (let Some(skv) <- this.sk) {
+        //if (!this.isMini && !this.sk.isNull) {
+            mat.skewFromAxis(-skv.v[0], skv.v[0])
         }
-        if (!this.r.isNull) {
-            mat.rotate(-this.r.v[0])
+        if (let Some(rv) <- this.r) {
+        //if (!this.isMini && !this.r.isNull) {
+            mat.rotate(-rv.v[0])
         } else {
             //TODO: 未在 AnimatableTransform 中找到 .rx  => 暂无 this.rx/this.ry/this.rz/this.or
             //mat.rotateZ(-this.rz.v[0]).rotateY(this.ry.v[0]).rotateX(this.rx.v[0]).rotateZ(-this.or.v[2])
             //    .rotateY(this.or.v[1])
             //    .rotateX(this.or.v[0])
         }
-        
+
         //TODO: 未在 AnimatableTransform 中找到 .p.s
         // this.a 是 PointF，v 数组长度只能是 2。
         //mat.translate(this.p.v[0], this.p.v[1], tz: -this.p.v[2])
-        mat.translate(this.p.v[0], this.p.v[1])
+        if (let Some(pv) <- this.p) {
+            mat.translate(pv.v[0], pv.v[1])
+        }
+
         //if (this.has_data_p_s) {
         if (this.data.p.s) {
-            if (this.data.p.z.size > 0) {
-                mat.translate(this.px.v[0], this.py.v[0], tz: -this.pz.v[0])
-            } else {
-                mat.translate(this.px.v[0], this.py.v[0], tz: 0.0)
+            if (let Some(pxv) <- this.px) {
+                if (let Some(pyv) <- this.py) {
+                    if (this.data.p.z.size > 0) {
+                        if (let Some(pzv) <- this.pz) {
+                            mat.translate(pxv.v[0], pyv.v[0], tz: -pzv.v[0])
+                        }
+                    } else {
+                        mat.translate(pxv.v[0], pyv.v[0], tz: 0.0)
+                    }
+                }
             }
         } else {
             //mat.translate(this.p.v[0], this.p.v[1], tz: -this.p.v[2])
-            mat.translate(this.p.v[0], this.p.v[1])
+            if (let Some(pv) <- this.p) {
+                mat.translate(pv.v[0], pv.v[1])
+            }
         }
     }
 
@@ -451,7 +472,7 @@ public class TransformProperty <: DynamicPropertyContainer {
     public func getValue(forceRender: Bool): Unit {
         this.processKeys(forceRender)
     }
- 
+
     func processKeys(forceRender: Bool): Unit {
         //Hilog.error(0, "--29--", "[processKeys]--[1]----> this.p.v = ${this.p.v}")
         if (this.elemGlobalData.frameId == this.frameId) {
@@ -468,28 +489,41 @@ public class TransformProperty <: DynamicPropertyContainer {
         if (this._mdf || forceRender) {
             var frameRate: Float64 = 0.0
             this.v.cloneFromProps(this.pre.props)
-            
+
             if (this.appliedTransformations < 1) {
                 //this.v.translate(-this.a.v[0], -this.a.v[1], tz: this.a.v[2])
-                this.v.translate(-this.a.v[0], -this.a.v[1])
-            }
-            if (this.appliedTransformations < 2) {
-                if (this.s.v.size == 3) {
-                    this.v.scale(this.s.v[0], this.s.v[1], sz: this.s.v[2])
-                } else {
-                    this.v.scale(this.s.v[0], this.s.v[1])
+                if (let Some(av) <- this.a) {
+                    this.v.translate(-av.v[0], -av.v[1])
                 }
             }
-            if (!this.sk.isNull && this.appliedTransformations < 3) {
-                this.v.skewFromAxis(-this.sk.v[0], this.sa.v[0])
+            if (this.appliedTransformations < 2) {
+                if (let Some(sv) <- this.s) {
+                    if (sv.v.size == 3) {
+                        this.v.scale(sv.v[0], sv.v[1], sz: sv.v[2])
+                    } else {
+                        this.v.scale(sv.v[0], sv.v[1])
+                    }
+                }
             }
-            if (!this.r.isNull && this.appliedTransformations < 4) {
-                this.v.rotate(-this.r.v[0])
-            } else if (this.r.isNull && this.appliedTransformations < 4) {
-                //TODO: 未在 AnimatableTransform 中找到 .rx  => 暂无 this.rx/this.ry/this.rz/this.or
-                //this.v.rotateZ(-this.rz.v[0]).rotateY(this.ry.v[0]).rotateX(this.rx.v[0]).rotateZ(-this.or.v[2])
-                //    .rotateY(this.or.v[1])
-                //    .rotateX(this.or.v[0])
+            //if (!this.isMini && !this.sk.isNull && this.appliedTransformations < 3) {
+            if (this.appliedTransformations < 3) {
+                if (let Some(skv) <- this.sk) {
+                    if (let Some(sav) <- this.sa) {
+                        this.v.skewFromAxis(-skv.v[0], sav.v[0])
+                    }
+                }
+            }
+            if (this.appliedTransformations < 4) {
+                if (let Some(rv) <- this.r) {
+                //if (!this.isMini && !this.r.isNull && this.appliedTransformations < 4) {
+                    this.v.rotate(-rv.v[0])
+                //} else if (!this.isMini && this.r.isNull && this.appliedTransformations < 4) {
+                } else {
+                    //TODO: 未在 AnimatableTransform 中找到 .rx  => 暂无 this.rx/this.ry/this.rz/this.or
+                    //this.v.rotateZ(-this.rz.v[0]).rotateY(this.ry.v[0]).rotateX(this.rx.v[0]).rotateZ(-this.or.v[2])
+                    //    .rotateY(this.or.v[1])
+                    //    .rotateX(this.or.v[0])
+                }
             }
             //TODO:不确定数据类型，暂定未Bool
             if (this.autoOriented) {
@@ -497,38 +531,50 @@ public class TransformProperty <: DynamicPropertyContainer {
                 var v2: Array<Float64> = Array<Float64>(2, item: 0.0)
                 frameRate = this.elemGlobalData.frameRate
                 //TODO: 暂未实现 getValueAtTime。在扩展中实现？？？
-                if (!this.p.isNull && this.p.keyframes.size > 0 && this.p.hasGetValueAtTime) {
-                    if (Float64(this.p._caching.lastFrame) + this.p.offsetTime <= this.p.keyframes[0].t) {
-                        v1 = this.p.getValueAtTime((this.p.keyframes[0].t + 0.01) / frameRate, 0.0)
-                        v2 = this.p.getValueAtTime(this.p.keyframes[0].t / frameRate, 0.0)
-                    } else if (Float64(this.p._caching.lastFrame) + this.p.offsetTime >= this.p.keyframes[this.p.keyframes.size - 1].t) {
-                        v1 = this.p.getValueAtTime((this.p.keyframes[this.p.keyframes.size - 1].t / frameRate), 0.0)
-                        v2 = this.p.getValueAtTime((this.p.keyframes[this.p.keyframes.size - 1].t - 0.05) / frameRate, 0.0)
-                    } else {
-                        v1 = this.p.pv
-                        v2 = this.p.getValueAtTime((Float64(this.p._caching.lastFrame) + this.p.offsetTime - 0.01) / frameRate, this.p.offsetTime)
+                var pflag: Bool = false
+                if (let Some(p_v) <- this.p) {
+                //if (!this.p.isNull && this.p.keyframes.size > 0 && this.p.hasGetValueAtTime) {}
+                    if (p_v.keyframes.size > 0 && p_v.hasGetValueAtTime) {
+                        pflag = true
+                        if (Float64(p_v._caching.lastFrame) + p_v.offsetTime <= p_v.keyframes[0].t) {
+                            v1 = p_v.getValueAtTime((p_v.keyframes[0].t + 0.01) / frameRate, 0.0)
+                            v2 = p_v.getValueAtTime(p_v.keyframes[0].t / frameRate, 0.0)
+                        } else if (Float64(p_v._caching.lastFrame) + p_v.offsetTime >= p_v.keyframes[p_v.keyframes.size - 1].t) {
+                            v1 = p_v.getValueAtTime((p_v.keyframes[p_v.keyframes.size - 1].t / frameRate), 0.0)
+                            v2 = p_v.getValueAtTime((p_v.keyframes[p_v.keyframes.size - 1].t - 0.05) / frameRate, 0.0)
+                        } else {
+                            v1 = p_v.pv
+                            v2 = p_v.getValueAtTime((Float64(p_v._caching.lastFrame) + p_v.offsetTime - 0.01) / frameRate, p_v.offsetTime)
+                        }
                     }
                 //} else if (this.has_data_p_s && !this.px.isNull && this.px.keyframes.size > 0 && this.py.keyframes.size > 0 && this.px.hasGetValueAtTime && this.py.hasGetValueAtTime) {
-                } else if (this.data.p.s && !this.px.isNull && this.px.keyframes.size > 0 && this.py.keyframes.size > 0 && this.px.hasGetValueAtTime && this.py.hasGetValueAtTime) {
+                } else if (!pflag && this.data.p.s) {
                     //TODO: 未在 AnimatableTransform 中找到 .p.s  => 暂无 this.px/this.py/this.px
-                    let px = this.px
-                    let py = this.py
-                    if (Float64(px._caching.lastFrame) + px.offsetTime <= px.keyframes[0].t) {
-                        v1[0] = px.getValueAtTime((px.keyframes[0].t + 0.01) / frameRate, 0.0)[0]
-                        v1[1] = py.getValueAtTime((py.keyframes[0].t + 0.01) / frameRate, 0.0)[0]
-                        v2[0] = px.getValueAtTime((px.keyframes[0].t) / frameRate, 0.0)[0]
-                        v2[1] = py.getValueAtTime((py.keyframes[0].t) / frameRate, 0.0)[0]
-                    } else if (Float64(px._caching.lastFrame) + px.offsetTime >= px.keyframes[px.keyframes.size - 1].t) {
-                        v1[0] = px.getValueAtTime((px.keyframes[px.keyframes.size - 1].t / frameRate), 0.0)[0]
-                        v1[1] = py.getValueAtTime((py.keyframes[py.keyframes.size - 1].t / frameRate), 0.0)[0]
-                        v2[0] = px.getValueAtTime((px.keyframes[px.keyframes.size - 1].t - 0.01) / frameRate, 0.0)[0]
-                        v2[1] = py.getValueAtTime((py.keyframes[py.keyframes.size - 1].t - 0.01) / frameRate, 0.0)[0]
-                    } else {
-                        v1 = [px.pv[0], py.pv[0]]
-                        v2[0] = px.getValueAtTime((Float64(px._caching.lastFrame) + px.offsetTime - 0.01) / frameRate, px.offsetTime)[0]
-                        v2[1] = py.getValueAtTime((Float64(py._caching.lastFrame) + py.offsetTime - 0.01) / frameRate, py.offsetTime)[0]
+                   if (let Some(pxv) <- this.px) {
+                        if (let Some(pyv) <- this.py) {
+                            let px = pxv
+                            let py = pyv
+                            if (this.data.p.s && !px.isNull && px.keyframes.size > 0 && py.keyframes.size > 0 && px.hasGetValueAtTime && py.hasGetValueAtTime) {
+                                pflag = true
+                                if (Float64(px._caching.lastFrame) + px.offsetTime <= px.keyframes[0].t) {
+                                    v1[0] = px.getValueAtTime((px.keyframes[0].t + 0.01) / frameRate, 0.0)[0]
+                                    v1[1] = py.getValueAtTime((py.keyframes[0].t + 0.01) / frameRate, 0.0)[0]
+                                    v2[0] = px.getValueAtTime((px.keyframes[0].t) / frameRate, 0.0)[0]
+                                    v2[1] = py.getValueAtTime((py.keyframes[0].t) / frameRate, 0.0)[0]
+                                } else if (Float64(px._caching.lastFrame) + px.offsetTime >= px.keyframes[px.keyframes.size - 1].t) {
+                                    v1[0] = px.getValueAtTime((px.keyframes[px.keyframes.size - 1].t / frameRate), 0.0)[0]
+                                    v1[1] = py.getValueAtTime((py.keyframes[py.keyframes.size - 1].t / frameRate), 0.0)[0]
+                                    v2[0] = px.getValueAtTime((px.keyframes[px.keyframes.size - 1].t - 0.01) / frameRate, 0.0)[0]
+                                    v2[1] = py.getValueAtTime((py.keyframes[py.keyframes.size - 1].t - 0.01) / frameRate, 0.0)[0]
+                                } else {
+                                    v1 = [px.pv[0], py.pv[0]]
+                                    v2[0] = px.getValueAtTime((Float64(px._caching.lastFrame) + px.offsetTime - 0.01) / frameRate, px.offsetTime)[0]
+                                    v2[1] = py.getValueAtTime((Float64(py._caching.lastFrame) + py.offsetTime - 0.01) / frameRate, py.offsetTime)[0]
+                                }
+                            }
+                        }
                     }
-                } else {
+                } else if (!pflag) {
                     v2 = defaultVector
                     v1 = v2
                 }
@@ -543,15 +589,23 @@ public class TransformProperty <: DynamicPropertyContainer {
             //TODO: 未在 AnimatableTransform 中找到 .p.s  => 暂无 this.px/this.py/this.px
             //if (!this.data.p.isNull() && this.has_data_p_s) {
             if (!this.data.p.isNull() && this.data.p.s) {
-                if (this.data.p.z.size > 0) {
-                    this.v.translate(this.px.v[0], this.py.v[0], tz: -this.pz.v[0])
-                } else {
-                    this.v.translate(this.px.v[0], this.py.v[0], tz: 0.0)
+                if (let Some(pxv) <- this.px) {
+                    if (let Some(pyv) <- this.py) {
+                        if (this.data.p.z.size > 0) {
+                            if (let Some(pzv) <- this.pz) {
+                                this.v.translate(pxv.v[0], pyv.v[0], tz: -pzv.v[0])
+                            }
+                        } else {
+                            this.v.translate(pxv.v[0], pyv.v[0], tz: 0.0)
+                        }
+                    }
                 }
             } else {
                 //Hilog.error(0, "--29--", "[processKeys]--[2]----> this.p.v = ${this.p.v}")
                 //this.v.translate(this.p.v[0], this.p.v[1], tz: -this.p.v[2])
-                this.v.translate(this.p.v[0], this.p.v[1])
+                if (let Some(p_v) <- this.p) {
+                    this.v.translate(p_v.v[0], p_v.v[1])
+                }
             }
 
         }
@@ -559,35 +613,43 @@ public class TransformProperty <: DynamicPropertyContainer {
     }
 
     public func precalculateMatrix(): Unit {
-        if (!this.a.k) {
-            // this.a 是 PointF，v 数组长度只能是 2。
-            //this.pre.translate(-this.a.v[0], -this.a.v[1], tz: this.a.v[2])
-            this.pre.translate(-this.a.v[0], -this.a.v[1])
-            this.appliedTransformations = 1
-        } else {
-            return
-        }
-        if (this.s.effectsSequence.size == 0) {
-            if (this.s.v.size == 3) {
-                this.pre.scale(this.s.v[0], this.s.v[1], sz: this.s.v[2])
+        if (let Some(a_v) <- this.a) {
+            if (!a_v.k) {
+                // this.a 是 PointF，v 数组长度只能是 2。
+                //this.pre.translate(-this.a.v[0], -this.a.v[1], tz: this.a.v[2])
+                this.pre.translate(-a_v.v[0], -a_v.v[1])
+                this.appliedTransformations = 1
             } else {
-                this.pre.scale(this.s.v[0], this.s.v[1])
+                return
+            }
+        }
+        if (let Some(sv) <- this.s) {
+            if (sv.effectsSequence.size == 0) {
+                if (sv.v.size == 3) {
+                    this.pre.scale(sv.v[0], sv.v[1], sz: sv.v[2])
+                } else {
+                    this.pre.scale(sv.v[0], sv.v[1])
+                }
             }
             this.appliedTransformations = 2
         } else {
             return
         }
-        if (!this.sk.isNull) {
-            if (this.sk.effectsSequence.size == 0 && this.sa.effectsSequence.size == 0) {
-                this.pre.skewFromAxis(-this.sk.v[0], this.sa.v[0])
-                this.appliedTransformations = 3
-            } else {
-                return
+        //if (!this.isMini && !this.sk.isNull) {
+        if (let Some(skv) <- this.sk) {
+            if (let Some(sav) <- this.sa) {
+                if (skv.effectsSequence.size == 0 && sav.effectsSequence.size == 0) {
+                    this.pre.skewFromAxis(-skv.v[0], sav.v[0])
+                    this.appliedTransformations = 3       
+                } else {
+                    return
+                }
             }
         }
-        if (!this.r.isNull) {
-            if (this.r.effectsSequence.size == 0) {
-                this.pre.rotate(-this.r.v[0])
+        if (let Some(rv) <- this.r) {
+        //if (!this.isMini && !this.r.isNull) {
+            if (rv.effectsSequence.size == 0) {
+                this.pre.rotate(-rv.v[0])
                 this.appliedTransformations = 4
             }
         }

@@ -9,14 +9,15 @@ public class PuckerAndBloatModifier <: ShapeModifier {
     //TODO：拆分多继承问题 -- extendPrototype([ShapeModifier], PuckerAndBloatModifier)
 
     //"a": {"a": 0, "k": 0, "ix": 7} => 走【分支1】
-    var amount: PropertyFactory<AK, Float64>
+    var amount: Option<PropertyFactory<AK, Float64>>
     var lineJoin: Int64 = 0
 
     public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>){
         super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
-        this.amount = PropertyFactory<AK, Float64>(AK(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+//        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
+//        this.amount = PropertyFactory<AK, Float64>(AK(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.amount = None
     }
     
     public func getValue(): Unit {
@@ -41,10 +42,17 @@ public class PuckerAndBloatModifier <: ShapeModifier {
             a = gs.a
             this.amount = PropertyFactory<AK, Float64>.getProp(gs.a, Float64(gs.a.k), 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         }
-        this.amount.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-        this.amount.container = [this]
 
-        this._isAnimated = this.amount.effectsSequence.size != 0
+        if (let Some(value) <- amount) {
+            value.containerType = 3
+            value.container = [this]
+            this._isAnimated = value.effectsSequence.size != 0
+        }
+
+//        this.amount.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+//        this.amount.container = [this]
+//
+//        this._isAnimated = this.amount.effectsSequence.size != 0
     }
     
     public func processPath(path: ShapeData, amount: Float64): ShapeData {
@@ -84,7 +92,12 @@ public class PuckerAndBloatModifier <: ShapeModifier {
         var shapePaths: ArrayList<ShapeData> = ArrayList<ShapeData>()
         let len: Int64 = this.shapes.size
         var jLen: Int64 = 0
-        var amount_v: Array<Float64> = this.amount.v
+//        var amount_v: Array<Float64> = this.amount.v
+        var amount_v: Array<Float64> = if (let Some(value) <- amount) {
+            value.v
+        } else {
+            Array<Float64>()
+        }
         
         if (amount_v.size > 0 && amount_v[0] != 0.0) {
             var localShapeCollection: ShapeCollection = ShapeCollection()

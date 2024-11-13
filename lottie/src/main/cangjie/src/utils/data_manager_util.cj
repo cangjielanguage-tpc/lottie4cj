@@ -386,7 +386,7 @@ func checkShapes(animationData: AnimationData, completeShapes: (Array<ContentMod
     }
 
     func iterateLayers(layers: Array<Layer>): Unit {
-        var layerData: Layer = Layer()
+        var layerData: Layer = empty_layer
         let len: Int64 = layers.size
         var jLen: Int64 = 0
         var kLen: Int64 = 0

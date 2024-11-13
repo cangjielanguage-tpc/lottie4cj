@@ -12,9 +12,9 @@ public class AnimatableSplitDimensionPathValue <: ToString {
     public var a: Int64
     public var ix: Int64
 
-    private let _k: Array<Keyframe<PointF>>
-    private let _x: Array<Keyframe<Float64>>
-    private let _y: Array<Keyframe<Float64>>
+    public let k: Array<Keyframe<PointF>>
+    public let x: Array<Keyframe<Float64>>
+    public let y: Array<Keyframe<Float64>>
 
     //TODO: 暂未在 json 中找到 z。暂定为 Array<Keyframe<Float64>>。TransformProperty中编译用。
     public var z: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
@@ -37,31 +37,31 @@ public class AnimatableSplitDimensionPathValue <: ToString {
         this.a = a
         this.ix = ix
         this.s = s
-        this._k = k
-        this._x = x
-        this._y = y
+        this.k = k
+        this.x = x
+        this.y = y
     }
 
     /**
      * Obtain the k of AnimatableSplitDimensionPathValue.
      */
-    public prop k: Array<Keyframe<PointF>> {
-        get() { this._k.clone() }
-    }
+    //public prop k: Array<Keyframe<PointF>> {
+    //    get() { this._k.clone() }
+    //}
 
     /**
      * Obtain the x of AnimatableSplitDimensionPathValue.
      */
-    public prop x: Array<Keyframe<Float64>> {
-        get() { this._x.clone() }
-    }
+    //public prop x: Array<Keyframe<Float64>> {
+    //    get() { this._x.clone() }
+    //}
 
     /**
      * Obtain the y of AnimatableSplitDimensionPathValue.
      */
-    public prop y: Array<Keyframe<Float64>> {
-        get() { this._y.clone() }
-    }
+    //public prop y: Array<Keyframe<Float64>> {
+    //    get() { this._y.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -70,9 +70,9 @@ public class AnimatableSplitDimensionPathValue <: ToString {
      */
     public func toString(): String {
         return "AnimatableSplitDimensionPathValue: {\n" +
-               "k = ${_k}\n" +
-               "x = ${_x}\n" +
-               "y = ${_y}\n}"
+               "k = ${k}\n" +
+               "x = ${x}\n" +
+               "y = ${y}\n}"
     }
 
     /**
@@ -81,6 +81,6 @@ public class AnimatableSplitDimensionPathValue <: ToString {
      * @return Type of Bool, if the instance is empty, return true.
      */
     public func isNull(): Bool {
-        return _k.size == 0 && _x.size == 0 && _y.size == 0
+        return k.size == 0 && x.size == 0 && y.size == 0
     }
 }

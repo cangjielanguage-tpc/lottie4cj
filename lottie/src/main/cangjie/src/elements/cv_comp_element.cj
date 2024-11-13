@@ -50,10 +50,11 @@ public class CvCompElement <: ICompElement {
             this.tm = PropertyFactory<ContentModelDK, Float64>.getProp(data.tm, data.tm.k[0].k ?? 0.0, globalData.frameRate, dp, globalData, data, types: 0, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: renderedFrame)
         } else if (data.tm.k.size > 1) {
             this.tm = PropertyFactory<ContentModelDK, Float64>.getProp(data.tm, data.tm.k, 0, globalData.frameRate, dp, globalData, data, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: renderedFrame)
+        } else {
+            this.tm = PropertyFactory<ContentModelDK, Float64>(empty_ContentModelDK, 0.0, dp, globalData, data, types: 0, dynamicProperties: this.dynamicProperties)
         }
         //this.tm.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
-        
         if(data.tm.k.size == 0) {
             this.tm._placeholder= true
         }

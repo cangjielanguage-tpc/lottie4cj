@@ -45,8 +45,8 @@ public open class MaskElement <: BaseElement {
         
         //需要初始化一个空的 ViewData。
         let dp: DynamicPropertyContainer = DynamicPropertyContainer(globalData, data, dynamicProperties: this.dynamicProperties)
-        let pf: PropertyFactory<Array<Keyframe<Int64>>, Int64> = PropertyFactory<Array<Keyframe<Int64>>, Int64>(Array<Keyframe<Int64>>(), 0.0, dp, globalData, data, dynamicProperties: dynamicProperties)
-        let spf: ShapePropertyFactory = ShapePropertyFactory(ContentModel(), 0, globalData, data, dynamicProperties: dynamicProperties)
+        let pf: PropertyFactory<Array<Keyframe<Int64>>, Int64> = empty_pf_Array_Keyframe_Int64
+        let spf: ShapePropertyFactory = empty_spf
         let emptyViewData: ViewData = ViewData(op: pf, props: spf)
         this.viewData = Array<ViewData>(len, item: emptyViewData)
         
@@ -65,7 +65,7 @@ public open class MaskElement <: BaseElement {
         var feMorph: CreateNS = empty_createNS
 
         //TODO: 先初始化一个空的 x
-        var x: PropertyFactory<Array<Keyframe<Int64>>, Int64> = PropertyFactory<Array<Keyframe<Int64>>, Int64>(Array<Keyframe<Int64>>(), 0.0, dp, globalData, data, dynamicProperties: dynamicProperties)
+        var x: PropertyFactory<Array<Keyframe<Int64>>, Int64> = empty_pf_Array_Keyframe_Int64
         
         var maskType: String = "clipPath"
         var maskRef: String = "clip-path"
@@ -351,7 +351,7 @@ public open class MaskElement <: BaseElement {
         //this.element = null
         this.globalData = GlobalData()
         this.maskElement = CreateNS("")
-        this.data = Layer()
+        this.data = empty_layer
         this.masksProperties = Array<Mask>()
     }
 

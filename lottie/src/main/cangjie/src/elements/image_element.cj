@@ -8,7 +8,7 @@
 package lottie.elements
 
 
-let EMPTY_ASSET: Asset = Asset("", Array<Layer>(), 0, 0, "", "", 0)
+
 
 /*
  * TODO：初始化后需要单独执行 this.initElement(data, globalData)，放在 init 中编译报错。
@@ -18,7 +18,7 @@ public open class IImageElement <: BaseElement {
 
     //TODO: 未实现this.globalData.getAssetData = this.animationItem.getAssetData.bind(this.animationItem)
     //TODO: 暂时用空的 Asset 代替
-    var assetData: Asset = EMPTY_ASSET
+    var assetData: Asset = empty_asset
     //父[5]类 RenderableDOMElement 中有 baseElement/layerElement/innerElem
 
     var sourceRect: SourceRect = SourceRect()

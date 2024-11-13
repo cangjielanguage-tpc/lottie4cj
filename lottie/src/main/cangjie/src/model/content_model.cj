@@ -43,7 +43,7 @@ public open class ContentModel <: ToString {
 public open class ContentModelP <: ToString {
 
     public let p: Int64
-    private let _k: Array<Keyframe<Array<Float64>>>
+    public let k: Array<Keyframe<Array<Float64>>>
 
     /**
      * Create a ContentModelP instance based on parameters.
@@ -53,15 +53,15 @@ public open class ContentModelP <: ToString {
      */
     public init(p!: Int64 = 0, k!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()){
         this.p = p
-        this._k = k
+        this.k = k
     }
 
     /**
      * Obtain the k of ContentModelP.
      */
-    public prop k: Array<Keyframe<Array<Float64>>> {
-        get() { this._k.clone() }
-    }
+    //public prop k: Array<Keyframe<Array<Float64>>> {
+    //    get() { this._k.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -71,13 +71,13 @@ public open class ContentModelP <: ToString {
     public func toString(): String {
         return "ContentModelP: {\n" +
                "p = ${p},\n" +
-               "k = ${_k}\n}"
+               "k = ${k}\n}"
     }
 }
 
 public open class ContentModelPK <: ToString {
 
-    private let _k: Array<Keyframe<Array<Float64>>>
+    public let k: Array<Keyframe<Array<Float64>>>
 
     /**
      * Create a ContentModelPK instance based on the parameter.
@@ -85,15 +85,15 @@ public open class ContentModelPK <: ToString {
      * @param k - Type of Array<Keyframe<Array<Float64>>>, the value of k.
      */
     public init(k!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()){
-        this._k = k
+        this.k = k
     }
 
     /**
      * Obtain the k of ContentModelPK.
      */
-    public prop k: Array<Keyframe<Array<Float64>>> {
-        get() { this._k.clone() }
-    }
+    //public prop k: Array<Keyframe<Array<Float64>>> {
+    //    get() { this._k.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -101,7 +101,7 @@ public open class ContentModelPK <: ToString {
      * @return Type of String, converted String.
      */
     public func toString(): String {
-        return "ContentModelPK: { k = ${_k} }"
+        return "ContentModelPK: { k = ${k} }"
     }
 }
 
@@ -134,7 +134,7 @@ public open class ContentModelD <: ToString {
 }
 
 public open class ContentModelDK <: ToString {
-    private let _k: Array<Keyframe<Float64>>
+    public let k: Array<Keyframe<Float64>>
 
     /**
      * Create a ContentModelDK instance based on the parameter.
@@ -142,15 +142,15 @@ public open class ContentModelDK <: ToString {
      * @param k - Type of Array<Keyframe<Float64>>, the value of k.
      */
     public init(k!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()){
-        this._k = k
+        this.k = k
     }
 
     /**
      * Obtain the k of ContentModelDK.
      */
-    public prop k: Array<Keyframe<Float64>> {
-        get() { this._k.clone() }
-    }
+    //public prop k: Array<Keyframe<Float64>> {
+    //    get() { this._k.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -158,6 +158,6 @@ public open class ContentModelDK <: ToString {
      * @return Type of String, converted String.
      */
     public func toString(): String {
-        return "ContentModelDK: { k = ${_k} }"
+        return "ContentModelDK: { k = ${k} }"
     }
 }

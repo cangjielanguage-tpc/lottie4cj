@@ -162,8 +162,8 @@ public class AnimationDataParser {
         var imageCount: Int32 = 0
         /* Iterate through and parse each layer. */
         let len: Int64 = reader.size()
-        let EMPTY_LAYER: Layer = Layer()
-        let layers: Array<Layer> = Array<Layer>(len, item: EMPTY_LAYER)
+        //let EMPTY_LAYER: Layer = Layer()
+        let layers: Array<Layer> = Array<Layer>(len, item: empty_layer)
         for (i in 0..len) {
             let jv: JsonValue = reader[i]
             /* Layer parsing. */
@@ -194,12 +194,11 @@ public class AnimationDataParser {
         if (len <= 0) {
             return Array<Asset>()
         }
-        let EMPTY_ARRAY_LAYER: Array<Layer> = Array<Layer>()
-        let EMPTY_ASSET: Asset = Asset("", Array<Layer>(), 0, 0, "", "", 0)
-        let assets: Array<Asset> = Array<Asset>(len, item: EMPTY_ASSET)
+
+        let assets: Array<Asset> = Array<Asset>(len, item: empty_asset)
         for (i in 0..len) {
             var id: String = ""
-            var layers: Array<Layer> = EMPTY_ARRAY_LAYER
+            var layers: Array<Layer> = empty_Array_layer
             let layerMap: HashMap<Int64, Layer> = HashMap<Int64, Layer>()
 
             /* For images. */
@@ -217,8 +216,8 @@ public class AnimationDataParser {
             if (let Some(v) <- jo.get(ASSETS_NAMES[1])) {
                 let ja: JsonArray = v.asArray()
                 let len: Int64 = ja.size()
-                let EMPTY_LAYER: Layer = Layer()
-                layers = Array<Layer>(len, item: EMPTY_LAYER)
+                //let EMPTY_LAYER: Layer = Layer()
+                layers = Array<Layer>(len, item: empty_layer)
                 for (j in 0..len) {
                   let jsonValue: JsonValue = ja[j]
                   let layer: Layer = LayerParser.parse(jsonValue)

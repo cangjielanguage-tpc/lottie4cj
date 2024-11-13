@@ -25,7 +25,7 @@ public class BezierFactory {
 
     //var ob = {}
     //ob.getBezierEasing = getBezierEasing
-    static var beziers: HashMap<String, BezierEasing> = HashMap<String, BezierEasing>(24)
+    static var beziers: HashMap<String, BezierEasing> = HashMap<String, BezierEasing>(16)
 
     public static func getBezierEasing(a: Float64, b: Float64, c: Float64, d: Float64, nm: Array<String>): BezierEasing {
         var str: Array<String> = nm

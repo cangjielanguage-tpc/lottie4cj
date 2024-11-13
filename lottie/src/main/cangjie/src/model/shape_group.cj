@@ -19,7 +19,7 @@ public class ShapeGroup <: ContentModel {
      */
     public let nm: String                    // 0 = name
     //public let hd: Bool                      // 1 = hidden
-    private let _it: Array<ContentModel>     // 2 = items
+    public let it: Array<ContentModel>     // 2 = items
 
     public var cix: Int64 = 0
 
@@ -38,7 +38,7 @@ public class ShapeGroup <: ContentModel {
      */
     public init(nm!: String, it!: Array<ContentModel>, hd!: Bool = false, cix!: Int64 = 0, np!: Int64 = 0) {
         this.nm = nm
-        this._it = it
+        this.it = it
         this.hd = hd
         this.cix = cix
         this.np = np
@@ -53,7 +53,7 @@ public class ShapeGroup <: ContentModel {
      */
     public init(nm: String, it: Array<ContentModel>, hd: Bool) {
         this.nm = nm
-        this._it = it
+        this.it = it
         this.hd = hd
     }
 
@@ -67,9 +67,9 @@ public class ShapeGroup <: ContentModel {
     /**
      * Obtain the it of ShapeGroup.
      */
-    public prop it: Array<ContentModel> {
-        get() { this._it.clone() }
-    }
+    //public prop it: Array<ContentModel> {
+    //    get() { this._it.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -81,6 +81,6 @@ public class ShapeGroup <: ContentModel {
                "ty: ${ty},\n" +
                "nm: ${nm},\n" +
                "hd: ${hd},\n" +
-               "it: ${_it}\n}"
+               "it: ${it}\n}"
     }
 }
