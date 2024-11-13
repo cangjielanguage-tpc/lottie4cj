@@ -27,14 +27,15 @@ public class DashProperty <: DynamicPropertyContainer {
     //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
     //在父类DynamicPropertyContainer中有elemGlobalData  //var elemGlobalData: GlobalData = GlobalData()
     //在父类DynamicPropertyContainer中有elemData        //var elemData: Layer = Layer()
-    var dataProps: Array<DataProp<ContentModelDK, Float64>> = Array<DataProp<ContentModelDK, Float64>>()
+//    var dataProps: Array<DataProp<ContentModelDK, Float64>> = Array<DataProp<ContentModelDK, Float64>>()
+    var dataProps: Option<Array<DataProp<ContentModelDK, Float64>>>
     var renderer: String
 
     var frameId: Int64 = -1
     public var k: Bool = false
     var dashStr: String = ""
 
-    public var dashArray: Array<Float64> = Array<Float64>()
+    public var dashArray: Array<Float64>
     //TODO: 长度为 1 的数组，是否换成数值成员变量类型 ？？？
     public var dashoffset: Array<Float64> = Array<Float64>(1, item: 0.0)
     
@@ -46,13 +47,18 @@ public class DashProperty <: DynamicPropertyContainer {
         super(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
 
         //TODO:未确认数据类型，自定义为 DataProp。
-        let empty_dp: DataProp<ContentModelDK, Float64> = DataProp<ContentModelDK, Float64>(n: "", p: PropertyFactory<ContentModelDK, Float64>(ContentModelDK(), 0.0, DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties), elemGlobalData, elemData, dynamicProperties: dynamicProperties))
-        this.dataProps = Array<DataProp<ContentModelDK, Float64>>(data.size, item: empty_dp)
+//        let empty_dp: DataProp<ContentModelDK, Float64> = DataProp<ContentModelDK, Float64>(n: "", p: PropertyFactory<ContentModelDK, Float64>(ContentModelDK(), 0.0, DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties), elemGlobalData, elemData, dynamicProperties: dynamicProperties))
+//        this.dataProps = Array<DataProp<ContentModelDK, Float64>>(data.size, item: empty_dp)
+        this.dataProps = None
         this.renderer = renderer
 
         let len: Int64 = data.size
         if (data.size > 0) {
             this.dashArray = Array<Float64>(len - 1, item: 0.0)
+            let empty_dp: DataProp<ContentModelDK, Float64> = DataProp<ContentModelDK, Float64>(n: "", p: PropertyFactory<ContentModelDK, Float64>(empty_ContentModelDK, 0.0, DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties), elemGlobalData, elemData, dynamicProperties: dynamicProperties))
+            this.dataProps = Array<DataProp<ContentModelDK, Float64>>(data.size, item: empty_dp)
+        } else {
+            this.dashArray = Array<Float64>()
         }
 
         //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
@@ -74,7 +80,11 @@ public class DashProperty <: DynamicPropertyContainer {
             props.container = [this]
             this.k = props.k || this.k
 
-            this.dataProps[i] = DataProp<ContentModelDK, Float64>(n: data[i].n, p: props)
+            if (let Some(value) <- dataProps) {
+                value[i] = DataProp<ContentModelDK, Float64>(n: data[i].n, p: props)
+            }
+
+//            this.dataProps[i] = DataProp<ContentModelDK, Float64>(n: data[i].n, p: props)
         }
         if (!this.k) {
             this.getValue(true)
@@ -95,21 +105,42 @@ public class DashProperty <: DynamicPropertyContainer {
         this.iterateDynamicProperties()
         this._mdf = this._mdf || forceRender
         if (this._mdf) {
-            let len: Int64 = this.dataProps.size
+            let len: Int64 = if (let Some(value) <- dataProps) {
+                value.size
+            } else {
+            	0
+            }
+
+//            let len: Int64 = this.dataProps.size
             if (this.renderer == "svg") {
                 this.dashStr = ""
             }
-            for (i in 0..len) {
-                if (this.dataProps[i].n != "o") {
-                    if (this.renderer == "svg") {
-                        this.dashStr += " " + this.dataProps[i].p.v[0].toString()
+
+            if (let Some(value) <- dataProps) {
+                for (i in 0..len) {
+                    if (value[i].n != "o") {
+                        if (this.renderer == "svg") {
+                            this.dashStr += " " + value[i].p.v[0].toString()
+                        } else {
+                            this.dashArray[i] = value[i].p.v[0]
+                        }
                     } else {
-                        this.dashArray[i] = this.dataProps[i].p.v[0]
+                        this.dashoffset[0] = value[i].p.v[0]
                     }
-                } else {
-                    this.dashoffset[0] = this.dataProps[i].p.v[0]
                 }
             }
+
+//            for (i in 0..len) {
+//                if (this.dataProps[i].n != "o") {
+//                    if (this.renderer == "svg") {
+//                        this.dashStr += " " + this.dataProps[i].p.v[0].toString()
+//                    } else {
+//                        this.dashArray[i] = this.dataProps[i].p.v[0]
+//                    }
+//                } else {
+//                    this.dashoffset[0] = this.dataProps[i].p.v[0]
+//                }
+//            }
         }
     }
 

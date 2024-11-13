@@ -35,7 +35,7 @@ public open class ExpressionInterface {
     //public open func selfCalling(value: String): ExpressionInterface { return this }
 
     //strokeInterfaceFactory----------------------------------------------------------------------------------
-    var dash: HashMap<String, ExpressionPropertyInterface<ContentModelDK, Float64>> = HashMap<String, ExpressionPropertyInterface<ContentModelDK, Float64>>(24)
+    var dash: HashMap<String, ExpressionPropertyInterface<ContentModelDK, Float64>> = HashMap<String, ExpressionPropertyInterface<ContentModelDK, Float64>>(0)
     //strokeInterfaceFactory----------------------------------------------------------------------------------
 
 

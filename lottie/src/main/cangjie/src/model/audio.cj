@@ -9,12 +9,12 @@ package lottie.model
 
 public class Audio <: ToString {
 
-    public var isPlaying: Bool = false
+    public var isPlaying: Bool
     public var play: () -> Unit = { => this.isPlaying = true }
     public var seek: () -> Unit = { => this.isPlaying = false }
-    public var playing: () -> Unit = { => ()}
-    public var rate: () -> Unit = { => ()}
-    public var setVolume: () -> Unit = { => ()}
+    public var playing: () -> Unit
+    public var rate: () -> Unit
+    public var setVolume: () -> Unit
 
     /**
      * Create a Audio instance based on parameters.

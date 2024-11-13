@@ -39,7 +39,7 @@ public class AnimationManager {
 
     //TODO：cj 没有 js 的可以直接用的 document。设置一个 document：CreateTag 对象在 最外层的 lottie 中？？？
     //TODO: 最外层的 lottie 传过来？？？
-    var document: HashMap<String, Array<CreateNS>> = HashMap<String, Array<CreateNS>>(24)
+    var document: HashMap<String, Array<CreateNS>> = HashMap<String, Array<CreateNS>>(16)
 
     //TODO: 初始化一个空的 AnimationConfig。
     var params: AnimationConfig

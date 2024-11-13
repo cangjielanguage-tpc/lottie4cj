@@ -34,25 +34,25 @@ func defalut_fnc(num: Float64): Float64 {
 public class CachingAtTime {
     //CachingAtTime--------------------
     //clone(shape: ShapeData): ShapeData
-    public var shapeValue: ShapeData = ShapeData()
-    public var lastIndex: Int64 = 0
-    public var lastTime: Float64 = initialDefaultFrameFloat64
+    public var shapeValue: ShapeData
+    public var lastIndex: Int64
+    public var lastTime: Float64
 
     //TODO: value 既可以是数组，也可以是数值。
-    public var value: Array<Float64> = Array<Float64>()
+    public var value: Array<Float64>
 
     //Caching-----------------------------------------
-    public var lastFrame: Int64 = 0
+    public var lastFrame: Int64
     //public var lastIndex: Int64 = 0
     //TODO: value 既可以是数组，也可以是数值。
     //public var value: Array<Float64> = Array<Float64>()
-    public var _lastKeyframeIndex: Int64 = 0
+    public var _lastKeyframeIndex: Int64
 
     public var _lastAddedLength: Float64 = 0.0
     public var _lastPoint: Int64 = 0
 
-    public init(shapeValue!: ShapeData = ShapeData(), lastIndex!: Int64 = 0, lastTime!: Float64 = initialDefaultFrameFloat64,
-        lastFrame!: Int64 = 0, value!: Array<Float64> = Array<Float64>(), _lastKeyframeIndex!: Int64 = 0
+    public init(shapeValue!: ShapeData = empty_shapeValue, lastIndex!: Int64 = 0, lastTime!: Float64 = initialDefaultFrameFloat64,
+        lastFrame!: Int64 = 0, value!: Array<Float64> = empty_Array_Float64, _lastKeyframeIndex!: Int64 = 0
     ){
         this.shapeValue = shapeValue
         this.lastIndex = lastIndex
@@ -68,11 +68,11 @@ public class CachingAtTime {
 //TODO: 将 Caching 和 CachingAtTime 进行合并。
 /*
 public class Caching {
-    public var lastFrame: Int64 = 0
-    public var lastIndex: Int64 = 0
+    public var lastFrame: Int64
+    public var lastIndex: Int64
     //TODO: value 既可以是数组，也可以是数值。
-    public var value: Array<Float64> = Array<Float64>()
-    public var _lastKeyframeIndex: Int64 = 0
+    public var value: Array<Float64>
+    public var _lastKeyframeIndex: Int64
 
     public var _lastAddedLength: Int64 = 0
     public var _lastPoint: Int64 = 0
@@ -90,9 +90,9 @@ public class Caching {
 /*
 public class CachingAtTime {
     //clone(shape: ShapeData): ShapeData
-    public var shapeValue: ShapeData = ShapeData()
-    public var lastIndex: Int64 = 0
-    public var lastTime: Float64 = initialDefaultFrameFloat64
+    public var shapeValue: ShapeData
+    public var lastIndex: Int64
+    public var lastTime: Float64
 
     //TODO: value 既可以是数组，也可以是数值。
     public var value: Array<Float64> = Array<Float64>()
@@ -138,7 +138,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
 //-----------------------------------------------------------------------------------------------------------------
 
     //TODO: dataK 是否保存成 E 泛型结构？还是修改保存为 data_k_xxxProperty ???
-    var dataK_Number: Array<Float64> = Array<Float64>()
+    var dataK_Number: Array<Float64> = empty_Array_Float64
     var dataK_Keyframed: Array<Keyframe<E>> = Array<Keyframe<E>>()
     
     public var data: T
@@ -154,13 +154,13 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     
     //在父类DynamicPropertyContainer中已经定义成员变量 //public var propType: String = ""
     public var mult: Float64 = 1.0
-    public var v: Array<Float64> = Array<Float64>()
-    public var pv: Array<Float64> = Array<Float64>()
+    public var v: Array<Float64> = empty_Array_Float64
+    public var pv: Array<Float64> = empty_Array_Float64
 
     public var k: Bool = false
     var kf: Bool = false
     
-    var vel: Array<Float64> = Array<Float64>()
+    var vel: Array<Float64> = empty_Array_Float64
     var _isFirstFrame: Bool = true
     
     var frameId: Int64 = -1
@@ -279,8 +279,8 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
 
 
         let keyData_e: Array<Float64> =
-        if (let Some(v) <- keyData.e) {
-            match (v) {
+        if (let Some(vl) <- keyData.e) {
+            match (vl) {
                 case w: Float64 => [w]
                 case w: Array<Float64> => w
                 case w: PointF => [w.x, w.y, 0.0]
@@ -298,8 +298,8 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             Array<Float64>()
         }
         let nextKeyData_s: Array<Float64> =
-        if (let Some(v) <- nextKeyData.s) {
-            match (v) {
+        if (let Some(vl) <- nextKeyData.s) {
+            match (vl) {
                 case w: Float64 => [w]
                 case w: Array<Float64> => w
                 case w: PointF => [w.x, w.y, 0.0]

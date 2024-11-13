@@ -184,7 +184,7 @@ public class DataManager {
         if (len <= 0) {
             return
         }
-        var layerData: Layer = Layer()
+        var layerData: Layer = empty_layer
         var jLen: Int64 = 0
         var kLen: Int64 = 0
         for (i in 0..len) {

@@ -37,7 +37,7 @@ public open class ICompElement <: BaseElement {
     //public var pendingElements: ArrayList<BaseElement> = ArrayList<BaseElement>()
 
     //TODO: 未实现,初拟定了一个数据类型TM.
-    public var tm: PropertyFactory<ContentModelDK, Float64> // = unsafe {zeroValue<PropertyFactory<ContentModelDK, Float64>>()}
+    public var tm: PropertyFactory<ContentModelDK, Float64> = unsafe {zeroValue<PropertyFactory<ContentModelDK, Float64>>()}
     //var renderedFrame: Float64 = 0.0
 
 
@@ -55,7 +55,7 @@ public open class ICompElement <: BaseElement {
     public init(data: Layer, globalData: GlobalData) {
         super(data, globalData)
         //空初始化编译用
-        this.tm = PropertyFactory<ContentModelDK, Float64>(ContentModelDK(), 0.0, DynamicPropertyContainer(), GlobalData(), Layer(), types: 0, dynamicProperties: ArrayList<DynamicPropertyContainer>())
+        //this.tm = PropertyFactory<ContentModelDK, Float64>(ContentModelDK(), 0.0, DynamicPropertyContainer(), GlobalData(), Layer(), types: 0, dynamicProperties: ArrayList<DynamicPropertyContainer>())
     }
 
     public func initElement(data: Layer, globalData: GlobalData) {

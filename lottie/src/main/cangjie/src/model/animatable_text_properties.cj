@@ -89,8 +89,8 @@ public class AnimatableTextPropertiesA <: ToString {
 public class AnimatableTextProperties <: ToString {
 
     public let fc: ArrayKeyframeArrayFloat64             //0 = color
-    private let _sc: Array<Keyframe<Array<Float64>>>     //1 = stroke
-    private let _sw: Array<Keyframe<Float64>>            //2 = strokeWidth
+    public let sc: Array<Keyframe<Array<Float64>>>       //1 = stroke
+    public let sw: Array<Keyframe<Float64>>              //2 = strokeWidth
     public let t: ArrayKeyframeFloat64                   //3 = tracking
 
     /**
@@ -108,24 +108,24 @@ public class AnimatableTextProperties <: ToString {
         t!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
     ){
         this.fc = fc
-        this._sc = sc
-        this._sw = sw
+        this.sc = sc
+        this.sw = sw
         this.t = t
     }
 
     /**
      * Obtain the sc of AnimatableTextProperties.
      */
-    public prop sc: Array<Keyframe<Array<Float64>>> {
-        get() { this._sc.clone() }
-    }
+    //public prop sc: Array<Keyframe<Array<Float64>>> {
+    //    get() { this._sc.clone() }
+    //}
 
     /**
      * Obtain the sw of AnimatableTextProperties.
      */
-    public prop sw: Array<Keyframe<Float64>> {
-        get() { this._sw.clone() }
-    }
+    //public prop sw: Array<Keyframe<Float64>> {
+    //    get() { this._sw.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -135,8 +135,8 @@ public class AnimatableTextProperties <: ToString {
     public func toString(): String {
         return "AnimatableTextProperties: {\n" +
                "fc = ${fc},\n" +
-               "sc = ${_sc},\n" +
-               "sw = ${_sw},\n" +
+               "sc = ${sc},\n" +
+               "sw = ${sw},\n" +
                "t = ${t}\n}"
     }
 }

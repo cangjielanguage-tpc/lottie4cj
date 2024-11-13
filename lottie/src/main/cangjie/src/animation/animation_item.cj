@@ -86,19 +86,19 @@ public class AnimationItem <: BaseEvent {
     var animType: String = ""
     var fileName: String = ""
     
-    var onError: (BMEvent) -> Unit = { m => () }
+    var onError: (BMEvent) -> Unit = onErrorEmpty
     var hasOnError: Bool = false
     var dataManager: DataManager = DataManager()
 
-    var onEnterFrame: (BMEnterFrameEvent) -> Unit = { m => () }
+    var onEnterFrame: (BMEnterFrameEvent) -> Unit = onErrorEmpty
     var hasOnEnterFrame: Bool = false
-    var onLoopComplete: (BMCompleteLoopEvent) -> Unit = { m => () }
+    var onLoopComplete: (BMCompleteLoopEvent) -> Unit = onErrorEmpty
     var hasOnLoopComplete: Bool = false
-    var onComplete: (BMCompleteEvent) -> Unit = { m => () }
+    var onComplete: (BMCompleteEvent) -> Unit = onErrorEmpty
     var hasOnComplete: Bool = false
-    var onSegmentStart: (BMSegmentStartEvent) -> Unit = { m => () }
+    var onSegmentStart: (BMSegmentStartEvent) -> Unit = onErrorEmpty
     var hasOnSegmentStart: Bool = false
-    var onDestroy: (BMDestroyEvent) -> Unit = { m => () }
+    var onDestroy: (BMDestroyEvent) -> Unit = onErrorEmpty
     var hasOnDestroy: Bool = false
 
     public init(animationManager: AnimationManager){
@@ -934,7 +934,7 @@ public class AnimationItem <: BaseEvent {
                 return this.assets[i]
             }
         }
-        return Asset("", Array<Layer>(), 0, 0, "", "", 0)
+        return empty_asset
     }
 
     public func hide(): Unit {

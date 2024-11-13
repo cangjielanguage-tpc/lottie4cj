@@ -26,7 +26,7 @@ public class GradientProperty <: DynamicPropertyContainer {
     var _omdf: Bool = false
     public var _collapsable: Bool = false
     public var _hasOpacity: Int64 = 0
-    var props: PropertyFactory<ContentModelP, Array<Float64>>
+    var props: Option<PropertyFactory<ContentModelP, Array<Float64>>>
     var k: Bool = false
 
     //public var isNull: Bool = false
@@ -35,11 +35,12 @@ public class GradientProperty <: DynamicPropertyContainer {
     public init(isNull!: Bool, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
         super()
         this.isNull = isNull
-        this.data = ContentModelP()
-        this.c = Array<Float64>()
-        this.o = Array<Float64>()
+        this.data = empty_ContentModelP
+        this.c = empty_Array_Float64
+        this.o = empty_Array_Float64
         //为了后续编译，提前初始化一个空的成员变量 this.props
-        this.props = PropertyFactory<ContentModelP, Array<Float64>>(ContentModelP(), 0.0, DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties), elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.props = None
+//        this.props = PropertyFactory<ContentModelP, Array<Float64>>(ContentModelP(), 0.0, DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties), elemGlobalData, elemData, dynamicProperties: dynamicProperties)
     }
 
 
@@ -60,7 +61,8 @@ public class GradientProperty <: DynamicPropertyContainer {
         this.o = Array<Float64>(cLength, item: 0.0)
 
         //为了后续编译，提前初始化一个空的成员变量 this.props
-        this.props = PropertyFactory<ContentModelP, Array<Float64>>(ContentModelP(), 0.0, DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties), elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        //this.props = PropertyFactory<ContentModelP, Array<Float64>>(ContentModelP(), 0.0, DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties), elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.props = Option<PropertyFactory<ContentModelP, Array<Float64>>>.None
 
         this._collapsable = this.checkCollapsable()
         this._hasOpacity = cLength
@@ -71,10 +73,16 @@ public class GradientProperty <: DynamicPropertyContainer {
         if (data.k.size > 0) { vLen = (data.k[0].s ?? Array<Float64>()).size }
         //"g":{"p":2,"k":{"a":0,"k":[0,1,1,1,1,0,0,0],"ix":9}}  //data.k = ContentModelP.k = Array<Keyframe<Array<Float64>>>
         this.props = PropertyFactory<ContentModelP, Array<Float64>>.getProp(data, data.k, 1, 0.0, this, elemGlobalData, elemData, vLen: vLen, dynamicProperties: dynamicProperties)
-        this.props.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-        this.props.container = [this]
 
-        this.k = this.props.k
+        if (let Some(value) <- props) {
+            value.containerType = 3
+            value.container = [this]
+            this.k = value.k
+        }
+//        this.props.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+//        this.props.container = [this]
+
+//        this.k = this.props.k
         this.getValue(true)
     }
     
@@ -119,45 +127,88 @@ public class GradientProperty <: DynamicPropertyContainer {
     }
 
     public func getValue(forceRender: Bool) {
-        this.props.getValue()
-        this._mdf = false
-        this._cmdf = false
-        this._omdf = false
-        if (this.props._mdf || forceRender) {
-            var len: Int64 = this.data.p * 4
-            var mult: Float64 = 0.0
-            var val: Float64 = 0.0
-            for (i in 0..len) {
-                mult = 255.0
-                if (i % 4 == 0) {
-                    mult = 100.0
-                }
-                val = round(this.props.v[i] * mult)
-                if (this.c[i] != val) {
-                    this.c[i] = val
-                    this._cmdf = !forceRender
-                }
-            }
-            if (this.o.size > 0) {
-                len = this.props.v.size
-                for (i in (this.data.p * 4) ..len) {
-                    mult = 1.0
-                    if (i % 2 == 0) {
+        if (let Some(value) <- props) {
+            value.getValue()
+            this._mdf = false
+            this._cmdf = false
+            this._omdf = false
+            if (value._mdf || forceRender) {
+                var len: Int64 = this.data.p * 4
+                var mult: Float64 = 0.0
+                var val: Float64 = 0.0
+                for (i in 0..len) {
+                    mult = 255.0
+                    if (i % 4 == 0) {
                         mult = 100.0
                     }
-                    val = this.props.v[i]
-                    if (i % 2 == 0) {
-                        val = round(this.props.v[i] * 100.0)
-                    }
-                    
-                    if (this.o[i - this.data.p * 4] != val) {
-                        this.o[i - this.data.p * 4] = val
-                        this._omdf = !forceRender
+                    val = round(value.v[i] * mult)
+                    if (this.c[i] != val) {
+                        this.c[i] = val
+                        this._cmdf = !forceRender
                     }
                 }
+                if (this.o.size > 0) {
+                    len = value.v.size
+                    for (i in (this.data.p * 4) ..len) {
+                        mult = 1.0
+                        if (i % 2 == 0) {
+                            mult = 100.0
+                        }
+                        val = value.v[i]
+                        if (i % 2 == 0) {
+                            val = round(value.v[i] * 100.0)
+                        }
+
+                        if (this.o[i - this.data.p * 4] != val) {
+                            this.o[i - this.data.p * 4] = val
+                            this._omdf = !forceRender
+                        }
+                    }
+                }
+                this._mdf = !forceRender
             }
-            this._mdf = !forceRender
         }
+
+
+//        this.props.getValue()
+//        this._mdf = false
+//        this._cmdf = false
+//        this._omdf = false
+//        if (this.props._mdf || forceRender) {
+//            var len: Int64 = this.data.p * 4
+//            var mult: Float64 = 0.0
+//            var val: Float64 = 0.0
+//            for (i in 0..len) {
+//                mult = 255.0
+//                if (i % 4 == 0) {
+//                    mult = 100.0
+//                }
+//                val = round(this.props.v[i] * mult)
+//                if (this.c[i] != val) {
+//                    this.c[i] = val
+//                    this._cmdf = !forceRender
+//                }
+//            }
+//            if (this.o.size > 0) {
+//                len = this.props.v.size
+//                for (i in (this.data.p * 4) ..len) {
+//                    mult = 1.0
+//                    if (i % 2 == 0) {
+//                        mult = 100.0
+//                    }
+//                    val = this.props.v[i]
+//                    if (i % 2 == 0) {
+//                        val = round(this.props.v[i] * 100.0)
+//                    }
+//
+//                    if (this.o[i - this.data.p * 4] != val) {
+//                        this.o[i - this.data.p * 4] = val
+//                        this._omdf = !forceRender
+//                    }
+//                }
+//            }
+//            this._mdf = !forceRender
+//        }
     }
 
 }

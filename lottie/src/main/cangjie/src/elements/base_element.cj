@@ -35,7 +35,7 @@ internal import lottie.bezier.*
 
 
 public func emptyCreateItem(layer: Layer): BaseElement {
-    return BaseElement(Layer(), GlobalData(), isNull: true)
+    return BaseElement(empty_layer, GlobalData(), isNull: true)
 }
 
 
@@ -80,6 +80,11 @@ public class FinalTransform {
 public type RenderableElement = BaseElement
 public type HierarchyElement = BaseElement
 
+func getElementByIdEmpty(ind: Int64): Option<BaseElement> {
+    return Option<BaseElement>.None
+}
+
+
 //cj继承关系：BaseElement <: RenderableDOMElement <: RenderableElement <: TransformElement <: HierarchyElement <: FrameElement
 //TODO: 暂时先将 CvBaseElement 和 BaseElement 合并。避免后面 CVXXXElement 多继承 XXXElement和 CVBaseElement
 public open class BaseElement <: Equatable<BaseElement> {
@@ -97,7 +102,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     public var renderedFrame: Float64 = 0.0
     
-    public var getElementByIdInRender: (Int64) -> Option<BaseElement> = { m => Option<BaseElement>.None }
+    public var getElementByIdInRender: (Int64) -> Option<BaseElement> = getElementByIdEmpty
 
 
 
@@ -107,18 +112,19 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     //TODO: 此处的 dynamicProperties 中数据类型是哪种？  TextProperty  /  PropertyFactory，暂定是 PropertyFactory。
     /* 动画特性列表 */
-    public var dynamicProperties: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>(24)
+    public var dynamicProperties: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>()
 
     /* 如果层在当前刻度中已修改，则为真 */
     public var _mdf: Bool = false
     public var _isParent: Bool = false
-    public var globalData: GlobalData = GlobalData()
-    public var isNull: Bool = false
+    public var globalData: GlobalData
+    public var isNull: Bool
 //FrameElement-2-----------------------------------------------------------------------------
 
 //HierarchyElement-1-----------------------------------------------------------------------------
     //TODO: finalTransform 从 TransformElement 移到 HierarchyElement 中。
     public var finalTransform: FinalTransform = FinalTransform(isNull: true, dynamicProperties: ArrayList<DynamicPropertyContainer>())
+    //public var finalTransform: FinalTransform = unsafe {zeroValue<FinalTransform>()}
 
     //元素的父列表
     //TODO: hierarchy 中装的是某种元素类型，暂定为父类 HierarchyElement？？？ 还是TransformElement(TransformElement中编译用到)？？？
@@ -178,7 +184,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
 
     //[ICompElement]--中移过来的。------------------------------------------------------
-    public var layers: Array<Layer> = Array<Layer>()
+    public var layers: Array<Layer> = empty_Array_layer
     //TODO: 未确认数据类型，暂定为 BaseElement。
     public var elements: Array<BaseElement> = Array<BaseElement>()
     var completeLayers: Bool = false
@@ -409,7 +415,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     public open func checkLayers(num: Float64): Unit {
         var len: Int64 = this.layers.size
-        var data: Layer = Layer()
+        var data: Layer = empty_layer
         this.completeLayers = true
 
         for(i in ((len - 1)..=0 : -1)) {
@@ -568,21 +574,21 @@ public open class BaseElement <: Equatable<BaseElement> {
     //}
 
     // 把当前对象转为 BaseElement。
-    func changeToBaseElement(): BaseElement {
-        let be: BaseElement = BaseElement(this.data, this.globalData)
-        be._isFirstFrame = this._isFirstFrame
-        be.dynamicProperties = this.dynamicProperties
-        be._mdf = this._mdf
-        be._isParent = this._isParent
-        be.globalData = this.globalData
-        be.data = this.data
-        be.finalTransform = this.finalTransform
-        be.hierarchy = this.hierarchy
-        be.buildElementParentingInComp = this.buildElementParentingInComp
-        be.getElementByPathInt64 = this.getElementByPathInt64
-        be.getElementByPathString = this.getElementByPathString
-        return be
-    }
+    //func changeToBaseElement(): BaseElement {
+    //    let be: BaseElement = BaseElement(this.data, this.globalData)
+    //    be._isFirstFrame = this._isFirstFrame
+    //    be.dynamicProperties = this.dynamicProperties
+    //    be._mdf = this._mdf
+    //    be._isParent = this._isParent
+    //    be.globalData = this.globalData
+    //    be.data = this.data
+    //    be.finalTransform = this.finalTransform
+    //    be.hierarchy = this.hierarchy
+    //    be.buildElementParentingInComp = this.buildElementParentingInComp
+    //    be.getElementByPathInt64 = this.getElementByPathInt64
+    //    be.getElementByPathString = this.getElementByPathString
+    //    return be
+    //}
 
 //HierarchyElement-2-----------------------------------------------------------------------------
 
@@ -594,17 +600,26 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.data = data
         this.globalData = globalData
 
-        this.finalTransform.isNull = false
+        //this.finalTransform.isNull = false
+
         if (!this.data.ks.isNull()) {
             //TODO:[lp]--会影响最外层的CvCompElement吗？？？
+            let mProp: TransformProperty
             if (this.compType == 1 && this.comp.size >= 1){
-                this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [comp[0].getRenderedFrameInElemComp])
+                //this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [comp[0].getRenderedFrameInElemComp])
+                mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [comp[0].getRenderedFrameInElemComp])
             } else {
-                this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [this.getRenderedFrameInElemComp])
+                //this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [this.getRenderedFrameInElemComp])
+                mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [this.getRenderedFrameInElemComp])
             }
+            this.finalTransform = FinalTransform(mProp: mProp)
             //this.finalTransform.mProp.addDynamicPropertyInElem = this.addDynamicProperty
         } else {
-            this.finalTransform.mProp.o.v = [0.0]
+            let arrdpc: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>()
+            this.finalTransform = FinalTransform(isNull: false, dynamicProperties: arrdpc)
+            let o = PropertyFactory<ArrayKeyframeInt64, Int64>(ArrayKeyframeInt64(), 0.0, this.finalTransform.mProp, this.globalData, this.data, dynamicProperties: arrdpc)
+            o.v = [0.0]
+            this.finalTransform.mProp.o = o
         }
 
         if (this.data.ao != 0) {
@@ -622,7 +637,9 @@ public open class BaseElement <: Equatable<BaseElement> {
         //Hilog.error(0, "--Element--", "[renderTransform]----> this.finalTransform.mProp.o._mdf = ${this.finalTransform.mProp.o._mdf}")
         //Hilog.error(0, "--Element--", "[renderTransform]----> this.finalTransform.mProp._mdf = ${this.finalTransform.mProp._mdf}")
 
-        this.finalTransform._opMdf = this.finalTransform.mProp.o._mdf || this._isFirstFrame
+        if (let Some(o) <- this.finalTransform.mProp.o) {
+            this.finalTransform._opMdf = o._mdf || this._isFirstFrame
+        }
         this.finalTransform._matMdf = this.finalTransform.mProp._mdf || this._isFirstFrame
 
         //Hilog.error(0, "--Element--", "[renderTransform]----> this.finalTransform._opMdf = ${this.finalTransform._opMdf}")
@@ -760,7 +777,11 @@ public open class BaseElement <: Equatable<BaseElement> {
     }
 
     public func checkTransparency(): Unit {
-        if (this.finalTransform.mProp.o.v[0] <= 0.0) {
+        var vnum: Float64 = 0.0
+        if (let Some(o) <- this.finalTransform.mProp.o) {
+            vnum = o.v[0]
+        }
+        if (vnum <= 0.0) {
             if (!this.isTransparent && this.globalData.renderConfig.hideOnTransparent) {
                 this.isTransparent = true
                 this.hide()
@@ -958,7 +979,10 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.globalData.ctxTransform(this.finalTransform.mat.props) //CanvasRendererBase
         //Hilog.error(0, "---33333--", "[renderFrame]: this.finalTransform.mProp.o.v[0] = ${this.finalTransform.mProp.o.v[0]}")
 
-        this.globalData.ctxOpacity(this.finalTransform.mProp.o.v[0])   //CanvasRendererBase
+        if (let Some(ov) <- this.finalTransform.mProp.o) {
+            this.globalData.ctxOpacity(ov.v[0])   //CanvasRendererBase
+        }
+
         this.renderInnerContent() //CVShapeElement
         this.globalData.restore(forceRealStack)
         //将两个layer数据分别绘制到两个离屏画布上，通过将离屏绘制数据结合混合模式绘制到当前显示画布上，实现mask效果
@@ -1038,7 +1062,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     public open func destroy() {
         this.canvasContext = unsafe {zeroValue<LottieCanvasRenderingContext2D>()}
-        this.data = Layer()
+        this.data = empty_layer
         this.globalData = unsafe {zeroValue<GlobalData>()}
         //this.maskManager.destroy()
         this.maskManager = Array<CvMaskElement>()

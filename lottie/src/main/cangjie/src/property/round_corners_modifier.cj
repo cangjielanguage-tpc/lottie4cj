@@ -8,13 +8,14 @@ package lottie.property
 public class RoundCornersModifier <: ShapeModifier {
     //TODO：拆分多继承问题 -- extendPrototype([ShapeModifier], RoundCornersModifier)
 
-    public var rd: PropertyFactory<ArrayKeyframeFloat64, Float64>
+    public var rd: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>>
     
     public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>){
         super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
-        this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+//        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
+//        this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.rd = None
     }
     
     public func getValue(): Unit {
@@ -25,18 +26,24 @@ public class RoundCornersModifier <: ShapeModifier {
         //TODO: 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
 
         if (data.ty == "rd") {
-            let rd: RoundedCorners = (data as RoundedCorners).getOrThrow()
+            let rc: RoundedCorners = (data as RoundedCorners).getOrThrow()
             
             //"r": {"a": 0, "k": 10, "ix": 1}  //_r: Array<Keyframe<Float64>>
-            if (rd.r.k.size == 1) {//走【分支1】
-                this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rd.r, rd.r.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-            } else if (rd.r.k.size > 1) {//走【分支3】
-                this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rd.r, rd.r.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            if (rc.r.k.size == 1) {//走【分支1】
+                this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rc.r, rc.r.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            } else if (rc.r.k.size > 1) {//走【分支3】
+                this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rc.r, rc.r.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
-            this.rd.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-            this.rd.container = [this]
+
+            if (let Some(value) <- rd) {
+                value.containerType = 3
+                value.container = [this]
+                this._isAnimated = value.effectsSequence.size != 0
+            }
+//            this.rd.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+//            this.rd.container = [this]
         }
-        this._isAnimated = this.rd.effectsSequence.size != 0
+//        this._isAnimated = this.rd.effectsSequence.size != 0
     }
 
     public func processPath(path: ShapeData, round: Float64): ShapeData {
@@ -122,8 +129,12 @@ public class RoundCornersModifier <: ShapeModifier {
         var shapePaths: ArrayList<ShapeData> = ArrayList<ShapeData>()
         let len: Int64 = this.shapes.size
         var jLen: Int64 = 0
-        var rd_v: Array<Float64> = this.rd.v
-    
+//        var rd_v: Array<Float64> = this.rd.v
+        var rd_v: Array<Float64> = if (let Some(value) <- rd) {
+                value.v
+            } else {
+            	Array<Float64>()
+            }
         if (rd_v.size > 0 && rd_v[0] != 0.0) {
             var localShapeCollection: ShapeCollection = ShapeCollection()
             for (i in 0..len) {

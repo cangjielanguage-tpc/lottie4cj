@@ -16,7 +16,7 @@ public class ShapePath <: ContentModel {
      */
     public let nm: String                          //0 = name
     public let ind: Int64                          //1 = ind
-    private let _ks: Array<Keyframe<ShapeData>>    //2 = shape   //暂时未找到调用PropertyFactory.getProp
+    public let ks: Array<Keyframe<ShapeData>>    //2 = shape   //暂时未找到调用PropertyFactory.getProp
     //public let hd: Bool                            //3 = hidden
 
     let _ty: String = "sh"
@@ -43,7 +43,7 @@ public class ShapePath <: ContentModel {
     ){
         this.nm = nm
         this.ind = ind
-        this._ks = ks
+        this.ks = ks
         this.hd = hd
         this.closed = closed
     }
@@ -58,9 +58,9 @@ public class ShapePath <: ContentModel {
     /**
      * Obtain the ks of ShapePath.
      */
-    public prop ks: Array<Keyframe<ShapeData>> {
-        get() { this._ks.clone() }
-    }
+    //public prop ks: Array<Keyframe<ShapeData>> {
+    //    get() { this._ks.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -73,7 +73,7 @@ public class ShapePath <: ContentModel {
                "ty: ${ty},\n" +
                "closed: ${closed},\n" +
                "nm: ${nm},\n" +
-               "ks: ${_ks},\n" +
+               "ks: ${ks},\n" +
                "hd: ${hd}\n}"
     }
 }

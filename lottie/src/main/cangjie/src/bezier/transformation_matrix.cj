@@ -15,21 +15,21 @@ public class Matrix {
 
     public init() {
         this.props[0] = 1.0
-        this.props[1] = 0.0
+        //this.props[1] = 0.0
 
-        this.props[2] = 0.0
-        this.props[3] = 0.0
-        this.props[4] = 0.0
+        //this.props[2] = 0.0
+        //this.props[3] = 0.0
+        //this.props[4] = 0.0
         this.props[5] = 1.0
-        this.props[6] = 0.0
-        this.props[7] = 0.0
-        this.props[8] = 0.0
-        this.props[9] = 0.0
+        //this.props[6] = 0.0
+        //this.props[7] = 0.0
+        //this.props[8] = 0.0
+        //this.props[9] = 0.0
         this.props[10] = 1.0
-        this.props[11] = 0.0
-        this.props[12] = 0.0
-        this.props[13] = 0.0
-        this.props[14] = 0.0
+        //this.props[11] = 0.0
+        //this.props[12] = 0.0
+        //this.props[13] = 0.0
+        //this.props[14] = 0.0
         this.props[15] = 1.0
     }
 

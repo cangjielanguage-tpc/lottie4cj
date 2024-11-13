@@ -25,7 +25,7 @@ public open class DynamicPropertyContainer <: ContentModelElement {
      * containerType：1-FrameElement; 2-TransformPropertyFactory; 3-其他Property/DynamicPropertyContainer
      * 间接用 addDynamicPropertyContainer 函数进行分别处理。
      */
-    public var container: Array<DynamicPropertyContainer> = Array<DynamicPropertyContainer>()
+    public var container: Array<DynamicPropertyContainer>
 
     //comp数据类型：1-Element; 2-Renderer；3-其他
     public var compType: Int8 = 0
@@ -36,18 +36,18 @@ public open class DynamicPropertyContainer <: ContentModelElement {
      * comp数据类型：1-Element; 2-Renderer；3-其他。
      * renderedFrame[0]中函数 => 间接获取 this.elem.comp.renderedFrame 可变的当时的值。
      */
-    public var getRenderedFrame: Array<() -> Float64> = Array<() -> Float64>()
+    public var getRenderedFrame: Array<() -> Float64> = empty_Array_unit_to_Float64
 
     //TODO：FrameElement 中编译用。
     public var propType: String = ""
 
     //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
-    public var elemGlobalData: GlobalData = GlobalData()
-    public var elemData: Layer = Layer()
+    public var elemGlobalData: GlobalData
+    public var elemData: Layer
 
     //TODO: 未确认 dynamicProperties 的数据类型，暂定为 DynamicPropertyContainer
-    public var dynamicProperties: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>()
-    public var dynamicPropertiesInElem: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>()
+    public var dynamicProperties: ArrayList<DynamicPropertyContainer>
+    public var dynamicPropertiesInElem: ArrayList<DynamicPropertyContainer>
     public var _mdf: Bool = false
     public var _isAnimated: Bool = false
 
@@ -57,6 +57,13 @@ public open class DynamicPropertyContainer <: ContentModelElement {
 
     public init() {
         this.isNull = true
+
+        this.elemGlobalData = empty_globalData
+        this.elemData = empty_layer
+        let dps: ArrayList<DynamicPropertyContainer> = empty_dynamicProperties
+        this.dynamicProperties = dps
+        this.dynamicPropertiesInElem = dps
+        this.container = empty_Array_dp
     }
 
     public init(elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
@@ -65,7 +72,9 @@ public open class DynamicPropertyContainer <: ContentModelElement {
 
         this.elemGlobalData = elemGlobalData
         this.elemData = elemData
+        this.dynamicProperties = ArrayList<DynamicPropertyContainer>()
         this.dynamicPropertiesInElem = dynamicProperties
+        this.container = Array<DynamicPropertyContainer>()
     }
 
     public func getRenderedFrameInElemComp(): Float64 {

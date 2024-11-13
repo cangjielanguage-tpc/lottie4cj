@@ -33,9 +33,9 @@ public class ValueProp<E> where E <: ToString {
 public class ExpressionValue<T, E> <: ExpressionInterface where T <: ToString , E <: ToString {
 
     //TODO: 增加成员变量 val，为了能直接给 expressionValue[i] 赋值。
-    var val: Array<Float64> = Array<Float64>()
+    var val: Array<Float64> = empty_Array_Float64
     
-    var value: Array<Float64> = Array<Float64>()
+    var value: Array<Float64> = empty_Array_Float64
     var numKeys: Int64 = 0
     //TODO：keyType代表要调用的 key 函数的区别。keyType：0-空；1-调用 key；2-调用 keyInSide
     public var keyType: Int64 = 0

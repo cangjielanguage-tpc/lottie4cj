@@ -78,7 +78,7 @@ public open class BaseRenderer {
     //public var elements: ArrayList<BaseElement> = ArrayList<BaseElement>()
     //var elementsNum: Int64 = 0   //elements 中实际储存的有效的 BaseElement--改为由
     //TODO: 未实现  //var buildItem
-    public var globalData: GlobalData = GlobalData()
+    public var globalData: GlobalData = empty_globalData
     
     //TODO: 数据类型未确认，暂定是 BaseElement
     public var pendingElements: ArrayList<BaseElement> = ArrayList<BaseElement>()
@@ -120,7 +120,7 @@ public open class BaseRenderer {
 
     public func checkLayers(num: Float64): Unit {
         var len: Int64 = this.layers.size
-        var data: Layer = Layer()
+        var data: Layer = empty_layer
         this.completeLayers = true
 
         for(i in ((len - 1)..=0 : -1)) {
@@ -142,14 +142,14 @@ public open class BaseRenderer {
         this.checkPendingElements()
     }
 
-    public open func createImage(data: Layer): IImageElement { return IImageElement(Layer(), GlobalData()) }
+    public open func createImage(data: Layer): IImageElement { return IImageElement(empty_layer, empty_globalData) }
     public open func createComp(data: Layer): ICompElement {
-        return ICompElement(Layer(), GlobalData())
+        return ICompElement(empty_layer, empty_globalData)
     }
-    public open func createSolid(data: Layer): ISolidElement { return ISolidElement(Layer(), GlobalData()) }
-    public open func createNull(data: Layer): NullElement { return NullElement(Layer(), GlobalData()) }
-    public open func createShape(data: Layer): IShapeElement { return IShapeElement(Layer(), GlobalData()) }
-    public open func createText(data: Layer): ITextElement { return ITextElement(Layer(), GlobalData()) }
+    public open func createSolid(data: Layer): ISolidElement { return ISolidElement(empty_layer, empty_globalData) }
+    public open func createNull(data: Layer): NullElement { return NullElement(empty_layer, empty_globalData) }
+    public open func createShape(data: Layer): IShapeElement { return IShapeElement(empty_layer, empty_globalData) }
+    public open func createText(data: Layer): ITextElement { return ITextElement(empty_layer, empty_globalData) }
 
     /**
      * Process layer data and create corresponding Element.

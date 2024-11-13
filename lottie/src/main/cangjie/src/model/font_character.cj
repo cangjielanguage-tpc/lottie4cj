@@ -18,9 +18,9 @@ public class CharsData <: ToString {
     public var refId: String = ""
     //从 animationData.assets 中找到符合条件的 Asset，条件：this.refId == Asset.id。
     //从找到符合条件的 Asset 中拿到 Asset.layers，赋值到成员变量 layers 中。
-    public var layers: Array<Layer> = Array<Layer>()
+    public var layers: Array<Layer> = empty_Array_layer
 
-    private let _shapes: Array<ContentModel>
+    public let shapes: Array<ContentModel>
 
     /**
      * Create a CharsData instance based on parameters.
@@ -28,15 +28,15 @@ public class CharsData <: ToString {
      * @param shapes - Type of Array<ContentModel>, the value of shapes.
      */
     public init(shapes!: Array<ContentModel> = Array<ContentModel>()){
-        this._shapes = shapes
+        this.shapes = shapes
     }
 
     /**
      * Obtain the shapes of CharsData.
      */
-    public prop shapes: Array<ContentModel> {
-        get() { this._shapes.clone() }
-    }
+    //public prop shapes: Array<ContentModel> {
+    //    get() { this._shapes.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -44,7 +44,7 @@ public class CharsData <: ToString {
      * @return Type of String, converted String.
      */
     public func toString(): String {
-        "CharsData: {\n shapes.size = ${_shapes.size},\n shapes = ${_shapes}\n }"
+        "CharsData: {\n shapes.size = ${shapes.size},\n shapes = ${shapes}\n }"
     }
 }
 

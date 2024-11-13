@@ -16,12 +16,12 @@ public class RepeaterModifier <: ShapeModifier {
     var tMatrix: Matrix = Matrix()
     var matrix: Matrix = Matrix()
     
-    var data: Repeater = Repeater()
+    var data: Repeater
 
-    public var c: PropertyFactory<ArrayKeyframeFloat64, Float64>
-    public var o: PropertyFactory<ArrayKeyframeFloat64, Float64>
-    public var so: PropertyFactory<ArrayKeyframeFloat64, Float64>
-    public var eo: PropertyFactory<ArrayKeyframeFloat64, Float64>
+    public var c: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>>
+    public var o: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>>
+    public var so: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>>
+    public var eo: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>>
 
     var tr: TransformProperty
 
@@ -54,16 +54,23 @@ public class RepeaterModifier <: ShapeModifier {
         compType!: Int8 = 0, renderedFrame!: Array<() -> Float64> = Array<() -> Float64>()
     ){
         super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.data = data
+
         this.reloadShapesInShapeElement = reloadShapes
 
         this.compType = compType
         this.getRenderedFrame = renderedFrame
 
-        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.o = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.so = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.eo = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+//        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+//        this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+//        this.o = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+//        this.so = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+//        this.eo = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+
+        this.c = None
+        this.o = None
+        this.so = None
+        this.eo = None
 
         //(data: AnimatableTransform, elemGlobalData: GlobalData, elemData: Layer)
         this.tr = TransformPropertyFactory.getTransformProperty(data.tr, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties, compType: compType, renderedFrame: renderedFrame)
@@ -109,8 +116,12 @@ public class RepeaterModifier <: ShapeModifier {
         } else if (rp.c.k.size > 1) {//走【分支3】
             this.c = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.c, rp.c.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         }
-        this.c.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-        this.c.container = [this]
+        if (let Some(value) <- c) {
+            value.containerType = 3
+            value.container = [this]
+        }
+//        this.c.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+//        this.c.container = [this]
         
         //"o": {"a": 0, "k": 0, "ix": 2}  //_c: Array<Keyframe<Float64>>
         if (rp.o.k.size == 1) {//走【分支1】
@@ -118,8 +129,12 @@ public class RepeaterModifier <: ShapeModifier {
         } else if (rp.o.k.size > 1) {//走【分支3】
             this.o = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.o, rp.o.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         }
-        this.o.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-        this.o.container = [this]
+        //if (let Some(value) <- o) {
+        //    value.containerType = 3
+        //    value.container = [this]
+        //}
+//        this.o.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+//        this.o.container = [this]
         
         this.tr = TransformPropertyFactory.getTransformProperty(rp.tr, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: this.getRenderedFrame)
         this.tr.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
@@ -131,8 +146,12 @@ public class RepeaterModifier <: ShapeModifier {
         } else if (rp.tr.so.k.size > 1) {//走【分支3】
             this.so = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.tr.so, rp.tr.so.k, 0, 0.01, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         }
-        this.so.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-        this.so.container = [this]
+        //if (let Some(value) <- so) {
+        //    value.containerType = 3
+        //    value.container = [this]
+        //}
+//        this.so.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+//        this.so.container = [this]
         
         //"eo": {"a": 0, "k": 100, "ix": 6}  //_eo: Array<Keyframe<Float64>>
         if (rp.tr.eo.k.size == 1) {//走【分支1】
@@ -140,8 +159,12 @@ public class RepeaterModifier <: ShapeModifier {
         } else if (rp.tr.eo.k.size > 1) {//走【分支3】
             this.eo = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(rp.tr.eo, rp.tr.eo.k, 0, 0.01, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         }
-        this.eo.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-        this.eo.container = [this]
+        //if (let Some(value) <- eo) {
+        //    value.containerType = 3
+        //    value.container = [this]
+        //}
+//        this.eo.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+//        this.eo.container = [this]
 
         this.data = rp
         if (this.dynamicProperties.size == 0) {
@@ -156,13 +179,30 @@ public class RepeaterModifier <: ShapeModifier {
         if (inv) {
             dir = -1.0
         }
-        let scaleX: Float64 = transform.s.v[0] + (1.0 - transform.s.v[0]) * (1.0 - perc)
-        let scaleY: Float64 = transform.s.v[1] + (1.0 - transform.s.v[1]) * (1.0 - perc)
-        pMatrix.translate(transform.p.v[0] * dir * perc, transform.p.v[1] * dir * perc, tz: transform.p.v[2])
-        rMatrix.translate(-transform.a.v[0], -transform.a.v[1], tz: transform.a.v[2])
-        rMatrix.rotate(-transform.r.v[0] * dir * perc)
-        rMatrix.translate(transform.a.v[0], transform.a.v[1], tz: transform.a.v[2])
-        sMatrix.translate(-transform.a.v[0], -transform.a.v[1], tz: transform.a.v[2])
+        var scaleX: Float64 = 0.0
+        var scaleY: Float64 = 0.0
+        if (let Some(sv) <- transform.s) {
+            scaleX = sv.v[0] + (1.0 - sv.v[0]) * (1.0 - perc)
+            scaleY = sv.v[1] + (1.0 - sv.v[1]) * (1.0 - perc)
+        }
+
+        if (let Some(p_v) <- transform.p) {
+            pMatrix.translate(p_v.v[0] * dir * perc, p_v.v[1] * dir * perc, tz: p_v.v[2])
+        }
+        if (let Some(a_v) <- transform.a) {
+            rMatrix.translate(-a_v.v[0], -a_v.v[1], tz: a_v.v[2])
+            if (let Some(r_v) <- transform.r) {
+                rMatrix.rotate(-r_v.v[0] * dir * perc)
+            }
+            rMatrix.translate(a_v.v[0], a_v.v[1], tz: a_v.v[2])
+            sMatrix.translate(-a_v.v[0], -a_v.v[1], tz: a_v.v[2])
+        } else if (let Some(r_v) <- transform.r) {
+             rMatrix.rotate(-r_v.v[0] * dir * perc)
+        }
+        //rMatrix.translate(-transform.a.v[0], -transform.a.v[1], tz: transform.a.v[2])
+        //rMatrix.rotate(-transform.r.v[0] * dir * perc)
+        //rMatrix.translate(transform.a.v[0], transform.a.v[1], tz: transform.a.v[2])
+        //sMatrix.translate(-transform.a.v[0], -transform.a.v[1], tz: transform.a.v[2])
 
         if (inv) {
             sMatrix.scale(1.0 / scaleX, 1.0 / scaleY)
@@ -170,7 +210,9 @@ public class RepeaterModifier <: ShapeModifier {
             sMatrix.scale(scaleX, scaleY)
         }
 
-        sMatrix.translate(transform.a.v[0], transform.a.v[1], tz: transform.a.v[2])
+        if (let Some(a_v) <- transform.a) {
+            sMatrix.translate(a_v.v[0], a_v.v[1], tz: a_v.v[2])
+        }
     }
     
     public func resetElements(elements: Array<ContentModel>): Unit {
@@ -212,7 +254,13 @@ public class RepeaterModifier <: ShapeModifier {
         var hasReloaded: Bool = false
         if (this._mdf || _isFirstFrame) {
             //数据来源分析：this.c.v = PropertyFactory.v = Array<Float64>
-            var copies: Int64 = Int64(ceil(this.c.v[0]))
+//            var copies: Int64 = Int64(ceil(this.c.v[0]))
+            var copies: Int64 = Int64(ceil(if (let Some(value) <- c) {
+                    value.v[0]
+                }else {
+                    0.0
+                }))
+
             if (this._groups.size < copies) {
                 var diffNum: Int64 = copies - this._groups.size
                 let empty_ShapeGroup: ShapeGroup = ShapeGroup("", Array<ContentModel>(), false)
@@ -296,7 +344,12 @@ public class RepeaterModifier <: ShapeModifier {
     
             this._currentCopies = copies
     
-            var offset: Float64 = this.o.v[0]
+//            var offset: Float64 = this.o.v[0]
+            var offset: Float64 = if (let Some(value) <- o) {
+                    value.v[0]
+                }else {
+                    0.0
+                }
             var offsetModulo: Int64 = Int64(offset) % 1
 
             var roundOffset: Float64 = 0.0
@@ -357,9 +410,25 @@ public class RepeaterModifier <: ShapeModifier {
                 //TODO: 为避免循环/递归构造函数调用，方便初始化，transform.op 从 PropertyFactory 类型改为 Array<PropertyFactory> 类型。
                 transformData.transform.op._mdf = true
                 if (this._currentCopies == 1) {
-                    transformData.transform.op.v = this.so.v
+//                    transformData.transform.op.v = this.so.v
+                    transformData.transform.op.v = if (let Some(value) <- so) {
+                        value.v
+                    } else {
+                    	Array<Float64>()
+                    }
                 } else {
-                    let v0: Float64 = this.so.v[0] + (this.eo.v[0] - this.so.v[0]) * Float64(i / (this._currentCopies - 1))
+//                    let v0: Float64 = this.so.v[0] + (this.eo.v[0] - this.so.v[0]) * Float64(i / (this._currentCopies - 1))
+                    var sov = if (let Some(value) <- so) {
+                        value.v[0]
+                    }else {
+                        0.0
+                    }
+                    var eov = if (let Some(value) <- eo) {
+                        value.v[0]
+                    }else {
+                        0.0
+                    }
+                    let v0: Float64 = sov + (eov - sov) * Float64(i / (this._currentCopies - 1))
                     transformData.transform.op.v = [v0]
                 }
     

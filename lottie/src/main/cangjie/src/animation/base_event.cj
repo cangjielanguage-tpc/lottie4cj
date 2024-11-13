@@ -15,7 +15,7 @@ public open class BaseEvent <: BMEvent {
      * TODO: 没法直接比较 2 个函数，需要包装成 2 个 Object，用 refEq 进行比较。 
      * (T) -> Unit 包装成 AnimationEventCallback，调用的时候调用 AnimationEventCallback.callback
      */
-    public var _cbs: HashMap<String, ArrayList<AnimationEventCallback>> = HashMap<String, ArrayList<AnimationEventCallback>>(24)
+    public var _cbs: HashMap<String, ArrayList<AnimationEventCallback>> = HashMap<String, ArrayList<AnimationEventCallback>>(16)
 
     public init(){
         super("")

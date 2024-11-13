@@ -23,6 +23,8 @@ internal import lottie.bezier.*
 
 import std.collection.*
 
+public let empty_globalData: GlobalData = GlobalData()
+
 public class CompSize {
     public let w: Float64                          // 0 = width       // View width
     public let h: Float64                          // 1 = height      // View height
@@ -154,7 +156,7 @@ public class GlobalData {
     public var defs: CreateNS = CreateNS("")
 
     //BaseRenderer.setupGlobalData 中给函数型成员变量赋值。
-    public var getAssetData: (String) -> Asset = { m => return Asset("", Array<Layer>(), 0, 0, "", "", 0) }
+    public var getAssetData: (String) -> Asset = { m => return empty_asset }
     public var getAssetsPath: (Asset) -> String = { m => return "" }
     public var imageLoader: ImagePreloader = ImagePreloader()
     //TODO：循环依赖。AudioControllerFactory 和 GlobalData 大循环依赖。

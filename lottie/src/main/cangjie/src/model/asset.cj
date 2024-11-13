@@ -22,7 +22,7 @@ public class Asset <: ToString & Equatable<Asset> {
     
     /* Corresponds to the field key name in the "assets" resource information array in json. */
     public let id: String                    // 0 = id              // Picture id
-    private let _layers: Array<Layer>        // 1 = layers          // Layer information
+    public let layers: Array<Layer>        // 1 = layers          // Layer information
     public let w: Int64                      // 2 = width           // Picture width
     public let h: Int64                      // 3 = height          // Picture height
     public let p: String                     // 4 = imageFileName   // Picture name
@@ -42,7 +42,7 @@ public class Asset <: ToString & Equatable<Asset> {
      */
     public init(id: String, layers: Array<Layer>, w: Int64, h: Int64, p: String, u: String, e: Int64){
         this.id = id
-        this._layers = layers
+        this.layers = layers
         this.w = w
         this.h = h
         this.p = p
@@ -53,9 +53,9 @@ public class Asset <: ToString & Equatable<Asset> {
     /**
      * Obtain the layers of Asset.
      */
-    public prop layers: Array<Layer> {
-        get() { this._layers.clone() }
-    }
+    //public prop layers: Array<Layer> {
+    //    get() { this._layers.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -65,7 +65,7 @@ public class Asset <: ToString & Equatable<Asset> {
     public func toString(): String {
         "Asset: {\n" +
         "id = ${id}\n" +
-        "layers.size = ${_layers.size}\n" +
+        "layers.size = ${layers.size}\n" +
         "w = ${w}\n" +
         "h = ${h}\n" +
         "p = ${p}\n" +
@@ -100,7 +100,7 @@ public class Asset <: ToString & Equatable<Asset> {
      */
     public func isNull(): Bool {
         return this.id == "" &&
-                this._layers.size == 0 &&
+                this.layers.size == 0 &&
                 this.w == -1 &&
                 this.h == -1 &&
                 this.p == "" &&

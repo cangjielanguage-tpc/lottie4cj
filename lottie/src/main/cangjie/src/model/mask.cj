@@ -35,9 +35,9 @@ public class Mask <: ContentModel {
     public let cl: Bool                             // 0 = cl
     public let inv: Bool                            // 1 = inverted
     public let mode: String                         // 2 = maskMode
-    private let _pt: Array<Keyframe<ShapeData>>     // 3 = maskPath   //走PropertyFactory.getProp中 0 分支逻辑
-    private let _o: Array<Keyframe<Int64>>          // 4 = opacity
-    private let _x: Array<Keyframe<Int64>>          // 5 = x
+    public let pt: Array<Keyframe<ShapeData>>     // 3 = maskPath   //走PropertyFactory.getProp中 0 分支逻辑
+    public let o: Array<Keyframe<Int64>>          // 4 = opacity
+    public let x: Array<Keyframe<Int64>>          // 5 = x
     public let nm: String                           // 6 = nm
     
     //public var viewData: Array<ViewData> = Array<ViewData>()
@@ -76,32 +76,32 @@ public class Mask <: ContentModel {
         this.cl = cl
         this.inv = inv
         this.mode = mode
-        this._pt = pt
-        this._o = o
-        this._x = x
+        this.pt = pt
+        this.o = o
+        this.x = x
         this.nm = nm
     }
 
     /**
      * Obtain the pt of Mask.
      */
-    public prop pt: Array<Keyframe<ShapeData>> {
-        get() { this._pt.clone() }
-    }
+    //public prop pt: Array<Keyframe<ShapeData>> {
+    //    get() { this._pt.clone() }
+    //}
 
     /**
      * Obtain the o of Mask.
      */
-    public prop o: Array<Keyframe<Int64>> {
-        get() { this._o.clone() }
-    }
+    //public prop o: Array<Keyframe<Int64>> {
+    //    get() { this._o.clone() }
+    //}
 
     /**
      * Obtain the x of Mask.
      */
-    public prop x: Array<Keyframe<Int64>> {
-        get() { this._x.clone() }
-    }
+    //public prop x: Array<Keyframe<Int64>> {
+    //    get() { this._x.clone() }
+    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -113,9 +113,9 @@ public class Mask <: ContentModel {
         "cl    = ${cl}\n" +
         "inv   = ${inv}\n" +
         "mode  = ${mode}\n" +
-        "pt    = ${_pt}\n" +
-        "o     = ${_o}\n" +
-        "x     = ${_x}\n" +
+        "pt    = ${pt}\n" +
+        "o     = ${o}\n" +
+        "x     = ${x}\n" +
         "nm    = ${nm}\n}"
     }
 }
