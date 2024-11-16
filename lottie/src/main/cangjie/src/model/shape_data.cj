@@ -276,4 +276,27 @@ public class ShapeData <: ToString {
         this._length = 0
     }
 
+    public func clone(): ShapeData {
+        var src = ShapeData()
+        src.c = this.c
+        src._length = this._length
+        src._maxLength = this._maxLength
+        var vr: Array<PointF> = Array<PointF>(this.v.size,item: PointF())
+        var ur: Array<PointF> = Array<PointF>(this.i.size,item: PointF())
+        var ors: Array<PointF> = Array<PointF>(this.o.size,item: PointF())
+        for (i in 0..this.v.size) {
+            vr[i] = this.v[i].clone()
+        }
+        for (i in 0..this.i.size) {
+            ur[i] = this.i[i].clone()
+        }
+        for (i in 0..this.o.size) {
+            ors[i] = this.o[i].clone()
+        }
+        src.v = vr
+        src.i = ur
+        src.o = ors
+        return src
+    }
+
 }

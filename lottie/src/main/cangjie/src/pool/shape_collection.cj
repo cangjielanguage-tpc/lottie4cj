@@ -32,8 +32,24 @@ public class ShapeCollection {
         //    this._maxLength *= 2
         //}
         //this.shapes[this._length] = shapeData
-        this.shapes.append(shapeData)
+        if(this.shapes.size > this._length) {
+            this.shapes.set(this._length,shapeData)
+        } else {
+        	this.shapes.append(shapeData)
+        }
         this._length += 1
+    }
+
+    public func clone(): ShapeCollection {
+        let sc = ShapeCollection()
+        sc._length = this._length
+        sc._maxLength = this._maxLength
+        var rc = ArrayList<ShapeData>(this.shapes.size)
+        for(i in 0..this.shapes.size) {
+            rc.append(this.shapes[i].clone())
+        }
+        sc.shapes = rc
+        return sc
     }
 
     /**
@@ -44,6 +60,7 @@ public class ShapeCollection {
             //TODO:和 shapePool有包交叉调用，暂时把包合并？？？---------------------------------------------------2024.07.13
             shapePool.release(this.shapes[i])
         }
+        this.shapes.clear()
         this._length = 0
     }
 }

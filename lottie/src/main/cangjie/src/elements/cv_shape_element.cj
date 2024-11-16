@@ -325,7 +325,9 @@ public class CvShapeElement <: IShapeElement {
                 if (processedPos == 0) {
                     //modifier = ShapeModifiers.getModifier(arr[i].ty)
                     //modifier.init(this, arr[i])
-                    modifier = ShapeModifier(arr[i], this.globalData, this.data, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
+                    //modifier = ShapeModifier(arr[i], this.globalData, this.data, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
+                    // "tm" 外层圆形转动效果
+                    modifier = ShapeModifier.initShapeModifier(arr[i], this.globalData, this.data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [this.getRenderedFrameInElemComp])
                     itemsData[i] = modifier
                     this.shapeModifiers.append(modifier)
                 } else {

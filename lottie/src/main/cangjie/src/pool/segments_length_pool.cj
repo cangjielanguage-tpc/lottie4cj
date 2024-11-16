@@ -12,7 +12,7 @@ func createSegmentsLength(): SegmentsLengthElement {
     return SegmentsLengthElement(
         //bez: segmentsLengthPool.newElement().lengths = segmentsLength = lengths    =>   lengths[i] = bezierLengthPool.newElement()
         lengths: Array<BezierLengthElement>(), 
-        totalLength: 0
+        totalLength: 0.0
     )
 }
 
