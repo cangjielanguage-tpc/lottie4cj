@@ -526,12 +526,8 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             this.checkLayers(num)
         }
 
-        if (num > 89.5) {
-            Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> num = ${num}")
-        }
-
-
         for (i in 0..len) {
+            //TODO: 测试用后续删除
             //if (i == 18) {
             //    Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> i = ${i}")
             //}

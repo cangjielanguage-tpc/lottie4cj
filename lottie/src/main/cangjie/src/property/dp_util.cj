@@ -8,7 +8,7 @@
 //package lottie.utils
 package lottie.property
 
-public let empty_Array_unit_to_Float64: Array<() -> Float64> = Array<() -> Float64>()
+public let empty_Array_Int64_to_Float64: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>()
 
 public let empty_ContentModelElement: ContentModelElement = ContentModelElement()
 

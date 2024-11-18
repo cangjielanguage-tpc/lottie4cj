@@ -26,7 +26,11 @@ public class CvShapeData <: ContentModelElement {
     //element == CvShapeElement
     //data => (arr[i].ty == 'sh'/'rc'/'el'/'sr')
     //public init(element: CvShapeElement, data: ContentModel, styles: ArrayList<StyleElem>, transformsManager: ShapeTransformManager) {
-    public init(elemGlobalData: GlobalData, elemData: Layer, data: ContentModel, styles: ArrayList<StyleElem>, transformsManager: ShapeTransformManager, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
+    public init(elemGlobalData: GlobalData, elemData: Layer, data: ContentModel, styles: ArrayList<StyleElem>, 
+        transformsManager: ShapeTransformManager, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+        compDataInd!: Int64 = -1
+    ) {
         this.styledShapes = ArrayList<StyledShape>()
         this.tr = [0, 0, 0, 0, 0, 0]
         var ty: Int64 = 4
@@ -37,7 +41,9 @@ public class CvShapeData <: ContentModelElement {
         } else if (data.ty == "sr") {
             ty = 7
         }
-        this.sh = ShapePropertyFactory.getShapeProp(data, ty, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        //this.sh = ShapePropertyFactory.getShapeProp(data, ty, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.sh = ShapePropertyFactory.getShapeProp(data, ty, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
+
         let len: Int64 = styles.size
         for (i in 0..len) {
             if (!styles[i].closed) {

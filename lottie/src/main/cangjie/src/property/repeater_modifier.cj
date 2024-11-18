@@ -51,7 +51,8 @@ public class RepeaterModifier <: ShapeModifier {
 
     public init(data: Repeater, elemGlobalData: GlobalData, elemData: Layer,
         reloadShapes: () -> Unit, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
-        compType!: Int8 = 0, renderedFrame!: Array<() -> Float64> = Array<() -> Float64>()
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+        compDataInd!: Int64 = -1
     ){
         super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.data = data
@@ -59,6 +60,7 @@ public class RepeaterModifier <: ShapeModifier {
         this.reloadShapesInShapeElement = reloadShapes
 
         this.compType = compType
+        this.compDataInd = compDataInd
         this.getRenderedFrame = renderedFrame
 
 //        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
@@ -80,9 +82,10 @@ public class RepeaterModifier <: ShapeModifier {
     public init(arr: Array<ContentModel>, pos: Int64, elemsData: Array<ContentModelElement>,
         elemGlobalData: GlobalData, elemData: Layer,
         reloadShapes: () -> Unit, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
-        compType!: Int8 = 0, renderedFrame!: Array<() -> Float64> = Array<() -> Float64>()
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+        compDataInd!: Int64 = -1
     ) {
-        this((arr[pos] as Repeater).getOrThrow(), elemGlobalData, elemData, reloadShapes, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame)
+        this((arr[pos] as Repeater).getOrThrow(), elemGlobalData, elemData, reloadShapes, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
         this.arr = arr
         this.pos = pos
         this.elemsData = elemsData

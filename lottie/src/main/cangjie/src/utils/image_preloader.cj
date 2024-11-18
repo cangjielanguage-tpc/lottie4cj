@@ -86,8 +86,8 @@ public class ImagePreloader {
             this.loadedAssets.fetchAdd(1)
             if (this.loadedAssets.load() == this.totalImages && this.loadedFootagesCount.load() == this.totalFootages) {
                 if (this.imagesLoadedCbFlag) {
-                    Hilog.error(0, "-----------", "[imageLoaded]: this.loadedAssets.load() = ${this.loadedAssets.load()}")
-                    Hilog.error(0, "-----------", "[imageLoaded]: this.totalImages = ${this.totalImages}")
+                    //Hilog.error(0, "-----------", "[imageLoaded]: this.loadedAssets.load() = ${this.loadedAssets.load()}")
+                    //Hilog.error(0, "-----------", "[imageLoaded]: this.totalImages = ${this.totalImages}")
                     this.imagesLoadedCb()
                 }
             }

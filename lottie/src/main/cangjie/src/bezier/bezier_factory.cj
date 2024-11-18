@@ -29,9 +29,10 @@ public class BezierFactory {
 
     public static func getBezierEasing(a: Float64, b: Float64, c: Float64, d: Float64, nm: Array<String>): BezierEasing {
         var str: Array<String> = nm
-        if (nm.isEmpty()) {
+        if (nm.isEmpty() || (nm.size >= 1 && nm[0] == "")) {
             str = [("bez_" + a.toString() + "_" + b.toString() + "_" + c.toString() + "_" + d.toString()).replace(".", "p")]
         }
+
         let sc = str.toString()
         if (beziers.contains(sc)) {
             return beziers[sc]
@@ -42,5 +43,3 @@ public class BezierFactory {
     }
 
 }
-
-

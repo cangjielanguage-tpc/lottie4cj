@@ -32,10 +32,10 @@ public class ShapeCollection {
         //    this._maxLength *= 2
         //}
         //this.shapes[this._length] = shapeData
-        if(this.shapes.size > this._length) {
-            this.shapes.set(this._length,shapeData)
+        if (this.shapes.size > this._length) {
+            this.shapes.set(this._length, shapeData)
         } else {
-        	this.shapes.append(shapeData)
+            this.shapes.append(shapeData)
         }
         this._length += 1
     }

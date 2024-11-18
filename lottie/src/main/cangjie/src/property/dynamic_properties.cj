@@ -29,6 +29,8 @@ public open class DynamicPropertyContainer <: ContentModelElement {
 
     //comp数据类型：1-Element; 2-Renderer；3-其他
     public var compType: Int8 = 0
+    //comp数据类型是 Element，对应的 Element.data.ind
+    public var compDataInd: Int64 = -1
     /*
      * TODO: comp 在arkts中是多种数据类型，cangjie没有办法完全兼容。
      * 【暂时】保存为两类，一类代表各种 Element；另一类是 Renderer，用到那个单独处理。
@@ -36,7 +38,7 @@ public open class DynamicPropertyContainer <: ContentModelElement {
      * comp数据类型：1-Element; 2-Renderer；3-其他。
      * renderedFrame[0]中函数 => 间接获取 this.elem.comp.renderedFrame 可变的当时的值。
      */
-    public var getRenderedFrame: Array<() -> Float64> = empty_Array_unit_to_Float64
+    public var getRenderedFrame: Array<(Int64) -> Float64> = empty_Array_Int64_to_Float64
 
     //TODO：FrameElement 中编译用。
     public var propType: String = ""
@@ -77,12 +79,12 @@ public open class DynamicPropertyContainer <: ContentModelElement {
         this.container = Array<DynamicPropertyContainer>()
     }
 
-    public func getRenderedFrameInElemComp(): Float64 {
+    public func getRenderedFrameInElemComp(_compDataInd: Int64): Float64 {
         if (this.compType == 1 && this.getRenderedFrame.size >= 1) {
             //Hilog.error(0, "--29--", "[getRenderedFrameInElemComp]--[1]--------------------------------")
             //return this.getRenderedFrame[0]()
 
-            let num = this.getRenderedFrame[0]()
+            let num = this.getRenderedFrame[0](_compDataInd)
             //Hilog.error(0, "--29--", "[getRenderedFrameInElemComp]--[1]--------------------------------num = ${num}")
             return num
         } else {

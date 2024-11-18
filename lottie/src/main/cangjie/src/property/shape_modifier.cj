@@ -25,22 +25,25 @@ public open class ShapeModifier <: DynamicPropertyContainer {
     // data类型：tm/rd/pb/zz/op / rp /ms
     public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer,
         dynamicProperties!: ArrayList<DynamicPropertyContainer>,
-        compType!: Int8 = 0, renderedFrame!: Array<() -> Float64> = Array<() -> Float64>()
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+        compDataInd!: Int64 = -1
     ) {
         super(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
 
         this.compType = compType
+        this.compDataInd = compDataInd
         this.getRenderedFrame = renderedFrame
     }
     public static func initShapeModifier(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer,
         dynamicProperties!: ArrayList<DynamicPropertyContainer>,
-        compType!: Int8 = 0, renderedFrame!: Array<() -> Float64> = Array<() -> Float64>()
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+        compDataInd!: Int64 = -1
     ): ShapeModifier {
         var sm: ShapeModifier
         if(data.ty == "tm") {
-            sm = TrimModifier(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame)
+            sm = TrimModifier(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
         } else {
-        	sm = ShapeModifier(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame)
+        	sm = ShapeModifier(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
         }
         //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
         sm.initDynamicPropertyContainer(elemGlobalData, elemData)

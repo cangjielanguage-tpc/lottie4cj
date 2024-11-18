@@ -26,7 +26,7 @@ public class NullElement <: BaseElement {
         this.initHierarchy()
     }
 
-    public func prepareFrame(num: Int64): Unit {
+    public func prepareFrame(num: Float64): Unit {
         this.prepareProperties(num, true)
     }
     
