@@ -16,8 +16,9 @@ public open class TrimModifier <: ShapeModifier {
     var eValue: Float64 = 0.0
     var m: Int64 = 0
 
-    public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>){
-        super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+    public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>
+        ,compType!: Int8 = 0, renderedFrame!: Array<() -> Float64> = Array<() -> Float64>()){
+        super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties ,compType: compType, renderedFrame: renderedFrame)
         this.s = None
         this.e = None
         this.o = None
@@ -37,9 +38,9 @@ public open class TrimModifier <: ShapeModifier {
 
             //"s": {"a": 0, "k": 0, "ix": 1}  //_s: Array<Keyframe<Float64>>
             if (tm.s.k.size == 1) {//走【分支1】
-                this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.s.k, tm.s.k[0].k ?? 0.0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.s.k, tm.s.k[0].k ?? 0.0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties,compType: compType, renderedFrame: getRenderedFrame)
             } else if (tm.s.k.size > 1) {//走【分支3】
-                this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.s.k, tm.s.k, 0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.s.k, tm.s.k, 0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties,compType: compType, renderedFrame: getRenderedFrame)
             }
             if (let Some(value) <- s) {
             	value.containerType = 3
@@ -47,12 +48,12 @@ public open class TrimModifier <: ShapeModifier {
             }
 //            this.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 //            this.s.container = [this]
-            
+
             //"e":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":37,"s":[0],"e":[100]},{"t":58.0000023623884}],"ix":2}
             if (tm.e.k.size == 1) {//走【分支1】  //_e: Array<Keyframe<Float64>>
-                this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.e.k, tm.e.k[0].k ?? 0.0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.e.k, tm.e.k[0].k ?? 0.0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties,compType: compType, renderedFrame: getRenderedFrame)
             } else if (tm.e.k.size > 1) {//走【分支3】
-                this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.e.k, tm.e.k, 0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.e.k, tm.e.k, 0, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties,compType: compType, renderedFrame: getRenderedFrame)
             }
             if (let Some(value) <- e) {
             	value.containerType = 3
@@ -60,12 +61,12 @@ public open class TrimModifier <: ShapeModifier {
             }
 //            this.e.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 //            this.e.container = [this]
-            
+
             //"o":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":37,"s":[18],"e":[0]},{"t":58.0000023623884}],"ix":3}
             if (tm.o.k.size == 1) {//走【分支1】   //_o: Array<Keyframe<Float64>>
-                this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.o.k, tm.o.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.o.k, tm.o.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties,compType: compType, renderedFrame: getRenderedFrame)
             } else if (tm.o.k.size > 1) {//走【分支3】
-                this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.o.k, tm.o.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(tm.o.k, tm.o.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties,compType: compType, renderedFrame: getRenderedFrame)
             }
             if (let Some(value) <- o) {
             	value.containerType = 3
@@ -73,13 +74,13 @@ public open class TrimModifier <: ShapeModifier {
             }
 //            this.o.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 //            this.o.container = [this]
-            
+
             this.m = tm.m
         }
 
         this.sValue = 0.0
         this.eValue = 0.0
-        
+
         //TODO: 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
 
         this._isAnimated = (if (let Some(value) <- s) {
@@ -98,12 +99,12 @@ public open class TrimModifier <: ShapeModifier {
 
 //        this._isAnimated = this.s.effectsSequence.size != 0 || this.e.effectsSequence.size != 0 || this.o.effectsSequence.size != 0
     }
-    
+
     public func addShapeToModifier(shapeData: ShapeDataShapeModifiers): Unit {
         //TODO: ShapeDataShapeModifiers 暂未找到成员变量 pathsData，需确认参数类型。
         shapeData.pathsData = Array<SegmentsLengthElement>()
     }
-    
+
     public func calculateShapeEdges(s: Float64, e: Float64, shapeLength: Float64, addedLength: Float64, totalModifierLength: Float64): Array<Array<Float64>> {
         var segments: Array<Array<Float64>> = Array<Array<Float64>>(2, item: Array<Float64>())
         var len: Int64 = 0
@@ -153,7 +154,7 @@ public open class TrimModifier <: ShapeModifier {
         }
         return shapeSegments
     }
-    
+
     // 数据类型分析推测：pathsData  =>  [segmentsLengthPool.newElement(), ......]
     //TODO: 未确认 pathsData 数据类型，暂定为 SegmentsLengthElement。
     public func releasePathsData(pathsData: Array<SegmentsLengthElement>): Array<SegmentsLengthElement> {
@@ -165,7 +166,7 @@ public open class TrimModifier <: ShapeModifier {
         //TODO: 没有办法清空 clean 参数数组，只能返回值为空，在调用处做赋值为空处理。  //pathsData.length = 0
         return Array<SegmentsLengthElement>()
     }
-    
+
     public func processShapes(_isFirstFrame: Bool): Bool {
         var s_v: Float64 = 0.0
         var e_v: Float64 = 0.0
@@ -224,7 +225,7 @@ public open class TrimModifier <: ShapeModifier {
             } else {
                 e_v = tmp + o_v
             }
-    
+
             if (s_v > e_v) {
                 var _s: Float64 = s_v
                 s_v = e_v
@@ -244,15 +245,15 @@ public open class TrimModifier <: ShapeModifier {
         //TODO: 还需要确认 pathsData 和 pathData 数据类型。
         var pathsData: Array<SegmentsLengthElement> = Array<SegmentsLengthElement>()
         var pathData: SegmentsLengthElement = SegmentsLengthElement()
-        
-        var totalShapeLength: Int64 = 0
-        var totalModifierLength: Int64 = 0
-    
+
+        var totalShapeLength: Float64 = 0.0
+        var totalModifierLength: Float64 = 0.0
+
         if (e_v == s_v) {
             for (i in 0..len) {
                 this.shapes[i].localShapeCollection.releaseShapes()
                 this.shapes[i].shape._mdf = true
-                this.shapes[i].shape.paths = this.shapes[i].localShapeCollection
+                this.shapes[i].shape.paths = this.shapes[i].localShapeCollection.clone()
                 if (this._mdf) {
                     //TODO: ShapeDataShapeModifiers 中新增成员变量 pathsData 数据类型还未确定。
                     //TODO: 手动清除数据。 // this.shapes[i].pathsData.length = 0
@@ -260,7 +261,7 @@ public open class TrimModifier <: ShapeModifier {
                 }
             }
         } else if (!((e_v == 1.0 && s_v == 0.0) || (e_v == 0.0 && s_v == 1.0))) {
-            var segments: Array<Array<Float64>> = Array<Array<Float64>>()
+            var segments: ArrayList<Array<Float64>> = ArrayList<Array<Float64>>()
             var localShapeCollection: ShapeCollection = ShapeCollection()
             for (i in 0..len) {
                 var shapeData: ShapeDataShapeModifiers = this.shapes[i]
@@ -270,7 +271,7 @@ public open class TrimModifier <: ShapeModifier {
                 } else {
                     shapePaths = shapeData.shape.paths
                     jLen = shapePaths._length
-                    totalShapeLength = 0
+                    totalShapeLength = 0.0
                     //TODO: ShapeDataShapeModifiers 中新增成员变量 pathsData 数据类型还未确定。
                     if (!shapeData.shape._mdf && shapeData.pathsData.size != 0) {
                         totalShapeLength = shapeData.totalShapeLength
@@ -283,7 +284,7 @@ public open class TrimModifier <: ShapeModifier {
                         for (j in 0..jLen) {
                             // 数据类型分析推测：pathData = segmentsLengthPool.newElement()  =>   pathData.lengths[i] = bezierLengthPool.newElement()
                             pathData = Bez.getSegmentsLength(shapePaths.shapes[j])
-                            
+
                             // 数据类型分析推测：pathsData[pathData]  =>  pathsData[segmentsLengthPool.newElement(), ......]
                             pathsData[j] = pathData
                             totalShapeLength += pathData.totalLength
@@ -291,14 +292,14 @@ public open class TrimModifier <: ShapeModifier {
                         shapeData.totalShapeLength = totalShapeLength
                         shapeData.pathsData = pathsData
                     }
-    
+
                     totalModifierLength += totalShapeLength
                     shapeData.shape._mdf = true
                 }
             }
             var shapeS: Float64 = s_v
             var shapeE: Float64 = e_v
-            var addedLength: Int64 = 0
+            var addedLength: Float64 = 0.0
             var edges: Array<Array<Float64>> = Array<Array<Float64>>()
             for (i in (len - 1)..=0:-1) {
                 var shapeData: ShapeDataShapeModifiers = this.shapes[i]
@@ -308,7 +309,7 @@ public open class TrimModifier <: ShapeModifier {
                     //如果m===2表示路径是单独修剪的，因此需要找到相对于whoel组的特定形状的边
                     if (this.m == 2 && len > 1) {
                         //TODO: calculateShapeEdges 中传入的参数 s/e 数据类型是 Int64，需要对齐。
-                        edges = this.calculateShapeEdges(s_v, e_v, Float64(shapeData.totalShapeLength), Float64(addedLength), Float64(totalModifierLength))
+                        edges = this.calculateShapeEdges(s_v, e_v, Float64(shapeData.totalShapeLength), Float64(addedLength), totalModifierLength)
                         addedLength += shapeData.totalShapeLength
                     } else {
                         edges = [[shapeS, shapeE]]
@@ -319,19 +320,19 @@ public open class TrimModifier <: ShapeModifier {
                         shapeS = edges[j][0]
                         shapeE = edges[j][1]
 
-                        segments = Array<Array<Float64>>(2, item: Array<Float64>())
+                        segments = ArrayList<Array<Float64>>()
                         var segmentsLength: Int64 = 0
-                        let shapeData_totalShapeLength: Float64 = Float64(shapeData.totalShapeLength)
+                        let shapeData_totalShapeLength: Float64 = shapeData.totalShapeLength
                         if (shapeE <= 1.0) {
                             //TODO: [注意]-直接用 Array<Int64> 代替 [s: s, e: e]，s 代表下标 0，e 代表下标 1。
-                            segments[0] = [shapeData_totalShapeLength * shapeS, shapeData_totalShapeLength * shapeE]
+                            segments.append([shapeData_totalShapeLength * shapeS, shapeData_totalShapeLength * shapeE])
                             segmentsLength = 1
                         } else if (shapeS >= 1.0) {
-                            segments[0] = [shapeData_totalShapeLength * (shapeS - 1.0), shapeData_totalShapeLength * (shapeE - 1.0)]
+                            segments.append([shapeData_totalShapeLength * (shapeS - 1.0), shapeData_totalShapeLength * (shapeE - 1.0)])
                             segmentsLength = 1
                         } else {
-                            segments[0] = [shapeData_totalShapeLength * shapeS, shapeData_totalShapeLength]
-                            segments[1] = [0.0, shapeData_totalShapeLength * (shapeE - 1.0)]
+                            segments.append([shapeData_totalShapeLength * shapeS, shapeData_totalShapeLength])
+                            segments.append([0.0, shapeData_totalShapeLength * (shapeE - 1.0)])
                             segmentsLength = 2
                         }
                         var newShapesData: ArrayList<ShapeData> = this.addShapes(shapeData, segments[0], ShapeData())
@@ -364,7 +365,7 @@ public open class TrimModifier <: ShapeModifier {
         }
         return true
     }
-    
+
     public func addPaths(newPaths: ArrayList<ShapeData>, localShapeCollection: ShapeCollection): Unit {
         var len: Int64 = newPaths.size
         for (i in 0..len) {
@@ -389,7 +390,7 @@ public open class TrimModifier <: ShapeModifier {
         }
         shapePath.setXYAt(pt4[0], pt4[1], "v", pos + 1)
     }
-    
+
     public func addSegmentFromArray(points: Array<Float64>, shapePath: ShapeData, pos: Int64, newShape: Bool): Unit {
         if (points.size < 8) {
             throw IndexOutOfBoundsException("[addSegmentFromArray]: points.size = ${points.size}")
@@ -419,7 +420,7 @@ public open class TrimModifier <: ShapeModifier {
         var shapes: ArrayList<ShapeData> = ArrayList<ShapeData>()
         var initPos: Int64 = 0
         var newShape: Bool = true
-        
+
         var shapePath: ShapeData = shapePathOld
         if (shapePath.isNull()) {
             shapePath = ShapeData()  //shapePool.newElement()
@@ -439,7 +440,8 @@ public open class TrimModifier <: ShapeModifier {
             } else {
                 jLen = lengths.size + 1
             }
-            for (j in 1..jLen) {
+            j = 1
+            while (j < jLen) {
                 currentLengthData = lengths[j - 1]
                 if (addedLength + Float64(currentLengthData.addedLength) < shapeSegment[0]) {
                     addedLength += Float64(currentLengthData.addedLength)
@@ -452,25 +454,26 @@ public open class TrimModifier <: ShapeModifier {
                         this.addSegment(shapePaths[i].v[j - 1], shapePaths[i].o[j - 1], shapePaths[i].i[j], shapePaths[i].v[j], shapePath, segmentCount, newShape)
                         newShape = false
                     } else {
-                        segment = Bez.getNewSegment(shapePaths[i].v[j - 1], shapePaths[i].v[j], shapePaths[i].o[j - 1], shapePaths[i].i[j], Int64(shapeSegment[0] - addedLength) / currentLengthData.addedLength, Int64(shapeSegment[1] - addedLength) / currentLengthData.addedLength, lengths[j - 1])
+                        segment = Bez.getNewSegment(shapePaths[i].v[j - 1], shapePaths[i].v[j], shapePaths[i].o[j - 1], shapePaths[i].i[j], (shapeSegment[0] - addedLength) / currentLengthData.addedLength, (shapeSegment[1] - addedLength) / currentLengthData.addedLength, lengths[j - 1])
                         this.addSegmentFromArray(segment, shapePath, segmentCount, newShape)
-                        
+
                         newShape = false
                         shapePath.c = false
                     }
                     addedLength += Float64(currentLengthData.addedLength)
                     segmentCount += 1
                 }
+                j += 1
             }
             if (shapePaths[i].c && lengths.size != 0) {
                 currentLengthData = lengths[j - 1]
                 if (addedLength <= shapeSegment[1]) {
-                    var segmentLength: Int64 = lengths[j - 1].addedLength
-                    if (shapeSegment[0] <= addedLength && shapeSegment[1] >= addedLength + Float64(segmentLength)) {
+                    var segmentLength: Float64 = lengths[j - 1].addedLength
+                    if (shapeSegment[0] <= addedLength && shapeSegment[1] >= addedLength + segmentLength) {
                         this.addSegment(shapePaths[i].v[j - 1], shapePaths[i].o[j - 1], shapePaths[i].i[0], shapePaths[i].v[0], shapePath, segmentCount, newShape)
                         newShape = false
                     } else {
-                        segment = Bez.getNewSegment(shapePaths[i].v[j - 1], shapePaths[i].v[0], shapePaths[i].o[j - 1], shapePaths[i].i[0], Int64(shapeSegment[0] - addedLength) / segmentLength, Int64(shapeSegment[1] - addedLength) / segmentLength, lengths[j - 1])
+                        segment = Bez.getNewSegment(shapePaths[i].v[j - 1], shapePaths[i].v[0], shapePaths[i].o[j - 1], shapePaths[i].i[0], ((shapeSegment[0] - addedLength) / segmentLength), (shapeSegment[1] - addedLength) / segmentLength, lengths[j - 1])
                         this.addSegmentFromArray(segment, shapePath, segmentCount, newShape)
 
                         newShape = false

@@ -73,7 +73,7 @@ public open class IShapeElement <: BaseElement {
              * CVShapeElement.shapes.sh => CVShapeData.sh => ShapePropertyFactory.getShapeProp => KeyframedShapeProperty/ShapeProperty/RectShapeProperty/EllShapeProperty/StarShapeProperty
              *
              */
-            this.shapes[i].sh.reset()
+            this.shapes[i].sh.resetShape()
         }
 
         len = this.shapeModifiers.size

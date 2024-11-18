@@ -167,16 +167,16 @@ public class Bez {
         var perc: Float64 = 0.0
         var addedLength: Float64 = 0.0
         var ptDistance: Float64 = 0.0
-        var point: Array<Float64> = Array<Float64>()
-        var lastPoint: Array<Float64> = Array<Float64>()
         //TODO:  数据类型  Element<Float64>  更换为  BezierLengthElement
-        let lengthData: BezierLengthElement = BezierLengthElement()
+        let lengthData: BezierLengthElement = BezierLengthElement(percents: Array<Float64>(curveSegments,item: 0.0), lengths: Array<Float64>(curveSegments,item: 0.0))
         let len: Int64 = pt3.size
+        var point: Array<Float64> = Array<Float64>(len,item: 0.0)
+        var lastPoint: Array<Float64> = Array<Float64>(len,item: Float64.NaN)
         for (k in 0..curveSegments) {
-            perc = Float64(k / (curveSegments - 1))
+            perc = Float64(k) / Float64(curveSegments - 1)
             ptDistance = 0.0
             for (i in 0..len) {
-                ptCoord = pow(1.0 - perc, 3) * pt1[i] + 3.0 * pow(1.0 - perc, 2) * perc * pt3[i] + 
+                ptCoord = pow(1.0 - perc, 3) * pt1[i] + 3.0 * pow(1.0 - perc, 2) * perc * pt3[i] +
                         3.0 * (1.0 - perc) * pow(perc, 2) * pt4[i] + pow(perc, 3) * pt2[i]
                 point[i] = ptCoord
                 if (lastPoint.size > i) {
@@ -184,30 +184,28 @@ public class Bez {
                 }
                 lastPoint[i] = point[i]
             }
-            if (ptDistance != 0.0) {
+            if (!ptDistance.isNaN()) {
                 ptDistance = sqrt(ptDistance)
                 addedLength += ptDistance
             }
             lengthData.percents[k] = perc
             lengthData.lengths[k] = addedLength
         }
-        lengthData.addedLength = Int64(addedLength)
+        lengthData.addedLength = addedLength
         return lengthData
     }
 
     public static func getSegmentsLength(shapeData: ShapeData): SegmentsLengthElement {
         //TODO: 数据类型 Element<Element> 更换为 SegmentsLengthElement。
-        var segmentsLength: SegmentsLengthElement =SegmentsLengthElement()
-        
         var closed: Bool = shapeData.c
         var pathV: Array<PointF> = shapeData.v
         var pathO: Array<PointF> = shapeData.o
         var pathI: Array<PointF> = shapeData.i
 
         var len = shapeData._length
-        
+        var segmentsLength: SegmentsLengthElement =SegmentsLengthElement(lengths: Array<BezierLengthElement>(len,item: BezierLengthElement()))
         var lengths: Array<BezierLengthElement> = segmentsLength.lengths
-        var totalLength: Int64 = 0
+        var totalLength: Float64 = 0.0
         for (i in 0..(len - 1)) {
             lengths[i] = getBezierLength([pathV[i].x, pathV[i].y], [pathV[i + 1].x, pathV[i + 1].y], [pathO[i].x, pathO[i].y], [pathI[i + 1].x, pathI[i + 1].y])
             totalLength += lengths[i].addedLength
@@ -312,12 +310,12 @@ public class Bez {
         //return inside
     }
 
-    static func getDistancePerc(perc: Int64, bezierData: BezierLengthElement): Float64 {
+    static func getDistancePerc(perc: Float64, bezierData: BezierLengthElement): Float64 {
         let percents: Array<Float64> = bezierData.percents
         let lengths: Array<Float64> = bezierData.lengths
         let len: Int64 = percents.size
-        var initPos: Int64 = Int64(floor(Float64((len - 1) * perc)))
-        let lengthPos: Float64 = Float64(perc * bezierData.addedLength)
+        var initPos: Int64 = Int64(floor(Float64(len - 1) * perc))
+        let lengthPos: Float64 = Float64(perc) * bezierData.addedLength
         var lPerc: Float64 = 0.0
         if (initPos == len - 1 || initPos == 0 || lengthPos == lengths[initPos]) {
             return percents[initPos]
@@ -327,7 +325,7 @@ public class Bez {
         if (lengths[initPos] > lengthPos) {
             dir = -1
         }
-        
+
         var flag: Bool = true
         while (flag) {
             if (lengths[initPos] <= lengthPos && lengths[initPos + 1] > lengthPos) {
@@ -347,11 +345,11 @@ public class Bez {
         return percents[initPos] + (percents[initPos + 1] - percents[initPos]) * lPerc
     }
 
-    public static func getPointInSegment(pt1: PointF, pt2: PointF, pt3: PointF, pt4: PointF, percent: Int64, bezierData: BezierLengthElement): Array<Float64> {
+    public static func getPointInSegment(pt1: PointF, pt2: PointF, pt3: PointF, pt4: PointF, percent: Float64, bezierData: BezierLengthElement): Array<Float64> {
         return getPointInSegment([pt1.x, pt1.y], [pt2.x, pt2.y], [pt3.x, pt3.y], [pt4.x, pt4.y], percent, bezierData)
     }
-    
-    public static func getPointInSegment(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>, pt4: Array<Float64>, percent: Int64, bezierData: BezierLengthElement): Array<Float64> {
+
+    public static func getPointInSegment(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>, pt4: Array<Float64>, percent: Float64, bezierData: BezierLengthElement): Array<Float64> {
         let t1: Float64 = getDistancePerc(percent, bezierData)
         let u1: Float64 = 1.0 - t1
         let ptX: Float64 = round((u1 * u1 * u1 * pt1[0] + (t1 * u1 * u1 + u1 * t1 * u1 + u1 * u1 * t1) * pt3[0] + (t1 * t1 * u1 + u1 * t1 * t1 + t1 * u1 * t1) * pt4[0] + t1 * t1 * t1 * pt2[0]) * 1000.0) / 1000.0
@@ -359,22 +357,22 @@ public class Bez {
         return [ptX, ptY]
     }
 
-    public static func getNewSegment(pt1: PointF, pt2: PointF, pt3: PointF, pt4: PointF, startPerc2: Int64, endPerc2: Int64, bezierData: BezierLengthElement): Array<Float64> {
+    public static func getNewSegment(pt1: PointF, pt2: PointF, pt3: PointF, pt4: PointF, startPerc2: Float64, endPerc2: Float64, bezierData: BezierLengthElement): Array<Float64> {
         return getNewSegment([pt1.x, pt1.y], [pt2.x, pt2.y], [pt3.x, pt3.y], [pt4.x, pt4.y], startPerc2, endPerc2, bezierData)
     }
-    
-    public static func getNewSegment(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>, pt4: Array<Float64>, startPerc2: Int64, endPerc2: Int64, bezierData: BezierLengthElement): Array<Float64> {
-        var startPerc: Int64 = startPerc2
-        var endPerc: Int64 = endPerc2
-        if (startPerc < 0) {
-            startPerc = 0
-        } else if (startPerc > 1) {
-            startPerc = 1
+
+    public static func getNewSegment(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>, pt4: Array<Float64>, startPerc2: Float64, endPerc2: Float64, bezierData: BezierLengthElement): Array<Float64> {
+        var startPerc: Float64 = startPerc2
+        var endPerc: Float64 = endPerc2
+        if (startPerc < 0.0) {
+            startPerc = 0.0
+        } else if (startPerc > 1.0) {
+            startPerc = 1.0
         }
 
         let t0: Float64 = getDistancePerc(startPerc, bezierData)
-        if (endPerc > 1) {
-            endPerc = 1
+        if (endPerc > 1.0) {
+            endPerc = 1.0
         } else {
             endPerc = endPerc
         }

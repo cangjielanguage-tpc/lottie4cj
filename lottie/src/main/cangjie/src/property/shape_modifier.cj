@@ -36,7 +36,12 @@ public open class ShapeModifier <: DynamicPropertyContainer {
         dynamicProperties!: ArrayList<DynamicPropertyContainer>,
         compType!: Int8 = 0, renderedFrame!: Array<() -> Float64> = Array<() -> Float64>()
     ): ShapeModifier {
-        let sm: ShapeModifier = ShapeModifier(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame)
+        var sm: ShapeModifier
+        if(data.ty == "tm") {
+            sm = TrimModifier(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame)
+        } else {
+        	sm = ShapeModifier(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame)
+        }
         //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
         sm.initDynamicPropertyContainer(elemGlobalData, elemData)
         //TODO: 直接调用的 DynamicPropertyContainer.initModifierProperties。
@@ -52,16 +57,16 @@ public open class ShapeModifier <: DynamicPropertyContainer {
     }
 
     public open func initModifierProperties(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer): Unit {}
-    
+
     public open func addShapeToModifier(shapeData: ShapeDataShapeModifiers): Unit {}
-    
+
     //数据来源分析：data => CVShapeData/SVGShapeData 抽象一个父类 BaseShapeData 出来--【都继承于 ContentModelElement】
     //TODO: 暂时都是canvas渲染，直接用 CvShapeData，暂时不抽象父类。
     public func addShape(data: CvShapeData): Unit {
         if (!this.closed) {
             //为动态特性添加形状。它涵盖了形状没有应用效果的情况，在每个滴答声中重置其_mdf状态。
             //TODO: 暂未确认 addDynamicProperty 调用的是 BaseElement 哪一级的？？？
-            //data.sh.container.addDynamicProperty(data.sh)
+            data.sh.addDynamicProperty(data.sh)
             //将 shapeCollectionPool.newShapeCollection() 改为 ShapeCollection()
             var shapeData: ShapeDataShapeModifiers = ShapeDataShapeModifiers(shape: data.sh, data: data, localShapeCollection: ShapeCollection())
             this.shapes.append(shapeData)

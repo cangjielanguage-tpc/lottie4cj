@@ -20,7 +20,7 @@ public open class ShapeDataShapeModifiers {
     public var pathsData: Array<SegmentsLengthElement> = Array<SegmentsLengthElement>()
     
     //TODO: 新增成员变量------------------------------------------------------------------------2024.08.12
-    public var totalShapeLength: Int64 = 0
+    public var totalShapeLength: Float64 = 0.0
 
     public init(shape!: ShapePropertyFactory, data!: CvShapeData, localShapeCollection!: ShapeCollection = ShapeCollection()){
         this.shape = shape

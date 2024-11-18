@@ -13,9 +13,9 @@ internal import lottie.model.*
 public open class SegmentsLengthElement <: ToString {
 
     public var lengths: Array<BezierLengthElement>
-    public var totalLength: Int64
+    public var totalLength: Float64
 
-    public init(lengths!: Array<BezierLengthElement> = Array<BezierLengthElement>(), totalLength!: Int64 = 0){
+    public init(lengths!: Array<BezierLengthElement> = Array<BezierLengthElement>(), totalLength!: Float64 = 0.0){
         this.lengths = lengths
         this.totalLength = totalLength
     }
@@ -26,13 +26,13 @@ public open class SegmentsLengthElement <: ToString {
 }
 
 public open class BezierLengthElement <: ToString {
-    
+
     //bezierLengthPool
-    public var addedLength: Int64
+    public var addedLength: Float64
     public var percents: Array<Float64>
     public var lengths: Array<Float64>
 
-    public init(addedLength!: Int64 = 0, percents!: Array<Float64> = Array<Float64>(), lengths!: Array<Float64> = Array<Float64>()){
+    public init(addedLength!: Float64 = 0.0, percents!: Array<Float64> = Array<Float64>(), lengths!: Array<Float64> = Array<Float64>()){
         this.addedLength = addedLength
         this.percents = percents
         this.lengths = lengths

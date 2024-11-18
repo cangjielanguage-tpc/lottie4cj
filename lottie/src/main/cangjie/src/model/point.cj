@@ -34,6 +34,10 @@ public class PointF <: ToString {
         return "PointF: {x='${x}', y='${y}'}"
     }
 
+    public func clone(): PointF {
+        return PointF(x:this.x,y:this.y)
+    }
+
     /**
      * The instance is empty.
      *
