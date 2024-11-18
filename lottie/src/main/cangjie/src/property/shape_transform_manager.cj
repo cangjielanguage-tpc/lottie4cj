@@ -30,7 +30,7 @@ public class ShapeTransformManager {
         if (let Some(v) <- sequence) {
             return v
         } else {
-            let seq: Sequence = Sequence(transforms: transforms, finalTransform: Matrix(), _mdf: false)
+            let seq: Sequence = Sequence(transforms: transforms.clone(), finalTransform: Matrix(), _mdf: false)
             this.sequences.put(key, seq)
             this.sequenceList.append(seq)
             return seq

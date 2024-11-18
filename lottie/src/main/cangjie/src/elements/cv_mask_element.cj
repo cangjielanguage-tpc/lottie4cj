@@ -34,7 +34,8 @@ public class CvMaskElement <: RenderableElement {
             if (this.masksProperties[i].mode != "n") {
                 hasMasks = true
             }
-            this.viewData[i] = ShapePropertyFactory.getShapeProp(this.masksProperties[i], 3, element.globalData,this.data, dynamicProperties: element.dynamicProperties)
+            //this.viewData[i] = ShapePropertyFactory.getShapeProp(this.masksProperties[i], 3, element.globalData,this.data, dynamicProperties: element.dynamicProperties)
+            this.viewData[i] = ShapePropertyFactory.getShapeProp(this.masksProperties[i], 3, element.globalData,this.data, dynamicProperties: element.dynamicProperties, compType: element.compType, renderedFrame: [element.getRenderedFrameInElemComp], compDataInd: element.compDataInd)
         }
         this.hasMasks = hasMasks
         if (hasMasks) {
@@ -93,6 +94,7 @@ public class CvMaskElement <: RenderableElement {
                   ctx.lineTo(0, 0);
                 }
                 data = this.viewData[i].v;
+
                 pt = transform.applyToPointArray(data.v[0].x, data.v[0].y, 0.0);
                 ctx.moveTo(pt[0], pt[1]);
                 var jLen = data._length;

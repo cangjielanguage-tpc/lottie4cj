@@ -75,7 +75,7 @@ public open class ITextElement <: BaseElement {
     public func prepareFrame(num: Float64): Unit {
         this._mdf = false
         this.prepareRenderableFrame(num)
-        this.prepareProperties(Int64(num), this.isInRange)
+        this.prepareProperties(num, this.isInRange)
         if (this.textProperty._mdf || this.textProperty._isFirstFrame) {
             //TODO: buildNewText => CVTextElement.buildNewText  
             this.buildNewText()

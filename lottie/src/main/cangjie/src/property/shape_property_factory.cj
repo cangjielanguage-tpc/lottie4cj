@@ -18,7 +18,7 @@ func default_unit_to_unit(): Unit {}
  *     2. 5个 xxxShapeProperty 都是 ShapePropertyFactory 的子类、
  */
 public class ShapePropertyFactory <: DynamicPropertyContainer {
-    var initFrame: Int64 = -999999
+    var initFrame: Float64 = -999999.0
     var cPoint: Float64 = roundCorner
 
     /*
@@ -72,7 +72,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
     public var offsetTime: Float64 = 0.0
     public var keyframes: Array<Keyframe<ShapeData>> = Array<Keyframe<ShapeData>>()
     public var keyframesMetadata: Array<KeyframeMetadata> = Array<KeyframeMetadata>()
-    public var lastFrame: Int64 = initFrame
+    public var lastFrame: Float64 = initFrame
     public var _caching: Caching = Caching(lastFrame: initFrame, lastIndex: 0)
 
 
@@ -96,9 +96,16 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
 
     //public var isNull: Bool = false
 
-    public init(data: ContentModel, types: Int64, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>, addEffectsSequence!: Bool = false){
+    public init(data: ContentModel, types: Int64, elemGlobalData: GlobalData, elemData: Layer, 
+        dynamicProperties!: ArrayList<DynamicPropertyContainer>, addEffectsSequence!: Bool = false,
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+        compDataInd!: Int64 = -1
+    ){
         super(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.propType = "shape"
+        this.compType = compType
+        this.compDataInd = compDataInd
+        this.getRenderedFrame = renderedFrame
         //TODO: BaseElement 还需要确认是否有循环引用问题。   //this.comp = elem.comp
         //this.container = elem
         //this.elem = elem
@@ -106,15 +113,15 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         this.types = types
 
         let dp: DynamicPropertyContainer = DynamicPropertyContainer()
-        this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>(AnimatableSplitDimensionPathValue(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.s = PropertyFactory<ArrayKeyframePointF, PointF>(ArrayKeyframePointF(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>(AnimatableSplitDimensionPathValue(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
+        this.s = PropertyFactory<ArrayKeyframePointF, PointF>(ArrayKeyframePointF(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
         let arr: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
-        this.r = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.ir = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.is2 = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.pt = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.or = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.os = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        this.r = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
+        this.ir = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
+        this.is2 = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
+        this.pt = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
+        this.or = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
+        this.os = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
 
         if (addEffectsSequence) {
             this.effectsSequence.append(interpolateShapeCurrentTime)
@@ -132,8 +139,11 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
      * 5个 xxxShapeProperty 都只在 ShapePropertyFactory 内部调用，对外还是直接用的 ShapePropertyFactory。
      * - KeyframedShapeProperty/ShapeProperty/RectShapeProperty/EllShapeProperty/StarShapeProperty
      */
-    public static func getShapeProp(data: ContentModel, types: Int64, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>): ShapePropertyFactory {
-        var props: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+    public static func getShapeProp(data: ContentModel, types: Int64, elemGlobalData: GlobalData, elemData: Layer, 
+        dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(), compDataInd!: Int64 = -1
+    ): ShapePropertyFactory {
+        var props: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
 
         if (types == 3 || types == 4) {
             var dataProp: Array<Keyframe<ShapeData>> = Array<Keyframe<ShapeData>>()
@@ -151,24 +161,24 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
             }
 
             if (dataProp.size > 1) {          // keys 是数组 => data.pt/ks.k 是数组
-                props = keyframedShapeProperty(data, types, dataProp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                props = keyframedShapeProperty(data, types, dataProp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
             } else if (dataProp.size == 1) {  // keys 是对象 => data.pt/ks.k 是对象
-                props = shapeProperty(data, types, dataProp[0], elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                props = shapeProperty(data, types, dataProp[0], elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
             }
             //props.getValue = props.processEffectsSequence
             props.pt_data = mask_pt
             props.ks_data = sh_ks
         } else if (types == 5) {
             let rc: RectangleShape = (data as RectangleShape).getOrThrow()
-            props = rectShapeProperty(rc, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            props = rectShapeProperty(rc, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
             //props.getValue = props.getValueOfRect
         } else if (types == 6) {
             let el: CircleShape = (data as CircleShape).getOrThrow()
-            props = ellShapeProperty(el, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            props = ellShapeProperty(el, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
             //props.getValue = props.getValueOfEll
         } else if (types == 7) {
             let sr: PolystarShape = (data as PolystarShape).getOrThrow()
-            props = starShapeProperty(sr, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            props = starShapeProperty(sr, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
             //props.getValue = props.getValueOfStar
         }
         if (props.k) {
@@ -199,8 +209,12 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
 //5个 xxxShapeProperty 初始化分隔线--------------------------------------------------------------------------------------
 
     //暂时明确的 data 的数据类型 ShapePath/Mask
-    public static func shapeProperty(data: ContentModel, types: Int64, pathData: Keyframe<ShapeData>, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>): ShapePropertyFactory {
-        let sp: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+    public static func shapeProperty(data: ContentModel, types: Int64, pathData: Keyframe<ShapeData>, 
+        elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+        compDataInd!: Int64 = -1
+    ): ShapePropertyFactory {
+        let sp: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
 
         //data.pt/ks.k 是对象 => pathData 是对象 => pathData = Mask.pt[0]/ShapePath.ks[0]  =>  直接传入 pathData(data.pt/ks.k)
         let pathDatas: ShapeData = pathData.k ?? ShapeData()
@@ -214,11 +228,15 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         sp.reset = sp.resetShape
         return sp
     }
-
+    
     //暂时明确的 data 的数据类型 ShapePath/Mask，将  Mask 改为继承 ContentModel。
-    public static func keyframedShapeProperty(data: ContentModel, types: Int64, k: Array<Keyframe<ShapeData>>, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>): ShapePropertyFactory {
-        let sp: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, addEffectsSequence: true, dynamicProperties: dynamicProperties)
-
+    public static func keyframedShapeProperty(data: ContentModel, types: Int64, k: Array<Keyframe<ShapeData>>,
+        elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+        compDataInd!: Int64 = -1
+    ): ShapePropertyFactory {
+        let sp: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, addEffectsSequence: true, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
+        
         sp.offsetTime = elemData.st
         //data.pt/ks.k 是数组 => pathData 是数组 => pathData = Mask.pt/ShapePath.ks  =>  直接传入 data.pt/ks.k
         sp.keyframes = k
@@ -240,40 +258,45 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         //在init初始化时赋值加入数组中。-- sp.effectsSequence = [interpolateShapeCurrentTime]
         return sp
     }
-
-    //暂时明确的 data = RectangleShape 的数据类型
-    public static func rectShapeProperty(data: RectangleShape, types: Int64, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>): ShapePropertyFactory {
-        let sp: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+    
+    //暂时明确的 data = RectangleShape 的数据类型 
+    public static func rectShapeProperty(data: RectangleShape, types: Int64, elemGlobalData: GlobalData,
+        elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+        compDataInd!: Int64 = -1
+    ): ShapePropertyFactory {
+        let sp: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
 
         sp.v.c = true
         sp.localShapeCollection.addShape(sp.v)
         sp.paths = sp.localShapeCollection
+        
         //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
         sp.initDynamicPropertyContainer(elemGlobalData, elemData)
-
+        
         // 仔细辨别确认调用的是 PropertyFactory.getProp 哪个分支。
         if (data.p.k.size > 1) {//p: AnimatableSplitDimensionPathValue => _k: Array<Keyframe<PointF>>
-            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
+            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
         } else if (data.p.k.size == 1) {//走【分支2】:  dataK 是数组Array<number>   //json中："p": {"a": 0, "k": [0, 0], "ix": 3}
             let point: PointF = data.p.k[0].k ?? PointF(x: 0.0, y: 0.0)
-            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 1.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
+            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 1.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
         }
         sp.p.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
         sp.p.container = [sp]
-
+            
         if (data.s.k.size > 1) {//_s: Array<Keyframe<PointF>>
-            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, data.s.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
+            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, data.s.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
         } else if (data.s.k.size == 1) {//走【分支2】:  dataK 是数组Array<number>   //json中："s": {"a": 0, "k": [101.414, 91.422], "ix": 2}
             let point: PointF = data.s.k[0].k ?? PointF(x: 0.0, y: 0.0)
-            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, point, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
+            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, point, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
         }
         sp.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
         sp.s.container = [sp]
-
+        
         if (data.r.k.size > 1) {//_r: Array<Keyframe<Float64>>
-            sp.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, data.r.k, 0, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, data.r.k, 0, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
         } else if (data.r.k.size == 1) {//走【分支1】:  dataK 是数值  //json中："r": {"a": 0, "k": 0, "ix": 4}
-            sp.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, (data.r.k[0].k ?? 0.0), 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, (data.r.k[0].k ?? 0.0), 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
         }
         sp.r.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
         sp.r.container = [sp]
@@ -288,35 +311,40 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
     }
 
     /* 暂时明确的 data = CircleShape 的数据类型 */
-    public static func ellShapeProperty(data: CircleShape, types: Int64, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>): ShapePropertyFactory {
-        let sp: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+    public static func ellShapeProperty(data: CircleShape, types: Int64, elemGlobalData: GlobalData,
+        elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+        compDataInd!: Int64 = -1
+    ): ShapePropertyFactory {
+        let sp: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
 
         sp.v.setPathData(true, 4)
         sp.localShapeCollection.addShape(sp.v)
-        sp.d = data.d
         sp.paths = sp.localShapeCollection
+        sp.d = data.d
+
         //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
         sp.initDynamicPropertyContainer(elemGlobalData, elemData)
-
+        
         /* 仔细辨别确认调用的是 PropertyFactory.getProp 哪个分支。 */
         if (data.p.k.size > 1) {  //p: AnimatableSplitDimensionPathValue => _k: Array<Keyframe<PointF>>
-            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
+            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
         } else if (data.p.k.size == 1) { //走【分支2】:  dataK 是数组Array<number>   //json中："p": {"a": 0, "k": [0, 0], "ix": 3}
             let point: PointF = data.p.k[0].k ?? PointF(x: 0.0, y: 0.0)
-            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 1.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
+            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, point, 1.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
         }
         sp.p.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
         sp.p.container = [sp]
-
+        
         if (data.s.k.size > 1) { //_s: Array<Keyframe<PointF>>
-            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, data.s.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
+            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, data.s.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
         } else if (data.s.k.size == 1) { //走【分支2】:  dataK 是数组Array<number>   //json中："s": {"a": 0, "k": [332.711, 332.711], "ix": 2}
             let point: PointF = data.s.k[0].k ?? PointF(x: 0.0, y: 0.0)
-            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, point, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
+            sp.s = PropertyFactory<ArrayKeyframePointF, PointF>.getProp(data.s, point, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
         }
         sp.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
         sp.s.container = [sp]
-
+        
         if (sp.dynamicProperties.size != 0) {
             sp.k = true
         } else {
@@ -327,73 +355,78 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
     }
 
     /* 暂时明确的 data = PolystarShape 的数据类型 */
-    public static func starShapeProperty(data: PolystarShape, types: Int64, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>): ShapePropertyFactory {
-        let sp: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+    public static func starShapeProperty(data: PolystarShape, types: Int64, elemGlobalData: GlobalData, elemData: Layer,
+        dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+        compDataInd!: Int64 = -1
+    ): ShapePropertyFactory {
+        let sp: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
 
         sp.v.setPathData(true, 0)
 
         sp.d = data.d
-
+        
         //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
         sp.initDynamicPropertyContainer(elemGlobalData, elemData)
         if (data.sy == 1) {
             /* 仔细辨别确认调用的是 PropertyFactory.getProp 哪个分支。 */
             //"ir":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[54.99]},{"t":59,"s":[61.99]}],"ix":6}
             if (data.ir.k.size > 1) {//【分支3】
-                sp.ir = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.ir, data.ir.k, 0, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                sp.ir = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.ir, data.ir.k, 0, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
                 sp.ir.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
                 sp.ir.container = [sp]
             }
-
+            
             //"is":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[0]},{"t":59,"s":[5]}],"ix":8}
             if (data.is2.k.size > 1) {//【分支3】
-                sp.is2 = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.is2, data.is2.k, 0, 0.01, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+                sp.is2 = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.is2, data.is2.k, 0, 0.01, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
                 sp.is2.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
                 sp.is2.container = [sp]
             }
-
+            
             sp.convertToPath = sp.convertStarToPath
         } else {
             sp.convertToPath = sp.convertPolygonToPath
         }
-
+        
         //"pt":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[5]},{"t":59,"s":[6]}],"ix":3}
         if (data.pt.k.size > 1) {//【分支3】 //_pt: Array<Keyframe<Float64>>
-            sp.pt = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.pt, data.pt.k, 0, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.pt = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.pt, data.pt.k, 0, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
             sp.pt.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
             sp.pt.container = [sp]
         }
-
+        
         //"p":{"a":1,"k":[{"i":{"x":0.833,"y":0.833},"o":{"x":0.167,"y":0.167},"t":0,"s":[0,0],"to":[0.833,1.333],"ti":[-0.833,-1.333]},{"t":59,"s":[5,8]}],"ix":4}
         if (data.p.k.size > 1) {//【分支4】   //p: AnimatableSplitDimensionPathValue => _k: Array<Keyframe<PointF>>
-            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties)
+            sp.p = PropertyFactory<AnimatableSplitDimensionPathValue, PointF>.getProp(data.p, data.p.k, 1, 0.0, sp, elemGlobalData, elemData, vLen: 3, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
             sp.p.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
             sp.p.container = [sp]
         }
-
+        
         //"r":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[187.839]},{"t":59,"s":[204.839]}],"ix":5}
         if (data.r.k.size > 1) {//【分支3】   //_r: Array<Keyframe<Float64>>
-            sp.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, data.r.k, 0, degToRads, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.r = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.r, data.r.k, 0, degToRads, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
             sp.r.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
             sp.r.container = [sp]
         }
-
+        
         //"or":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[109.981]},{"t":59,"s":[123.981]}],"ix":7}
-        if (data.or.k.size > 1) {//【分支3】  //_or: Array<Keyframe<Float64>>
-            sp.or = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.or, data.or.k, 0, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        if (data.or.k.size > 1) {//【分支3】  //_or: Array<Keyframe<Float64>> 
+            sp.or = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.or, data.or.k, 0, 0.0, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
             sp.or.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
             sp.or.container = [sp]
         }
-
+        
         //"os":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[0]},{"t":59,"s":[40]}],"ix":9}
         if (data.os.k.size > 1) {//【分支3】  //_os: Array<Keyframe<Float64>>
-            sp.os = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.os, data.os.k, 0, 0.01, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+            sp.os = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(data.os, data.os.k, 0, 0.01, sp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
             sp.os.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
             sp.os.container = [sp]
         }
-
+        
         sp.localShapeCollection.addShape(sp.v)
-        sp.paths=sp.localShapeCollection
+        sp.paths = sp.localShapeCollection
+        
         if (sp.dynamicProperties.size != 0) {
             sp.k = true
         } else {
@@ -470,7 +503,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         this.frameId = this.elemGlobalData.frameId
         //TODO：iterateDynamicProperties 调用问题。// 拆分多继承问题 -- //extendPrototype([DynamicPropertyContainer], EllShapePropertyFactory)
         this.iterateDynamicProperties()
-
+    
         if (this._mdf) {
             this.convertEllToPath()
         }
@@ -499,15 +532,15 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         _v.o[3].y = p1 - s1 * cPoint
         if (_cw) {
             _v.v[1].x = p0 + s0
-            _v.v[3].x = p0 - s0
-            _v.i[0].x = p0 - s0 * cPoint
-            _v.i[1].x = p0 + s0
-            _v.i[2].x = p0 + s0 * cPoint
-            _v.i[3].x = p0 - s0
-            _v.o[0].x = p0 + s0 * cPoint
-            _v.o[1].x = p0 + s0
-            _v.o[2].x = p0 - s0 * cPoint
-            _v.o[3].x = p0 - s0
+            _v.v[3].x = p0 - s0 
+            _v.i[0].x = p0 - s0 * cPoint 
+            _v.i[1].x = p0 + s0 
+            _v.i[2].x = p0 + s0 * cPoint 
+            _v.i[3].x = p0 - s0 
+            _v.o[0].x = p0 + s0 * cPoint 
+            _v.o[1].x = p0 + s0 
+            _v.o[2].x = p0 - s0 * cPoint 
+            _v.o[3].x = p0 - s0 
         } else {
             _v.v[1].x = p0 - s0
             _v.v[3].x = p0 + s0
@@ -563,9 +596,9 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         this.v._length = 0
         for (i in 0..Int64(numPts)) {
             if (longFlag) {
-                rad = longRad
-                roundness = longRound
-                perimSegment = longPerimSegment
+                rad = longRad 
+                roundness = longRound 
+                perimSegment = longPerimSegment 
             } else {
                 rad = shortRad
                 roundness = shortRound
@@ -620,7 +653,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
             //TODO: 是要把 this.p.v[0] 和 this.p.v[1] 转为正数吗？  //x += +this.p.v[0]  //y += +this.p.v[1]
             x += this.p.v[0]
             y += this.p.v[1]
-
+            
             this.v.setTripleAt(x, y, x - ox * perimSegment * roundness * dir, y - oy * perimSegment * roundness * dir, x + ox * perimSegment * roundness * dir, y + oy * perimSegment * roundness * dir, i, replace: true)
             currentAng += angle * dir
         }
@@ -720,7 +753,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
                 previousValue.i[j].x = keyPropS.i[j].x
                 previousValue.o[j].x = keyPropS.o[j].x
                 previousValue.v[j].x = keyPropS.v[j].x
-
+                
                 previousValue.i[j].y = keyPropS.i[j].y
                 previousValue.o[j].y = keyPropS.o[j].y
                 previousValue.v[j].y = keyPropS.v[j].y
@@ -728,7 +761,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
                 previousValue.i[j].x = keyPropS.i[j].x + (keyPropE.i[j].x - keyPropS.i[j].x) * perc
                 previousValue.o[j].x = keyPropS.o[j].x + (keyPropE.o[j].x - keyPropS.o[j].x) * perc
                 previousValue.v[j].x = keyPropS.v[j].x + (keyPropE.v[j].x - keyPropS.v[j].x) * perc
-
+                
                 previousValue.i[j].y = keyPropS.i[j].y + (keyPropE.i[j].y - keyPropS.i[j].y) * perc
                 previousValue.o[j].y = keyPropS.o[j].y + (keyPropE.o[j].y - keyPropS.o[j].y) * perc
                 previousValue.v[j].y = keyPropS.v[j].y + (keyPropE.v[j].y - keyPropS.v[j].y) * perc
@@ -739,17 +772,17 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
     func interpolateShapeCurrentTime(): ShapeData {
         //let frameNum: Float64 = this.comp.renderedFrame - this.offsetTime
         //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInElemComp】间接获取当时值。
-        let frameNum: Float64 = renderedFrameInElemComp() - this.offsetTime
+        let frameNum: Float64 = this.getRenderedFrameInElemComp(this.compDataInd) - this.offsetTime
         let initTime: Float64 = this.keyframes[0].t - this.offsetTime
         let endTime: Float64 = this.keyframes[this.keyframes.size - 1].t - this.offsetTime
-        let lastFrame: Float64 = Float64(this._caching.lastFrame)
+        let lastFrame: Float64 = this._caching.lastFrame
         if (!(lastFrame != Float64(initFrame) && ((lastFrame < initTime && frameNum < initTime) || (lastFrame > endTime && frameNum > endTime)))) {
             if (lastFrame >= frameNum) {
                 this._caching.lastIndex = 0
             }
             this.interpolateShape(frameNum, this.pv, this._caching)
         }
-        this._caching.lastFrame = Int64(frameNum)
+        this._caching.lastFrame = frameNum
         return this.pv
     }
 

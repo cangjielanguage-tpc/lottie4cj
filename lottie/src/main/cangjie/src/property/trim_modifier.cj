@@ -17,8 +17,8 @@ public open class TrimModifier <: ShapeModifier {
     var m: Int64 = 0
 
     public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>
-        ,compType!: Int8 = 0, renderedFrame!: Array<() -> Float64> = Array<() -> Float64>()){
-        super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties ,compType: compType, renderedFrame: renderedFrame)
+        ,compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(), compDataInd!: Int64 = -1){
+        super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties ,compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
         this.s = None
         this.e = None
         this.o = None

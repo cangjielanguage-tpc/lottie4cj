@@ -13,10 +13,12 @@ public class CvCompElement <: ICompElement {
     //使用了data.layers暂时使用AnimationData
     public init(data: Layer, globalData: GlobalData, createItem: (Layer) -> BaseElement, buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
         compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>(),
-        getElementByIdInRender!: (Int64) -> Option<BaseElement> = { m => Option<BaseElement>.None }
+        getElementByIdInRender!: (Int64) -> Option<BaseElement> = { m => Option<BaseElement>.None },
+        compDataInd!: Int64 = -1
     ) {
         super(data, globalData)
         this.compType = compType
+        this.compDataInd = compDataInd
         this.comp = comp
         this.getElementByIdInRender = getElementByIdInRender
         this.createItem = createItem
@@ -41,17 +43,23 @@ public class CvCompElement <: ICompElement {
         let dp = DynamicPropertyContainer(globalData, data, dynamicProperties: this.dynamicProperties)
         dp.dynamicProperties = this.dynamicProperties
 
-        var renderedFrame: Array<() -> Float64> = Array<() -> Float64>()
+        var renderedFrame: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>()
         if (compType == 1 && comp.size >= 1){
             renderedFrame = [comp[0].getRenderedFrameInElemComp]
         }
 
+        var cdInd: Int64 = -1
+        if (this.compType == 1 && this.compDataInd != -1) {
+            cdInd = this.compDataInd
+        } else if (this.compType == 1) {
+            cdInd = this.data.ind
+        }
         if (data.tm.k.size == 1) {
-            this.tm = PropertyFactory<ContentModelDK, Float64>.getProp(data.tm, data.tm.k[0].k ?? 0.0, globalData.frameRate, dp, globalData, data, types: 0, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: renderedFrame)
+            this.tm = PropertyFactory<ContentModelDK, Float64>.getProp(data.tm, data.tm.k[0].k ?? 0.0, globalData.frameRate, dp, globalData, data, types: 0, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: renderedFrame, compDataInd: cdInd)
         } else if (data.tm.k.size > 1) {
-            this.tm = PropertyFactory<ContentModelDK, Float64>.getProp(data.tm, data.tm.k, 0, globalData.frameRate, dp, globalData, data, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: renderedFrame)
+            this.tm = PropertyFactory<ContentModelDK, Float64>.getProp(data.tm, data.tm.k, 0, globalData.frameRate, dp, globalData, data, vLen: 1, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: renderedFrame, compDataInd: cdInd)
         } else {
-            this.tm = PropertyFactory<ContentModelDK, Float64>(empty_ContentModelDK, 0.0, dp, globalData, data, types: 0, dynamicProperties: this.dynamicProperties)
+            this.tm = PropertyFactory<ContentModelDK, Float64>(empty_ContentModelDK, 0.0, dp, globalData, data, types: 0, dynamicProperties: this.dynamicProperties, compDataInd: cdInd)
         }
         //this.tm.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
@@ -71,17 +79,10 @@ public class CvCompElement <: ICompElement {
         ctx.lineTo(0, 0)
         ctx.clip()
 
-        //let len: Int64 = this.layers.size
-        //var indexCOMP: Int64 = 16
-        //var indexCOMP: Int64 = 4
-        //if (this.completeLayers || (this.elements.size > indexCOMP && !this.elements[indexCOMP].isNull)) {
-        //    this.elements[indexCOMP].renderFrame()
-        //}
-
         let len: Int64 = this.layers.size
-        var indexCOMP: Int64 = 0
+        var indexCOMP: Int64 = 0 //TODO: 测试用后续删除
         for (i in (len - 1)..=0: -1) {
-            indexCOMP = i
+            indexCOMP = i //TODO: 测试用后续删除
             if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
                 this.elements[i].renderFrame()  //renderFrame
             }

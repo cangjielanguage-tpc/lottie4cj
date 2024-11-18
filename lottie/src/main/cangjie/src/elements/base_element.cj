@@ -91,6 +91,8 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     //comp数据类型：1-Element；2-Renderer；3-其他
     public var compType: Int8 = 0
+    //comp数据类型是 Element，对应的 Element.data.ind
+    public var compDataInd: Int64 = -1
     //public var containerInFP: Array<DynamicPropertyContainer> = Array<DynamicPropertyContainer>()
     /*
      * TODO: comp 在arkts中是多种数据类型，cangjie没有办法完全兼容。
@@ -265,13 +267,15 @@ public open class BaseElement <: Equatable<BaseElement> {
         //this.maskManager = CvMaskElement(data, element: RenderableElement)
     }
 
-    public func getRenderedFrameInElemComp(): Float64{
-        if (this.compType == 1 && this.comp.size >= 1){
-            //Hilog.error(0, "--29--", "[Element][getRenderedFrameInElemComp]--[1]--------------------------------layerId = ${layerId}")
-            this.comp[0].getRenderedFrameInElemComp()
+    public func getRenderedFrameInElemComp(_compDataInd: Int64): Float64 {
+        if (this.compType == 2 && this.data.ind == _compDataInd) {
+            return this.renderedFrame
         }
-        //Hilog.error(0, "--29--", "[Element][getRenderedFrameInElemComp]--[2]--------------------------------layerId = ${layerId}")
-        //Hilog.error(0, "--29--", "[Element][getRenderedFrameInElemComp]--[2]--------------------------------layerId = this.renderedFrame = ${this.renderedFrame}")
+        if (this.compType == 1 && this.comp.size >= 1){
+            return this.comp[0].getRenderedFrameInElemComp(_compDataInd)
+        } else if (this.compType == 2) {
+            return this.globalData.renderedFrameInRendered()
+        }
         return this.renderedFrame
     }
 
@@ -281,18 +285,18 @@ public open class BaseElement <: Equatable<BaseElement> {
             throw Exception("Non canvas cannot call this function。")
         }
         if (layer.ty == 2) {
-            return CvImageElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender)
+            return CvImageElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender, compDataInd: this.data.ind)
         } else if (layer.ty == 0) {
-            return CvCompElement(layer, this.globalData, this.createItem, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender)
+            return CvCompElement(layer, this.globalData, this.createItem, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender, compDataInd: this.data.ind)
         } else if (layer.ty == 1) {
-            return CvSolidElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender)
+            return CvSolidElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender, compDataInd: this.data.ind)
         } else if (layer.ty == 3) {
             return NullElement(layer, this.globalData)
         } else if (layer.ty == 4) {
             //return CvShapeElement(layer, this.globalData, this.buildElementParenting, this.pendingElements, layers: this.layers, elements: this.elements)
-            return CvShapeElement(layer, this.globalData, this.buildElementParenting, layers: this.layers, elements: this.elements, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender)
+            return CvShapeElement(layer, this.globalData, this.buildElementParenting, layers: this.layers, elements: this.elements, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender, compDataInd: this.data.ind)
         } else if (layer.ty == 5) {
-            return CvTextElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender)
+            return CvTextElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender, compDataInd: this.data.ind)
         } else if (layer.ty == 6) {
             //TODO: 暂不实现  //return this.createAudio(layer)
             return NullElement(layer, this.globalData)
@@ -497,7 +501,7 @@ public open class BaseElement <: Equatable<BaseElement> {
      * @param num - 层时间中的当前帧数
      * @param isVisible - 如果层当前在范围内
      */
-    public func prepareProperties(num: Int64, isVisible: Bool): Unit {
+    public func prepareProperties(num: Float64, isVisible: Bool): Unit {
         let len: Int64 = this.dynamicProperties.size
 
         for (i in 0..len) {
@@ -601,23 +605,29 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.globalData = globalData
 
         //this.finalTransform.isNull = false
-
+        var cdInd: Int64 = -1
+        if (this.compType == 1 && this.compDataInd != -1) {
+            cdInd = this.compDataInd
+        } else if (this.compType == 1) {
+            cdInd = this.data.ind
+        }
         if (!this.data.ks.isNull()) {
             //TODO:[lp]--会影响最外层的CvCompElement吗？？？
             let mProp: TransformProperty
             if (this.compType == 1 && this.comp.size >= 1){
                 //this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [comp[0].getRenderedFrameInElemComp])
-                mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [comp[0].getRenderedFrameInElemComp])
+                mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [comp[0].getRenderedFrameInElemComp], compDataInd: cdInd)
             } else {
                 //this.finalTransform.mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [this.getRenderedFrameInElemComp])
-                mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [this.getRenderedFrameInElemComp])
+                mProp = TransformPropertyFactory.getTransformProperty(this.data.ks, globalData, data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [this.getRenderedFrameInElemComp], compDataInd: cdInd)
             }
+
             this.finalTransform = FinalTransform(mProp: mProp)
             //this.finalTransform.mProp.addDynamicPropertyInElem = this.addDynamicProperty
         } else {
             let arrdpc: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>()
             this.finalTransform = FinalTransform(isNull: false, dynamicProperties: arrdpc)
-            let o = PropertyFactory<ArrayKeyframeInt64, Int64>(ArrayKeyframeInt64(), 0.0, this.finalTransform.mProp, this.globalData, this.data, dynamicProperties: arrdpc)
+            let o = PropertyFactory<ArrayKeyframeInt64, Int64>(ArrayKeyframeInt64(), 0.0, this.finalTransform.mProp, this.globalData, this.data, dynamicProperties: arrdpc, compDataInd: cdInd)
             o.v = [0.0]
             this.finalTransform.mProp.o = o
         }
@@ -960,6 +970,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         if (this.hidden || this.data.hd) {
             return
         }
+
         if (this.data.td == 1 && !forceRender) {
             return
         }
@@ -988,7 +999,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         //将两个layer数据分别绘制到两个离屏画布上，通过将离屏绘制数据结合混合模式绘制到当前显示画布上，实现mask效果
         this.exitLayer() // CVBaseElement
 
-        //恢复高斯模糊的默认值，防止非高斯模糊图层也高斯模糊 shadowBlur(blur: Int64): UnitHilog.error(0, "--Renderer--", "[buildAllItems]--[1]----> i = ${i}")
+        //恢复高斯模糊的默认值，防止非高斯模糊图层也高斯模糊 shadowBlur(blur: Int64): Unit
         this.canvasContext.shadowBlur(0)
 
         if (this.maskManager.size > 0 && this.maskManager[0].hasMasks) {
@@ -1178,7 +1189,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         //调用 RenderableElement.prepareRenderableFrame
         this.prepareRenderableFrame(num)
         //调用 FrameElement.prepareProperties
-        this.prepareProperties(Int64(num), this.isInRange)
+        this.prepareProperties(num, this.isInRange)
         //调用 RenderableElement.checkTransparency
         this.checkTransparency()
     }

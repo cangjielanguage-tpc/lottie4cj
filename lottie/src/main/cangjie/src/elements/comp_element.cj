@@ -81,7 +81,7 @@ public open class ICompElement <: BaseElement {
     public func prepareFrame(num: Float64): Unit {
         this._mdf = false
         this.prepareRenderableFrame(num)
-        this.prepareProperties(Int64(num), this.isInRange)
+        this.prepareProperties(num, this.isInRange)
         //TODO: 未在 json 中找到 layers.xt，暂时定义为 Bool类型。
         if (!this.isInRange && !this.data.xt) {
             return
@@ -102,12 +102,13 @@ public open class ICompElement <: BaseElement {
             //TODO: 初始化后，传入 BaseRenderer.checkLayers(num: Float64) 函数。
             this.checkLayers(this.renderedFrame)
         }
+
         //由于表达式之间的连接方式，此迭代需要向后进行
         for (i in (len - 1)..=0:-1) {
-            if (this.completeLayers || this.elements.size > i) {
-                let a = this.renderedFrame
-                let b = this.layers[i].st
-                let c = this.renderedFrame - this.layers[i].st
+            if (this.completeLayers || this.elements.size > i && !this.elements[i].isNull) {
+                let a = this.renderedFrame  //TODO：调试用，后续删除
+                let b = this.layers[i].st  //TODO：调试用，后续删除
+                let c = this.renderedFrame - this.layers[i].st  //TODO：调试用，后续删除
                 this.elements[i].prepareFrame(this.renderedFrame - this.layers[i].st) // IShapeElement
                 if (this.elements[i]._mdf) {
                     this._mdf = true

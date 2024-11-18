@@ -128,7 +128,7 @@ public open class IShapeElement <: BaseElement {
     
     public func prepareFrame(num: Float64) {
         this.prepareRenderableFrame(num)
-        this.prepareProperties(Int64(num), this.isInRange)
+        this.prepareProperties(num, this.isInRange)
     }
     
     //TODO: 配合 RepeaterModifier 编译用，暂未实现。
