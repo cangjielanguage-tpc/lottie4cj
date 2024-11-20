@@ -4,31 +4,19 @@
 
 package lottie.parser
 
-/* {"ty":"mm","mm":1,"nm":"Merge Paths 1","mn":"ADBE Vector Filter - Merge","hd":false} */
 class MergePathsParser {
-
-    private static let NAMES: Array<String> = [
-        "nm",  // 0
-        "mm",  // 1
-        "hd"   // 2
-    ]
-
-    static func parse(reader: JsonObject): MergePaths {
+    static func parse(reader: JsonReader): MergePaths {
         var name: String = ""
         var mode: Int64 = 0
         var hidden: Bool = false
-
-        if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
-            name = v.asString().getValue()
+        while (reader.peek() != JsonToken.EndObject) {
+            match (reader.readName()) {
+                case "nm" => name = reader.readValue<String>()
+                case "mm" => mode = reader.readValue<Int64>()
+                case "hd" => hidden = reader.readValue<Bool>()
+                case _ => reader.skip()
+            }
         }
-        if (let Some(v) <- reader.get(NAMES[1])) { // "mm"
-            mode = v.asInt().getValue()
-        }
-        if (let Some(v) <- reader.get(NAMES[2])) {  //"hd"
-            hidden = v.asBool().getValue()
-        }
-
-        let cm: MergePaths = MergePaths(nm: name, mm: mode, hd: hidden)
-        return cm
+        return MergePaths(nm: name, mm: mode, hd: hidden)
     }
 }

@@ -8,52 +8,97 @@
 package lottie.parser
 
 class Utils {
-
-    static func isAtLeastVersion(major: Int32, minor: Int32, patch: Int32, minMajor: Int32,
-                                        minMinor: Int32, minPatch: Int32): Bool {
+    static func isAtLeastVersion(major: Int32, minor: Int32, patch: Int32, minMajor: Int32, minMinor: Int32,
+        minPatch: Int32): Bool {
         if (major < minMajor) {
-          return false
+            return false
         } else if (major > minMajor) {
-          return true
+            return true
         }
 
         if (minor < minMinor) {
-          return false
+            return false
         } else if (minor > minMinor) {
-          return true
+            return true
         }
 
         return patch >= minPatch
     }
 
-    public static let NAMES_A_AK: Array<String> = [
-        "a",  //0
-        "k"   //1
-    ]
-    
-    public static func parseSAK(jo: JsonObject): AK {
+    public static func parseSAK(reader: JsonReader): AK {
         var a: Int64 = 0
         var k: Int64 = 0
-        if (let Some(v) <- jo.get(NAMES_A_AK[0])) { //"a"
-            a = v.asInt().getValue()
-        }
-        if (let Some(v) <- jo.get(NAMES_A_AK[1])) { //"k"
-            k = v.asInt().getValue()
+        while (reader.peek() != EndObject) {
+            match (reader.readName()) {
+                case "a" => a = reader.readValue<Int64>()
+                case "k" => k = reader.readValue<Int64>()
+                case _ => reader.skip()
+            }
         }
         return AK(a: a, k: k)
     }
 }
 
-public let NAMES_AIX: Array<String> = [
-    "a",  // 0
-    "ix"  // 1
-]
-public func handleAIX(jv: JsonValue, keyframe: ArrayKeyframeFloat64): Unit {
-    let jo: JsonObject = jv.asObject()
-    if (let Some(k) <- jo.get(NAMES_AIX[0])) { // "a"
-        keyframe.a = k.asInt().getValue()
+public func handleAIX(reader: JsonReader, keyframe: ArrayKeyframeFloat64): Unit {
+    while (reader.peek() == EndObject) {
+        match (reader.readName()) {
+            case "a" => keyframe.a = reader.readValue<Int64>()
+            case "ix" => keyframe.ix = reader.readValue<Int64>()
+            case _ => reader.skip()
+        }
     }
-    if (let Some(k) <- jo.get(NAMES_AIX[1])) { // "ix"
-        keyframe.ix = k.asInt().getValue()
+}
+
+extend JsonToken {
+    public func asString(): String {
+        match (this) {
+            case JsonNull => "JsonNull"
+            case JsonBool => "JsonBool"
+            case JsonNumber => "JsonNumber"
+            case JsonString => "JsonString"
+            case BeginArray => "BeginArray"
+            case EndArray => "EndArray"
+            case BeginObject => "BeginObject"
+            case EndObject => "EndObject"
+            case Name => "Name"
+        }
+    }
+}
+
+public class JsonReader {
+    var reader: JsonStreamReader
+
+    var tmpList: ArrayList<String> = ArrayList<String>(1)
+
+    public init(inputStream: InputStream) {
+        this.reader = JsonStreamReader(inputStream)
+    }
+
+    public func endArray(): Unit {
+        reader.endArray()
+    }
+    public func endObject(): Unit {
+        reader.endObject()
+    }
+    public func peek(): Option<JsonToken> {
+        reader.peek()
+    }
+    public func readName(): String {
+        let tmpName = reader.readName()
+        tmpList.append(tmpName)
+        return tmpName
+    }
+    public func readValue<T>(): T where T <: JsonDeserializable<T> {
+        let tmp = reader.readValue<T>()
+        return tmp
+    }
+    public func skip(): Unit {
+        reader.skip()
+    }
+    public func startArray(): Unit {
+        reader.startArray()
+    }
+    public func startObject(): Unit {
+        reader.startObject()
     }
 }

@@ -17,8 +17,8 @@ public class AnimatableValueParser {
      * @return Type of Array<Keyframe<Float64>>.
      *                 An array of instances of the specified data that encapsulates the animation.
      */
-    public static func parseFloat(reader: JsonValue): Array<Keyframe<Float64>> {
-        return parse(reader, FloatParser.INSTANCE)
+    public static func parseFloat(reader: JsonReader): Array<Keyframe<Float64>> {
+        return parse<Float64>(reader, FloatParser.INSTANCE)
     }
 
     /**
@@ -29,39 +29,42 @@ public class AnimatableValueParser {
      * @return Type of Array<Keyframe<Array<Float64>>>.
      *                 An array of instances of the specified data that encapsulates the animation.
      */
-    public static func parseArrayFloat(reader: JsonValue): Array<Keyframe<Array<Float64>>> {
-        return parse(reader, ArrayFloat64Parser.INSTANCE)
+    public static func parseArrayFloat(reader: JsonReader): Array<Keyframe<Array<Float64>>> {
+        return parse<Array<Float64>>(reader, ArrayFloat64Parser.INSTANCE)
     }
 
-    static func parseInteger(reader: JsonValue): Array<Keyframe<Int64>> {
-        return parse(reader, IntegerParser.INSTANCE)
+    static func parseInteger(reader: JsonReader): Array<Keyframe<Int64>> {
+        return parse<Int64>(reader, IntegerParser.INSTANCE)
     }
 
-    static func parsePoint(reader: JsonValue): Array<Keyframe<PointF>> {
+    static func parsePoint(reader: JsonReader): Array<Keyframe<PointF>> {
         return KeyframesParser.parse(reader, PointFParser.INSTANCE)
     }
 
-    static func parseScale(reader: JsonValue): Array<Keyframe<Array<Float64>>> {
+    static func parseScale(reader: JsonReader): Array<Keyframe<Array<Float64>>> {
         return parse(reader, ScaleXYParser.INSTANCE)
     }
 
-    static func parseShapeData(reader: JsonValue): Array<Keyframe<ShapeData>> {
+    static func parseShapeData(reader: JsonReader): Array<Keyframe<ShapeData>> {
         return parse(reader, ShapeDataParser.INSTANCE)
     }
 
-    static func parseDocumentData(reader: JsonValue): Array<Keyframe<DocumentData>> {
+    static func parseDocumentData(reader: JsonReader): Array<Keyframe<DocumentData>> {
         return parse(reader, DocumentDataParser.INSTANCE)
     }
 
-    static func parseColor(reader: JsonValue): Array<Keyframe<Array<Float64>>> {
-        return parse(reader, ColorParser.INSTANCE)
+    static func parseColor(reader: JsonReader): Array<Keyframe<Array<Float64>>> {
+        return parse<Array<Float64>>(reader, ColorParser.INSTANCE)
     }
 
-    static func parseGradientColor(reader: JsonValue, points: Int64): Array<Keyframe<Array<Float64>>> {
+    static func parseGradientColor(reader: JsonReader, points: Int64): Array<Keyframe<Array<Float64>>> {
         return parse(reader, GradientColorParser(points))
     }
 
-    private static func parse<T>(reader: JsonValue, valueParser: ValueParser<T>): Array<Keyframe<T>> where T <: ToString {
+    /**
+     * Will return null if the animation can't be played such as if it has expressions.
+     */
+    private static func parse<T>(reader: JsonReader, valueParser: ValueParser<T>): Array<Keyframe<T>> where T <: ToString {
         return KeyframesParser.parse<T>(reader, valueParser)
     }
 }

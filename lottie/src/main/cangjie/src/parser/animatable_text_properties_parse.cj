@@ -9,33 +9,6 @@ package lottie.parser
 
 public class AnimatableTextPropertiesParser {
 
-    //"layers"."t"."a"(."a")
-    private static let PROPERTIES_NAMES: Array<String> = ["a", "s"]
-
-    //"layers"."t"."a"."a"(.{"fc", "sc", "sw", "t"})
-    private static let ANIMATABLE_PROPERTIES_NAMES: Array<String> = [
-        "fc", //0
-        "sc", //1
-        "sw", //2
-        "t"   //3
-    ]
-
-    private static let PROPERTIES_NAMES_S: Array<String> = [
-        "t",  //0
-        "xe", //1
-        "ne", //2
-        "a",  //3
-        "b",  //4
-        "rn", //5
-        "sh", //6
-        "r"   //7
-    ]
-
-    private static let PROPERTIES_NAMES_S_AK: Array<String> = [
-        "a",  //0
-        "k"   //1
-    ]
-
     /**
      * Animate the data of a special "a" in json data, parsed into the corresponding AnimatableTextProperties instance.
      *
@@ -43,21 +16,22 @@ public class AnimatableTextPropertiesParser {
      * @return Type of AnimatableTextProperties.
      *                 an array of instances of the special "a" data that encapsulates the animation.
      */
-    public static func parse(reader: JsonObject): AnimatableTextPropertiesA {
+    public static func parse(reader: JsonReader): AnimatableTextPropertiesA {
         var anim: AnimatableTextProperties = AnimatableTextProperties()
-        if (let Some(v) <- reader.get(PROPERTIES_NAMES[0])) { //"a"   //"layers"."t"."a"(."a")
-            let jo: JsonObject = v.asObject()
-            anim = parseAnimatableTextProperties(jo)
-        }
         var s: AnimatableTextPropertiesS = AnimatableTextPropertiesS()
-        if (let Some(v) <- reader.get(PROPERTIES_NAMES[1])) { //"s"   //"layers"."t"."a"(."s")
-            let jo: JsonObject = v.asObject()
-            s = parseS(jo)
+        reader.startObject()
+        while (reader.peek() != JsonToken.EndObject) {
+            match (reader.readName()) {
+                case "a" => anim = parseAnimatableTextProperties(reader)
+                case "s" => s = parseS(reader)
+                case _ => reader.skip()
+            }
         }
+        reader.endObject()
         return AnimatableTextPropertiesA(a: anim, s: s)
     }
 
-    private static func parseS(jo: JsonObject): AnimatableTextPropertiesS {
+    private static func parseS(reader: JsonReader): AnimatableTextPropertiesS {
         var t: Int64 = 0
         var xe: AK = AK()
         var ne: AK = AK()
@@ -66,71 +40,57 @@ public class AnimatableTextPropertiesParser {
         var rn: Int64 = 0
         var sh: Int64 = 0
         var r: Int64 = 0
-        if (let Some(v) <- jo.get(PROPERTIES_NAMES_S[0])) { //"t"
-            t = v.asInt().getValue()
+        reader.startObject()
+        while (reader.peek() != EndObject) {
+            match (reader.readName()) {
+                case "t" => t = reader.readValue<Int64>()
+                case "xe" => xe = parseSAK(reader)
+                case "ne" => ne = parseSAK(reader)
+                case "a" => a = parseSAK(reader)
+                case "b" => b = reader.readValue<Int64>()
+                case "rn" => rn = reader.readValue<Int64>()
+                case "sh" => sh = reader.readValue<Int64>()
+                case "r" => r = reader.readValue<Int64>()
+                case _ => reader.skip()
+            }
         }
-        if (let Some(v) <- jo.get(PROPERTIES_NAMES_S[1])) { //"xe"
-            let jo: JsonObject = v.asObject()
-            xe = parseSAK(jo)
-        }
-        if (let Some(v) <- jo.get(PROPERTIES_NAMES_S[2])) { //"ne"
-            let jo: JsonObject = v.asObject()
-            ne = parseSAK(jo)
-        }
-        if (let Some(v) <- jo.get(PROPERTIES_NAMES_S[3])) { //"a"
-            let jo: JsonObject = v.asObject()
-            a = parseSAK(jo)
-        }
-        if (let Some(v) <- jo.get(PROPERTIES_NAMES_S[4])) { //"b"
-            b = v.asInt().getValue()
-        }
-        if (let Some(v) <- jo.get(PROPERTIES_NAMES_S[5])) { //"rn"
-            rn = v.asInt().getValue()
-        }
-        if (let Some(v) <- jo.get(PROPERTIES_NAMES_S[6])) { //"sh"
-            sh = v.asInt().getValue()
-        }
-        if (let Some(v) <- jo.get(PROPERTIES_NAMES_S[7])) { //"r"
-            r = v.asInt().getValue()
-        }
+        reader.endObject()
         return AnimatableTextPropertiesS(t: t, xe: xe, ne: ne, a: a, b: b, rn: rn, sh: sh, r: r)
     }
 
-    private static func parseSAK(jo: JsonObject): AK {
+    private static func parseSAK(reader: JsonReader): AK {
         var a: Int64 = 0
         var k: Int64 = 0
-        if (let Some(v) <- jo.get(PROPERTIES_NAMES_S_AK[0])) { //"a"
-            a = v.asInt().getValue()
+        reader.startObject()
+        while (reader.peek() != EndObject) {
+            match (reader.readName()) {
+                case "a" => a = reader.readValue<Int64>()
+                case "k" => k = reader.readValue<Int64>()
+                case _ => reader.skip()
+            }
         }
-        if (let Some(v) <- jo.get(PROPERTIES_NAMES_S_AK[1])) { //"k"
-            k = v.asInt().getValue()
-        }
+        reader.endObject()
         return AK(a: a, k: k)
     }
 
-    private static func parseAnimatableTextProperties(reader: JsonObject): AnimatableTextProperties {
+    private static func parseAnimatableTextProperties(reader: JsonReader): AnimatableTextProperties {
         var color: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
         var stroke: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
         var strokeWidth: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
         var tracking: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
 
         //"layers"."t"."a"."a"(.{"fc", "sc", "sw", "t"})
-        if (let Some(v) <- reader.get(ANIMATABLE_PROPERTIES_NAMES[0])) { //"fc"
-            let jv: JsonValue = v.asObject()
-            color = AnimatableValueParser.parseColor(jv)
+        reader.startObject()
+        while (reader.peek() != EndObject) {
+            match (reader.readName()) {
+                case "fc" => color = AnimatableValueParser.parseColor(reader)
+                case "sc" => stroke = AnimatableValueParser.parseColor(reader)
+                case "sw" => strokeWidth = AnimatableValueParser.parseFloat(reader)
+                case "t" => tracking = AnimatableValueParser.parseFloat(reader)
+                case _ => reader.skip()
+            }
         }
-        if (let Some(v) <- reader.get(ANIMATABLE_PROPERTIES_NAMES[1])) { //"sc"
-            let jv: JsonValue = v.asObject()
-            stroke = AnimatableValueParser.parseColor(jv)
-        }
-        if (let Some(v) <- reader.get(ANIMATABLE_PROPERTIES_NAMES[2])) { //"sw"
-            let jv: JsonValue = v.asObject()
-            strokeWidth = AnimatableValueParser.parseFloat(jv)
-        }
-        if (let Some(v) <- reader.get(ANIMATABLE_PROPERTIES_NAMES[3])) { //"t"
-            let jv: JsonValue = v.asObject()
-            tracking = AnimatableValueParser.parseFloat(jv)
-        }
+        reader.endObject()
 
         let cm: AnimatableTextProperties = AnimatableTextProperties(
             fc: ArrayKeyframeArrayFloat64(k: color),
