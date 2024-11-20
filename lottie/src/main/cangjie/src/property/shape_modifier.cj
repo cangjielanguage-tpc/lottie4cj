@@ -93,6 +93,6 @@ public open class ShapeModifier <: DynamicPropertyContainer {
 
     //TODO：用于 IShapeElement 编译，isAnimatedWithShape 未找到原函数。
     public open func isAnimatedWithShape(data: Layer): Bool { return true }
-    public open func processShapes(flag: Bool): Bool { return true }
+    public open func processShapes(flag: Bool): Bool { return false }
 
 }
