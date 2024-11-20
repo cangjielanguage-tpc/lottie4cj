@@ -5,22 +5,7 @@
 package lottie.parser
 
 class FontParser {
-    
-    /* "fonts"."list"[{.}] */
-    private static let NAMES: Array<String> = [
-        "fFamily", // 0 = family
-        "fName",   // 1 = name
-        "fStyle",  // 2 = style
-        "ascent",  // 3 = ascent
-
-        "fOrigin", // 4 = "fOrigin"
-        "origin",  // 5 = "origin"
-        "fPath",   // 6 = "fPath"
-        "fClass",  // 7 = "fClass"
-        "fWeight"  // 8 = "fWeight"
-    ]
-
-    static func parse(reader: JsonObject): Font {
+    static func parse(reader: JsonReader): Font {
         var family: String = ""
         var name: String = ""
         var style: String = ""
@@ -32,34 +17,23 @@ class FontParser {
         var fClass: String = ""
         var fWeight: String = ""
 
-        if (let Some(v) <- reader.get(NAMES[0])) { //"fFamily"
-            family = v.asString().getValue()
+        reader.startObject()
+        while (reader.peek() != JsonToken.EndObject) {
+            let key = reader.readName()
+            match (key) {
+                case "fFamily" => family = reader.readValue<String>()
+                case "fName" => name = reader.readValue<String>()
+                case "fStyle" => style = reader.readValue<String>()
+                case "ascent" => ascent = reader.readValue<Float64>()
+                case "fOrigin" => fOrigin = reader.readValue<String>()
+                case "origin" => origin = reader.readValue<Int64>()
+                case "fPath" => fPath = reader.readValue<String>()
+                case "fClass" => fClass = reader.readValue<String>()
+                case "fWeight" => fWeight = reader.readValue<String>()
+                case _ => reader.skip()
+            }
         }
-        if (let Some(v) <- reader.get(NAMES[1])) { //"fName"
-            name = v.asString().getValue()
-        }
-        if (let Some(v) <- reader.get(NAMES[2])) { //"fStyle"
-            style = v.asString().getValue()
-        }
-        if (let Some(v) <- reader.get(NAMES[3])) { //"ascent"
-            ascent = v.asFloat().getValue()
-        }
-
-        if (let Some(v) <- reader.get(NAMES[4])) { // 4 = "fOrigin"
-            fOrigin = v.asString().getValue()
-        }
-        if (let Some(v) <- reader.get(NAMES[5])) { // 5 = "origin"
-            origin = v.asInt().getValue()
-        }
-        if (let Some(v) <- reader.get(NAMES[6])) { // 6 = "fPath"
-            fPath = v.asString().getValue()
-        }
-        if (let Some(v) <- reader.get(NAMES[7])) { // 7 = "fClass"
-            fClass = v.asString().getValue()
-        }
-        if (let Some(v) <- reader.get(NAMES[8])) { // 8 = "fWeight"
-            fWeight = v.asString().getValue()
-        }
+        reader.endObject()
 
         return Font(family, name, style, ascent, fOrigin, origin, fPath, fClass, fWeight)
     }

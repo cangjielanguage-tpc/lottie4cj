@@ -1,21 +1,10 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
-
 package lottie.parser
 
 class ShapeFillParser {
-
-    private static let NAMES: Array<String> = [
-        "nm",          // 0
-        "c",           // 1
-        "o",           // 2
-        "fillEnabled", // 3
-        "r",           // 4
-        "hd"           // 5
-    ]
-
-    static func parse(reader: JsonObject): ShapeFill {
+    static func parse(reader: JsonReader): ShapeFill {
         var color: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
         var fillEnabled: Bool = false
         var opacity: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>()
@@ -23,27 +12,19 @@ class ShapeFillParser {
         var name: String = ""
         var fillTypeInt: Int64 = 1
         var hidden: Bool = false
-
-        if (let Some(v) <- reader.get(NAMES[0])) { // "nm"
-            name = v.asString().getValue()
-        }
-        if (let Some(v) <- reader.get(NAMES[1])) { //"c"  //"layers"."shapes"."c"  <==  "layers"."shapes".{"ty": "fl"}
-            color = AnimatableValueParser.parseColor(v)
-        }
-        if (let Some(v) <- reader.get(NAMES[2])) { // "o"
-            opacity = AnimatableValueParser.parseInteger(v)
-        }
-        if (let Some(v) <- reader.get(NAMES[3])) { //"fillEnabled"
-            fillEnabled = v.asBool().getValue()
-        }
-        if (let Some(v) <- reader.get(NAMES[4])) { // "r"
-            fillTypeInt = v.asInt().getValue()
-        }
-        if (let Some(v) <- reader.get(NAMES[5])) { // "hd"
-            hidden = v.asBool().getValue()
+        while (reader.peek() != EndObject) {
+            match (reader.readName()) {
+                case "nm" => name = reader.readValue<String>()
+                case "c" => color = AnimatableValueParser.parseColor(reader)
+                case "o" => opacity = AnimatableValueParser.parseInteger(reader)
+                case "fillEnabled" => fillEnabled = reader.readValue<Bool>()
+                case "r" => fillTypeInt = reader.readValue<Int64>()
+                case "hd" => hidden = reader.readValue<Bool>()
+                case _ => reader.skip()
+            }
         }
 
-        let cm: ShapeFill = ShapeFill(
+        return ShapeFill(
             nm: name,
             c: color,
             o: opacity,
@@ -51,6 +32,5 @@ class ShapeFillParser {
             r: fillTypeInt,
             hd: hidden
         )
-        return cm
     }
 }

@@ -8,56 +8,22 @@
 package lottie.parser
 
 public class AnimatablePathValueParser {
-
-    //"layers"."shapes"."p"."k"   <== "layers"."shapes".{"ty": "tr"}  //"k": [0, 0]
-    private static let NAMES: Array<String> = [
-        "k",
-        "x",
-        "y"
-    ]
-    private static let NAMES_AIX: Array<String> = [
-        "a",   // 0
-        "ix",  // 1
-        "s"    // 2
-    ]
-
-    /**
-     * Animate json data in special "p" data,
-     * parse encapsulated into the corresponding Keyframe<PointF> in an array of instances.
-     *
-     * @param reader - Type of JsonValue. Animate special "p" data in json data.
-     * @return Type of Array<Keyframe<PointF>>.
-     *         An array of instances of the special "p" data that encapsulates the animation.
-     */
-    public static func parse(reader: JsonValue): Array<Keyframe<PointF>> {
-        var keyframes: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
-
-        var jk: JsonKind = reader.kind()
-        if (equalsJsonKind(jk, JsonKind.JsArray)) {
-            let ja: JsonArray = reader.asArray()
-
-            let len: Int64 = ja.size()
-            if (len <= 0) {
-                return keyframes
+    public static func parse(reader: JsonReader): Array<Keyframe<PointF>> {
+        let keyframes = ArrayList<Keyframe<PointF>>()
+        if (reader.peek() == JsonToken.BeginArray) {
+            reader.startArray()
+            while (reader.peek() != JsonToken.EndArray) {
+                keyframes.append(PathKeyframeParser.parse(reader))
             }
-            jk = ja[0].kind()
-            if (equalsJsonKind(jk, JsonKind.JsInt) || equalsJsonKind(jk, JsonKind.JsFloat)) {
-                keyframes = [PathKeyframeParser.parse(ja)]
-            } else if (equalsJsonKind(jk, JsonKind.JsObject)) {
-                let EMPTY_KEYFRAME_POINTF: Keyframe<PointF> = Keyframe<PointF>()
-                keyframes = Array<Keyframe<PointF>>(len, item: EMPTY_KEYFRAME_POINTF)
-                for (i in 0..len) {
-                    keyframes[i] = PathKeyframeParser.parse(ja[i])
-                }
-            }
+            reader.endArray()
         } else {
-            keyframes = [Keyframe<PointF>(k: JsonUtils.jsonToPoint(reader))]
+            keyframes.append(Keyframe<PointF>(k: JsonUtils.jsonToPoint(reader)))
         }
-        return keyframes
+        // Once extra memory copy
+        return keyframes.toArray()
     }
 
-    static func parseSplitPath(reader: JsonValue): AnimatableSplitDimensionPathValue {
-
+    static func parseSplitPath(reader: JsonReader): AnimatableSplitDimensionPathValue {
         var a: Int64 = 0
         var ix: Int64 = 0
         var s: Bool = false
@@ -66,45 +32,37 @@ public class AnimatablePathValueParser {
         var xAnimation: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
         var yAnimation: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
 
-        var hasExpressions:Bool = false
+        var hasExpressions: Bool = false
 
-        let jsonObject: JsonObject = reader.asObject()
-
-        if (let Some(v) <- jsonObject.get(NAMES_AIX[0])) { // "a"
-            a = v.asInt().getValue()
-        }
-        if (let Some(v) <- jsonObject.get(NAMES_AIX[1])) { // "ix"
-            ix = v.asInt().getValue()
-        }
-        if (let Some(v) <- jsonObject.get(NAMES_AIX[2])) { // "s"
-            s = v.asBool().getValue()
-        }
-        
-        if (let Some(v) <- jsonObject.get(NAMES[0])) { //"k"
-            pathAnimation = AnimatablePathValueParser.parse(v)
-        }
-        if (let Some(v) <- jsonObject.get(NAMES[1])) { //"x"
-            let jk: JsonKind = v.kind()
-            if (equalsJsonKind(jk, JsonKind.JsString)) {
-                hasExpressions = true
-            } else {
-                xAnimation = AnimatableValueParser.parseFloat(v)
+        reader.startObject()
+        while (reader.peek() != EndObject) {
+            match (reader.readName()) {
+                case "a" => a = reader.readValue<Int64>()
+                case "ix" => ix = reader.readValue<Int64>()
+                case "s" => s = reader.readValue<Bool>()
+                case "k" => pathAnimation = AnimatablePathValueParser.parse(reader)
+                case "x" => if (reader.peek() == JsonToken.JsonString) {
+                    hasExpressions = true
+                    reader.skip()
+                } else {
+                    xAnimation = AnimatableValueParser.parseFloat(reader)
+                }
+                case "y" => if (reader.peek() == JsonToken.JsonString) {
+                    hasExpressions = true
+                    reader.skip()
+                } else {
+                    yAnimation = AnimatableValueParser.parseFloat(reader)
+                }
+                case _ => reader.skip()
             }
         }
-        if (let Some(v) <- jsonObject.get(NAMES[2])) { //"y"
-            let jk: JsonKind = v.kind()
-            if (equalsJsonKind(jk, JsonKind.JsString)) {
-                hasExpressions = true
-            } else {
-                yAnimation = AnimatableValueParser.parseFloat(v)
-            }
-        }
+        reader.endObject()
 
         if (hasExpressions) {
-            logger.log(LogLevel.INFO,  "Lottie doesn't support expressions.")
+            logger.log(LogLevel.INFO, "Lottie doesn't support expressions.")
         }
 
-        let aspv: AnimatableSplitDimensionPathValue = AnimatableSplitDimensionPathValue(
+        return AnimatableSplitDimensionPathValue(
             a: a,
             ix: ix,
             s: s,
@@ -112,6 +70,5 @@ public class AnimatablePathValueParser {
             x: xAnimation,
             y: yAnimation
         )
-        return aspv
     }
 }

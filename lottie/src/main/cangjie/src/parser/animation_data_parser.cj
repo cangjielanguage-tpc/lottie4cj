@@ -8,60 +8,27 @@
 package lottie.parser
 
 internal import std.math.*
-internal import encoding.json.*
-internal import encoding.json.stream.*
 internal import std.collection.*
 internal import std.convert.*
 internal import std.log.*
-internal import std.io.InputStream
-
+internal import std.io.{InputStream, ByteArrayStream}
+internal import encoding.json.stream.*
 internal import lottie.model.*
-import ohos.hilog.*
+
 public let logger: SimpleLogger = SimpleLogger()
 
 /**
  * A parser for lottie json that parses into AnimationData objects.
  */
 public class AnimationDataParser {
-
     private static let LAYERS_TY_IMAGE: Int64 = 2
-
-    /* Fields that correspond to external structures in json */
-    private static let NAMES: Array<String> = [
-        "w",       // 0
-        "h",       // 1
-        "ip",      // 2
-        "op",      // 3
-        "fr",      // 4
-        "v",       // 5
-        "layers",  // 6
-        "assets",  // 7
-        "fonts",   // 8
-        "chars",   // 9
-        "markers", // 10
-        "nm",      // 11
-        "ddd"      // 12
-    ]
-
     /**
      * Encapsulate the animation's json data parsing into an AnimationData instance.
      *
      * @param reader - Type of String, animated json data string.
      * @return Type of AnimationData, an instance of the json data that encapsulates the animation.
      */
-    static func loopParse(r: JsonReader): Unit {
-
-    }
-    public static func parse(input: InputStream): AnimationData {
-        let j = JsonReader(input)
-
-
-
-        throw Exception()
-    }
-
-    public static func parse(reader: String): AnimationData {
-
+    public static func parse(inputstr: String): AnimationData {
         var startFrame: Float64 = 0.0
         var endFrame: Float64 = 0.0
         var frameRate: Float64 = 0.0
@@ -81,64 +48,37 @@ public class AnimationDataParser {
         var nm: String = ""
         var ddd: Int64 = 0
 
-        let jsonObject: JsonObject = JsonValue.fromStr(reader).asObject()
+        let reader = JsonReader(ByteArrayStream.fromString(inputstr))
         /* Obtain key information by NAMES[0-10]. Other fields are skipped, not processed, and not saved. */
-        if (let Some(v) <- jsonObject.get(NAMES[0])) {
-            width = v.asInt().getValue()
-        }
-        if (let Some(v) <- jsonObject.get(NAMES[1])) {
-            height = v.asInt().getValue()
-        }
-        if (let Some(v) <- jsonObject.get(NAMES[2])) {
-            startFrame = v.asFloat().getValue()
-        }
-        if (let Some(v) <- jsonObject.get(NAMES[3])) {
-            endFrame = v.asFloat().getValue()
-        }
-        if (let Some(v) <- jsonObject.get(NAMES[4])) {
-            frameRate = v.asFloat().getValue()
-        }
+        reader.startObject()
+        while (reader.peek() != EndObject) {
+            match (reader.readName()) {
+                case "w" => width = reader.readValue<Int64>()
+                case "h" => height = reader.readValue<Int64>()
+                case "ip" => startFrame = reader.readValue<Float64>()
+                case "op" => endFrame = reader.readValue<Float64>()
+                case "fr" => frameRate = reader.readValue<Float64>()
+                case "v" =>
+                    version = reader.readValue<String>()
+                    let versions: Array<String> = version.split(".")
 
-        if (let Some(v) <- jsonObject.get(NAMES[5])) {
-            version = v.asString().getValue()
-            let versions: Array<String> = version.split(".")
-
-            let majorVersion: Int32 = Int32.parse(versions[0])
-            let minorVersion: Int32 = Int32.parse(versions[1])
-            let patchVersion: Int32 = Int32.parse(versions[2])
-            if (!Utils.isAtLeastVersion(majorVersion, minorVersion, patchVersion, 4, 0, 0)) {
-                throw Exception("Lottie only supports bodymovin >= 4.4.0")
+                    let majorVersion: Int32 = Int32.parse(versions[0])
+                    let minorVersion: Int32 = Int32.parse(versions[1])
+                    let patchVersion: Int32 = Int32.parse(versions[2])
+                    if (!Utils.isAtLeastVersion(majorVersion, minorVersion, patchVersion, 4, 0, 0)) {
+                        throw Exception("Lottie only supports bodymovin >= 4.4.0")
+                    }
+                case "layers" => layers = parseLayers(reader, layerMap)
+                case "assets" => assets = parseAssets(reader)
+                case "fonts" => fonts = parseFonts(reader)
+                case "chars" => chars = parseChars(reader)
+                case "markers" => markers = parseMarkers(reader)
+                case "nm" => nm = reader.readValue<String>()
+                case "ddd" => ddd = reader.readValue<Int64>()
+                case _ => reader.skip()
             }
         }
-
-        if (let Some(v) <- jsonObject.get(NAMES[6])) {
-            let ja: JsonArray = v.asArray()
-            layers = parseLayers(ja, layerMap)
-        }
-        if (let Some(v) <- jsonObject.get(NAMES[7])) {
-            let ja: JsonArray = v.asArray()
-            assets = parseAssets(ja)
-        }
-
-        if (let Some(v) <- jsonObject.get(NAMES[8])) {
-            fonts = parseFonts(v)
-        }
-        if (let Some(v) <- jsonObject.get(NAMES[9])) {
-            let ja: JsonArray = v.asArray()
-            chars = parseChars(ja)
-        }
-
-        if (let Some(v) <- jsonObject.get(NAMES[10])) {
-            let ja: JsonArray = v.asArray()
-            markers = parseMarkers(ja)
-        }
-
-        if (let Some(v) <- jsonObject.get(NAMES[11])) {
-            nm = v.asString().getValue()
-        }
-        if (let Some(v) <- jsonObject.get(NAMES[12])) {
-            ddd = v.asInt().getValue()
-        }
+        reader.endObject()
 
         let composition: AnimationData = AnimationData(
             w: width,
@@ -158,47 +98,29 @@ public class AnimationDataParser {
         return composition
     }
 
-    private static func parseLayers(reader: JsonArray, layerMap: HashMap<Int64, Layer>): Array<Layer> {
+    private static func parseLayers(reader: JsonReader, layerMap: HashMap<Int64, Layer>): Array<Layer> {
         var imageCount: Int32 = 0
         /* Iterate through and parse each layer. */
-        let len: Int64 = reader.size()
-        //let EMPTY_LAYER: Layer = Layer()
-        let layers: Array<Layer> = Array<Layer>(len, item: empty_layer)
-        for (i in 0..len) {
-            let jv: JsonValue = reader[i]
-            /* Layer parsing. */
-            let layer: Layer = LayerParser.parse(jv)
+        let layers: ArrayList<Layer> = ArrayList<Layer>()
+        reader.startArray()
+        while (reader.peek() != EndArray) {
+            let layer: Layer = LayerParser.parse(reader)
             if (layer.ty == LAYERS_TY_IMAGE) {
                 imageCount++
             }
-            /* Add layers and map to improve efficiency. */
-            layers[i] = layer
+            layers.append(layer)
             layerMap.put(layer.ind, layer)
         }
-        return layers
+        reader.endArray()
+        return layers.toArray()
     }
 
-    //"assets"
-    static let ASSETS_NAMES: Array<String> = [
-        "id",     // 0  // Picture id
-        "layers", // 1  // Layer information
-        "w",      // 2  // Picture width
-        "h",      // 3  // Picture height
-        "p",      // 4  // Picture name
-        "u",      // 5  // Picture path
-        "e"       // 6
-    ]
-
-    private static func parseAssets(reader: JsonArray): Array<Asset> {
-        let len: Int64 = reader.size()
-        if (len <= 0) {
-            return Array<Asset>()
-        }
-
-        let assets: Array<Asset> = Array<Asset>(len, item: empty_asset)
-        for (i in 0..len) {
+    private static func parseAssets(reader: JsonReader): Array<Asset> {
+        let assets: ArrayList<Asset> = ArrayList<Asset>()
+        reader.startArray()
+        while (reader.peek() != EndArray) {
             var id: String = ""
-            var layers: Array<Layer> = empty_Array_layer
+            var layers: Array<Layer> = Array<Layer>()
             let layerMap: HashMap<Int64, Layer> = HashMap<Int64, Layer>()
 
             /* For images. */
@@ -207,112 +129,71 @@ public class AnimationDataParser {
             var imageFileName: String = ""
             var relativeFolder: String = ""
             var e: Int64 = 0
-
-            let jo: JsonObject = reader[i].asObject()
-
-            if (let Some(v) <- jo.get(ASSETS_NAMES[0])) {
-                id = v.asString().getValue()
-            }
-            if (let Some(v) <- jo.get(ASSETS_NAMES[1])) {
-                let ja: JsonArray = v.asArray()
-                let len: Int64 = ja.size()
-                //let EMPTY_LAYER: Layer = Layer()
-                layers = Array<Layer>(len, item: empty_layer)
-                for (j in 0..len) {
-                  let jsonValue: JsonValue = ja[j]
-                  let layer: Layer = LayerParser.parse(jsonValue)
-                  layerMap.put(layer.ind, layer)
-                  layers[j] = layer
+            reader.startObject()
+            while (reader.peek() != EndObject) {
+                match (reader.readName()) {
+                    case "id" => id = reader.readValue<String>()
+                    case "layers" => layers = parseLayers(reader, layerMap)
+                    case "w" => width = reader.readValue<Int64>()
+                    case "h" => height = reader.readValue<Int64>()
+                    case "p" => imageFileName = reader.readValue<String>()
+                    case "u" => relativeFolder = reader.readValue<String>()
+                    case "e" => e = reader.readValue<Int64>()
+                    case _ => reader.skip()
                 }
             }
-            if (let Some(v) <- jo.get(ASSETS_NAMES[2])) {
-                width = v.asInt().getValue()
-            }
-            if (let Some(v) <- jo.get(ASSETS_NAMES[3])) {
-                height = v.asInt().getValue()
-            }
-            if (let Some(v) <- jo.get(ASSETS_NAMES[4])) {
-                imageFileName = v.asString().getValue()
-            }
-            if (let Some(v) <- jo.get(ASSETS_NAMES[5])) {
-                relativeFolder = v.asString().getValue()
-            }
-            if (let Some(v) <- jo.get(ASSETS_NAMES[6])) {
-                e = v.asInt().getValue()
-            }
 
-            let asset: Asset = Asset(id, layers, width, height, imageFileName, relativeFolder, e)
-            assets[i] = asset
+            reader.endObject()
+            assets.append(Asset(id, layers, width, height, imageFileName, relativeFolder, e))
         }
-        return assets
+        reader.endArray()
+        return assets.toArray()
     }
 
-    //"fonts"
-    private static let FONT_NAMES: String = "list"
-
-    private static func parseFonts(reader: JsonValue): Fonts {
-        let jsonObject: JsonObject = reader.asObject()
-        var list: Array<Font> = Array<Font>()
-        if (let Some(v) <- jsonObject.get(FONT_NAMES)) {
-            let ja: JsonArray = v.asArray()
-            let len: Int64 = ja.size()
-            if (len > 0) {
-                let EMPTY_FONT: Font = Font("", "", "", 0.0, "", 0, "", "", "")
-                list = Array<Font>(len, item: EMPTY_FONT)
-                for (i in 0..len) {
-                    let jo: JsonObject = ja[i].asObject()
-                    let font: Font = FontParser.parse(jo)
-                    list[i] = font
-                }
+    private static func parseFonts(reader: JsonReader): Fonts {
+        var fonts: ArrayList<Font> = ArrayList<Font>()
+        reader.startObject()
+        if (reader.readName() == "list") {
+            reader.startArray()
+            while (reader.peek() != JsonToken.EndArray) {
+                fonts.append(FontParser.parse(reader))
             }
+            reader.endArray()
         }
-        return Fonts(list: list)
+        reader.endObject()
+        return Fonts(list: fonts.toArray())
     }
 
-    private static func parseChars(reader: JsonArray): Array<FontCharacter> {
-        let len: Int64 = reader.size()
-        let EMPTY_FCHARS: FontCharacter = FontCharacter(CharsData(shapes: Array<ContentModel>()), "", 0.0, 0.0, "", "")
-        let chars: Array<FontCharacter> = Array<FontCharacter>(len, item: EMPTY_FCHARS)
-        for (i in 0..len) {
-            let jo: JsonObject = reader[i].asObject()
-            let character: FontCharacter = FontCharacterParser.parse(jo)
-            chars[i] = character
+    private static func parseChars(reader: JsonReader): Array<FontCharacter> {
+        let chars: ArrayList<FontCharacter> = ArrayList<FontCharacter>()
+        reader.startArray()
+        while (reader.peek() != EndArray) {
+            chars.append(FontCharacterParser.parse(reader))
         }
-        return chars
+        reader.endArray()
+        return chars.toArray()
     }
 
-    //"markers"
-    private static let MARKER_NAMES: Array<String> = [
-        "cm",
-        "tm",
-        "dr"
-    ]
-
-    private static func parseMarkers(reader: JsonArray): Array<Marker> {
-        let len: Int64 = reader.size()
-        if (len <= 0) {
-            return Array<Marker>()
-        }
-        let EMPTY_MARKER: Marker = Marker("", 0.0, 0.0)
-        let markers: Array<Marker> = Array<Marker>(len, item: EMPTY_MARKER)
-        for (i in 0..len) {
+    private static func parseMarkers(reader: JsonReader): Array<Marker> {
+        let markers = ArrayList<Marker>()
+        reader.startArray()
+        while (reader.peek() != EndArray) {
             var comment: String = ""
             var frame: Float64 = 0.0
             var durationFrames: Float64 = 0.0
-
-            let jo: JsonObject = reader[i].asObject()
-            if (let Some(v) <- jo.get(MARKER_NAMES[0])) {
-                comment = v.asString().getValue()
+            reader.startObject()
+            while (reader.peek() != EndObject) {
+                match (reader.readName()) {
+                    case "cm" => comment = reader.readValue<String>()
+                    case "tm" => frame = reader.readValue<Float64>()
+                    case "dr" => durationFrames = reader.readValue<Float64>()
+                    case _ => reader.skip()
+                }
             }
-            if (let Some(v) <- jo.get(MARKER_NAMES[1])) {
-                frame = v.asFloat().getValue()
-            }
-            if (let Some(v) <- jo.get(MARKER_NAMES[2])) {
-                durationFrames = v.asFloat().getValue()
-            }
-            markers[i] = Marker(comment, frame, durationFrames)
+            reader.endObject()
+            markers.append(Marker(comment, frame, durationFrames))
         }
-        return markers
+        reader.endArray()
+        return markers.toArray()
     }
-
 }

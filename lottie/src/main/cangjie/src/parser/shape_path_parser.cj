@@ -1,50 +1,31 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
-
 package lottie.parser
 
 class ShapePathParser {
-
-    private static let NAMES: Array<String> = [
-        "nm",    //0
-        "ind",   //1
-        "ks",    //2
-        "hd",    //3
-        "closed"     //4
-    ]
-
-    static func parse(reader: JsonValue): ShapePath {
+    static func parse(reader: JsonReader): ShapePath {
         var name: String = ""
-        var ind: Int64 = 0
-
+        var ind = 0
         var shape: Array<Keyframe<ShapeData>> = Array<Keyframe<ShapeData>>()
-        var hidden: Bool = false
+        var hidden = false
         var closed: Bool = false
-
-        let jo: JsonObject = reader.asObject()
-        if (let Some(v) <- jo.get(NAMES[0])) { // "nm"
-            name = v.asString().getValue()
+        while (reader.peek() != EndObject) {
+            match (reader.readName()) {
+                case "nm" => name = reader.readValue<String>()
+                case "ind" => ind = reader.readValue<Int64>()
+                case "ks" => shape = AnimatableValueParser.parseShapeData(reader)
+                case "hd" => hidden = reader.readValue<Bool>()
+                case "closed" => closed = reader.readValue<Bool>()
+                case _ => reader.skip()
+            }
         }
-        if (let Some(v) <- jo.get(NAMES[1])) { // //"ind"
-            ind = v.asInt().getValue()
-        }
-        if (let Some(v) <- jo.get(NAMES[2])) { // "ks"
-            shape = AnimatableValueParser.parseShapeData(v)
-        }
-        if (let Some(v) <- jo.get(NAMES[3])) { // "hd"
-            hidden = v.asBool().getValue()
-        }
-        if (let Some(v) <- jo.get(NAMES[4])) { // "closed"
-            closed = v.asBool().getValue()
-        }
-        let cm: ShapePath = ShapePath(
+        return ShapePath(
             nm: name,
             ind: ind,
             ks: shape,
             hd: hidden,
             closed: closed
         )
-        return cm
     }
 }
