@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -9,7 +9,7 @@ package lottie.model
 
 public class ShapeGroup <: ContentModel {
 
-    //TODO:新增成员变量，解析部分暂未补上。
+    //新增成员变量，解析部分待补充。
     public var np: Int64 = 0
     public var ix: Int64 = 0
     public let mn: String = ""
@@ -18,7 +18,7 @@ public class ShapeGroup <: ContentModel {
      * 0. "layers"."shapes".{"ty": "gr"} = ShapeGroupParser
      */
     public let nm: String                    // 0 = name
-    //public let hd: Bool                      // 1 = hidden
+
     public let it: Array<ContentModel>     // 2 = items
 
     public var cix: Int64 = 0
@@ -63,13 +63,6 @@ public class ShapeGroup <: ContentModel {
     public override prop types: Int8 {
         get() { 0 }
     }
-
-    /**
-     * Obtain the it of ShapeGroup.
-     */
-    //public prop it: Array<ContentModel> {
-    //    get() { this._it.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

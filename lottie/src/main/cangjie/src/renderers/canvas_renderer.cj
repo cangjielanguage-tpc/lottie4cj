@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -9,7 +9,6 @@ package lottie.renderers
 
 
 public class CanvasRenderer <: CanvasRendererBase {
-    //TODO：拆分多继承问题 -- //extendPrototype([CanvasRendererBase], CanvasRenderer)
 
     /**
      * Create a CanvasRenderer instance based on parameter.
@@ -32,8 +31,7 @@ public class CanvasRenderer <: CanvasRendererBase {
             this.renderConfig.runExpressions = v.runExpressions
 
             this.renderConfig.clearCanvas = v.clearCanvas
-            //TODO: 未确认数据类型 context
-            //context = v.context
+
             this.renderConfig.progressiveLoad = v.progressiveLoad
             this.renderConfig.preserveAspectRatio = v.preserveAspectRatio
             this.renderConfig.imagePreserveAspectRatio = v.imagePreserveAspectRatio
@@ -56,7 +54,6 @@ public class CanvasRenderer <: CanvasRendererBase {
     }
 
     public func getRenderedFrame(): Float64{
-        //Hilog.error(0, "--29--", "[rendered][getRenderedFrame]--[1]--------------------------------")
         return this.renderedFrame
     }
 

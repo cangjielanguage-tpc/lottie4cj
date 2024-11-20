@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -112,20 +112,6 @@ public class AnimatableTextProperties <: ToString {
         this.sw = sw
         this.t = t
     }
-
-    /**
-     * Obtain the sc of AnimatableTextProperties.
-     */
-    //public prop sc: Array<Keyframe<Array<Float64>>> {
-    //    get() { this._sc.clone() }
-    //}
-
-    /**
-     * Obtain the sw of AnimatableTextProperties.
-     */
-    //public prop sw: Array<Keyframe<Float64>> {
-    //    get() { this._sw.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

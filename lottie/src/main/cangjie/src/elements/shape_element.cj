@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -13,7 +13,6 @@ public open class IShapeElement <: BaseElement {
 
     var shapeModifiers: ArrayList<ShapeModifier> = ArrayList<ShapeModifier>()
 
-    //TODO: 自定义数据类型 ProcessedElement。
     var processedElements: ArrayList<ProcessedElement> = ArrayList<ProcessedElement>()
     public var shapes: ArrayList<CvShapeData> = ArrayList<CvShapeData>()
 
@@ -30,7 +29,7 @@ public open class IShapeElement <: BaseElement {
     /**
      * Add shape to modifiers.
      *
-     * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.	    // data => CVShapeData/SVGShapeData 抽象一个父类 BaseShapeData 出来
+     * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.
      */
     // data => CVShapeData/SVGShapeData 抽象一个父类 BaseShapeData 出来
     public func addShapeToModifiers(data: CvShapeData): Unit {
@@ -50,7 +49,6 @@ public open class IShapeElement <: BaseElement {
         var i: Int64 = 0
         let len: Int64 = this.shapeModifiers.size
         for (i in 0..len) {
-            //TODO：在 IShapeElement 中定义函数 isAnimatedWithShape，但未找到原函数实现。
             if (this.shapeModifiers[i].isAnimatedWithShape(data)) {
                 return true
             }
@@ -81,7 +79,6 @@ public open class IShapeElement <: BaseElement {
         for (i in (len - 1)..=0:-1) {
             shouldBreakProcess = this.shapeModifiers[i].processShapes(this._isFirstFrame)
             //解决中继器重置形状以使以下进程被调用两次的情况的变通方法
-            // TODO: find a better solution for this
             if (shouldBreakProcess) {
                 break
             }

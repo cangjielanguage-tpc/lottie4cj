@@ -1,14 +1,11 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 package lottie.elements
 
-//TODO
-//public class CvCompElement <: ICompElement {
 public class CvCompElement <: ICompElement {
 
     protected var hasMasks: Bool = false
-    //protected var pendingElements: ArrayList<String>
 
     //使用了data.layers暂时使用AnimationData
     public init(data: Layer, globalData: GlobalData, createItem: (Layer) -> BaseElement, buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
@@ -27,16 +24,8 @@ public class CvCompElement <: ICompElement {
         this.completeLayers = false
         //使用了data.layers暂时使用AnimationData
         this.layers = data.layers
-        //this.layers = Array<Layer>()
-        //this.pendingElements = ArrayList<String>()
-        this.elements = Array<BaseElement>(this.layers.size, item: BaseElement(Layer(), GlobalData(), isNull: true))
 
-        //this.buildAllItemsElement = globalData.buildAllItemsElement
-        //this.checkLayers = globalData.checkLayers
-        //this.createItem = globalData.createItem
-        
-        //空初始化编译用
-        //this.tm = PropertyFactory<ContentModelDK, Float64>(ContentModelDK(), 0.0, DynamicPropertyContainer(), GlobalData(), Layer(), types: 0, dynamicProperties: ArrayList<DynamicPropertyContainer>())
+        this.elements = Array<BaseElement>(this.layers.size, item: BaseElement(Layer(), GlobalData(), isNull: true))
 
         //tm暂时不是data属性
         this.initElement(data, globalData)
@@ -61,7 +50,6 @@ public class CvCompElement <: ICompElement {
         } else {
             this.tm = PropertyFactory<ContentModelDK, Float64>(empty_ContentModelDK, 0.0, dp, globalData, data, types: 0, dynamicProperties: this.dynamicProperties, compDataInd: cdInd)
         }
-        //this.tm.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
         if(data.tm.k.size == 0) {
             this.tm._placeholder= true
@@ -73,16 +61,14 @@ public class CvCompElement <: ICompElement {
 
         ctx.beginPath()
         ctx.moveTo(0, 0)
-        ctx.lineTo(this.data.w, 0.0)  //1920
-        ctx.lineTo(this.data.w, this.data.h)////1920  1080
-        ctx.lineTo(0.0, this.data.h)//1080
+        ctx.lineTo(this.data.w, 0.0)
+        ctx.lineTo(this.data.w, this.data.h)
+        ctx.lineTo(0.0, this.data.h)
         ctx.lineTo(0, 0)
         ctx.clip()
 
         let len: Int64 = this.layers.size
-        var indexCOMP: Int64 = 0 //TODO: 测试用后续删除
         for (i in (len - 1)..=0: -1) {
-            indexCOMP = i //TODO: 测试用后续删除
             if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
                 this.elements[i].renderFrame()  //renderFrame
             }
@@ -111,13 +97,11 @@ public class CvCompElement <: ICompElement {
         var len = this.layers.size
         for (i in 0..len) {
             if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
-                //this.elements[i].changeColor(color, undefined)
                 this.elements[i].changeColor(color, 0)
             }
         }
         } else {
             if (this.completeLayers || (this.elements.size > endColor-1 && !this.elements[endColor-1].isNull)) {
-                //this.elements[endColor-1].changeColor(color, undefined)
                 this.elements[endColor-1].changeColor(color, 0)
             }
         }
@@ -127,7 +111,6 @@ public class CvCompElement <: ICompElement {
         var len = this.layers.size
         for (i in 0..len) {
             if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
-                //this.elements[i].changeColor(color, undefined)
                 this.elements[i].changeColor(color, 0)
             }
         }
@@ -139,7 +122,7 @@ public class CvCompElement <: ICompElement {
         var i = len - 1
         while (i >= 0) {
             if ((this.elements.size > i && !this.elements[i].isNull)) {
-                this.elements[i].destroy()  ///CvShapeElement
+                this.elements[i].destroy()
             }
             i -= 1
         }
@@ -150,6 +133,5 @@ public class CvCompElement <: ICompElement {
     public func createComp(data: Layer) {
         return CvCompElement(data, this.globalData, this.createItem, this.buildElementParentingInComp)
     }
-
 
 }

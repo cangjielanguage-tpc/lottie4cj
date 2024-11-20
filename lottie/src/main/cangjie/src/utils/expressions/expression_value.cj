@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -48,11 +48,8 @@ class ExpressionValue<T, E> <: ExpressionInterface where T <: ToString , E <: To
     //var propertyGroup = elementProp.propertyGroup
 
     //数据来源分析：PropertyFactory.getVelocityAtTime: (Float64) -> Array<Float64>
-    //public prop velocity: Array<Keyframe<Int64>> {
     public prop velocity: Array<Float64> {
         get() {
-            //TODO: 没有在 BaseRenderer 中找到 currentFrame，elementProp数据类型需要再确认。
-            //elementProp.getVelocityAtTime(elementProp.comp.currentFrame)
             Array<Float64>()
         }
     }
@@ -61,15 +58,12 @@ class ExpressionValue<T, E> <: ExpressionInterface where T <: ToString , E <: To
     var mult: Float64 = 0.0
     var types: String = ""
 
-    //TODO: 传入的参数 elementProp 是处理后的 PropertyFactory<T, E> ？？？ -- 【暂定是这样】
-    //TODO: 传入的参数 elementProp 是自定义的数据类型吗？
     public init(elementProp: PropertyFactory<T, E>){
         this(elementProp, elementProp.mult, "")
     }
-    //TODO: 初始化传入的 val 和 expressionValue.value = val，此处是单数值，后面是数组。单数值改为长度为 1 的数组。
+
     public init(elementProp: PropertyFactory<T, E>, val: Array<Float64>){
         this(elementProp, elementProp.mult, "")
-        //TODO: this.val 会被覆盖。是否需要此步操作？？？
         this.val = val
     }
     public init(elementProp: PropertyFactory<T, E>, mult: Float64, types: String){
@@ -90,7 +84,6 @@ class ExpressionValue<T, E> <: ExpressionInterface where T <: ToString , E <: To
         if (types != "") {
             if (types == "color") {
                 len = 4
-                //TODO: 增加成员变量 val，为了能直接给 expressionValue[i] 赋值。
                 this.val = Array<Float64>(len, item: 0.0)
                 arrValue = Array<Float64>(len, item: 0.0)
                 for (i in 0..len) {

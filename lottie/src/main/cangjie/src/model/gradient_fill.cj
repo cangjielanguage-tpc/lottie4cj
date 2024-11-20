@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -85,29 +85,6 @@ public class GradientFill <: FillStroke {
     public override prop types: Int8 {
         get() { 4 }
     }
-
-    /**
-     * Obtain the o of GradientFill.
-     */
-    //public prop o: Array<Keyframe<Int64>> {
-    //    get() { this._o.clone() }
-    //}
-
-    /**
-     * Obtain the s of GradientFill.
-     */
-    //public prop s: Array<Keyframe<PointF>> {
-    //public prop s: Array<Keyframe<Array<Float64>>> {
-    //    get() { this._s.clone() }
-    //}
-
-    /**
-     * Obtain the e of GradientFill.
-     */
-    //public prop e: Array<Keyframe<PointF>> {
-    //public prop e: Array<Keyframe<Array<Float64>>> {
-    //    get() { this._e.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

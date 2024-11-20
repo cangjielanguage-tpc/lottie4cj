@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -10,7 +10,6 @@ package lottie.model
 
 public let empty_Array_Float64: Array<Float64> = Array<Float64>()
 
-//public let empty_globalData: GlobalData = GlobalData()
 public let empty_shapeValue: ShapeData = ShapeData()
 public let empty_ak: AK = AK()
 public let empty_layer: Layer = Layer()

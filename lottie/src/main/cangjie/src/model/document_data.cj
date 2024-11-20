@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -150,20 +150,6 @@ public class DocumentData <: ToString & Equatable<DocumentData> {
         this.ps = ps
         this.sz = sz
     }
-
-    /**
-     * Obtain the fc of DocumentData.
-     */
-    //public prop fc: Array<Float64> {
-    //    get() { this._fc.clone() }
-    //}
-
-    /**
-     * Obtain the sc of DocumentData.
-     */
-    //public prop sc: Array<Float64> {
-    //    get() { this._sc.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

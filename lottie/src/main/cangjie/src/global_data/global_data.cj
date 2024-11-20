@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -65,19 +65,15 @@ public class CanvasContext {
     public var filter: String = ""
 
     public func clearRect(x: Int64, y: Int64, w: Int64, h: Int64) {
-        //TODO
     }
 
     public func restoreLayer() {
-        //TODO
     }
 
     public func beginPath() {
-        //TODO
     }
     
     public func fill(r: Int64) {
-        //TODO
     }
 }
 
@@ -85,7 +81,7 @@ public class RenderConfig {
     //编译使用
     public var hideOnTransparent: Bool = false
     public var clearCanvas: Bool
-    //TODO: 未确认数据类型 context  //public var context: Option<context>
+
     public var progressiveLoad: Bool
     public var preserveAspectRatio: String
     public var imagePreserveAspectRatio: String
@@ -98,7 +94,6 @@ public class RenderConfig {
 
     public init(
         clearCanvas!: Bool = true,
-        //TODO: 未确认数据类型 context  //context!: Option<context> = None,
         progressiveLoad!: Bool = false,
         preserveAspectRatio!: String = "xMidYMid meet",
         imagePreserveAspectRatio!: String = "xMidYMid slice",
@@ -109,7 +104,6 @@ public class RenderConfig {
         dpr!: Float64 = 1.0
     ){
         this.clearCanvas = clearCanvas
-        //TODO: 未确认数据类型 context  //this.context = context
         this.progressiveLoad = progressiveLoad
         this.preserveAspectRatio = preserveAspectRatio
         this.imagePreserveAspectRatio = imagePreserveAspectRatio
@@ -121,24 +115,17 @@ public class RenderConfig {
     }
 }
 
-//TODO: 未完全实现
 public class GlobalData {
 
-    //TODO: 未实现 ProjectInterface  //public var projectInterface: ProjectInterface = ProjectInterface()
     public var frameNum: Float64 = -1.0
     public var _mdf: Bool = false
     public var renderConfig: RenderConfig= RenderConfig()
     public var currentGlobalAlpha: Float64 = -1.0
-    
-    //TODO： 数据类型需要再确认 //public var blendMode: Int64 = 0
+
     public var blendMode: UnionType = UnionType()
-    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //public var canvasContext: Option<CanvasRenderingContext2D>
-    //TODO：未完全实现 CanvasRendererBase  //public var renderer: CanvasRendererBase =
+
     public var isDashed: Bool = false
 
-    //public var canvasContext: CanvasContext = CanvasContext()
-    //TODO: 初始化一个空的 CanvasRenderingContext2D 编译用。
-//    private var renderingSettings: RenderingContextSettings = unsafe{zeroValue<RenderingContextSettings>()}
     public var canvasContext: LottieCanvasRenderingContext2D = unsafe{zeroValue<LottieCanvasRenderingContext2D>()}
     public var hasCanvasRenderingContext2D: Bool = false
 
@@ -159,26 +146,17 @@ public class GlobalData {
     public var getAssetData: (String) -> Asset = { m => return empty_asset }
     public var getAssetsPath: (Asset) -> String = { m => return "" }
     public var imageLoader: ImagePreloader = ImagePreloader()
-    //TODO：循环依赖。AudioControllerFactory 和 GlobalData 大循环依赖。
-    //public var audioController: AudioControllerFactory = AudioControllerFactory()
 
-    //TODO: 解构 renderer 和 globalData。
-    //this.globalData.renderer.save(forceRealStack);
-    //this.globalData.renderer.ctxTransform(this.finalTransform.mat.props);
-    //this.globalData.renderer.ctxOpacity(this.finalTransform.mProp.o.v);
-    //this.globalData.renderer.restore(true);
     public var save: (Bool) -> Unit = { m => () }
     public var ctxTransform: (Array<Float64>) -> Unit = { m => () }
     public var ctxOpacity: (Float64) -> Unit = { m => () }
     public var restore: (Bool) -> Unit = { m => () }
     public var hasRenderer: Bool = false
 
-    //TODO: 初始化后，传入 BaseRenderer.buildAllItems() 函数。
+    //初始化后，传入 BaseRenderer.buildAllItems() 函数。
     public var buildAllItemsElement: (Array<Layer>) -> Unit = { m => ()}
-    //TODO: 初始化后，传入 BaseRenderer.checkLayers(num: Float64) 函数。
+    //初始化后，传入 BaseRenderer.checkLayers(num: Float64) 函数。
     public var checkLayers: (Float64) -> Unit = { m => ()}
-    //TODO: 循环引用。
-    //public var createItem: (Layer) -> BaseElement = { m => return BaseElement(Layer(), GlobalData(), isNull: true) }
 
     public var getRenderedFrameInElemComp: () -> Float64 = { => 0.0}
 
@@ -195,25 +173,13 @@ public class GlobalData {
     
     public init(frameNum!: Float64, _mdf!: Bool, renderConfig!: RenderConfig, currentGlobalAlpha!: Float64,
         canvasContext!: LottieCanvasRenderingContext2D
-        //save!: (Bool) -> Unit = { m => () },
-        //ctxTransform!: (Array<Float64>) -> Unit = { m => () },
-        //ctxOpacity!: (Int64) -> Unit = { m => () },
-        //restore!: (Bool) -> Unit = { m => () },
-        //hasRenderer!: Bool = false
     ) {
         this.frameNum = frameNum
         this._mdf = _mdf
         this.renderConfig = renderConfig
         this.currentGlobalAlpha = currentGlobalAlpha
         this.canvasContext = canvasContext
-        //this.save = save
-        //this.ctxTransform = ctxTransform
-        //this.ctxOpacity = ctxOpacity
-        //this.restore = restore
-        //this.hasRenderer = hasRenderer
     }
-
-    //public func getAssetsPath(assetData: Asset): String { return "" }
 
 }
 

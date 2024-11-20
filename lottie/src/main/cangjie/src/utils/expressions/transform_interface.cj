@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -88,46 +88,19 @@ class TransformExpressionInterface {
     }
 
     public prop rotation: ExpressionPropertyInterface<ArrayKeyframeFloat64, Float64> {
-        //TODO: TransformProperty 中 this.rx/this.ry/this.rz/this.or 为空。
         get() { ExpressionPropertyInterface<ArrayKeyframeFloat64, Float64>(transform.r.getOrThrow()) }
     }
-
-    //TODO: TransformProperty 中 this.rx/this.ry/this.rz/this.or 为空。
-    //public prop zRotation: ExpressionPropertyInterface<T, E> {
-    //    get() { ExpressionPropertyInterface(transform.rz || transform.r) }
-    //}
-
-    //TODO: TransformProperty 中 this.rx/this.ry/this.rz/this.or 为空。
-    //public prop xRotation: ExpressionPropertyInterface {
-    //    get() { ExpressionPropertyInterface(transform.rx) }
-    //}
-
-    //TODO: TransformProperty 中 this.rx/this.ry/this.rz/this.or 为空。
-    //public prop yRotation: ExpressionPropertyInterface {
-    //    get() { ExpressionPropertyInterface(transform.ry) }
-    //}
 
     public prop scale: ExpressionPropertyInterface<ArrayKeyframeArrayFloat64, Array<Float64>> {
         get() { ExpressionPropertyInterface<ArrayKeyframeArrayFloat64, Array<Float64>>(transform.s.getOrThrow()) }
     }
 
-    //TODO：已经执行了，相当于 ExpressionPropertyInterface(x)()
     public prop position: ExpressionValue<AnimatableSplitDimensionPathValue, PointF>  {
         get() {
             return _transformFactory.selfCalling()()
-            //if (!transform.p.isNull) {
-            //    return _transformFactory()
-            //}
-            //TODO: 未在 AnimatableTransform 中找到 data.p.s  =>  has_data_p_s = false，暂无 this.px/this.py/this.px。设置成空的。
-            //return [
-            //  //TODO： _px/_py/_pz 是 ExpressionPropertyInterface。 ExpressionPropertyInterface 调用的返回值是函数 () -> ExpressionValue<T, E>
-            //  _px(),
-            //  _py(),
-            //  _pz ? _pz() : 0]
         }
     }
 
-    //TODO: [TransformProperty]： p 和 px/py/pz 两者存其一, has_data_p_s = false 表示 p 存在，px/py/pz 为空。
     public prop xPosition: ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64> {
         get() { ExpressionPropertyInterface<Array<Keyframe<Float64>>, Float64>(transform.px.getOrThrow()) }
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -18,12 +18,8 @@ public class MarkerDataPayload {
     public init(name!: String){
         this.name = name
     }
-    //public func isNull(): Bool {
-    //    return this.isNull
-    //}
 }
 
-//TODO: 是否将 Marker 和 MarkerData 进行合并？？？
 public class MarkerData {
 
     public var payload: MarkerDataPayload             // 0 = { name: marker.cm }

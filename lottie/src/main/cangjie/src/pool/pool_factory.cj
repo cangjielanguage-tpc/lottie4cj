@@ -1,19 +1,17 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is PoolFactory.
  */
-//package lottie.utils.pooling
 package lottie.pool
 
 
 internal import std.collection.*
 
 public class PoolFactory<T> where T <: ToString {
-    
-    //TODO: Element 是可变数据类型，用 T 代替
+
     var _create: () -> T
     var _release: Option<(T) -> Unit>
 
@@ -29,7 +27,6 @@ public class PoolFactory<T> where T <: ToString {
      * @param _create - Type of function, () -> T.
      * @param _release - Type of function, Option<(T) -> Unit>.
      */
-    //TODO: Element 是可变数据类型，用 T 代替
     public init(initialLength: Int64, _create: () -> T, _release!: Option<(T) -> Unit> = None) {
         this._create = _create
         this._release = _release
@@ -44,7 +41,6 @@ public class PoolFactory<T> where T <: ToString {
      * @return Type of T.
      */
     public func newElement(): T {
-        //TODO: Element 是可变数据类型，用 T 代替
         var element: T
         if (this._length != 0) {
             this._length -= 1

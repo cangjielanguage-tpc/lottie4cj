@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -14,7 +14,6 @@ public class MergePaths <: ContentModel {
      */
     public let nm: String         // 0 = name
     public let mm: Int64          // 1 = mode
-    //public let hd: Bool           // 2 = hidden
 
     let _ty: String = "mm"
     public open prop ty: String {

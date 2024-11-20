@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -8,7 +8,7 @@
 package lottie.model
 
 public class Repeater <: ContentModel {
-    //TODO:新增成员变量，解析部分暂未补上。
+    //新增成员变量，解析部分待补充。
     public let mn: String = ""
 
     public var ix: Int64 = -1
@@ -23,7 +23,6 @@ public class Repeater <: ContentModel {
     //"o": {"a": 0, "k": 0, "ix": 2}
     public let o: ArrayKeyframeFloat64             // 2 = offset
     public let tr: AnimatableTransform             // 3 = transform
-    //public let hd: Bool                            // 4 = hidden
 
     let _ty: String = "rp"
     public open prop ty: String {

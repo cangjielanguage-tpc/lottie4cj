@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -7,7 +7,6 @@
  */
 package lottie.elements
 
-//TODO: 未实现，编译用
 public class TM {
     var _placeholder: Bool = false
     var v: Float64 = 0.0
@@ -24,27 +23,8 @@ public class TM {
  * 2. checkLayers      => 传入 BaseRenderer 中的这个函数。
  */
 public open class ICompElement <: BaseElement {
-    //TODO：拆分多继承问题 -- extendPrototype([BaseElement, TransformElement, HierarchyElement, FrameElement, RenderableDOMElement], ICompElement)
 
-    //TODO: 初始化后，传入 BaseRenderer.buildAllItemsElement() 函数。
-    //public var buildAllItemsElement: (Array<Layer>) -> Unit = { m => ()}
-    //TODO: 初始化后，传入 BaseRenderer.checkLayers(num: Float64) 函数。
-    //public var checkLayers: (Float64) -> Unit = { m => ()}
-    //public var createItem: (Layer) -> BaseElement = { m => return BaseElement(Layer(), GlobalData(), isNull: true) }
-
-
-    //TODO: 数据类型未确认，暂定是 BaseElement
-    //public var pendingElements: ArrayList<BaseElement> = ArrayList<BaseElement>()
-
-    //TODO: 未实现,初拟定了一个数据类型TM.
     public var tm: PropertyFactory<ContentModelDK, Float64> = unsafe {zeroValue<PropertyFactory<ContentModelDK, Float64>>()}
-    //var renderedFrame: Float64 = 0.0
-
-
-    //var completeLayers: Bool = false
-    //public var layers: Array<Layer> = Array<Layer>()
-    //TODO: 未确认数据类型，暂定为 BaseElement。
-    //public var elements: Array<BaseElement> = Array<BaseElement>()
 
     /**
      * Create a ICompElement instance based on parameters.
@@ -54,8 +34,6 @@ public open class ICompElement <: BaseElement {
      */
     public init(data: Layer, globalData: GlobalData) {
         super(data, globalData)
-        //空初始化编译用
-        //this.tm = PropertyFactory<ContentModelDK, Float64>(ContentModelDK(), 0.0, DynamicPropertyContainer(), GlobalData(), Layer(), types: 0, dynamicProperties: ArrayList<DynamicPropertyContainer>())
     }
 
     public func initElement(data: Layer, globalData: GlobalData) {
@@ -82,7 +60,7 @@ public open class ICompElement <: BaseElement {
         this._mdf = false
         this.prepareRenderableFrame(num)
         this.prepareProperties(num, this.isInRange)
-        //TODO: 未在 json 中找到 layers.xt，暂时定义为 Bool类型。
+        //未在 json 中找到 layers.xt，暂时定义为 Bool类型。
         if (!this.isInRange && !this.data.xt) {
             return
         }
@@ -99,16 +77,12 @@ public open class ICompElement <: BaseElement {
 
         let len: Int64 = this.elements.size
         if (!this.completeLayers) {
-            //TODO: 初始化后，传入 BaseRenderer.checkLayers(num: Float64) 函数。
             this.checkLayers(this.renderedFrame)
         }
 
         //由于表达式之间的连接方式，此迭代需要向后进行
         for (i in (len - 1)..=0:-1) {
             if (this.completeLayers || this.elements.size > i && !this.elements[i].isNull) {
-                let a = this.renderedFrame  //TODO：调试用，后续删除
-                let b = this.layers[i].st  //TODO：调试用，后续删除
-                let c = this.renderedFrame - this.layers[i].st  //TODO：调试用，后续删除
                 this.elements[i].prepareFrame(this.renderedFrame - this.layers[i].st) // IShapeElement
                 if (this.elements[i]._mdf) {
                     this._mdf = true
@@ -225,73 +199,5 @@ public open class ICompElement <: BaseElement {
         this.destroyElements()
         this.destroyBaseElement()
     }
-
-
-
-    //-------------------------------------------------------------------------------------
-    /*
-    public func buildAllItems(): Unit {
-        let len: Int64 = this.layers.size
-        for (i in 0..len) {
-            //在子类 CanvasRendererBase 中具体实现
-            this.buildItem(i)
-        }
-        //在子类 CanvasRendererBase 中具体实现
-        this.checkPendingElements()
-    }
-
-    public func buildItem(pos: Int64): Unit {
-        let elements: Array<BaseElement> = this.elements
-        if ((elements.size > pos && !elements[pos].isNull) || this.layers[pos].ty == 99) {
-        //if (this.elements.size > pos || this.layers[pos].ty == 99) {
-            return
-        }
-        //TODO: 函数参数不一致，有 2 个参数暂时未传递。
-        let element: BaseElement = this.createItem(this.layers[pos])
-        //TODO: 【暂未处理】ArrayList 直接指定下标赋值报错。暂时改为append。 //this.elements.append(element)
-        elements[pos] = element
-
-
-        if (element.finalTransform.mProp.o.v.size > 0) {
-        }
-
-
-        element.initExpressions()
-    }
-
-    public func checkPendingElements(): Unit {
-        while (this.pendingElements.size != 0) {
-            let element: BaseElement = this.pendingElements.remove(this.pendingElements.size - 1)
-
-            //TODO[lp]: - HierarchyElement.checkParenting => element 是 HierarchyElement ？？？
-            element.checkParenting()
-        }
-    }
-
-    public func checkLayers(num: Float64): Unit {
-        var len: Int64 = this.layers.size
-        var data: Layer = Layer()
-        this.completeLayers = true
-
-        for(i in ((len - 1)..=0 : -1)) {
-            //如果当层无 element，代表该层 layer 未处理。
-            //if (this.elements.size < i - 1) {
-            if (this.elements[i].isNull) {
-                data = this.layers[i]
-                if ((data.ip - data.st) <= (num - this.layers[i].st) && (data.op - data.st) > (num - this.layers[i].st)) {
-                    //在子类 CanvasRendererBase 中具体实现
-                    this.buildItem(i)
-                }
-            }
-            //this.completeLayers = this.elements[i] ? this.completeLayers : false
-            if (this.elements[i].isNull) {
-                this.completeLayers = false
-            }
-        }
-        //在子类 CanvasRendererBase 中具体实现
-        this.checkPendingElements()
-    }
-    */
-
 
 }

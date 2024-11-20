@@ -1,12 +1,10 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is BaseElement.
  */
-//package lottie.utils.shapes
-//package lottie.property
 package lottie.pool
 
 public class ShapeCollection {
@@ -26,12 +24,6 @@ public class ShapeCollection {
      * @param nm - Type of ShapeData.
      */
     public func addShape(shapeData: ShapeData): Unit {
-        //TODO: 需要设置扩容逻辑么？？？-----------------------------------------------------------------------2024.07.12
-        //if (this._length == this._maxLength) {
-        //    this.shapes = this.shapes.concat(createSizedArray(this._maxLength))
-        //    this._maxLength *= 2
-        //}
-        //this.shapes[this._length] = shapeData
         if (this.shapes.size > this._length) {
             this.shapes.set(this._length, shapeData)
         } else {
@@ -57,7 +49,6 @@ public class ShapeCollection {
      */
     public func releaseShapes(): Unit {
         for (i in 0..this._length) {
-            //TODO:和 shapePool有包交叉调用，暂时把包合并？？？---------------------------------------------------2024.07.13
             shapePool.release(this.shapes[i])
         }
         this.shapes.clear()

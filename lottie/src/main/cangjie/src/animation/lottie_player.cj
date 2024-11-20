@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -60,16 +60,6 @@ public open class LottiePlayer {
      * @param params 详见AnimationConfigWithPath或AnimationConfigWithData的声明
      * @return AnimationItem 动画对象, 可控制动画播放。
      */
-    //TODO: 未实现 //func loadAnimation(params: AnimationConfigWithPath): AnimationItem
-    //TODO: 未实现 //func loadAnimation(params: AnimationConfigWithData): AnimationItem
-    /*
-    public func loadAnimation(params: AnimationConfig): AnimationItem {
-        //if (standalone === true) {
-        //  console.error("-----------------")
-        //  params.animationData = JSON.parse(animationData);
-        //}
-        return animationManager.loadAnimation(params)
-    }*/
 
     /**
      * 通过动画名称控制, 销毁动画 声明式范式下可配合组件生命周期onDisappear()与onPageHide()使用, web范式下可配合配合生命周期onHide()使用

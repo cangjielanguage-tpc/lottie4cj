@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -38,8 +38,6 @@ public class LetterProps {
 
     public init(){}
 
-    //p => this.props = createTypedArray('float32', 16)
-    //public LetterProps(o: Int64, sw: Int64, sc: String, fc: String, m: String, p: Array<Float64>) {
     public init(o: Int64, sw: Int64, sc: Color, fc: Color, m: String, p: Array<Float64>) {
         this.o = o
         this.sw = sw
@@ -91,7 +89,7 @@ public class LetterProps {
             this._mdf.m = true
             updated = true
         }
-        //TODO: 注意数组越界问题
+
         if (this.p.size != p.size && (this.p[0] != p[0] || this.p[1] != p[1] || this.p[4] != p[4] || this.p[5] != p[5] || this.p[12] != p[12] || this.p[13] != p[13])) {
             this.p = p
             this._mdf.p = true

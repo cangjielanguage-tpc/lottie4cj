@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -17,7 +17,6 @@ public open class ITextElement <: BaseElement {
     public var lettersChangedFlag: Bool = true
     public var renderType: String = ""
     
-    //TODO:需要解构 ITextElement 和 TextProperty 互调用。改成 TextProperty 中只传入 ITextElement 中部分函数和值。
     public var textProperty: TextProperty
     
     public var textAnimator: TextAnimatorProperty
@@ -33,8 +32,7 @@ public open class ITextElement <: BaseElement {
         this.textProperty = TextProperty(data.t, globalData)
         this.textAnimator = TextAnimatorProperty(data.t, this.renderType, globalData, data, this.textProperty.currentData, dynamicProperties: this.dynamicProperties)
     }
- 
-    //TODO: 未实现，编译用。
+
     public func addDynamicProperty(tp: TextProperty): Unit {}
 
     public func initElement(data: Layer, globalData: GlobalData) {

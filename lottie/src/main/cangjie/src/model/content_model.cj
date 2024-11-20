@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -57,13 +57,6 @@ public open class ContentModelP <: ToString {
     }
 
     /**
-     * Obtain the k of ContentModelP.
-     */
-    //public prop k: Array<Keyframe<Array<Float64>>> {
-    //    get() { this._k.clone() }
-    //}
-
-    /**
      * Return to convert the instance into a string and return.
      *
      * @return Type of String, converted String.
@@ -87,13 +80,6 @@ public open class ContentModelPK <: ToString {
     public init(k!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()){
         this.k = k
     }
-
-    /**
-     * Obtain the k of ContentModelPK.
-     */
-    //public prop k: Array<Keyframe<Array<Float64>>> {
-    //    get() { this._k.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -144,13 +130,6 @@ public open class ContentModelDK <: ToString {
     public init(k!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()){
         this.k = k
     }
-
-    /**
-     * Obtain the k of ContentModelDK.
-     */
-    //public prop k: Array<Keyframe<Float64>> {
-    //    get() { this._k.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

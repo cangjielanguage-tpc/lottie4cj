@@ -1,20 +1,19 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is BaseElement.
  */
-//package lottie.utils.expressions
 package lottie.property
 
 public class ValueProp<E> where E <: ToString {
 
-    //TODO: 增加成员变量 val，在 E 是 Float64 时进行赋值。 type == 'unidimensional' 时用此成员变量。
+    // 增加成员变量 val，在 E 是 Float64 时进行赋值。 type == 'unidimensional' 时用此成员变量。
     var val: Float64 = 0.0
 
-    //TODO: value 是泛型，没有办法直接拿到 value[0]，所以将 types 存入，后续获取 valueProp.value，根据 types 确定是拿value[0]还是整个value。
-    //TODO: type == 'unidimensional' 时用成员变量 val； 否则用成员变量 value。
+    // value 是泛型，没有办法直接拿到 value[0]，所以将 types 存入，后续获取 valueProp.value，根据 types 确定是拿value[0]还是整个value。
+    // type == 'unidimensional' 时用成员变量 val； 否则用成员变量 value。
     var types: String = ""
 
     var time: Float64 = 0.0
@@ -32,29 +31,18 @@ public class ValueProp<E> where E <: ToString {
 
 public class ExpressionValue<T, E> <: ExpressionInterface where T <: ToString , E <: ToString {
 
-    //TODO: 增加成员变量 val，为了能直接给 expressionValue[i] 赋值。
+    //增加成员变量 val，为了能直接给 expressionValue[i] 赋值。
     var val: Array<Float64> = empty_Array_Float64
     
     var value: Array<Float64> = empty_Array_Float64
     var numKeys: Int64 = 0
-    //TODO：keyType代表要调用的 key 函数的区别。keyType：0-空；1-调用 key；2-调用 keyInSide
+    //keyType代表要调用的 key 函数的区别。keyType：0-空；1-调用 key；2-调用 keyInSide
     public var keyType: Int64 = 0
     public var keyInSide: (Int64) -> ValueProp<E> = { m => ValueProp<E>("") }
 
-    //TODO: 暂未确定数据类型。
-    //TODO: 是否用到
-    //var valueAtTime: (Float64, Float64) -> Array<Float64> = { m, n => return Array<Float64>() }
-    //var speedAtTime: (Float64) -> Float64 = { n => return n }
-    //var velocityAtTime: (Float64) -> Array<Float64> = { n => return [n] }
-    //TODO: 暂未拿到 PropertyFactory.propertyGroup 数据类型。
-    //var propertyGroup = elementProp.propertyGroup
-
     //数据来源分析：PropertyFactory.getVelocityAtTime: (Float64) -> Array<Float64>
-    //public prop velocity: Array<Keyframe<Int64>> {
     public prop velocity: Array<Float64> {
         get() {
-            //TODO: 没有在 BaseRenderer 中找到 currentFrame，elementProp数据类型需要再确认。
-            //elementProp.getVelocityAtTime(elementProp.comp.currentFrame)
             Array<Float64>()
         }
     }
@@ -63,15 +51,12 @@ public class ExpressionValue<T, E> <: ExpressionInterface where T <: ToString , 
     var mult: Float64 = 0.0
     var types: String = ""
 
-    //TODO: 传入的参数 elementProp 是处理后的 PropertyFactory<T, E> ？？？ -- 【暂定是这样】
-    //TODO: 传入的参数 elementProp 是自定义的数据类型吗？
     public init(elementProp: PropertyFactory<T, E>){
         this(elementProp, elementProp.mult, "")
     }
-    //TODO: 初始化传入的 val 和 expressionValue.value = val，此处是单数值，后面是数组。单数值改为长度为 1 的数组。
+    
     public init(elementProp: PropertyFactory<T, E>, val: Array<Float64>){
         this(elementProp, elementProp.mult, "")
-        //TODO: this.val 会被覆盖。是否需要此步操作？？？
         this.val = val
     }
     public init(elementProp: PropertyFactory<T, E>, mult: Float64, types: String){

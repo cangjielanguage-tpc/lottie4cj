@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -19,13 +19,6 @@ public class Fonts <: ToString {
     public init(list!: Array<Font> = Array<Font>()){
         this.list = list
     }
-
-    /**
-     * Obtain the list of Fonts.
-     */
-    //public prop list: Array<Font> {
-    //    get() { this._list.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -48,13 +41,9 @@ public class Fonts <: ToString {
 
 public open class Font <: ToString {
 
-    //public var cache: Array<Int64> = Array<Int64>()
     public var cache: ArrayList<Int64> = ArrayList<Int64>()
-    //public var helper
 
     public var loaded: Bool = false
-    //public var monoCase: FontManagerNode
-    //public var sansCase: FontManagerNode
 
     public let fFamily: String           // 0 = family
     public let fName: String             // 1 = name

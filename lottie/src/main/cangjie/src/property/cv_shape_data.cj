@@ -1,7 +1,6 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
-//package lottie.shape_items
 package lottie.property
 
 internal import std.collection.*
@@ -23,9 +22,6 @@ public class CvShapeData <: ContentModelElement {
         }
     }
 
-    //element == CvShapeElement
-    //data => (arr[i].ty == 'sh'/'rc'/'el'/'sr')
-    //public init(element: CvShapeElement, data: ContentModel, styles: ArrayList<StyleElem>, transformsManager: ShapeTransformManager) {
     public init(elemGlobalData: GlobalData, elemData: Layer, data: ContentModel, styles: ArrayList<StyleElem>, 
         transformsManager: ShapeTransformManager, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
         compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
@@ -41,7 +37,6 @@ public class CvShapeData <: ContentModelElement {
         } else if (data.ty == "sr") {
             ty = 7
         }
-        //this.sh = ShapePropertyFactory.getShapeProp(data, ty, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.sh = ShapePropertyFactory.getShapeProp(data, ty, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
 
         let len: Int64 = styles.size

@@ -1,15 +1,14 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-//package lottie.effects
 package lottie.utils.expressions
 
 internal import lottie.global_data.*
 internal import lottie.model.*
 internal import lottie.property.*
 internal import std.collection.*
-//internal import lottie.utils.expressions.*
+
 
 public class SliderEffect <: SuperEffect {
 

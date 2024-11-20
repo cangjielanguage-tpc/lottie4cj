@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -41,27 +41,6 @@ public class AnimatableSplitDimensionPathValue <: ToString {
         this.x = x
         this.y = y
     }
-
-    /**
-     * Obtain the k of AnimatableSplitDimensionPathValue.
-     */
-    //public prop k: Array<Keyframe<PointF>> {
-    //    get() { this._k.clone() }
-    //}
-
-    /**
-     * Obtain the x of AnimatableSplitDimensionPathValue.
-     */
-    //public prop x: Array<Keyframe<Float64>> {
-    //    get() { this._x.clone() }
-    //}
-
-    /**
-     * Obtain the y of AnimatableSplitDimensionPathValue.
-     */
-    //public prop y: Array<Keyframe<Float64>> {
-    //    get() { this._y.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

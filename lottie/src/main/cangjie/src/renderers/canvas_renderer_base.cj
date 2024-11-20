@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -12,7 +12,6 @@ package lottie.renderers
  * 1. contentModeInAnimationItem() => 间接获取 this.animationItem.contentMode 可变的当时的值。
  */
 public abstract class CanvasRendererBase <: BaseRenderer {
-    //TODO：拆分多继承问题 -- //extendPrototype([BaseRenderer], CanvasRendererBase)
 
     public var data: AnimationData = AnimationData()
     public var transformCanvas: TransformCanvas = TransformCanvas()
@@ -20,7 +19,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
     public var contextData = CvContextData()
     
     public var transformMat: Matrix = Matrix()
-    //public var rendererType: String = "canvas"
     public var destroyed: Bool = false
 
     public var renderConfig: RenderConfig
@@ -32,13 +30,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      */
     public init(config: Option<RenderConfig>, container: LottieCanvasRenderingContext2D) {
         super(container)
-        //this.canvasContext = container
-        //this.wrapperInAnimationItem = container
+
         this.renderConfig = RenderConfig()
         if (let Some(v) <- config) {
             this.renderConfig.clearCanvas = v.clearCanvas
-            //TODO: 未确认数据类型 context
-            //context = v.context
+
             this.renderConfig.progressiveLoad = v.progressiveLoad
             this.renderConfig.preserveAspectRatio = v.preserveAspectRatio
             this.renderConfig.imagePreserveAspectRatio = v.imagePreserveAspectRatio
@@ -56,17 +52,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             canvasContext: container
         )
         this.globalData.hasCanvasRenderingContext2D = true
-        //this.globalData.renderedFrameInComp = getRenderedFrame
 
         this.rendererType = "canvas"
     }
 
-    //public func getRenderedFrame(): Float64{
-    //    return this.renderedFrame
-    //}
-
     public func createShape(data: Layer): CvShapeElement {
-        //return CvShapeElement(data, this.globalData, this.buildElementParenting, ArrayList<BaseElement>())
         return CvShapeElement(data, this.globalData, this.buildElementParenting, compType: 2, getElementByIdInRender: this.getElementById)
     }
 
@@ -102,7 +92,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             return
         }
         if (!this.renderConfig.clearCanvas) {//canvasContext 是画布组件中的 CanvasRenderingContext2D
-            //this.canvasContext.transform(props[0], props[1], props[4], props[5], props[12], props[13])
             this.canvasContext.transform(props[0], props[4], props[1], props[5], props[12], props[13])
             return
         }
@@ -123,7 +112,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         var trProps = currentTransform.props
 
         //在画布上应用新的变换
-        //this.canvasContext.setTransform(trProps[0], trProps[1], trProps[4], trProps[5], trProps[12], trProps[13])
         this.canvasContext.setTransform(trProps[0], trProps[4], trProps[1], trProps[5], trProps[12], trProps[13])
     }
 
@@ -134,14 +122,12 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      */
     public func ctxOpacity(op: Float64): Unit {
         var tmps = this.contextData.getTransform().props;
-        //Hilog.error(0, "---1--", "[ctxOpacity]----->tmps = ${tmps}")
 
         var currentOpacity: Float64 = this.contextData.getOpacity()
         if (!this.renderConfig.clearCanvas) { //canvasContext 是画布组件中的 CanvasRenderingContext2D
             if (op < 0.0) {
                 this.canvasContext.globalAlpha(0)
             } else {
-                //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
                 //TODO:怎么获取原来的透明度呢？？？
                 //this.canvasContext.globalAlpha( *= op)
             }
@@ -162,9 +148,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         if (this.globalData.currentGlobalAlpha != currentOpacity) {
             this.globalData.currentGlobalAlpha = currentOpacity
         }
-
-//        var tmps2 = this.contextData.getTransform().props;
-        //Hilog.error(0, "---1--", "[ctxOpacity]----->tmps2 = ${tmps2}")
     }
 
     /**
@@ -184,8 +167,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param actionFlag - Type of Bool.
      */
     public func save(actionFlag: Bool): Unit {
-        var tmps = this.contextData.getTransform().props;
-        //Hilog.error(0, "---0--", "----->tmps = ${tmps}")
+        var tmps = this.contextData.getTransform().props
         if (!this.renderConfig.clearCanvas) {
             this.canvasContext.save()
             return
@@ -194,8 +176,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             this.canvasContext.save()
         }
         this.contextData.push()
-//        var tmps2 = this.contextData.getTransform().props;
-        //Hilog.error(0, "---0--", "----->tmps2 = ${tmps2}")
     }
 
     /**
@@ -216,7 +196,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         let popped: (Array<Float64>, Float64) = this.contextData.pop()
         let transform: Array<Float64> = popped[0]
         let opacity: Float64 = popped[1]
-        //this.canvasContext.setTransform(transform[0], transform[1], transform[4], transform[5], transform[12], transform[13])
         this.canvasContext.setTransform(transform[0], transform[4], transform[1], transform[5], transform[12], transform[13])
 
         if (this.globalData.currentGlobalAlpha != opacity) {
@@ -231,17 +210,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param animData - Type of AnimationData, an instance of the json data that encapsulates the animation.
      */
     public func configAnimation(animData: AnimationData): Unit {
-        /*
-         //TODO：未开发 animationItem.wrapper
-         if (this.wrapperInAnimationItem) {
-           this.canvasContext = this.wrapperInAnimationItem
-         } else {  //canvasContext 是画布组件中的 CanvasRenderingContext2D
-           this.canvasContext = this.renderConfig.context
-         }
-         */
-
-
-        //TODO：this.animationItem.contentMode 的值是可变的，故不能直接传值，需要通过函数【contentModeInAnimationItem】间接获取当时值。
         let contentMode: String = contentModeInAnimationItem()
         if (contentMode == "Fill") {
             this.renderConfig.preserveAspectRatio = "none"
@@ -268,17 +236,13 @@ public abstract class CanvasRendererBase <: BaseRenderer {
 
         this.setupGlobalData(animData, CreateTag(""))
         this.globalData.canvasContext = this.canvasContext
-        //TODO：是都需要解构 CanvasRendererBase 和 GlobalData？？？  //this.globalData.renderer = this
         this.globalData.isDashed = false
         this.globalData.progressiveLoad = this.renderConfig.progressiveLoad
         this.globalData.transformCanvas = this.transformCanvas
 
         let emptyBaseElement: BaseElement = BaseElement(Layer(), globalData, isNull: true)
-        //this.elements.size = 0
         this.elements = Array<BaseElement>(animData.layers.size, item: emptyBaseElement)
-        //this.elements = Array<BaseElement>(animData.layers.size)
         this.updateContainerSize()
-
     }
 
     /**
@@ -319,31 +283,15 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.canvasContext.restore()
         this.canvasContext.setTransform(1, 0, 0, 1, 0, 0) //resetting the transform
         this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h) //清空之前画布
-//        //TODO:怎么获取之前的画布 width 和 height？？？
         this.canvasContext.clearRect(0, 0, 0, 0) //清空之前画布
-//        //TODO:[39]- 先按照 arkts 中 数据写死 this.canvasContext.width 和 this.canvasContext.height
-////        let ccw = 174.46153846153845
-////        let cch = 200.0
-//        this.canvasContext.clearRect(0.0, 0.0, ccw, cch) //清空之前画布
         this.canvasContext.save()
 
         this.reset()
         let elementWidth = 174.46153846153845
         let elementHeight = 200.0
-//        var elementWidth: Float64 = if (let Some(v) <- width) {
-//            Float64(v)
-//        } else {
-//            540.0
-//        }
-//        var elementHeight: Float64 = if (let Some(v) <- height) {
-//            Float64(v)
-//        } else {
-//            360.0
-//        }
 
         var elementRel: Float64 = 0.0
         var animationRel: Float64 = 0.0
-
 
         if (this.renderConfig.preserveAspectRatio.contains("meet") || this.renderConfig.preserveAspectRatio.contains("slice")) {
             let par: Array<String> = this.renderConfig.preserveAspectRatio.split(" ")
@@ -360,7 +308,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
 
             let xPos: String = pos[0..4]
             let yPos: String = pos[4..]
-            //TODO: 被除数 elementHeight = 0。
+
             elementRel = elementWidth / elementHeight
             animationRel = Float64(this.transformCanvas.w / this.transformCanvas.h)
             if ((animationRel > elementRel && fillType == "meet") || (animationRel < elementRel && fillType == "slice")) {

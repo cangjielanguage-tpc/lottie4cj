@@ -1,18 +1,16 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is shapeCollectionPool.
  */
-//package lottie.utils.pooling
 package lottie.pool
 
 public class shapeCollectionPool {
 
     var _length: Int64 = 0
     var _maxLength: Int64 = 4
-    //TODO: ShapeCollection 未实现---------------------------------------------------------------------------2024.07.12
     var pool: ArrayList<ShapeCollection> = ArrayList<ShapeCollection>(this._maxLength)
 
     /**
@@ -40,13 +38,6 @@ public class shapeCollectionPool {
             shapePool.release(shapeCollection.shapes[i])
         }
         shapeCollection._length = 0
-
-        //TODO: 需要设置扩容逻辑么？？？-----------------------------------------------------------------------2024.07.12
-        //if (_length == _maxLength) {
-        //    pool = pooling.double(pool)
-        //    _maxLength *= 2
-        //}
-        //pool[_length] = shapeCollection
         pool.append(shapeCollection)
         this._length += 1
     }

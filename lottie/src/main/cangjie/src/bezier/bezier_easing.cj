@@ -1,11 +1,10 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is BezierEasing.
  */
-//package lottie.third_party
 package lottie.bezier
 
 
@@ -25,14 +24,11 @@ public class BezierEasing {
     var _mSampleValues: Array<Float64>
     var _precomputed: Bool
 
-    //var beziers: HashMap<String, BezierEasing> = HashMap<String, BezierEasing>(24)
-
     //points is an array of [ mX1, mY1, mX2, mY2 ]
     init(points: Array<Float64>) {
         this._p = points
         this._mSampleValues = Array<Float64>(kSplineTableSize, item: 0.0)
         this._precomputed = false
-        //this.get = this.get.bind(this)
     }
 
     func A(aA1: Float64, aA2: Float64): Float64 {
@@ -86,20 +82,6 @@ public class BezierEasing {
         }
         return aGuessT
     }
-
-    //func getBezierEasing(a: Float64, b: Float64, c: Float64, d: Float64, nm: String): BezierEasing {
-    //    var str: String = nm
-    //    if (nm.isEmpty()) {
-    //        str = "bez_" + a + "_" + b + "_" + c + "_" + d
-    //    }
-    //    str = str.replace(".", "p")
-    //    if (beziers.contains(str)) {
-    //        return beziers[str]
-    //    }
-    //    let bezEasing: BezierEasing = BezierEasing([a, b, c, d])
-    //    beziers[str] = bezEasing
-    //    return bezEasing
-    //}
     
     //------------------------------------------------------------------------------------
 

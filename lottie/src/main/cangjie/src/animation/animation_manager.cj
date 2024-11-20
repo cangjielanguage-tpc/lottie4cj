@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -37,27 +37,12 @@ internal import ohos.system_date_time.*
 
 public class AnimationManager {
 
-    //TODO：cj 没有 js 的可以直接用的 document。设置一个 document：CreateTag 对象在 最外层的 lottie 中？？？
-    //TODO: 最外层的 lottie 传过来？？？
+    //cj 没有 js 的可以直接用的 document。设置一个 document：CreateTag 对象在 最外层的 lottie 中？？？
+    //最外层的 lottie 传过来？？？
     var document: HashMap<String, Array<CreateNS>> = HashMap<String, Array<CreateNS>>(16)
 
-    //TODO: 初始化一个空的 AnimationConfig。
     var params: AnimationConfig
-    //var params: AnimationConfig = AnimationConfig(
-    //      wrapper_ns: CreateNS("doc"),
-    //      container: canvasRenderingContext,
-    //      renderer: "canvas", // canvas 渲染模式
-    //      loop: true,
-    //      autoplay: true,
-    //      name: "2016",
-    //      contentMode: "Contain",
-    //      path: "common/lottie/data.json", // 路径加载动画只支持entry/src/main/ets 文件夹下的相对路径
-    //      // path: "common/lottie/data_rawfile.json"
-    //      // path: "common/lottie/data_base64.json"
-    //      animationData: AnimationData()
-    //    )
 
-    //TODO: 暂未确认 registeredAnimations 的数据类型。自定义数据类型 RegisteredAnimation。
     var registeredAnimations: ArrayList<RegisteredAnimation> = ArrayList<RegisteredAnimation>()
     var initTime: Int64 = 0
     var animatorTime: Int64 = 0
@@ -83,14 +68,11 @@ public class AnimationManager {
         )
     }
 
-    //TODO: 暂未确认 ev 的数据类型。综合查找，暂定数据类型为 BMDestroyEvent。
-    //func subtractPlayingCount(en: Option<BMEvent>): Unit {
     func removeElement(ev2: Option<BMEvent>): Unit {
         var ev: BMDestroyEvent = (ev2.getOrThrow() as BMDestroyEvent).getOrThrow()
         var i: Int64 = 0
         let animItem: AnimationItem = ev.target
         while (i < len) {
-            //TODO: 暂未确认 registeredAnimations 的数据类型。自定义数据类型 RegisteredAnimation。
             if (registeredAnimations.size > i) {
                 if (refEq(registeredAnimations[i].animation, animItem)) {
                     //splice: 从数组中添加或删除元素。-- splice(i, 1) 此处是删除--删除下标 i 处元素
@@ -106,14 +88,11 @@ public class AnimationManager {
         }
     }
 
-    //TODO: element 的数据类型： CreateTag/CreateNS。将 CreateTag 和 CreateNS 进行合并，合并为 CreateNS？？？
-    //TODO: element 数据类型是 CanvasRenderingContext2D 还是 CreateNS ？？？
     public func registerAnimation(element: CreateNS, animationData: AnimationData): Option<AnimationItem> {
         if (element.isNull) {
             return None
         }
         for (i in 0..len) {
-            //TODO: 暂未确认 registeredAnimations 的数据类型。自定义数据类型 RegisteredAnimation。
             if (registeredAnimations.size > i) {
                 if (refEq(registeredAnimations[i].elem, element) && !registeredAnimations[i].elem.isNull) {
                     return registeredAnimations[i].animation
@@ -125,8 +104,6 @@ public class AnimationManager {
 
         setupAnimation(animItem, element)
 
-        //TODO: 调用 setData(wrapper: CanvasRenderingContext2D, animationData: AnimationData) ？？？
-        //TODO: element 数据类型是 CanvasRenderingContext2D 还是 CreateNS ？？？-- 再增加一个参数 wrapper_ns: CreateNS
         animItem.setData(params.container.ctx2d, animationData, wrapper_ns: element)
 
         return animItem
@@ -134,10 +111,8 @@ public class AnimationManager {
 
     public func getRegisteredAnimations(): ArrayList<AnimationItem> {
         let lenAnims: Int64 = registeredAnimations.size
-        //TODO: 暂未确认 registeredAnimations[i].animation 数据类型，暂定为 AnimationItem。
         var animations: ArrayList<AnimationItem> = ArrayList<AnimationItem>(24)
         for (i in 0..lenAnims) {
-            //TODO: 是否保留 registeredAnimations[i] 为 Null 的判断？？？  //if (registeredAnimations.size > i) {}
             animations.append(registeredAnimations[i].animation)
         }
         return animations
@@ -152,9 +127,7 @@ public class AnimationManager {
         this.playingAnimationsNum -= 1
     }
 
-    //TODO: element 数据类型是 CanvasRenderingContext2D 还是 CreateNS ？？？
     func setupAnimation(animItem: AnimationItem, element: CreateNS): Unit {
-        //TODO:需要增加判断 animItem 是否是 null 吗？  //if (!!animItem) {}
         animItem.addEventListener("destroy", AnimationEventCallback(this.removeElement))
         animItem.addEventListener("_active", AnimationEventCallback(this.addPlayingCount))
         animItem.addEventListener("_idle", AnimationEventCallback(this.subtractPlayingCount))
@@ -173,23 +146,17 @@ public class AnimationManager {
         return animItem
     }
 
-    //TODO: 暂未确认 animation 数据类型。
     public func setSpeed(val: Int64, animation: String): Unit {
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
-                //TODO: 多了一个参数？？？   //registeredAnimations[i].animation.setSpeed(val, animation)
                 registeredAnimations[i].animation.setSpeed(val)
             }
         }
     }
 
-    //TODO: 暂未确认 animation 数据类型。
     public func setDirection(val: Int64, animation: String): Unit {
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
-                //TODO: 多了一个参数？？？   //registeredAnimations[i].animation.setDirection(val, animation)
                 registeredAnimations[i].animation.setDirection(val)
             }
         }
@@ -197,7 +164,6 @@ public class AnimationManager {
 
     public func play(animation: String): Unit {
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.play(name: animation)
             }
@@ -208,7 +174,6 @@ public class AnimationManager {
     func resume(nowTime: Int64): Unit {
         var elapsedTime: Int64 = nowTime - initTime
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.advanceTime(Float64(elapsedTime))
             }
@@ -224,13 +189,11 @@ public class AnimationManager {
 
     func first(nowTime: Int64): Unit {
         initTime = nowTime
-        //TODO: 未引入 windows。   //window.requestAnimationFrame(resume)
     }
 
     public func pause(animation: String): Unit {
         _paused= true
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.pause(name: animation)
             }
@@ -239,7 +202,6 @@ public class AnimationManager {
 
     public func goToAndStop(value: Float64, isFrame: Bool, animation: String): Unit {
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.goToAndStop(value, isFrame, animation)
             }
@@ -248,7 +210,6 @@ public class AnimationManager {
 
     public func stop(animation: String): Unit {
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.stop(animation)
             }
@@ -257,7 +218,6 @@ public class AnimationManager {
 
     public func togglePause(animation: String): Unit {
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.togglePause(animation)
             }
@@ -272,14 +232,12 @@ public class AnimationManager {
         if (state == AnimationStatus.Paused || state == AnimationStatus.Stopped) {
             _stopped = true
         }
-        //TODO：需要引入 @ohos.animator 的 AnimatorResult
+        //需要引入 @ohos.animator 的 AnimatorResult
         if (let Some(v) <- this._animator) {
             if (state == AnimationStatus.Paused) {
-                //TODO：需要引入 @ohos.animator 的 AnimatorResult
                 v.pause()
             }
             if (state == AnimationStatus.Stopped) {
-                //TODO：需要引入 @ohos.animator 的 AnimatorResult
                 v.finish()
             }
         }
@@ -313,7 +271,6 @@ public class AnimationManager {
     public func destroy(animation: String): Unit {
         var tag: Bool = false
         for (i in (len - 1)..=0:-1) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
                 if (!registeredAnimations[i].animation.isPaused && registeredAnimations[i].animation.name != animation) {
                     //如果还有其他动画也在播放，则不需要停止
@@ -327,13 +284,11 @@ public class AnimationManager {
             setAnimatorState(AnimationStatus.Stopped)
             _stopped = true
             _isFrozen = false
-            //TODO：需要引入 @ohos.animator 的 AnimatorResult
             this._animator = None
         }
     }
 
     public func searchAnimations(animationData: AnimationData, standalone: Bool, renderer2: String): Unit {
-        //TODO：cj 没有 js 的可以直接用的 document。设置一个 document：CreateTag 对象在 最外层的 lottie 中？？？
         let lotties: Array<CreateNS> = document["lottie"]
         let bodymovins: Array<CreateNS> = document["bodymovin"]
         let animElements: Array<CreateNS> = lotties.concat(bodymovins)
@@ -365,7 +320,6 @@ public class AnimationManager {
 
     public func setContentMode(contentMode: String): Unit {
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.setContentMode(contentMode)
             }
@@ -374,26 +328,19 @@ public class AnimationManager {
 
     public func resize(): Unit {
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
-            //if (registeredAnimations.size > i  && !!registeredAnimations[i].animation) {
             if (registeredAnimations.size > i) {
-                //TODO: 少传 2 个参数。  //registeredAnimations[i].animation.resize()
                 registeredAnimations[i].animation.resize(0, 0)
             }
         }
     }
 
-    //TODO: 暂未实现。
     func activate() {
         if (!_isFrozen && playingAnimationsNum != 0) {
             if (_stopped) {
-                //TODO：需要引入 @ohos.animator 的 AnimatorResult
                 if (let Some(v) <- this._animator) {
                     v.finish()
                 }
 
-                //TODO：数据类型需要再确认，是时间格式还是数值格式？？？  //initTime = Date.now()
-                //initTime = DateTime.now().toUnixTimeStamp().toMilliseconds()
                 initTime = SystemDateTime.getCurrentTime()
                 let options: AnimatorOptions = AnimatorOptions(
                     duration: 20000,
@@ -405,10 +352,8 @@ public class AnimationManager {
                     begin: 0.0,
                     end: 1.0
                 )
-                //TODO：需要引入 @ohos.animator 的 create(options: AnimatorOptions): AnimatorResult
-                //this._animator = animator.create(options)
+
                 let backAnimator: AnimatorResult = AnimatorResult(options)
-                 //TODO：需要引入 @ohos.animator 的 AnimatorResult
                 backAnimator.onframe = { value: Float64  =>
                     AppLog.info("onframe called ${value}")
                     // js 中 Date.now()：返回自1970年1月1日午夜（UTC）以来经过的毫秒数  //resume(Date.now())
@@ -434,7 +379,6 @@ public class AnimationManager {
 
     public func setVolume(val: Int64, animation: String): Unit {
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.setVolume(val, animation)
             }
@@ -443,7 +387,6 @@ public class AnimationManager {
 
     public func mute(animation: String): Unit {
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.mute(animation)
             }
@@ -452,7 +395,6 @@ public class AnimationManager {
 
     public func unmute(animation: String): Unit {
         for (i in 0..len) {
-            //TODO: 是否增加 registeredAnimations[i].animation 非null判断？？？
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.unmute(animation)
             }

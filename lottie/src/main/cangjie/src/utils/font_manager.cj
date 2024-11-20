@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -15,7 +15,6 @@ internal import std.collection.*
 
 public type CreateTag = CreateNS
 
-//TODO: 未完全开发完成
 public class FontManager {
 
     var maxWaitingTime: Int32 = 5000
@@ -52,8 +51,6 @@ public class FontManager {
      */
     public init() { }
 
-
-    //TODO: defs可以是空对象或者
     //数据来源分析：fontData == animData.fonts == Fonts
     public func addFonts(fontData: Fonts, defs: CreateTag): Unit {
         if (fontData.isEmpty()) {

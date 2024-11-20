@@ -1,9 +1,8 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 package lottie.elements.helpers.shapes
 
-//TODO DynamicPropertyContainer继承
 public class SVGStrokeStyleData <: SVGNoStyleData {
     public var _isAnimated: Bool
     //调用DynamicPropertyContainer类接口

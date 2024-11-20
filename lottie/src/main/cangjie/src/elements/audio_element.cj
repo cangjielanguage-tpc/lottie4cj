@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -7,7 +7,6 @@
  */
 package lottie.elements
 
-//TODO: 未完全实现
 public class AudioElement {
     
 
@@ -20,7 +19,6 @@ public class AudioElement {
     public var data: Layer
 
     public init(data: Layer, globalData: GlobalData) {
-        //TODO: 未实现this.globalData 函数
         this._isPlaying = false
         this._canPlay = false
         this._currentTime = 0.0
@@ -51,7 +49,6 @@ public class AudioElement {
     }
 
     public func pause() {
-        // TODO
         this._isPlaying = false
         this._canPlay = false
     }
@@ -60,9 +57,7 @@ public class AudioElement {
         this._canPlay = true
     }
 
-    public func setRate(rateValue: Int64) {
-        // TODO
-    }
+    public func setRate(rateValue: Int64) {}
 
     public func volume(volumeValue: Int64) {
         this._volumeMultiplier = volumeValue;

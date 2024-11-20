@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -16,7 +16,7 @@ import ohos.state_macro_manage.*
  * 动画事件回调函数声明
  */
 public class AnimationEventCallback {
-    public var callback: (Option<BMEvent>) -> Unit //= { m => ()}
+    public var callback: (Option<BMEvent>) -> Unit
     public init(callback: (Option<BMEvent>) -> Unit){
         this.callback = callback
     }
@@ -27,7 +27,7 @@ public class AnimationConfig {
     /**
      * 与canvas组件绑定的上下文CanvasRenderingContext2D, 提供最基础的绘制渲染能力
      */
-    //TODO：要挂载动画的DOM对象
+    //要挂载动画的DOM对象
     public var container: LottieCanvasRenderingContext2D
     public var wrapper: LottieCanvasRenderingContext2D
     public var wrapper_ns: CreateNS = CreateNS("")
@@ -40,11 +40,8 @@ public class AnimationConfig {
 
     /**
      * 动画播放结束后, 是否循环播放，默认值true, 值为true时无限循环播放 值类型为number, 且>=1时为设置重复播放的次数
-     * 定为 Int64 数据类型，<= 1 表示不循环
-     * //TODO: 是否需要再增加一个成员变量，表示是否循环？？？和循环次数分开？？？
+     * 定为 Int64 数据类型，-1 表示true，-2 表示false。
      */
-//    public var loop: Bool = false
-//    public var loopNum: Int64 = 0
     public var loop: Int64 = 0
 
     /**
@@ -64,11 +61,6 @@ public class AnimationConfig {
     public var name: String = ""
 
     /**
-     * 应用上下文 Context 在HSP场景下需要传正确的context，非HSP场景不影响，context可以不传
-     */
-    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //public var context?: common.UIAbilityContext
-
-    /**
      * 应用包名 用于打印日志区分不同模块调用启动aniamtor，packageName可以不传
      */
     public var packageName: String = ""
@@ -78,7 +70,6 @@ public class AnimationConfig {
      */
     public var contentMode: String = ""
 
-    //TODO: AnimationItem.setParams 编译用。
     public var rendererSettings: RenderConfig = RenderConfig()
     public var autoloadSegments: Bool = true
     public var assetsPath: String = ""
@@ -97,16 +88,11 @@ public class AnimationConfig {
      * @example path: 'common/lottie/data.json'
      */
     public var path: String = ""
-    
-    //public init(){
-    //    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-    //    this.wrapper = wrapper
-    //}
+
     var context: Option<AbilityContext> = None
 
     public init(
         wrapper_ns!: CreateNS,
-        //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
         container!: CanvasRenderingContext2D,
         renderer!: String = "canvas",
         loop!: Int64 = -1,
@@ -118,7 +104,6 @@ public class AnimationConfig {
         context!: Option<AbilityContext> = None
     ){
         this.wrapper_ns = wrapper_ns
-        //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
         this.wrapper = LottieCanvasRenderingContext2D(container)
 
         this.container = LottieCanvasRenderingContext2D(container)

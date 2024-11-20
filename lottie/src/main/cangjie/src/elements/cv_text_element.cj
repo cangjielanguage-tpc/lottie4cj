@@ -1,11 +1,10 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 package lottie.elements
 
 internal import ohos.font.*
 
-//TODO: 未完全实现
 public class CvTextElement <: ITextElement {
     var textSpans: ArrayList<TextSpans>
 

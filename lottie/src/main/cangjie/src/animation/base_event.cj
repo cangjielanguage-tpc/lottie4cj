@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -11,8 +11,7 @@ package lottie.animation
 public open class BaseEvent <: BMEvent {
 
     /*
-     * TODO: 未确定 this._cbs 的 value 中的数据类型。
-     * TODO: 没法直接比较 2 个函数，需要包装成 2 个 Object，用 refEq 进行比较。 
+     * 没法直接比较 2 个函数，需要包装成 2 个 Object，用 refEq 进行比较。 
      * (T) -> Unit 包装成 AnimationEventCallback，调用的时候调用 AnimationEventCallback.callback
      */
     public var _cbs: HashMap<String, ArrayList<AnimationEventCallback>> = HashMap<String, ArrayList<AnimationEventCallback>>(16)
@@ -21,11 +20,9 @@ public open class BaseEvent <: BMEvent {
         super("")
     }
 
-    //TODO：未确认参数 args 的数据类型。
     public func triggerEvent(eventName: String, args: BMEvent): Unit {
         if (this._cbs.size > 0) {
             if (this._cbs.contains(eventName)) {
-                //TODO: 未确定 this._cbs 的 value 中的数据类型。
                 let callbacks: ArrayList<AnimationEventCallback> = this._cbs[eventName]
                 for (i in 0..callbacks.size) {
                     callbacks[i].callback(args)
@@ -65,7 +62,6 @@ public open class BaseEvent <: BMEvent {
                 if (hasEventName) {
                     var len: Int64 = callbacks.size
                     while (i < len) {
-                        //TODO: 没法直接比较 2 个函数，需要包装成 2 个 Object，用 refEq 进行比较。refEq(Object, Object)：判断两个 Object 实例的内存地址是否相同。
                         if (refEq(callbacks[i], callback)) {
                             //splice: 从数组中添加或删除元素。--此处是删除--删除下标 i 处元素
                             callbacks.remove(i)

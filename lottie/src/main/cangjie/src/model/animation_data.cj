@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -87,34 +87,6 @@ public class AnimationData <: ToString {
         this.ddd = ddd
         this.isNull = isNull
     }
-
-    /**
-     * Obtain the layers of AnimationData.
-     */
-    //public prop layers: Array<Layer> {
-    //    get() { this._layers.clone() }
-    //}
-
-    /**
-     * Obtain the assets of AnimationData.
-     */
-    //public prop assets: Array<Asset> {
-    //    get() { this._assets.clone() }
-    //}
-
-    /**
-     * Obtain the chars of AnimationData.
-     */
-    //public prop chars: Array<FontCharacter> {
-    //    get() { this._chars.clone() }
-    //}
-
-    /**
-     * Obtain the markers of AnimationData.
-     */
-    //public prop markers: Array<Marker> {
-    //    get() { this._markers.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

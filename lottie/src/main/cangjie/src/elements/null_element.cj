@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -8,7 +8,6 @@
 package lottie.elements
 
 public class NullElement <: BaseElement {
-    //TODO：拆分多继承问题 -- extendPrototype([BaseElement, TransformElement, HierarchyElement, FrameElement], NullElement)
 
     /**
      * Create a NullElement instance based on parameters.

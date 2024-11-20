@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -13,13 +13,13 @@ public class Layer <: ToString {
 
     public var tp: Int64 = -1
 
-    //TODO: ICompElement编译用。
+    //ICompElement编译用。
     public var xt: Bool = false //不确认xt数据类型，暂定为Bool。
-    //TODO: 当 layer.ty == 101 && isAsset == true 时，此 Layer 实际代表的是 Asset。兼容 BaseRenderer.searchExtraCompositions 中 createComp 函数应用。
+    //当 layer.ty == 101 && isAsset == true 时，此 Layer 实际代表的是 Asset。兼容 BaseRenderer.searchExtraCompositions 中 createComp 函数应用。
     public var asset: Asset = Asset("", Array<Layer>(), 0, 0, "", "", 0)
     public var isAsset: Bool = false
 
-    //TODO: RenderableElement编译用。
+    //RenderableElement编译用。
     public var textData: Size = Size()
     public var width: Int64 = 0
     public var height: Int64 = 0
@@ -27,9 +27,6 @@ public class Layer <: ToString {
 
     public var hasMask: Bool = false
     public var td: Int64
-    
-    //TODO: this.layers[j].id 是 Layer.ind ？？？
-    //public var refId: Int64 = 0
     
     public var singleShape: Bool = false
     public var completed: Bool = false
@@ -154,27 +151,6 @@ public class Layer <: ToString {
     }
 
     /**
-     * Obtain the masksProperties of Layer.
-     */
-    //public prop masksProperties: Array<Mask> {
-    //    get() { this._masksProperties.clone() }
-    //}
-
-    /**
-     * Obtain the shapes of Layer.
-     */
-    //public prop shapes: Array<ContentModel> {
-    //    get() { this._shapes.clone() }
-    //}
-
-    /**
-     * Obtain the ef of Layer.
-     */
-    //public prop ef: Array<LayerEF> {
-    //    get() { this._ef.clone() }
-    //}
-
-    /**
      * Return to convert the instance into a string and return.
      *
      * @return Type of String, converted String.
@@ -222,13 +198,6 @@ public class LayerTD <: ToString {
     public init(k!: Array<Keyframe<DocumentData>> = Array<Keyframe<DocumentData>>()){
         this.k = k
     }
-
-    /**
-     * Obtain the k of LayerTD.
-     */
-    //public prop k: Array<Keyframe<DocumentData>> {
-    //    get() { this._k.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.
@@ -296,13 +265,6 @@ public class LayerT <: ToString {
     }
 
     /**
-     * Obtain the a of LayerT.
-     */
-    //public prop a: Array<AnimatableTextPropertiesA> {
-    //    get() { this._a.clone() }
-    //}
-
-    /**
      * Return to convert the instance into a string and return.
      *
      * @return Type of String, converted String.
@@ -363,13 +325,6 @@ public open class LayerEF <: ToString {
         this.nm = nm
         this.ef = ef
     }
-
-    /**
-     * Obtain the ef of LayerEF.
-     */
-    //public prop ef: Array<Effect> {
-    //    get() { this._ef.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.
