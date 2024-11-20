@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -32,7 +32,6 @@ public class TagStyle {
     public var height: String = ""
 }
 
-//TODO: 将 CreateNS 和 CreateTag 合并。
 public class CreateNS <: ToString & Equatable<CreateNS> {
 
     //------CreateTag---------------------------------------------------------------------

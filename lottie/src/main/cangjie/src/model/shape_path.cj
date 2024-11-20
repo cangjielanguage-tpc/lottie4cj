@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -54,13 +54,6 @@ public class ShapePath <: ContentModel {
     public override prop types: Int8 {
         get() { 6 }
     }
-
-    /**
-     * Obtain the ks of ShapePath.
-     */
-    //public prop ks: Array<Keyframe<ShapeData>> {
-    //    get() { this._ks.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

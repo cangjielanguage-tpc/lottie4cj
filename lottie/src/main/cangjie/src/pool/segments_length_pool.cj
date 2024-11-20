@@ -1,16 +1,14 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is segmentsLengthPool.
  */
-//package lottie.utils.pooling
 package lottie.pool
 
 func createSegmentsLength(): SegmentsLengthElement {
     return SegmentsLengthElement(
-        //bez: segmentsLengthPool.newElement().lengths = segmentsLength = lengths    =>   lengths[i] = bezierLengthPool.newElement()
         lengths: Array<BezierLengthElement>(), 
         totalLength: 0.0
     )

@@ -1,11 +1,10 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is a GradientStroke structure.
  */
-//package lottie.shape_items
 package lottie.property
 
 //兼容(arr[i].ty === 'fl'/'st'/'gf'/'gs') 
@@ -24,7 +23,6 @@ public class FillStrokeElement <: ContentModelElement {
 
     //指向的是已经处理的 c，即 "fl"/"st" 的 c_k
     public var c: PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>    //1 = color
-    //public var c: PropertyFactory<Array<KeyframeArrayFloat64>, Array<Float64>>
 
     public var o: PropertyFactory<Array<Keyframe<Int64>>, Int64>                        //2 = opacity
     public var s: PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>      //4 = startPoint

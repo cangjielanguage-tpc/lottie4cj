@@ -1,20 +1,17 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is PropertyInterface.
  */
-//package lottie.utils.expressions
 package lottie.property
 
 
 public class PropertyInterface <: ExpressionInterface  {
 
-    //public var _name: String = ""
     public var propertyGroup: (Option<Int64>) -> ExpressionInterface = { m => return ExpressionInterface() }
-    //public var isNull: Bool = false
-    
+
     public init(){
         this.isNull = true
     }

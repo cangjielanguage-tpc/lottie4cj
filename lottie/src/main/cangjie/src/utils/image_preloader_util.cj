@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 package lottie.utils
@@ -19,8 +19,7 @@ public class ImgOB <: ToString {
     var createNS: CreateNS
     var animationData: AnimationData
     var isCreateNS: Bool
-    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-    //TODO: pixel_map 是可以为空的，数据结构写为 Option 还是 Array ？？？
+
     public var pixel_map: ?PixelMap = unsafe {zeroValue<PixelMap>()}
     public var width: Int64 = 0
     public var height: Int64 = 0
@@ -55,9 +54,7 @@ public class ImgOB <: ToString {
 }
 
 public class OB <: ToString {
-    //TODO: 泛型 T 的数据类型为：CreateNS/AnimationData。
-    //TODO: 是否改为元组类型。(CreateNS, AnimationData, Bool)。Bool = true 代表 CreateNS；Bool = false 代表 AnimationData.
-    //var img: (CreateNS, AnimationData, Bool)
+
     var img: ImgOB
     var assetData: Asset
 

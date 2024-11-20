@@ -1,21 +1,18 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is a MaskElement dependency file.
  */
 package lottie
-//package lottie.elements
 
-//TODO: main 中定义的变量及函数。
+//main 中定义的变量及函数。
 var locationHref: String = ""
 public func getLocationHref(): String {
     return locationHref
 }
 
-//TODO: 是否合并 StoredData 和 ViewData
-//TODO: 自定义数据类型。
 class StoredData {
     var elem: CreateNS
     var x: PropertyFactory<Array<Keyframe<Int64>>, Int64>
@@ -44,7 +41,6 @@ class StoredData {
     }
 }
 
-//TODO: 自定义数据类型。
 public class ViewData {
     var elem: CreateNS
     var lastPath: String

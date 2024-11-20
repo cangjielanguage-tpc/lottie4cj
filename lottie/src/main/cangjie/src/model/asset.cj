@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -12,9 +12,8 @@ package lottie.model
  */
 public class Asset <: ToString & Equatable<Asset> {
 
-    //TODO: 编译用，暂时在 json 中找不到 assets[i].t。
+    //编译用，暂时在 json 中找不到 assets[i].t。
     public var t: String = ""
-    //TODO: 不确定来源和数据类型
     public var xt: Bool = false
     
     //确认 "assets"."layers" 是否被 从 json 处理成对象格式
@@ -22,7 +21,7 @@ public class Asset <: ToString & Equatable<Asset> {
     
     /* Corresponds to the field key name in the "assets" resource information array in json. */
     public let id: String                    // 0 = id              // Picture id
-    public let layers: Array<Layer>        // 1 = layers          // Layer information
+    public let layers: Array<Layer>          // 1 = layers          // Layer information
     public let w: Int64                      // 2 = width           // Picture width
     public let h: Int64                      // 3 = height          // Picture height
     public let p: String                     // 4 = imageFileName   // Picture name
@@ -49,13 +48,6 @@ public class Asset <: ToString & Equatable<Asset> {
         this.u = u
         this.e = e
     }
-
-    /**
-     * Obtain the layers of Asset.
-     */
-    //public prop layers: Array<Layer> {
-    //    get() { this._layers.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

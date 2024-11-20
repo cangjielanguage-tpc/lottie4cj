@@ -1,11 +1,10 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is DashProperty.
  */
-//package lottie.utils.shapes
 package lottie.property
 
 /*
@@ -21,13 +20,6 @@ package lottie.property
  */
 public class DashProperty <: DynamicPropertyContainer {
 
-    //TODO：拆分多继承问题 -- extendPrototype([DynamicPropertyContainer], DashProperty)
-
-    //var elem: BaseElement
-    //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
-    //在父类DynamicPropertyContainer中有elemGlobalData  //var elemGlobalData: GlobalData = GlobalData()
-    //在父类DynamicPropertyContainer中有elemData        //var elemData: Layer = Layer()
-//    var dataProps: Array<DataProp<ContentModelDK, Float64>> = Array<DataProp<ContentModelDK, Float64>>()
     var dataProps: Option<Array<DataProp<ContentModelDK, Float64>>>
     var renderer: String
 
@@ -36,19 +28,11 @@ public class DashProperty <: DynamicPropertyContainer {
     var dashStr: String = ""
 
     public var dashArray: Array<Float64>
-    //TODO: 长度为 1 的数组，是否换成数值成员变量类型 ？？？
     public var dashoffset: Array<Float64> = Array<Float64>(1, item: 0.0)
-    
-    //在父类 DynamicPropertyContainer 中 //var _isAnimated = this.k
-    //在父类 DynamicPropertyContainer 中 //var _mdf: Bool = false
 
-    //createStyleElement(data) 中 data  == ContentModel => data.d = ShapeStroke/GradientStroke.d(Array<ContentModelD>)
     public init(data: Array<ContentModelD>, renderer: String, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
         super(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
 
-        //TODO:未确认数据类型，自定义为 DataProp。
-//        let empty_dp: DataProp<ContentModelDK, Float64> = DataProp<ContentModelDK, Float64>(n: "", p: PropertyFactory<ContentModelDK, Float64>(ContentModelDK(), 0.0, DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties), elemGlobalData, elemData, dynamicProperties: dynamicProperties))
-//        this.dataProps = Array<DataProp<ContentModelDK, Float64>>(data.size, item: empty_dp)
         this.dataProps = None
         this.renderer = renderer
 
@@ -61,7 +45,6 @@ public class DashProperty <: DynamicPropertyContainer {
             this.dashArray = Array<Float64>()
         }
 
-        //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
         this.initDynamicPropertyContainer(elemGlobalData, elemData)
 
         for (i in 0..len) {

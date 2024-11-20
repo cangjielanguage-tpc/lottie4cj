@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -7,7 +7,6 @@
  */
 package lottie.utils
 
-//internal import std.fs.*
 internal import std.convert.*
 
 import lottie.parser.*
@@ -18,12 +17,10 @@ internal import ohos.ability.*
 
 class WorkerProxy {
 
-    //TODO：参数 e 没有直接用，一直用的是 e.data，参数直接改成 e.data-----------------------------------------------2024.07.08
-    //var workerFn: (e) -> Unit
     var workerFn: (Data) -> Unit = default_Data_To_AnimationData
     
     //workerProxy.onmessage 实际的逻辑代码在后面 setupWorker 中 workerInstance.onmessage
-    //TODO: 需要和 workerInstance 关联
+    //需要和 workerInstance 关联
     var onmessage: (Data) -> Unit = default_Data_To_Unit
     
     init(){}
@@ -35,68 +32,42 @@ class WorkerProxy {
         this.onmessage = onmessage
     }
     
-    //TODO: 把 workerInstance.postMessage 改为多参函数？？？
-    //(type: String, path: String, fullPath: String, id: String, context2D: CanvasRenderingContext2D, animation: AnimationData)
-    //func postMessage(path) {
-    //    //TODO: 调用 DataManager 的成员变量 workerFn
-    //    workerFn({ data: path })  //workerFn = func workerStart
-    //}
+    //把 workerInstance.postMessage 改为多参函数？？？
     func postMessage(data: Data) {
         workerFn(data)
     }
 }
 
-//TODO:未实现
 public class DataManager {
     var context:?AbilityContext = Option<AbilityContext>.None
     var _counterId: Int64 = 1
     var processes: HashMap<String, Processes> = HashMap<String, Processes>(24)
-    //TODO: 未确认 e 的数据类型
-    //TODO：参数 e 没有直接用，一直用的是 e.data，参数直接改成 e.data-----------------------------------------------2024.07.08
     var workerFn: (Data) -> Unit = default_Data_To_AnimationData
-    
-    //TODO：需要增加一个 WorkerProxy 的无参构造 -- 调整后不需要无参构造
+
     var workerInstance: WorkerProxy = WorkerProxy()
     
     var workerInstanceFlag: Bool = false
     
     var assetLoader: AssetLoader = AssetLoader()
-    
-    ////TODO：setupWorker 改为 init，并和 createWorker 合并
-    //public init(){
-    //    this.workerFn = this.workerStart
-    //    this.workerInstance = WorkerProxy(this.workerStart, this.onmessageWorkerInstance)
-    //}
 
-    //TODO: 未实现
-    //[4]-参数 data 的成员变量 animationData，就是拿到解析 json 后封装好的 AnimationData。
     func postMessage(data: Data) {
         //workerProxy未单独使用，可以直接等于 workerProxy = workerInstance
-        //workerProxy.onmessage({ data: data })
         this.workerInstance.onmessage(data)
     }
 
-    //4.
-    //TODO：createWorker 和 init 合并？？？
     func createWorker(fn: (Data) -> Unit): WorkerProxy {
         this.workerFn = fn   //workerFn = func workerStart
-        //5.
-        //TODO: workerProxy 独立成一个对象，还是拆开融入到 DataManager 中 ？？？
         return WorkerProxy(fn)
     }
-    
-    //TODO: 未确认 event 数据类型。可能是
+
     //[5]-参数 data 的成员变量 animationData，就是拿到解析 json 后封装好的 AnimationData。
     func onmessageWorkerInstance(data: Data) {
-        //var data = event.data
-        //let data: Data = data
         let id: String = data.id
         if (this.processes.contains(id)) {
             let process: Processes = this.processes[id]
             this.processes.remove(id)
             if (data.status == "success") {
                 //[6]-解析 json 后封装好的 AnimationData，结果在回调函数 onComplete 中。
-                //process.onComplete(data.payload)
                 process.onComplete(data.animation)
             } else if (data.status == "error") {
                 process.onError()
@@ -105,14 +76,11 @@ public class DataManager {
     }
 
     //2.
-    //TODO：setupWorker 改为 init？？？
     func setupWorker(): Unit {
-        //TODO：setupWorker只执行一次，是否融入到 init 中？？？
         if (!workerInstanceFlag) {
             this.workerInstanceFlag = true
             
-            //3.    //workerInstance = workerProxy
-            // workerStart 中的代码，是在 loadAnimation/loadData/completeAnimation中最后一步执行
+            //3.  workerStart 中的代码，是在 loadAnimation/loadData/completeAnimation中最后一步执行
             this.workerInstance = this.createWorker(this.workerStart)
             
             //workerProxy.onmessage 实际的逻辑代码此处。 workerProxy/workerInstance.onmessage
@@ -120,29 +88,20 @@ public class DataManager {
         }
     }
 
-
-    //在开发此函数--20240708
-    //TODO：参数 e 没有直接用，一直用的是 e.data，参数直接改成 e.data-----------------------------------------------2024.07.08
     func workerStart(data: Data): Unit {
-        //var animationData: AnimationData = AnimationData(isNull: true)
         if (data.types == "loadAnimation") {
-
             //[3]-回调函数 callback 的参数 animationData，就是拿到解析 json 后封装好的 AnimationData。
             func callback(animationData: AnimationData): Unit {
                 completeData(animationData)
-                //postMessage(Data(id: data.id, payload: data, status: "success"))
                 postMessage(Data(id: data.id, animation: animationData, status: "success"))
             }
             func errorCallback(): Unit {
                 postMessage(Data(id: data.id, status: "error"))
             }
             
-            //TODO：assetLoader 只在 workerStart 函数内部调用，是否将 assetLoader 融入到 DataManager 中？？？
             //[1]-在此函数调用时，拿到解析 json 后封装好的 AnimationData，结果在回调函数 callback 中。
             assetLoader.load(
                 this.context,
-                //TODO：context2D 在 cj 的 assetLoader.load 函数中用不上。
-                //data.context2D,
                 data.path,
                 data.fullPath,
                 //[2]-回调函数 callback 的参数 animationData，就是拿到解析 json 后封装好的 AnimationData。
@@ -154,14 +113,11 @@ public class DataManager {
             completeData(animation)
             postMessage(Data(
               id: data.id,
-              //payload: animation,
               animation: animation,
               status: "success"
             ))
-            //animationData = animation
         } else if (data.types == "loadData") {
             func callback(animationData: AnimationData): Unit {
-                //postMessage(Data(id: e.data.id, payload: animationData, status: "success"))
                 postMessage(Data(id: data.id, animation: animationData, status: "success"))
             }
             func errorCallback(): Unit {
@@ -176,7 +132,6 @@ public class DataManager {
                 errorCallback
             )
         }
-        //return animationData
     }
 
     func completeLayers(layers: Array<Layer>, comps: Array<Asset>): Unit {
@@ -189,17 +144,13 @@ public class DataManager {
         var kLen: Int64 = 0
         for (i in 0..len) {
             layerData = layers[i]
-            //TODO：要不要增加一个成员变量 hasKS ？？？----------------------------------------------------------2024.07.03
-            //if (('ks' in layerData) && !layerData.completed)
             if (!layerData.ks.isNull() && !layerData.completed) {
                 layerData.completed = true
                 if (layerData.hasMask) {
                     var maskProps: Array<Mask> = layerData.masksProperties
                     
                     var mask: Mask = Mask()
-                    //var pt_k: Bool = false
-                    //var shapeData: ShapeData = ShapeData()
-                    
+
                     jLen = maskProps.size
                     for (j in 0..jLen) {
                         /**
@@ -211,13 +162,6 @@ public class DataManager {
                          */
                         mask = maskProps[j]
                         // 把 maskProps[j].pt.k 提前处理
-                        //if (mask.pt.size > 0) {
-                        //    if (let Some(v) <- mask.pt[0].k) {  //"k"
-                        //        pt_k = true
-                        //        shapeData = v
-                        //    }
-                        //}
-                        //if (pt_k && shapeData.i.size > 0) { // json 中 k 是一个对象
                         if (mask.pt.size == 1) { // json 中 k 是一个对象 => 数据保存在 Mask.pt[i](Keyframe<Array<Float64>>).k [中] 
                             if (let Some(v) <- mask.pt[0].k) { //"k"
                                 convertPathsToAbsoluteValues(v)
@@ -241,8 +185,7 @@ public class DataManager {
                 } else if (layerData.ty == 4) {
                     completeShapes(layerData.shapes)
                 } else if (layerData.ty == 5) {
-                    //TODO: 在 json 中找不到 layers[i].t.p,此步执行无意义！
-                    //completeText(layerData)
+                    // 在 json 中找不到 layers[i].t.p,此步执行无意义！  //completeText(layerData)
                 }
             }
         }
@@ -253,23 +196,9 @@ public class DataManager {
         if (chars.size > 0) {
             let len: Int64 = chars.size
             for (i in 0..len) {
-                //TODO: 在 json 中找不到 chars[i].t-----------------------------------------------------------2024.07.04
+                //在 json 中找不到 chars[i].t
                 if (chars[i].t == 1) {
-                    // var compData = findComp(chars[i].data.refId, assets)
-                    //TODO: 此处的 chars[i].data 是 layer ---------------------------------------------------2024.07.04
                     chars[i].data.layers = findCompLayers(chars[i].data.refId, assets)
-                    // chars[i].data.ip = 0
-                    // chars[i].data.op = 99999
-                    // chars[i].data.st = 0
-                    // chars[i].data.sr = 1
-                    // chars[i].w = compData.w
-                    // chars[i].data.ks = {
-                    //   a: { k: [0, 0, 0], a: 0 },
-                    //   p: { k: [0, -compData.h, 0], a: 0 },
-                    //   r: { k: 0, a: 0 },
-                    //   s: { k: [100, 100], a: 0 },
-                    //   o: { k: 100, a: 0 },
-                    // }
                     completeLayers(chars[i].data.layers, assets)
                 }
             }
@@ -290,15 +219,7 @@ public class DataManager {
     func findCompLayers(id: String, comps: Array<Asset>): Array<Layer> {
         let comp: Asset = findComp(id, comps)
         if (!comp.isNull()) {
-            //comp.layers.__used 是确认 "assets"."layers" 是否被从 json 处理成对象格式。cj 不存在此情况。
             return comp.layers
-            //if (!comp.__used) {
-            //    //comp.layers.__used = true
-            //    //comp.layers.__used = true
-            //    comp.__used = true
-            //    return comp.layers
-            //}
-            //return JSON.parse(JSON.stringify(comp.layers))
         }
         return Array<Layer>()
     }

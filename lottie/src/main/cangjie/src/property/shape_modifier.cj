@@ -1,26 +1,17 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
-//package lottie.utils.shapes
 package lottie.property
 
 func default_Bool_to_Unit(flag: Bool): Unit {}
 
 public open class ShapeModifier <: DynamicPropertyContainer {
 
-    //TODO：拆分多继承问题 -- extendPrototype([DynamicPropertyContainer], ShapeModifier)
-    
-    //TODO: 暂未确定数据类型，自定义数据类型 ShapeDataShapeModifiers。
     var shapes: ArrayList<ShapeDataShapeModifiers> = ArrayList<ShapeDataShapeModifiers>()
     var frameId: Int64 = initialDefaultFrame
     public var closed: Bool = false
     var k: Bool = false
-    
-    //var elem: IShapeElement
-    //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
-    //在父类DynamicPropertyContainer中有elemGlobalData  //var elemGlobalData: GlobalData = GlobalData()
-    //在父类DynamicPropertyContainer中有elemData        //var elemData: Layer = Layer()
-    
+
     // 只在 CvShapeElement/SVGShapeElement 中调用， elem = CvShapeElement/SVGShapeElement，data = ContentModel
     // data类型：tm/rd/pb/zz/op / rp /ms
     public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer,
@@ -45,12 +36,10 @@ public open class ShapeModifier <: DynamicPropertyContainer {
         } else {
         	sm = ShapeModifier(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
         }
-        //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
+
         sm.initDynamicPropertyContainer(elemGlobalData, elemData)
-        //TODO: 直接调用的 DynamicPropertyContainer.initModifierProperties。
         sm.initModifierProperties(data, elemGlobalData, elemData)
 
-        //TODO：调用父类 DynamicPropertyContainer.dynamicProperties
         if (sm.dynamicProperties.size > 0) {
             sm.k = true
         } else {

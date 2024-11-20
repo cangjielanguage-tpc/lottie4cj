@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -38,12 +38,4 @@ public class PointF <: ToString {
         return PointF(x:this.x,y:this.y)
     }
 
-    /**
-     * The instance is empty.
-     *
-     * @return Type of Bool, if the instance is empty, return true.
-     */
-    //public func isNull(): Bool {
-    //    return x == 0.0 && y == 0.0
-    //}
 }

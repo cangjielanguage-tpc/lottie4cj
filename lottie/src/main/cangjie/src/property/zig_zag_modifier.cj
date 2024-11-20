@@ -1,13 +1,11 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 package lottie.property
 
 public open class ZigZagModifier <: ShapeModifier {
-    //TODO：拆分多继承问题 -- extendPrototype([ShapeModifier], ZigZagModifier)
-
-    //TODO: 暂定ZigZagModifier 对应 PolystarShape 数据类型。
+    // 暂定ZigZagModifier 对应 PolystarShape 数据类型。
     var amplitude: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>>
     var frequency: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>>
     var pointsType: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>>
@@ -18,11 +16,6 @@ public open class ZigZagModifier <: ShapeModifier {
         this.amplitude = None
         this.frequency = None
         this.pointsType = None
-
-//        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-//        this.amplitude = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-//        this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-//        this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
     }
     
     public func getValue(): Unit {
@@ -30,13 +23,13 @@ public open class ZigZagModifier <: ShapeModifier {
     }
     
     public func initModifierProperties(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer) {
-        //TODO: 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
+        // 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
 
-        //TODO: 暂定 ZigZagModifier 对应 PolystarShape 数据类型。
+        // 暂定 ZigZagModifier 对应 PolystarShape 数据类型。
         if (data.ty == "sr") {
             let sr: PolystarShape = (data as PolystarShape).getOrThrow()
 
-            //TODO: 暂定 ZigZagModifier 对应 PolystarShape 数据类型。暂未确认 data.s 数据类型。  //this.amplitude = PropertyFactory.getProp(elem, data.s, 0, null, this)
+            // 暂定 ZigZagModifier 对应 PolystarShape 数据类型。暂未确认 data.s 数据类型。  //this.amplitude = PropertyFactory.getProp(elem, data.s, 0, null, this)
             
             if (sr.r.k.size == 1) {//走【分支1】
                 this.frequency = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(sr.r, sr.r.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
@@ -48,9 +41,7 @@ public open class ZigZagModifier <: ShapeModifier {
             	value.containerType = 3
                 value.container = [this]
             }
-//            this.frequency.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-//            this.frequency.container = [this]
-            
+
             if (sr.pt.k.size == 1) {//走【分支1】
                 this.pointsType = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(sr.pt, sr.pt.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
             } else if (sr.pt.k.size > 1) {//走【分支3】
@@ -62,8 +53,6 @@ public open class ZigZagModifier <: ShapeModifier {
                 value.container = [this]
             }
 
-//            this.pointsType.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-//            this.pointsType.container = [this]
         }
         this._isAnimated = (if (let Some(value) <- amplitude) {
             value.effectsSequence.size != 0
@@ -78,7 +67,6 @@ public open class ZigZagModifier <: ShapeModifier {
         } else {
         	false
         })
-//        this._isAnimated = this.amplitude.effectsSequence.size != 0 || this.frequency.effectsSequence.size != 0 || this.pointsType.effectsSequence.size != 0
     }
 
     public func processPath(path: ShapeData, amplitude: Float64, frequency: Float64, pointType: Float64): ShapeData {

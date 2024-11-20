@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 package lottie.elements
 
@@ -10,9 +10,7 @@ internal import lottie.pool.*
 
 internal import ohos.component.CanvasGradient
 
-//TODO 未完全实现
 public class CvShapeElement <: IShapeElement {
-//public class CvShapeElement <: CvBaseElement {
 
     protected var stylesList: ArrayList<StyleElem>
     protected var prevViewData: Array<ContentModelElement>
@@ -33,7 +31,7 @@ public class CvShapeElement <: IShapeElement {
         this.compDataInd = compDataInd
         this.comp = comp
         this.getElementByIdInRender = getElementByIdInRender
-        //this.pendingElements = pendingElements
+
         this.layers = layers
         this.elements = elements
         this.buildElementParentingInComp = buildElementParentingInComp
@@ -49,18 +47,8 @@ public class CvShapeElement <: IShapeElement {
         this.initElement(data, globalData)
     }
 
-//    public func initElement() {
-//        //RenderableDOMElement.initElement
-//    }
-
     //初始化一个空的 TransformInElement。
     public let transformHelper: TransformInElement = TransformInElement(opacity: 1.0, _opMdf: false, op: empty_pf_ArrayKeyframeInt64_Int64, mProps: empty_tp)
-    //public func transformHelper(): TransformInElement {
-    //    return TransformInElement(opacity: 1.0, _opMdf: false,
-    //        op: PropertyFactory<ArrayKeyframeInt64, Int64>(ArrayKeyframeInt64(), 0.0, dp, GlobalData(), Layer(), dynamicProperties: this.dynamicProperties),
-    //        mProps: TransformProperty(isNull: true, dynamicProperties: this.dynamicProperties)
-    //    )
-    //}
 
     public func dashResetter() {
         Array<Float64>()
@@ -84,12 +72,9 @@ public class CvShapeElement <: IShapeElement {
         let styleElem = StyleElem(data: data,
             types: data.ty,
             preTransforms: this.transformsManager.addTransformSequence(transforms),
-            //transforms: ArrayList<ContentModelElement>(),
-            //elements: ArrayList<StyledShape>(),
             closed: data.hd == true
         )
         var elementData = FillStrokeElement(isNull: true, dynamicProperties: this.dynamicProperties)
-        //let dp: DynamicPropertyContainer = DynamicPropertyContainer(this.globalData, this.data)
         var vLen: Int64 = 2
         if (data.ty == "fl" || data.ty == "st") {
 
@@ -103,7 +88,6 @@ public class CvShapeElement <: IShapeElement {
 
         
             if (!elementData.c.k) {
-                //styleElem.co = "rgb(" + "${floor(elementData.c.v[0])}" + "," + "${floor(elementData.c.v[1])}" + "," + "${floor(elementData.c.v[2])}" + ")"
                 styleElem.co = Color(UInt8(floor(elementData.c.v[0])), UInt8(floor(elementData.c.v[1])), UInt8(floor(elementData.c.v[2])))
             }
         } else if (data.ty == "gf" || data.ty == "gs") {
@@ -125,16 +109,11 @@ public class CvShapeElement <: IShapeElement {
             }
             elementData.e.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
-            
-            //TODO: h 成员变量暂时是空的。
-            // elementData.h = PropertyFactory.getProp(this, data.h || { k: 0 }, 0, 0.01, this)
             elementData.a = PropertyFactory<AK, Int64>.getProp(data.a, data.a.k, degToRads, dp, this.globalData, this.data, types: 0, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp], compDataInd: cdInd)
             elementData.a.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
-            
             elementData.g = GradientProperty(data.g, this.globalData, this.data, dynamicProperties: this.dynamicProperties)
             elementData.g.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-
         }
 
         if (data.o.size == 1) {
@@ -142,10 +121,8 @@ public class CvShapeElement <: IShapeElement {
         } else if (data.o.size > 1) {
             elementData.o = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(data.o, data.o, 0, 0.01, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp], compDataInd: cdInd)
         }
-        //elementData.o = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(data.o, data.o, 0, 0.01, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1)
         elementData.o.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
-            
         if (data.ty == "st" || data.ty == "gs") {
             let lc: Int64 = if (data.lc <= 0){ 2 } else { data.lc }
             styleElem.lc = lineCapEnum[lc]
@@ -160,10 +137,8 @@ public class CvShapeElement <: IShapeElement {
             } else if (data.w.size > 1) {
                 elementData.w = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.w, data.w, 0, 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp], compDataInd: cdInd)
             }
-            //elementData.w = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(data.w, data.w, 0, 0.0, dp, this.globalData, this.data, dynamicProperties: this.dynamicProperties, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
             elementData.w.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
-            
             if (!elementData.w.k) {
                 styleElem.wi = elementData.w.v[0]
             }
@@ -172,10 +147,8 @@ public class CvShapeElement <: IShapeElement {
                 elementData.d = d
                 elementData.d.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
 
-            
                 if (!elementData.d.k) {
                     styleElem.da = elementData.d.dashArray
-                    //styleElem.do = elementData.d.dashoffset[0]
                     styleElem.dos = elementData.d.dashoffset[0]
                 }
             }
@@ -226,8 +199,6 @@ public class CvShapeElement <: IShapeElement {
         var elementData = TransformInElement(opacity: 1.0,
             _opMdf: false,
             key: this.transformsManager.getNewKey(),
-            //(data: T, dataK: Array<Keyframe<E>>, types: Int64, mult: Option<Float64>, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp])
-            //op: PropertyFactory<ArrayKeyframeInt64, Int64>.getProp(datas.o, datas.o.k, 0, 0.01, dp, this.globalData, this.data, containerType: 1, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp]),
             op: op,
             mProps: TransformPropertyFactory.getTransformProperty(datas, this.globalData, this.data, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp], compDataInd: cdInd)
         )
@@ -235,8 +206,6 @@ public class CvShapeElement <: IShapeElement {
     }
 
     public func createShapeElement(data: ContentModel) {
-        //TODO: 传入 ShapePropertyFactory 是空的，编译用。
-
         let cdInd: Int64 = getCompDataInd()
         var elementData: CvShapeData
         if (this.compType == 1 && this.comp.size >= 1){
@@ -260,7 +229,6 @@ public class CvShapeElement <: IShapeElement {
         for (i in 0..len) {
             this.dynamicProperties[i].getValue()
         }
-        //this.renderModifiers()
         this.transformsManager.processSequences(this._isFirstFrame)
     }
 
@@ -296,7 +264,7 @@ public class CvShapeElement <: IShapeElement {
         var ownStyles =  ArrayList<StyleElem>()
         var ownModifiers = ArrayList<ShapeModifier>()
         var processedPos: Int64 = 0
-        //var modifier
+
         var currentTransform: AnimatableTransformElement
         var ownTransforms: ArrayList<AnimatableTransformElement> = transforms.clone()
         var index = len
@@ -349,9 +317,6 @@ public class CvShapeElement <: IShapeElement {
             } else if (arr[i].ty == "tm" || arr[i].ty == "rd" || arr[i].ty == "pb" || arr[i].ty == "zz" || arr[i].ty == "op") {
                 var modifier: ShapeModifier = ShapeModifier(arr[i], this.globalData, this.data, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp], compDataInd: cdInd)
                 if (processedPos == 0) {
-                    //modifier = ShapeModifiers.getModifier(arr[i].ty)
-                    //modifier.init(this, arr[i])
-                    //modifier = ShapeModifier(arr[i], this.globalData, this.data, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp], compDataInd: cdInd)
                     // "tm" 外层圆形转动效果
                     modifier = ShapeModifier.initShapeModifier(arr[i], this.globalData, this.data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [this.getRenderedFrameInElemComp], compDataInd: cdInd)
                     
@@ -363,13 +328,8 @@ public class CvShapeElement <: IShapeElement {
                 }
                 ownModifiers.append(modifier)
             } else if (arr[i].ty == "rp") {
-                //var modifier: RepeaterModifier = (itemsData[i] as RepeaterModifier).getOrThrow()
                 if (processedPos == 0) {
-                    //modifier = ShapeModifiers.getModifier(arr[i].ty)
-                    //modifier.init(this, arr, i, itemsData)
                     var modifier = RepeaterModifier(arr, i, itemsData, this.globalData, this.data, reloadShapes, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [this.getRenderedFrameInElemComp], compDataInd: cdInd)
-                    //modifier.compType = 1
-                    //modifier.getRenderedFrame = [this.getRenderedFrameInElemComp]
                     itemsData[i] = modifier
                     this.shapeModifiers.append(modifier)
                     shouldRender = false
@@ -377,7 +337,6 @@ public class CvShapeElement <: IShapeElement {
                     var modifier = (itemsData[i] as RepeaterModifier).getOrThrow()
                     modifier.closed = true
                 }
-                //ownModifiers.append(modifier)
                 ownModifiers.append((itemsData[i] as RepeaterModifier).getOrThrow())
             }
 
@@ -411,25 +370,14 @@ public class CvShapeElement <: IShapeElement {
     }
 
     public func drawLayer() {
-        ////Hilog.error(0, "---9--", "----->${currentStyle.preTransforms.finalTransform.props}")
-        //var tmps = currentStyle.preTransforms.finalTransform.props
-
         var len = this.stylesList.size
-        //TODO: this.globalData.renderer数据类型是什么？
-        //var renderer = this.globalData.renderer
         var ctx = this.globalData.canvasContext
         for (i in 0..len) {
             var currentStyle: StyleElem = this.stylesList[i]
             var types = currentStyle.types
 
-            // Skipping style when
-            // Stroke width equals 0
-            // style should not be rendered (extra unused repeaters)
-            // current opacity equals 0
-            // global opacity equals 0
             if (!(((types == "st" || types == "gs") && currentStyle.wi == 0.0) || !currentStyle.data._shouldRender ||
                 currentStyle.coOp == 0.0 || this.globalData.currentGlobalAlpha == 0.0)) {
-                //TODO: this.globalData.renderer数据类型是什么？
                 this.globalData.save(false)
 
                 var elems = currentStyle.elements
@@ -463,7 +411,6 @@ public class CvShapeElement <: IShapeElement {
                     }
                     ctx.miterLimit(currentStyle.ml)
                 } else {
-                    //rgb(36,46,81)
                     if (types == "fl") {
                         ctx.fillStyle(currentStyle.co)
                     }else {
@@ -474,9 +421,8 @@ public class CvShapeElement <: IShapeElement {
                 if (types != "st" && types != "gs") {
                     ctx.beginPath()
                 }
-                //Hilog.error(0, "---9--", "----->${currentStyle.preTransforms.finalTransform.props}")
                 var tmps = currentStyle.preTransforms.finalTransform.props
-               this.globalData.ctxTransform(currentStyle.preTransforms.finalTransform.props)
+                this.globalData.ctxTransform(currentStyle.preTransforms.finalTransform.props)
                 var jLen = elems.size
                 for (j in 0..jLen) {
                     if (types == "st" || types == "gs") {
@@ -498,16 +444,11 @@ public class CvShapeElement <: IShapeElement {
                     }
                     var nodes = elems[j].trNodes
                     var kLen = nodes.size
-                    //Hilog.error(0, "", "测试【trNodes】-- kLen = ${kLen} ------------------------------------------")
                     for (k in 0..kLen) {
                         if (nodes[k].t == "m") {
                             ctx.moveTo(nodes[k].p[0], nodes[k].p[1])
-                            //TODO：调试用，后续删除
-                            //ctx.moveTo(30, 30)
                         } else if (nodes[k].t == "c") {
                             ctx.bezierCurveTo(nodes[k].pts[0], nodes[k].pts[1], nodes[k].pts[2], nodes[k].pts[3], nodes[k].pts[4], nodes[k].pts[5])
-                            //TODO：调试用，后续删除
-                            //ctx.bezierCurveTo(20, 100, 200, 100, 200, 20)
                         } else {
                             ctx.closePath()
                         }
@@ -523,7 +464,6 @@ public class CvShapeElement <: IShapeElement {
                     //其实fill方法有两个参数可选：nonzero | evenodd ，“nonzero”是非零环绕原则，也是默认值，“evenodd”为奇偶原则
                     ctx.fill()
                 }
-                //renderer.restore()
                 this.globalData.restore(false)
             }
         }
@@ -548,56 +488,24 @@ public class CvShapeElement <: IShapeElement {
         while ( i >= 0) {
             if (items[i].ty == "fl" || items[i].ty == "st") {
                 //  data[i] 类型为StyleElement
-//                if (color.size == 4) {
-//                    data[i].c.v[0] = color[0]
-//                    data[i].c.v[1] = color[1]
-//                    data[i].c.v[2] = color[2]
-//                    data[i].o.v = color[3]
-//                  } else if (color.size == 3) {
-//                    data[i].c.v[0] = color[0]
-//                    data[i].c.v[1] = color[1]
-//                    data[i].c.v[2] = color[2]
-//                  } else if (color.size == 2) {
-//                    data[i].c.v[0] = color[0]
-//                    data[i].c.v[2] = color[1]
-//                  } else if (color.size == 1) {
-//                    data[i].c.v[0] = color[0]
-//                  }
             } else if (items[i].ty == "gr") {
                 this.renderShapeColor(color, endColor, (items[i] as ShapeGroup).getOrThrow().it, (data[i] as ShapeGroupElement).getOrThrow().it)
             } else if (items[i].ty == "gf" || items[i].ty == "gs") {
-//                try {
-                    //data[i].style.grd = undefined
-                    var lens = 3
-                    for (j in 0..lens) {
-                        //data[i] 类型为StyleElement
-//                          if (color.size >= 3) {
-//                            data[i].g.c[j * 4 + 1] = color[0]
-//                            data[i].g.c[j * 4 + 2] = color[1]
-//                            data[i].g.c[j * 4 + 3] = color[2]
-//                          } else if (color.size == 2) {
-//                            data[i].g.c[j * 4 + 1] = color[0]
-//                            data[i].g.c[j * 4 + 2] = color[1]
-//                          } else if (color.size == 1) {
-//                            data[i].g.c[j * 4 + 1] = color[0]
-//                          }
-                    }
-//                  } catch (e: Exception) {
-//                  }
+                var lens = 3
+                for (j in 0..lens) {
+                    //data[i] 类型为StyleElement
+                }
             }
             i -= 1
         }
     }
 
-    //items: ContentModel-->ShapeGroup
-    //TODO: 对标 CVShapeElement.prototype.renderShapeColor
     public func renderShapeColor(color2: Array<Int64>, endColor2: Array<Int64>, items: Array<ContentModel>, data: Array<ContentModelElement>): Unit {
         var color: Array<Float64> = Array<Float64>(color2.size, {i => Float64(color2[i])})
         var endColor: Array<Float64> = Array<Float64>(endColor2.size, {i => Float64(endColor2[i])})
         this.renderShapeColor(color, endColor, items, data)
     }
 
-    //TODO: 对标 CVShapeElement.prototype.renderShapeColor
     public func renderShapeColor(color: Array<Float64>, endColor: Array<Float64>, items2: Array<ContentModel>, data2: Array<ContentModelElement>): Unit {
         var items: Array<ContentModel> = items2
         var data: Array<ContentModelElement> = data2
@@ -610,7 +518,6 @@ public class CvShapeElement <: IShapeElement {
         while ( i >= 0) {
             if (items[i].ty == "fl" || items[i].ty == "st") {
                 //  data[i] 类型为StyleElement
-                //let fillStroke: FillStroke = (data[i] as FillStroke).getOrThrow()
                 let fse: FillStrokeElement = (items[i] as FillStrokeElement).getOrThrow()
                 if (endColor.size > 0) {
                     var c_data_k_s: Array<Float64> = Array<Float64>()
@@ -667,28 +574,23 @@ public class CvShapeElement <: IShapeElement {
                     }
                 }
             } else if (items[i].ty == "gr") {
-                // data[i]------->ShapeGroupElement
                 this.renderShapeColor(color, endColor, (items[i] as ShapeGroup).getOrThrow().it, (data[i] as ShapeGroupElement).getOrThrow().it)
             } else if (items[i].ty == "gf" || items[i].ty == "gs") {
-//                try {
-                    let fse: FillStrokeElement = (items[i] as FillStrokeElement).getOrThrow()
-                    //data[i].style.grd = undefined
-                    var lens = 3
-                    for (j in 0..lens) {
-                        //data[i] 类型为StyleElement
-                        if (color.size >= 3) {
-                          fse.g.c[j * 4 + 1] = color[0]
-                          fse.g.c[j * 4 + 2] = color[1]
-                          fse.g.c[j * 4 + 3] = color[2]
-                        } else if (color.size == 2) {
-                          fse.g.c[j * 4 + 1] = color[0]
-                          fse.g.c[j * 4 + 2] = color[1]
-                        } else if (color.size == 1) {
-                          fse.g.c[j * 4 + 1] = color[0]
-                        }
+                let fse: FillStrokeElement = (items[i] as FillStrokeElement).getOrThrow()
+                var lens = 3
+                for (j in 0..lens) {
+                    //data[i] 类型为StyleElement
+                    if (color.size >= 3) {
+                      fse.g.c[j * 4 + 1] = color[0]
+                      fse.g.c[j * 4 + 2] = color[1]
+                      fse.g.c[j * 4 + 3] = color[2]
+                    } else if (color.size == 2) {
+                      fse.g.c[j * 4 + 1] = color[0]
+                      fse.g.c[j * 4 + 2] = color[1]
+                    } else if (color.size == 1) {
+                      fse.g.c[j * 4 + 1] = color[0]
                     }
-//                } catch (e: Exception) {
-//                }
+                }
             }
             i -= 1
         }
@@ -702,7 +604,6 @@ public class CvShapeElement <: IShapeElement {
         }
     }
 
-    //public func renderShape(parentTransform: TransformHelpers, items: Array<ShapeDataInCV>, data: Array<ItemData>, isMain!: Bool = false): Unit {
     public func renderShape(parentTransform: TransformInElement, items: Array<ContentModel>, data: Array<ContentModelElement>,
         isMain!: Bool = false): Unit {
         var len = items.size - 1
@@ -752,7 +653,6 @@ public class CvShapeElement <: IShapeElement {
                 var pathNodesos: Option<ShapeData> = paths.shapes.get(j)
                 if (let Some(pathNodes) <- pathNodesos) {
                     if (pathNodes.v.size > 0) {
-                        //Hilog.error(0, "", "测试【trNodes】-2-- pathNodes._length = ${pathNodes._length} ------------------------------------------")
                         len = pathNodes._length
                         for (index in 1..len) {
                             if (index == 1) {
@@ -769,11 +669,6 @@ public class CvShapeElement <: IShapeElement {
                             shapeNodes.append(StyledShapeTrNodes("m", p: groupTransformMat.applyToPointArray(pathNodes.v[0].x, pathNodes.v[0].y, 0.0)))
                         }
                         if (pathNodes.c  && len > 0) {
-                            //let aaa = groupTransformMat.applyToTriplePoints(
-                            //                                                [pathNodes.o[i].x,pathNodes.o[i].y],
-                            //                                                [pathNodes.i[0].x,pathNodes.i[0].y],
-                            //                                                [pathNodes.v[0].x,pathNodes.v[0].y]
-                            //                                                )
                             shapeNodes.append(StyledShapeTrNodes("c",
                                 pts: groupTransformMat.applyToTriplePoints(
                                                                             [pathNodes.o[i].x,pathNodes.o[i].y],
@@ -788,11 +683,9 @@ public class CvShapeElement <: IShapeElement {
 
             }
             styledShape.trNodes = shapeNodes
-            //Hilog.error(0, "", "测试【trNodes】-3-- shapeNodes.size = ${shapeNodes.size} ------------------------------------------")
         }
     }
 
-    //public func renderPath(pathData: ShapeDataInCV, itemData: Object) {
     public func renderPath(pathData: ContentModel, itemDatas: ContentModelElement) {
         var itemData = (itemDatas as CvShapeData).getOrThrow()
         if (pathData.hd != true && pathData._shouldRender) {
@@ -806,19 +699,12 @@ public class CvShapeElement <: IShapeElement {
     public func renderFill(styleData: ContentModel, itemData: FillStrokeElement, groupTransform: TransformInElement) {
         var styleElem = itemData.style
         if (itemData.c._mdf || this._isFirstFrame) {
-            //styleElem.co = "rgb(" + "${floor(itemData.c.v[0])}" + "," + "${floor(itemData.c.v[1])}" + "," + "${floor(itemData.c.v[2])}" + ")"
-            //TODO: 测试观察用，后续删除
             let a = floor(itemData.c.v[0])
             let b = floor(itemData.c.v[1])
             let c = floor(itemData.c.v[2])
-            //Hilog.error(0, "", "[renderFill]: itemData.c.v = ${itemData.c.v}")
-            //Hilog.error(0, "", "[renderFill]: a = ${a}, b = ${b}, c = ${c}")
             styleElem.co = Color(UInt8(floor(itemData.c.v[0])), UInt8(floor(itemData.c.v[1])), UInt8(floor(itemData.c.v[2])))
         }
         if (itemData.o._mdf || groupTransform._opMdf || this._isFirstFrame) {
-            //TODO: 测试观察用，后续删除
-            //Hilog.error(0, "", "[renderFill]: itemData.o.v[0] = ${itemData.o.v[0]}")
-            //Hilog.error(0, "", "[renderFill]: groupTransform.opacity = ${groupTransform.opacity}")
             styleElem.coOp = Float64(itemData.o.v[0]) * groupTransform.opacity
         }
     }
@@ -826,8 +712,6 @@ public class CvShapeElement <: IShapeElement {
     public func renderGradientFill(styleData: FillStroke, itemData: FillStrokeElement, groupTransform: TransformInElement) {
         var styleElem: StyleElem = itemData.style
         var grd: CanvasGradient
-        //TODO: FillStrokeElement.h 成员变量暂时是空的。
-        //if (!styleElem.hasgrd || itemData.g._mdf || itemData.s._mdf || itemData.e._mdf || (styleData.t != 1 && (itemData.h._mdf || itemData.a._mdf)))
         if (!styleElem.hasgrd || itemData.g._mdf || itemData.s._mdf || itemData.e._mdf || (styleData.t != 1 && itemData.a._mdf)) {
             var ctx = this.globalData.canvasContext
             var pt1 = itemData.s.v
@@ -843,8 +727,7 @@ public class CvShapeElement <: IShapeElement {
                  */
                 var ang = atan((pt2[1] - pt1[1]) / (pt2[0] - pt1[0]))
 
-                //TODO: FillStrokeElement.h 成员变量暂时是空的。其中的 v 会默认取值为 v = initFrame = initialDefaultFrame = -999999
-                //var percent = itemData.h.v
+                //FillStrokeElement.h 成员变量暂时是空的。其中的 v 会默认取值为 v = initFrame = initialDefaultFrame = -999999
                 var percent = -999999.0
                 if (percent >= 1.0) {
                     percent = 0.99
@@ -865,7 +748,6 @@ public class CvShapeElement <: IShapeElement {
                 if (itemData.g._hasOpacity != 0 && itemData.g._collapsable) {
                     opacity = itemData.g.o[i * 2 + 1]
                 }
-                //grd.addColorStop(cValues[i * 4] / 100.0, 'rgba(' + cValues[i * 4 + 1] + ',' + cValues[i * 4 + 2] + ',' + cValues[i * 4 + 3] + ',' + opacity + ')')
                 let color: Color = Color(UInt8(cValues[i * 4 + 1]), UInt8(cValues[i * 4 + 2]), UInt8(cValues[i * 4 + 3]), alpha: Float32(opacity))
                 grd.addColorStop(cValues[i * 4] / 100.0, color)
             }
@@ -883,7 +765,6 @@ public class CvShapeElement <: IShapeElement {
             styleElem.dos = d.dashoffset[0]
         }
         if (itemData.c._mdf || this._isFirstFrame) {
-            //styleElem.co = "rgb(" + "${floor(itemData.c.v[0])}" + "," + "${floor(itemData.c.v[1])}" + "," + "${floor(itemData.c.v[2])}" + ")"
             styleElem.co = Color(UInt8(floor(itemData.c.v[0])), UInt8(floor(itemData.c.v[1])), UInt8(floor(itemData.c.v[2])))
         }
         if (itemData.o._mdf || groupTransform._opMdf || this._isFirstFrame) {
@@ -896,8 +777,6 @@ public class CvShapeElement <: IShapeElement {
 
     public override func destroy() {
         this.shapesData = Array<ContentModel>()
-        // this.globalData = null
-        // this.canvasContext = null
         this.stylesList.clear()
         this.itemsData =Array<ContentModelElement>()
     }

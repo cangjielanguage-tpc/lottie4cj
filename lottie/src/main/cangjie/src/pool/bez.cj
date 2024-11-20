@@ -1,17 +1,13 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is bez.
  */
-//package lottie.utils
-//package lottie.bezier
 package lottie.pool
 
 internal import lottie.inner.*
-//internal import lottie.pool.*
-//internal import lottie.model.*
 
 internal import std.math.*
 internal import std.collection.*
@@ -23,8 +19,6 @@ func defaultFnct(num: Float64): Int64 {
 public class KeyframeMetadata {
     public var bezierData: BezierData = BezierData()
 
-    //TODO: 是否考虑把 __fnct 从 Option 改为 Array？？？
-    //var __fnct: Option<(Float64) -> Int64> = None
     public var __fnct: Option<(Float64) -> Float64> = None
     public init(){}
     public func isNull(): Bool {
@@ -32,14 +26,6 @@ public class KeyframeMetadata {
     }
 }
 
-
-//class StoredData {
-//    var bezierName: BezierData = BezierData()
-//    init(){}
-//    func isNull(): Bool {
-//        return bezierName.isNull()
-//    }
-//}
 public class BezierData {
     public var segmentLength: Float64 = 0.0
     public var points: Array<PointData> = Array<PointData>()
@@ -167,7 +153,7 @@ public class Bez {
         var perc: Float64 = 0.0
         var addedLength: Float64 = 0.0
         var ptDistance: Float64 = 0.0
-        //TODO:  数据类型  Element<Float64>  更换为  BezierLengthElement
+
         let lengthData: BezierLengthElement = BezierLengthElement(percents: Array<Float64>(curveSegments,item: 0.0), lengths: Array<Float64>(curveSegments,item: 0.0))
         let len: Int64 = pt3.size
         var point: Array<Float64> = Array<Float64>(len,item: 0.0)
@@ -196,7 +182,7 @@ public class Bez {
     }
 
     public static func getSegmentsLength(shapeData: ShapeData): SegmentsLengthElement {
-        //TODO: 数据类型 Element<Element> 更换为 SegmentsLengthElement。
+
         var closed: Bool = shapeData.c
         var pathV: Array<PointF> = shapeData.v
         var pathO: Array<PointF> = shapeData.o
@@ -240,74 +226,63 @@ public class Bez {
         return buildBezierData([pt1.x, pt1.y], [pt2.x, pt2.y], pt3, pt4)
     }
 
-    //public static func buildBezierData(): (Array<Float64>, Array<Float64>, Array<Float64>, Array<Float64>) -> BezierData {
     public static func buildBezierData(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>, pt4: Array<Float64>): BezierData {
-        //TODO：此处的 storedData 无用。需要调整此函数。
-        //let storedData: HashMap<String, BezierData> = HashMap<String, BezierData>(24)
+        if (pt1.size < 2 || pt2.size < 2 || pt3.size < 2 || pt4.size < 2) {
+            throw IndexOutOfBoundsException("[buildBezierData]: pt1.size = ${pt1.size}, pt2.size = ${pt2.size}, pt3.size = ${pt3.size}, pt4.size = ${pt4.size}")
+        }
+        let key: String = pt1[0].toString() + "_" + pt1[1].toString() + "_" +
+            pt2[0].toString() + "_" + pt2[1].toString() + "_" + pt3[0].toString() + "_" + pt3[1].toString() + "_" +
+            pt4[0].toString() + "_" + pt4[1].toString()
+        let bezierName: String = key.replace(".", "p")
 
-        //func inside(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>, pt4: Array<Float64>): BezierData {
-            if (pt1.size < 2 || pt2.size < 2 || pt3.size < 2 || pt4.size < 2) {
-                throw IndexOutOfBoundsException("[buildBezierData]: pt1.size = ${pt1.size}, pt2.size = ${pt2.size}, pt3.size = ${pt3.size}, pt4.size = ${pt4.size}")
+        if (!storedData.contains(bezierName)) {
+            var curveSegments: Int64 = defaultCurveSegments
+
+            var ptCoord: Float64 = 0.0
+            var perc: Float64 = 0.0
+            var addedLength: Float64 = 0.0
+            var ptDistance: Float64 = 0.0
+            var point: Array<Float64> = Array<Float64>()
+            var lastPoint: Array<Float64> = Array<Float64>()
+            if (pt1.size == 2 && (pt1[0] != pt2[0] || pt1[1] != pt2[1]) &&
+                pointOnLine2D(pt1[0], pt1[1], pt2[0], pt2[1], pt1[0] + pt3[0], pt1[1] + pt3[1]) &&
+                pointOnLine2D(pt1[0], pt1[1], pt2[0], pt2[1], pt2[0] + pt4[0], pt2[1] + pt4[1])
+            ) {
+                curveSegments = 2
             }
-            let key: String = pt1[0].toString() + "_" + pt1[1].toString() + "_" +
-                pt2[0].toString() + "_" + pt2[1].toString() + "_" + pt3[0].toString() + "_" + pt3[1].toString() + "_" +
-                pt4[0].toString() + "_" + pt4[1].toString()
-            let bezierName: String = key.replace(".", "p")
-            //Hilog.error(0, "--29--", "[buildBezierData]--[1]--------------------------------bezierName = ${bezierName}")
-            for ((k, v) in storedData) {
-            	//Hilog.error(0, "--29--", "[buildBezierData]--[1]--------------------------------k = ${k}")
+            let empty: PointData = PointData()
+            var bezierData = BezierData(curveSegments, empty)
+            var len: Int64 = pt3.size
+            if (pt1.size < len) {
+                len = pt1.size
             }
-
-            if (!storedData.contains(bezierName)) {
-                var curveSegments: Int64 = defaultCurveSegments
-
-                var ptCoord: Float64 = 0.0
-                var perc: Float64 = 0.0
-                var addedLength: Float64 = 0.0
-                var ptDistance: Float64 = 0.0
-                var point: Array<Float64> = Array<Float64>()
-                var lastPoint: Array<Float64> = Array<Float64>()
-                if (pt1.size == 2 && (pt1[0] != pt2[0] || pt1[1] != pt2[1]) &&
-                    pointOnLine2D(pt1[0], pt1[1], pt2[0], pt2[1], pt1[0] + pt3[0], pt1[1] + pt3[1]) &&
-                    pointOnLine2D(pt1[0], pt1[1], pt2[0], pt2[1], pt2[0] + pt4[0], pt2[1] + pt4[1])
-                ) {
-                    curveSegments = 2
-                }
-                let empty: PointData = PointData()
-                var bezierData = BezierData(curveSegments, empty)
-                var len: Int64 = pt3.size
-                if (pt1.size < len) {
-                    len = pt1.size
-                }
-                if (pt2.size < len) {
-                    len = pt2.size
-                }
-                if (pt4.size < len) {
-                    len = pt4.size
-                }
-                for (k in 0..curveSegments) {
-                    point = Array<Float64>(len, item: 0.0)
-                    perc = Float64(k) / (Float64(curveSegments) - 1.0)
-                    ptDistance = 0.0
-                    for (i in 0..len) {
-                        ptCoord = pow(1.0 - perc, 3) * pt1[i] + 3.0 * pow(1.0 - perc, 2) * perc * (pt1[i] + pt3[i]) +
-                            3.0 * (1.0 - perc) * pow(perc, 2) * (pt2[i] + pt4[i]) + pow(perc, 3) * pt2[i]
-                        point[i] = ptCoord
-                        if (lastPoint.size > 0) {
-                            ptDistance += pow(point[i] - lastPoint[i], 2)
-                        }
+            if (pt2.size < len) {
+                len = pt2.size
+            }
+            if (pt4.size < len) {
+                len = pt4.size
+            }
+            for (k in 0..curveSegments) {
+                point = Array<Float64>(len, item: 0.0)
+                perc = Float64(k) / (Float64(curveSegments) - 1.0)
+                ptDistance = 0.0
+                for (i in 0..len) {
+                    ptCoord = pow(1.0 - perc, 3) * pt1[i] + 3.0 * pow(1.0 - perc, 2) * perc * (pt1[i] + pt3[i]) +
+                        3.0 * (1.0 - perc) * pow(perc, 2) * (pt2[i] + pt4[i]) + pow(perc, 3) * pt2[i]
+                    point[i] = ptCoord
+                    if (lastPoint.size > 0) {
+                        ptDistance += pow(point[i] - lastPoint[i], 2)
                     }
-                    ptDistance = sqrt(ptDistance)
-                    addedLength += ptDistance
-                    bezierData.points[k] = PointData(ptDistance, point)
-                    lastPoint = point
                 }
-                bezierData.segmentLength = addedLength
-                storedData.put(bezierName, bezierData)
+                ptDistance = sqrt(ptDistance)
+                addedLength += ptDistance
+                bezierData.points[k] = PointData(ptDistance, point)
+                lastPoint = point
             }
-            return storedData[bezierName]
-        //}
-        //return inside
+            bezierData.segmentLength = addedLength
+            storedData.put(bezierName, bezierData)
+        }
+        return storedData[bezierName]
     }
 
     static func getDistancePerc(perc: Float64, bezierData: BezierLengthElement): Float64 {

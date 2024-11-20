@@ -1,11 +1,10 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is a ShapeFill structure.
  */
-//package lottie.shape_items
 package lottie.property
 
 internal import ohos.base.Color
@@ -21,8 +20,6 @@ public class StyleElem {
     public var elements: ArrayList<StyledShape>
     protected var closed: Bool
 
-    //protected var co: String = ""
-    //UI组件中： Color(red: UInt8, green: UInt8, blue: UInt8, alpha!: Float32 = 1.0)
     public var co: Color = Color(0, 0, 0, alpha: 1.0)
     //CVShapeElement.drawLayer 中编译用
     public var grd: Option<CanvasGradient> = None
@@ -53,12 +50,3 @@ public class StyleElem {
         this.isNull = isNull
     }
 }
-
-//已完成：
-//(arr[i].ty === 'fl'/'st'/'gf'/'gs') -- FillStrokeElement
-//(arr[i].ty === 'gr')  -- ShapeGroupElement
-//(arr[i].ty === 'tr')  -- AnimatableTransformElement
-//(arr[i].ty === 'sh'/'rc'/'el'/'sr') -- CVShapeData
-//(arr[i].ty === 'tm'/'rd'/'pb'/'zz'/'op')-- ShapeModifiers.getModifier--【ShapeModifier子类】
-//(arr[i].ty === 'rp')--RepeaterModifier--【ShapeModifier子类】
-

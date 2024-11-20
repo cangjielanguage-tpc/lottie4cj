@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -28,7 +28,6 @@ public func getFontProperties(fontData: Font): FontProps {
     var styleName: String = ""
     for (i in 0..len) {
         styleName = styles[i].toAsciiLower()
-        //switch (styleName) {
         if (styleName == "italic") {
             fStyle = "italic"
         } else if (styleName == "bold") {
@@ -37,10 +36,8 @@ public func getFontProperties(fontData: Font): FontProps {
             fWeight = "900"
         } else if (styleName == "medium") {
             fWeight = "500"
-        //} else if (styleName == "regular") {
         } else if (styleName == "regular" || styleName == "normal") {
             fWeight = "400"
-        //} else if (styleName == "light") {
         } else if (styleName == "light" || styleName == "thin") {
             fWeight = "200"
         }
@@ -52,5 +49,3 @@ public func getFontProperties(fontData: Font): FontProps {
     }
     return FontProps(style: fStyle, weight: fWeightNow)
 }
-
-

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 package lottie.utils
@@ -12,7 +12,6 @@ internal import std.time.*
 
 internal import lottie.inner.*
 
-//TODO：image 是系统 api，暂时不联合编译
 internal import ohos.image.Image as MultiImage
 internal import ohos.image.Component as ImageComponent
 internal import ohos.image.PixelMap
@@ -38,21 +37,13 @@ public class ImagePreloader {
     
     var _createImageData: (Asset) -> OB = default_Asset_To_OB_CreateNS
 
-    //var _imageLoaded: () -> Unit = default_Unit_To_Unit
-    //var _footageLoaded: () -> Unit = default_Unit_To_Unit
-
-    //TODO: 未确认成员变量中函数类型
-    //var testImageLoaded: (CreateNS) -> Unit = testImageLoaded
-    //var createFootageData: (Asset) -> OB = createFootageData
-
     var assetsPath: String = ""
     var path: String = ""
     var totalImages: Int64 = 0
     var totalFootages: Int64 = 0
     let loadedAssets: AtomicInt64 = AtomicInt64(0)
     let loadedFootagesCount: AtomicInt64 = AtomicInt64(0)
-    
-    //TODO: 未确认成员变量中数据类型
+
     var imagesLoadedCb: () -> Unit = default_Unit_To_Unit
     var imagesLoadedCbFlag: Bool = false
     //var images: ArrayList<(Asset) -> OB<CreateNS>> = ArrayList<(Asset) -> OB<CreateNS>>(24)

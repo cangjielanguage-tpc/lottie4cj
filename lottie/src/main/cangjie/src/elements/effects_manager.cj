@@ -4,7 +4,7 @@
 package lottie.elements
 /*
 
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
 
  */
 
@@ -48,9 +48,7 @@ public class GroupEffect <: DynamicPropertyContainer {
                 case 7 => eff = CheckboxEffect(effects[i], element, datas, this, dynamicProperties: dynamicProperties)
                 case 10 => eff = LayerIndexEffect(effects[i], element, datas, this, dynamicProperties: dynamicProperties)
                 case 11 => eff = MaskIndexEffect(effects[i], element, datas, this, dynamicProperties: dynamicProperties)
-                //未实现，编译用
-                //  case 5 =>
-                //     eff = EffectsManager(effects[i],element,datas, this);
+
                 case _ => eff = NoValueEffect(effects[i], element, datas, this)
             }
 

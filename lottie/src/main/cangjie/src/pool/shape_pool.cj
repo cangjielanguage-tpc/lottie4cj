@@ -1,11 +1,10 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is shapePool.
  */
-//package lottie.utils.pooling
 package lottie.pool
 
 internal import ohos.hilog.*
@@ -13,7 +12,6 @@ internal import ohos.hilog.*
 /**
  * The shape pool.
  */
-//TODO：调不到shapePool.clone，需要把 shapePool 改为对象？？？-----------------------------------------------------------------2024.08.19
 public let shapePool = PoolFactory<ShapeData>(4, createShapePool, _release: releaseShapePool)
 
 func createShapePool(): ShapeData {
@@ -26,9 +24,6 @@ func releaseShapePool(shapePath: ShapeData): Unit {
         pointPool.release(shapePath.v[i])
         pointPool.release(shapePath.i[i])
         pointPool.release(shapePath.o[i])
-        //shapePath.v[i] = null
-        //shapePath.i[i] = null
-        //shapePath.o[i] = null
     }
     shapePath.release()
     
@@ -36,10 +31,8 @@ func releaseShapePool(shapePath: ShapeData): Unit {
     shapePath.c = false
 }
 
-//TODO: 怎么和 [PoolFactory]factory.clone 关联？？？----------------------------------------------------------------------2024.07.12
 public func clone(shape: ShapeData): ShapeData {
     var cloned: ShapeData = shapePool.newElement()
-    //var cloned: ShapeData = ShapeData()
 
     if (cloned._length > cloned.v.size) {
         cloned._length = cloned.v.size
@@ -48,7 +41,6 @@ public func clone(shape: ShapeData): ShapeData {
         cloned._maxLength = cloned.v.size
     }
 
-    //var len = shape._length === undefined ? shape.v.length : shape._length
     if(cloned._length > cloned.v.size) {
         cloned._length = cloned.v.size
     }
@@ -59,9 +51,7 @@ public func clone(shape: ShapeData): ShapeData {
     if (shape._length == 0) {
         len = shape.v.size
     }
-    //if (shape.v.size > shape._length) {
-    //    len = shape.v.size
-    //}
+
     cloned.setLength(len)
     cloned.c = shape.c
 
@@ -76,8 +66,3 @@ public func clone(shape: ShapeData): ShapeData {
     }
     return cloned
 }
-
-//var factory = poolFactory(4, create, release)
-//factory.clone = clone
-
-//return factory

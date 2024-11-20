@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -9,11 +9,7 @@ package lottie.elements
 
 internal import lottie.model.*
 
-/*
- * TODO：初始化后需要单独执行 this.initElement(data, globalData)，放在 init 中编译报错。
- */
 public open class ISolidElement <: BaseElement {
-    //TODO：拆分多继承问题 -- extendPrototype([IImageElement], ISolidElement)
 
     /**
      * Create a ISolidElement instance based on parameters.
@@ -23,7 +19,6 @@ public open class ISolidElement <: BaseElement {
      */
     public init(data: Layer, globalData: GlobalData) {
         super(data, globalData)
-        //TODO：初始化后需要单独执行 this.initElement(data, globalData)，放在 init 中编译报错。
     }
 
     /**

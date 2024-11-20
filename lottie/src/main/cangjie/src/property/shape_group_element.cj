@@ -1,14 +1,12 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is a ShapeGroup structure.
  */
-//package lottie.shape_items
 package lottie.property
 
-//TODO: ShapeGroupElement 就是命名的 GroupElement <: CreatSearchElement
 public class ShapeGroupElement <: ContentModelElement {
 
     /**
@@ -17,8 +15,6 @@ public class ShapeGroupElement <: ContentModelElement {
     public var it: Array<ContentModelElement> = Array<ContentModelElement>()
     public var prevViewData: Array<ContentModelElement> = Array<ContentModelElement>()
 
-    //public let ty: String = "gr"
-    
     public init(){
         this.ty = "gr"
     }

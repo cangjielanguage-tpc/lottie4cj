@@ -1,11 +1,10 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is BezierFactory.
  */
-//package lottie.third_party
 package lottie.bezier
 import ohos.hilog.*
 internal import std.collection.*
@@ -23,8 +22,6 @@ public class BezierFactory {
      *
      */
 
-    //var ob = {}
-    //ob.getBezierEasing = getBezierEasing
     static var beziers: HashMap<String, BezierEasing> = HashMap<String, BezierEasing>(16)
 
     public static func getBezierEasing(a: Float64, b: Float64, c: Float64, d: Float64, nm: Array<String>): BezierEasing {

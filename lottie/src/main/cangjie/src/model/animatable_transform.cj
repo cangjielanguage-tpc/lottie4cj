@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -8,7 +8,7 @@
 package lottie.model
 
 public class AnimatableTransform <: ContentModel {
-    //TODO:新增成员变量，解析部分暂未补上。
+    //新增成员变量，解析部分待补充。
     public let mn: String = ""
 
     public var nm: String = "Transform"

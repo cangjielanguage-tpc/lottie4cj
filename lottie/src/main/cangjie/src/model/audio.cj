@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -51,7 +51,6 @@ public class Audio <: ToString {
         return "Audio: {isPlaying = ${this.isPlaying}}}"
     }
 
-    //TODO: AudioControllerFactory 中编译用，暂未实现。
     public func volume(volume: Int64): Unit {}
     public func setRate(rateValue: Int64): Unit {}
     public func resume(): Unit {}

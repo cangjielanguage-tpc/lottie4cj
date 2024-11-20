@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 package lottie.inner
@@ -244,7 +244,6 @@ public class PolynomialBezier {
      * @return Type of PolynomialBezier.
      */
     public static func shapeSegment(shapePath: ShapeData, index: Int64): PolynomialBezier {
-        //TODO: shapePath.length() ？？？   //var nextIndex = (index + 1) % shapePath.length();
         let nextIndex: Int64 = index + 1
         
         let p0: Array<Float64> = [shapePath.v[index].x, shapePath.v[index].y]
@@ -262,7 +261,6 @@ public class PolynomialBezier {
      * @return Type of PolynomialBezier.
      */
     public static func shapeSegmentInverted(shapePath: ShapeData, index: Int64): PolynomialBezier {
-        //TODO: shapePath.length() ？？？   //var nextIndex = (index + 1) % shapePath.length();
         let nextIndex: Int64 = index + 1
         
         let p0: Array<Float64> = [shapePath.v[nextIndex].x, shapePath.v[nextIndex].y]

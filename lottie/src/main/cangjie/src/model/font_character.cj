@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -30,13 +30,6 @@ public class CharsData <: ToString {
     public init(shapes!: Array<ContentModel> = Array<ContentModel>()){
         this.shapes = shapes
     }
-
-    /**
-     * Obtain the shapes of CharsData.
-     */
-    //public prop shapes: Array<ContentModel> {
-    //    get() { this._shapes.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

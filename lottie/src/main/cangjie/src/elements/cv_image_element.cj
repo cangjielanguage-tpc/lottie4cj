@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 package lottie.elements
 
@@ -21,12 +21,8 @@ public class CvImageElement <: IImageElement {
         this.getElementByIdInRender = getElementByIdInRender
         this.assetData = globalData.getAssetData(data.refId)
         this.img = globalData.imageLoader.getAsset(this.assetData)
-        this.initElement(data, globalData)  //RenderableDOMElement
+        this.initElement(data, globalData)
     }
-
-    //public func initElement() {}
-
-    //public func prepareFrame() {}
 
     public override  func createContent() {
         if (this.img.width > 0 && (this.assetData.w != this.img.width || this.assetData.h != this.img.height)) {
@@ -54,8 +50,7 @@ public class CvImageElement <: IImageElement {
             //传入base64资源与rawfile资源解析出的pixelMap进行绘制
             this.canvasContext.drawImage(this.img.pixel_map.getOrThrow(), 0, 0, this.img.width, this.img.height);
          } else {
-            //this.img为 ImageBitmap
-            //this.canvasContext.drawImage(this.img, 0, 0);
+            //this.img为 ImageBitmap  //this.canvasContext.drawImage(this.img, 0, 0)
          }
     }
 

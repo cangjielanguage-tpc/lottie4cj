@@ -1,16 +1,13 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 package lottie.elements
 
 internal import lottie.model.*
 
-//TODO
 public class CvMaskElement <: RenderableElement {
 
     protected var hasMasks: Bool
-
-    //TODO: 暂时先将 CvBaseElement 和 BaseElement 合并。避免后面 CVXXXElement 多继承 XXXElement和 CVBaseElement
 
     protected var element: RenderableElement
     protected var masksProperties: Array<Mask>
@@ -18,11 +15,8 @@ public class CvMaskElement <: RenderableElement {
     protected var list: ArrayList<Array<Float64>>
     protected var ptsds: Array<Float64>
 
-    //TODO: 暂时先将 CvBaseElement 和 BaseElement 合并。避免后面 CVXXXElement 多继承 XXXElement和 CVBaseElement
-    //public init(data: Layer, element: CvBaseElement) {
     public init(data: Layer, element: RenderableElement) {
         super(data, element.globalData)
-        //this.data = data
         this.element = element
         this.masksProperties = this.data.masksProperties
         this.viewData = Array<ShapePropertyFactory>(this.masksProperties.size,item: unsafe {zeroValue<ShapePropertyFactory>()})
@@ -34,7 +28,6 @@ public class CvMaskElement <: RenderableElement {
             if (this.masksProperties[i].mode != "n") {
                 hasMasks = true
             }
-            //this.viewData[i] = ShapePropertyFactory.getShapeProp(this.masksProperties[i], 3, element.globalData,this.data, dynamicProperties: element.dynamicProperties)
             this.viewData[i] = ShapePropertyFactory.getShapeProp(this.masksProperties[i], 3, element.globalData,this.data, dynamicProperties: element.dynamicProperties, compType: element.compType, renderedFrame: [element.getRenderedFrameInElemComp], compDataInd: element.compDataInd)
         }
         this.hasMasks = hasMasks
@@ -121,13 +114,11 @@ public class CvMaskElement <: RenderableElement {
               }
             }
           }
-          //this.element.globalData.renderer.save(true);
           this.element.globalData.save(true);
           ctx.clip();
     }
 
     public func destroy() {
-        //this.element = null;
         this.list = ArrayList<Array<Float64>>()
     }
 

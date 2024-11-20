@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -8,8 +8,7 @@
 package lottie.animation
 
 public class AnimationItem <: BaseEvent {
-    //TODO：拆分多继承问题 -- //extendPrototype([BaseEvent], AnimationItem)
-
+ 
     public var _animationManager: AnimationManager
     public var name: String = ""
     public var path: String = ""
@@ -29,17 +28,12 @@ public class AnimationItem <: BaseEvent {
     public var autoplay: Bool = false
     /**
      * 动画播放结束后, 是否循环播放，默认值true, 值为true时无限循环播放 值类型为number, 且>=1时为设置重复播放的次数
-     * 定为 Int64 数据类型，<= 1 表示不循环，相当于 false。
      * 定为 Int64 数据类型，-1 表示true，-2 表示false。
      */
-//    public var loop: Bool = false
-    //TODO: 是否需要再增加一个成员变量，表示是否循环？？？和循环次数分开？？？
-//    public var loopNum: Int64 = 0
     public var loop: Int64 = -2
 
     let TRUE = -1
     let FALSE = -2
-
 
     //是否已经初始化指定的渲染器。
     var hasRenderer: Bool = false
@@ -56,11 +50,10 @@ public class AnimationItem <: BaseEvent {
 
     public var _idle: Bool = true
     public var _completedLoop: Bool = false
-    //TODO: 暂未联合编译 ProjectInterface。  //public var projectInterface = ProjectInterface()
+
     public var imagePreloader: ImagePreloader = ImagePreloader()
     public var audioController: AudioControllerFactory = AudioControllerFactory()
 
-    //TODO: 是否将 Marker 和 MarkerData 进行合并？？？
     public var markers: Array<MarkerData> = Array<MarkerData>()
 
     public var drawnFrameEvent: BMEnterFrameEvent
@@ -80,9 +73,7 @@ public class AnimationItem <: BaseEvent {
      */
     public var initialSegment: Array<Float64> = Array<Float64>()
     public var autoloadSegments: Bool = true
-    
-    //TODO: 不确定 container 数据类型暂定为 CreateNS。对应的是html渲染的 hide/show。
-    //var container: CreateNS = CreateNS("")
+
     var animType: String = ""
     var fileName: String = ""
     
@@ -107,7 +98,6 @@ public class AnimationItem <: BaseEvent {
         
         this.isSubframeEnabled = getSubframeEnabled()
 
-        //TODO: 暂未联合编译 ProjectInterface。  //this.projectInterface = ProjectInterface()
         this.drawnFrameEvent = BMEnterFrameEvent("drawnFrame", 0.0, 0.0, 0.0)
 
         //初始化一个或许为空的 CanvasRenderingContext2D，实际 this.wrapper 赋值是在 AnimationItem.setParams 函数中。
@@ -144,61 +134,37 @@ public class AnimationItem <: BaseEvent {
             cvRenderer.globalData.ctxOpacity = cvRenderer.ctxOpacity
             cvRenderer.globalData.restore = cvRenderer.restore
             cvRenderer.globalData.hasRenderer = true
-            //cvRenderer.globalData.buildAllItems = cvRenderer.buildAllItems
-            //cvRenderer.globalData.buildAllItemsElement = cvRenderer.buildAllItemsElement
-            //cvRenderer.globalData.checkLayers = cvRenderer.checkLayers
 
             cvRenderer.globalData.renderedFrameInRendered = cvRenderer.getRenderedFrame
 
             this.renderer = cvRenderer
             this.hasRenderer = true
         } else if (animTypes == "svg") {
-            //TODO: 暂未实现 SVGRenderer。  //this.renderer = SVGRenderer(params.rendererSettings)
             this.hasRenderer = true
         } else if (animTypes == "html") {
-            //TODO: 暂未实现 HybridRenderer。  //this.renderer = HybridRenderer(params.rendererSettings)
             this.hasRenderer = true
         }
         if (this.hasRenderer) {
             this.renderer.wrapperInAnimationItem = this.wrapper
-            //TODO: 不确定 container 数据类型暂定为 CreateNS。对应的是html渲染的 hide/show。
-            //this.renderer.containerInAnimationItem = this.container
             this.renderer._isFirstFrameInAnimationItem = this._isFirstFrameInAnimationItem
             this.renderer.contentModeInAnimationItem = this.contentModeInAnimationItem
 
             this.renderer.globalData.getAssetData = this.getAssetData
             this.renderer.globalData.getAssetsPath = this.getAssetsPath
             this.renderer.globalData.imageLoader = this.imagePreloader
-            //TODO：循环依赖。AudioControllerFactory 和 GlobalData 大循环依赖。
-            //this.renderer.globalData.audioController = this.animationItem.audioController
         }
 
-        //TODO：改为从用例中直接传到 lottie.loadAnimation(AnimationConfig) 中的 AnimationConfig。
         this.context = params.context
-        /*
-        if (let Some(v) <- params.context) {
-            this.context = v
-        } else {
-            //README.md 中 let context = getContext(this).createModuleContext('library') as common.UIAbilityContext
-            this.context = getContext()
-        }
-        */
 
         //数据来源分析：SVGRenderer  =>  var defs = createNS("defs")
-        //TODO：AbilityContext 是仓颉 UI 中的系统组件 api，暂时不联合编译
-        //this.imagePreloader.setCacheType(animTypes, this.renderer.globalData.defs, this.context)
         this.imagePreloader.setCacheType(animTypes, this.renderer.globalData.defs, params.context)
-        //this.imagePreloader.context = params.context
-
-        //TODO: 未实现 renderer.setProjectInterface  //this.renderer.setProjectInterface(this.projectInterface)
+ 
         this.animType = animTypes
         this.loop = params.loop
-//        this.loopNum = params.loopNum
 
         this.contentMode = params.contentMode
         this.packageName = params.packageName
         //把应用包名传到 animationManager 对象里用于日志打印
-        //TODO：还需要校验 AnimationManager 是否为 Null 吗？？？  //if (!!this._animationManager) {}
         this._animationManager.setPackageName(this.packageName)
 
         this.autoplay = params.autoplay
@@ -234,7 +200,6 @@ public class AnimationItem <: BaseEvent {
 
             dataManager.loadAnimation(
                 params.context,
-                //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //this.wrapper,--【传入后无具体应用，改为不传入此参数】
                 params.path,
                 this.configAnimation,
                 this.onSetupError
@@ -265,15 +230,12 @@ public class AnimationItem <: BaseEvent {
         let params: AnimationConfig = AnimationConfig(
             wrapper_ns: wrapper_ns,
             container: wrapper,
-            //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译  //wrapper: wrapper,
             animationData: animationData
         )
         
-        //TODO: 在 HTML DOM 中，通过 attributes 对象来表示 HTML 属性。一下皆为HTML属性节点信息获取。【暂时不实现】
         this.setParams(params)
     }
 
-    //TODO：暂未确认 data 的数据类型，暂时定为 AnimationData。
     public func includeLayers(data: AnimationData): Unit {
         if (data.op > this.animationData.op) {
             this.animationData.op = data.op
@@ -286,8 +248,6 @@ public class AnimationItem <: BaseEvent {
         let jLen: Int64 = newLayers.size
         for (j in 0..jLen) {
             for (i in 0..len) {
-                //TODO: Layer 中增加成员变量 id？？？
-                //TODO: this.layers[j].id 是 Layer.ind ？？？ -- 暂时用this.layers[j].ind 代替 this.layers[j].id   //if (layers[i].id == newLayers[j].id) {
                 if (layers[i].ind == newLayers[j].ind) {
                     layers[i] = newLayers[j]
                     break
@@ -296,7 +256,6 @@ public class AnimationItem <: BaseEvent {
         }
         if (this.hasRenderer) {
             if (data.chars.size > 0 || !data.fonts.isEmpty()) {
-                //TODO: FontManager 没有完全开发完成。
                 this.renderer.globalData.fontManager.addChars(data.chars)
                 this.renderer.globalData.fontManager.addFonts(data.fonts, this.renderer.globalData.defs)
             }
@@ -317,19 +276,10 @@ public class AnimationItem <: BaseEvent {
 
     public func onSegmentComplete(data: AnimationData): Unit {
         this.animationData = data
-        //TODO：暂未实现 getExpressionsPlugin
-        /*
-        var expressionsPlugin = getExpressionsPlugin()
-        if (expressionsPlugin) {
-            //TODO：暂未实现 initExpressions
-            expressionsPlugin.initExpressions(this)
-        }
-        */
         this.loadNextSegment()
     }
     
     public func loadNextSegment(): Unit {
-        //TODO：animationData.segments 不是 ArrayList<Array<Float64>> 数据类型？？？
         let segments: ArrayList<Array<Float64>> = this.animationData.segments
         if (segments.size == 0 || !this.autoloadSegments) {
             
@@ -338,14 +288,12 @@ public class AnimationItem <: BaseEvent {
             return
         }
         //shift: 删除并返回数组的第一个元素。
-        //TODO：segment 不是 Array<Float64> 数据类型？？？
         let segment: Array<Float64> = segments.remove(0)
-        //TODO: segment.time 是从哪儿来的？？？    //this.timeCompleted = segment.time * this.frameRate
 
         let strArray: Array<String> = [this.path, this.fileName, "_", this.segmentPos.toString(), ".json"]
         let segmentPath: String = String.join(strArray)
         this.segmentPos += 1
-        //TODO: 暂未联合测试 dataManager.loadData。
+
         dataManager.loadData(segmentPath, this.includeLayers, { => this.trigger("data_failed")} )
     }
 
@@ -359,7 +307,6 @@ public class AnimationItem <: BaseEvent {
     
     public func imagesLoaded(): Unit {
         this.trigger("loaded_images")
-        Hilog.error(0, "----lp-------", "[imagesLoaded]: --------------------------------")
         this.checkLoaded()
     }
 
@@ -370,102 +317,69 @@ public class AnimationItem <: BaseEvent {
     }
     
     public func configAnimation(animData: AnimationData): Unit {
-
         if (!hasRenderer) {
             return
         }
-//        try {
-            this.animationData = animData
-            if (this.initialSegment.size >= 2) {
-                this.totalFrames = floor(this.initialSegment[1] - this.initialSegment[0])
-                this.firstFrame = round(this.initialSegment[0])
-            } else {
-                this.totalFrames = floor(this.animationData.op - this.animationData.ip)
-                this.firstFrame = round(this.animationData.ip)
-            }
+        this.animationData = animData
+        if (this.initialSegment.size >= 2) {
+            this.totalFrames = floor(this.initialSegment[1] - this.initialSegment[0])
+            this.firstFrame = round(this.initialSegment[0])
+        } else {
+            this.totalFrames = floor(this.animationData.op - this.animationData.ip)
+            this.firstFrame = round(this.animationData.ip)
+        }
 
-            this.renderer.configAnimation(animData)
+        this.renderer.configAnimation(animData)
 
 
-            this.assets = this.animationData.assets
-            this.frameRate = this.animationData.fr
-            //TODO: [40]. Float64 30/1000 = 0.29999999999999
-            this.frameMult = this.animationData.fr / 1000.0
-//            this.frameMult = 0.03
+        this.assets = this.animationData.assets
+        this.frameRate = this.animationData.fr
+        this.frameMult = this.animationData.fr / 1000.0
 
-            this.renderer.searchExtraCompositions(animData.assets)
-            this.markers = markerParser(animData.markers)
+        this.renderer.searchExtraCompositions(animData.assets)
+        this.markers = markerParser(animData.markers)
 
-            this.trigger("config_ready")
-            Hilog.error(0, "lipei", "[configAnimation]begin preloadImages------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
-            this.preloadImages()
-            this.loadSegments()
-            this.updaFrameModifier()
-            this.waitForFontsLoaded()
-            if (this.isPaused) {
-                this.audioController.pause()
-            }
-
-//        } catch (error: Exception) {
-//            this.triggerConfigError(error)
-//            throw error
-//        }
+        this.trigger("config_ready")
+        this.preloadImages()
+        this.loadSegments()
+        this.updaFrameModifier()
+        this.waitForFontsLoaded()
+        if (this.isPaused) {
+            this.audioController.pause()
+        }
     }
 
     public func waitForFontsLoaded(): Unit {
         if (!hasRenderer) {
             return
         }
-        //TODO： 此处的 this.renderer.globalData.fontManager.isLoaded 怎么一直是 false ？？？
-        //TODO：暂时先写死成 true。  //if (true) {
         if (this.renderer.globalData.fontManager.isLoaded) {
             this.checkLoaded()
         } else {
-            //TODO：setTimeout 第二个参数：延迟的时间，单位是毫秒。
-            //TODO: 此处需要不停触发吗？？？
             Timer.once(Duration.millisecond * 20, this.waitForFontsLoaded)
         }
     }
     
     public func checkLoaded(): Unit {
-        Hilog.error(0, "lipei", "---come in checkLoaded----------------------------1")
         if (!hasRenderer) {
             return
         }
         if (!this.isLoaded
-            //TODO：[已解决]为什么 this.renderer.globalData.fontManager.isLoaded = false ？？？
             && this.renderer.globalData.fontManager.isLoaded
               && (this.imagePreloader.loadedImages() || this.renderer.rendererType != "canvas")
               && (this.imagePreloader.loadedFootages())
         ) {
-            Hilog.error(0, "lipei", "---come in checkLoaded-----------------------------------------------------------2")
-            Hilog.error(0, "lipei", "[checkLoaded]------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
             this.isLoaded = true
-            //TODO：暂未实现 getExpressionsPlugin
-            /*
-            var expressionsPlugin = getExpressionsPlugin()
-            if (expressionsPlugin) {
-                //TODO：暂未实现 initExpressions
-                expressionsPlugin.initExpressions(this)
-            }
-            */
-            Hilog.error(0, "lipei", "[checkLoaded] begin initItems------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
             // 初始化所有元素
             this.renderer.initItems()//初始化所有图层
-            Hilog.error(0, "lipei", "[checkLoaded] end initItems------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
 
-            //TODO：即刻运行的定时器，是否可以改为，按照顺序执行代码逻辑？？？   //setTimeout(function () { this.trigger("DOMLoaded") }.bind(this), 0)
             Timer.once(Duration.second * 0, {=>
                 this.trigger("DOMLoaded")
             })
 
-            //Hilog.error(0, "liyanqing", "this.trigger")
-            Hilog.error(0, "lipei", "[checkLoaded] start gotoFrame------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
-
             // 渲染第一帧
             this.gotoFrame()
 
-            Hilog.error(0, "lipei", "[checkLoaded] end gotoFrame------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
             // 自动播放
             if (this.autoplay) {
                 this.play() //播放动画
@@ -484,7 +398,6 @@ public class AnimationItem <: BaseEvent {
         //添加此验证以实现向后兼容性，以防传递事件对象。
     
         //防止 this.renderer 为 null，导致读取 updateContainerSize 属性失败
-        //TODO: 函数怎么判断是否为 null ？？？  //if (hasRenderer && !!this.renderer.updateContainerSize) {
         if (hasRenderer) {
             this.renderer.updateContainerSize(width, height)
         }
@@ -516,28 +429,17 @@ public class AnimationItem <: BaseEvent {
         if (!this.hasRenderer) {
             return
         }
-//        try {
-            this.renderer.changeColor(color, endColor, layer, index)
-            //替换play函数为gotoFrame,防止play方法创建Animator对象，导致修改颜色后刷帧问题
-            this.gotoFrame()
-            this.renderer.renderFrame(0.0, true)
-//        } catch (error: Exception) {
-//            // TODO: decide how to handle catch case
-//            throw error
-//        }
+        this.renderer.changeColor(color, endColor, layer, index)
+        //替换play函数为gotoFrame,防止play方法创建Animator对象，导致修改颜色后刷帧问题
+        this.gotoFrame()
+        this.renderer.renderFrame(0.0, true)
     }
 
     public func renderFrame(): Unit {
         if (this.isLoaded == false || !this.hasRenderer) {
             return
         }
-//        try {
-            //TODO: CanvasRendererBase.renderFrame(num: Int64, forceRender: Bool) 2个参数。
-            this.renderer.renderFrame(this.currentFrame + this.firstFrame, false)
-//        } catch (error: Exception) {
-//            this.triggerRenderFrameError(error)
-//            throw error
-//        }
+        this.renderer.renderFrame(this.currentFrame + this.firstFrame, false)
     }
     
     public func play(name!: String = ""): Unit {
@@ -546,8 +448,6 @@ public class AnimationItem <: BaseEvent {
         }
         if (this.isPaused) {
             this.isPaused = false
-            //判断this._animationManager是否为空
-            //TODO：还需要校验 AnimationManager 是否为 Null 吗？？？  //if (!!this._animationManager) {}
             this._animationManager.setPauseState(false)
             
             this.trigger("_pause")
@@ -566,7 +466,6 @@ public class AnimationItem <: BaseEvent {
         }
         if (this.isPaused == false) {
             this.isPaused = true
-            //TODO：还需要校验 AnimationManager 是否为 Null 吗？？？  //if (!!this._animationManager) {}
             this._animationManager.setPauseState(true)
             this.trigger("_play")
             this._idle = true
@@ -599,7 +498,7 @@ public class AnimationItem <: BaseEvent {
     public func getMarkerData(markerName: Float64): MarkerData {
         return this.getMarkerData(markerName.toString())
     }
-    //TODO: markerName 的数据类型是 String 吗？？？
+
     public func getMarkerData(markerName: String): MarkerData {
         var marker: MarkerData = MarkerData()
         for (i in 0..this.markers.size) {
@@ -618,7 +517,6 @@ public class AnimationItem <: BaseEvent {
         //使用isNaN()函数来判断一个值是否是NaN值。如果该值为非数字值或NaN值，返回true，否则返回false。
         let marker: MarkerData = this.getMarkerData(value)
         if (!marker.isNull) {
-            //TODO: Marker 中新增成员变量 time ？？？
             this.goToAndStop(marker.time, true, "")
         }
         this.pause()
@@ -676,9 +574,7 @@ public class AnimationItem <: BaseEvent {
         var _isComplete: Bool = false
         //检查nextValue>totalFrames-1是否用于处理非循环和循环动画。
         //如果动画不循环，它应该停止在totalFrames-1。如果它要循环，它应该完成最后一帧，然后循环。
-        //TODO: arkts中 nextValue 不是恰好为 98,仓颉是98
         if (nextValue >= this.totalFrames - 1.0 && this.frameModifier > 0.0) {
-            //if (!this.loop || this.playCount == this.loopNum ) {
             if (!(this.loop == TRUE)  || this.playCount == this.loop) {
                 var num: Int64 = 0
                 if (nextValue > this.totalFrames) {
@@ -830,18 +726,14 @@ public class AnimationItem <: BaseEvent {
         this.imagePreloader.destroy()
         this.trigger("destroy")
         this._cbs.clear()
-        //TODO: 需要清空一下成员变量。函数类型的成员变量是否为空，有另一个成员变量 hasXXX: Bool 来表示。
+        
         this.hasOnEnterFrame = false
         this.hasOnLoopComplete = false
         this.hasOnComplete = false
         this.hasOnSegmentStart = false
         this.hasOnDestroy = false
 
-        //TODO: 需要清空一下成员变量 渲染器。由另一个成员变量 hasRenderer: Bool 来表示该渲染器是否可用。
         this.hasRenderer = false
-        //this.renderer = empty_renderer
-        //TODO：是否需要清空 this.imagePreloader，初始化一个新的 ImagePreloader？？？  //this.imagePreloader = null
-        //TODO: 暂未联合编译 ProjectInterface。  //this.projectInterface = null
     }
 
     public func setCurrentRawFrameValue(value: Float64): Unit {
@@ -958,28 +850,21 @@ public class AnimationItem <: BaseEvent {
         if (!hasRenderer) {
             return
         }
-//        try {
-            let element: Option<BaseElement> = this.renderer.getElementByPath(path)
-            if (let Some(v) <- element) {
-                v.updateDocumentData(documentData, index)
-            }
-//        } catch (error: Exception) {
-//            // TODO: decide how to handle catch case
-//        }
+        let element: Option<BaseElement> = this.renderer.getElementByPath(path)
+        if (let Some(v) <- element) {
+            v.updateDocumentData(documentData, index)
+        }
     }
 
     public func updateDocumentData(path: Array<String>, documentData: DocumentData, index: Int64): Unit {
         if (!hasRenderer) {
             return
         }
-//        try {
-            let element: Option<BaseElement> = this.renderer.getElementByPath(path)
-            if (let Some(v) <- element) {
-                v.updateDocumentData(documentData, index)
-            }
-//        } catch (error: Exception) {
-//            // TODO: decide how to handle catch case
-//        }
+
+        let element: Option<BaseElement> = this.renderer.getElementByPath(path)
+        if (let Some(v) <- element) {
+            v.updateDocumentData(documentData, index)
+        }
     }
 
     public func trigger(name: String): Unit {
@@ -1000,7 +885,6 @@ public class AnimationItem <: BaseEvent {
             } else if (name == "destroy") {
                 this.triggerEvent(name, BMDestroyEvent(name, this))
             } else {
-                //TODO: 少传一个参数？？？   //this.triggerEvent(name)
                 this.triggerEvent(name, BMEvent(""))
             }
         }
@@ -1014,8 +898,7 @@ public class AnimationItem <: BaseEvent {
             if (this.hasOnComplete) {
                 this.onComplete(BMCompleteEvent(name, this.frameMult))
             }
-            //判断this._animationManager是否为空
-            //TODO: 是否需要判断this._animationManager为空  //if (!!this._animationManager) {}
+
             var registeredAnimations = this._animationManager.getRegisteredAnimations()
             // 在registeredAnimations不为空和Animator的状态是Running的前提下，判断动画是否全部播放结束
             if (registeredAnimations.size > 0 && this._animationManager.getAnimatorState() == AnimationStatus.Running) {
@@ -1047,13 +930,11 @@ public class AnimationItem <: BaseEvent {
         this.triggerEvent("error", error)
     
         if (this.hasOnError) {
-            //TODO: 多传输了一个参数。  //this.onError.call(this, error)
             this.onError(error)
         }
     }
     
     public func triggerConfigError(nativeError: Exception): Unit {
-        //TODO: 多传输了一个参数。
         let error: BMConfigErrorEvent = BMConfigErrorEvent(nativeError)
         this.triggerEvent("error", error)
 

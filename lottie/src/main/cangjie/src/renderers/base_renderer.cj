@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -17,7 +17,7 @@ internal import ohos.hilog.*
 internal import lottie.model.*
 internal import lottie.elements.*
 internal import lottie.elements.helpers.*
-//internal import lottie.animation.*
+
 internal import lottie.global_data.*
 internal import lottie.bezier.*
 internal import lottie.utils.*
@@ -36,8 +36,6 @@ public open class BaseRenderer {
      * this.animationItem._isFirstFrame
      * this.animationItem.contentMode
      */
-    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-    //TODO: 初始化一个空的 CanvasRenderingContext2D。
     public var wrapperInAnimationItem: LottieCanvasRenderingContext2D
 
     /*
@@ -47,50 +45,29 @@ public open class BaseRenderer {
      * [AnimationItem] this.wrapper = params.wrapper || params.container ( params <=> loadAnimation(params) )
      *   =>  CanvasRenderingContext2D = this.canvasContext = this.renderConfig.context
      */
-    //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
     //CanvasRendererBase 中挪过来的。
     public var canvasContext: LottieCanvasRenderingContext2D
 
-    //TODO: 字符串不能直接传递，否则 animationItem.contentMode 中修改，此处不会修改。
-    //TODO: 不确定 this.animationItem.container数据类型暂定为 CreateNS。【对应的是html渲染的 hide/show】。
-    //public var containerInAnimationItem: CreateNS = CreateNS("")
-
     public var _isFirstFrameInAnimationItem: () -> Float64 = { => 0.0 }
-    //TODO：this.animationItem.contentMode 的值是可变的，故不能直接传值，需要通过函数【contentModeInAnimationItem】间接获取当时值。
     public var contentModeInAnimationItem: () -> String = { => "" }
 
     public var rendererType: String = ""
 
-    /**
-     * //TODO: 需要解构 BaseRenderer 和 BaseElement 互调用。
-     * //TODO: 将 BaseRenderer 中的 elements 和 pendingElements，放到 BaseElement 中
-     * 
-     * //TODO: elements 数据类型是 BaseElement/BaseRenderer，暂定是 BaseElement
-     * public var elements: Array<BaseElement> = Array<BaseElement>()
-     * //TODO: 数据类型未确认，暂定是 BaseElement
-     * public var pendingElements: ArrayList<BaseElement> = ArrayList<BaseElement>()
-     */
 
     public var layers: Array<Layer> = Array<Layer>()
     public var completeLayers: Bool = false
-    //TODO: elements 数据类型是 BaseElement/BaseRenderer，暂定是 BaseElement
+
     public var elements: Array<BaseElement> = Array<BaseElement>()
-    //public var elements: ArrayList<BaseElement> = ArrayList<BaseElement>()
-    //var elementsNum: Int64 = 0   //elements 中实际储存的有效的 BaseElement--改为由
-    //TODO: 未实现  //var buildItem
     public var globalData: GlobalData = empty_globalData
-    
-    //TODO: 数据类型未确认，暂定是 BaseElement
+
     public var pendingElements: ArrayList<BaseElement> = ArrayList<BaseElement>()
 
-    //TODO: 在子类 CanvasRendererBase 中具体实现
     public open func buildItem(pos: Int64): Unit {}
     public open func checkPendingElements(): Unit {}
     public open func configAnimation(animData: AnimationData): Unit {}
     public open func updateContentMode(contentMode: String): Unit {}
     public open func updateContainerSize(width: Int64, height: Int64): Unit {}
-    //public open func changeColor(color: Array<Int64>): Unit {}
-    //public open func changeColor(color: Array<Int64>, endColor: Array<Int64>): Unit {}
+
     public open func changeColor(color: Array<Int64>, endColor: Array<Int64>, layer: Int64, index: Int64): Unit {}
     public open func changeColor(color: Array<Int64>, endColor: Int64, layer: Int64, index: Int64): Unit {}
     public open func changeColor(color: Array<Int64>, layer: Int64, index: Int64): Unit {}
@@ -107,15 +84,6 @@ public open class BaseRenderer {
     public init(container: LottieCanvasRenderingContext2D) {
         this.canvasContext = (container)
         this.wrapperInAnimationItem = container
-
-        //调试CVCompElement 中图形绘制渲染未生效，未报错问题。 继承关系中成员变量赋值成功与否。【后续删除】
-        //this.globalData = GlobalData(
-        //    frameNum: -1.0,
-        //    _mdf: false,
-        //    renderConfig: RenderConfig(),
-        //    currentGlobalAlpha: -1,
-        //    canvasContext: container
-        //)
     }
 
     public func checkLayers(num: Float64): Unit {
@@ -125,20 +93,18 @@ public open class BaseRenderer {
 
         for(i in ((len - 1)..=0 : -1)) {
             //如果当层无 element，代表该层 layer 未处理。
-            //if (this.elements.size < i - 1) {
             if (this.elements[i].isNull) {
                 data = this.layers[i]
                 if ((data.ip - data.st) <= (num - this.layers[i].st) && (data.op - data.st) > (num - this.layers[i].st)) {
-                    //在子类 CanvasRendererBase 中具体实现
                     this.buildItem(i)
                 }
             }
-            //this.completeLayers = this.elements[i] ? this.completeLayers : false
+            
             if (this.elements[i].isNull) {
                 this.completeLayers = false
             }
         }
-        //在子类 CanvasRendererBase 中具体实现
+
         this.checkPendingElements()
     }
 
@@ -171,12 +137,12 @@ public open class BaseRenderer {
         } else if (layer.ty == 5) {
             return this.createText(layer)
         } else if (layer.ty == 6) {
-            //TODO: 暂不实现  //return this.createAudio(layer)
+            //暂不实现  //return this.createAudio(layer)
             return this.createNull(layer)
         } else if (layer.ty == 13) {
             return this.createCamera(layer)
         } else if (layer.ty == 15) {
-            //TODO: 暂不实现  //return this.createFootage(layer)
+            //暂不实现  //return this.createFootage(layer)
             return this.createNull(layer)
         } else {
             return this.createNull(layer)
@@ -193,35 +159,22 @@ public open class BaseRenderer {
         throw Exception("You\'re using a 3d camera. Try the html renderer.")
     }
 
-    //TODO: 暂不实现  //public func createAudio(data: Layer): BaseElement { return new AudioElement(data, this.globalData, this) }
-
-    //TODO: 暂不实现  //public func createFootage(data: Layer): BaseElement { return new FootageElement(data, this.globalData, this) }
-
     /**
      * Build all Element.
      */
     public func buildAllItems(): Unit {
         let len: Int64 = this.layers.size
         for (i in 0..len) {
-
-            //if (i == 14) {
-            //    Hilog.error(0, "--Renderer--", "[buildAllItems]--[1]----> i = ${i}")
-            //}
-
-            //在子类 CanvasRendererBase 中具体实现
             this.buildItem(i)
         }
-        //在子类 CanvasRendererBase 中具体实现
         this.checkPendingElements()
     }
 
     public func buildAllItemsElement(layersArr: Array<Layer>): Unit {
         let len: Int64 = layersArr.size
         for (i in 0..len) {
-            //在子类 CanvasRendererBase 中具体实现
             this.buildItem(i)
         }
-        //在子类 CanvasRendererBase 中具体实现
         this.checkPendingElements()
     }
 
@@ -238,7 +191,7 @@ public open class BaseRenderer {
         for (i in 0..len) {
             j = 0
             while (j < jLen) {
-                //TODO: this.layers[j].id 是 Layer.ind ？？？ -- 暂时用this.layers[j].ind 代替 this.layers[j].id
+                // this.layers[j].id 是 Layer.ind ？？？ -- 暂时用this.layers[j].ind 代替 this.layers[j].id
                 if (this.layers[j].ind == newLayers[i].ind) {
                     this.layers[j] = newLayers[i]
                     break

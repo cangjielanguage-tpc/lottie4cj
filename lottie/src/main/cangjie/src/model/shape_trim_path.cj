@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -9,7 +9,7 @@ package lottie.model
 
 public class ShapeTrimPath <: ContentModel {
 
-    //TODO:新增成员变量，解析部分暂未补上。
+    //新增成员变量，解析部分待补充。
     public var ix: Int64 = 0
     public let mn: String = ""
 
@@ -24,7 +24,6 @@ public class ShapeTrimPath <: ContentModel {
     public let o: ArrayKeyframeFloat64          // 2 = offset
     public let nm: String                       // 3 = name
     public let m: Int64                         // 4 = type
-    //public let hd: Bool                         // 5 = hidden
 
     let _ty: String = "tm"
     public open prop ty: String {

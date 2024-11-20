@@ -1,16 +1,13 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is TextAnimatorDataProperty.
  */
 package lottie.utils.text
-//package lottie.property
 
 
-//TODO: 对应 model.AnimatableTextProperties
-//TODO: 自定义，封装 TextAnimatorDataProperty.a 
 public class AnimatableTextProperty {
 
     public let fc: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>
@@ -73,8 +70,6 @@ public class AnimatableTextProperty {
  */
 public class TextAnimatorDataProperty {
 
-    //var elem: ITextElement
-    //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
     var elemGlobalData: GlobalData
     var elemData: Layer
     var elemTextPropertyCurrentData: DocumentData
@@ -95,8 +90,6 @@ public class TextAnimatorDataProperty {
 
         //空的 PropertyFactor，为了 this.a 中数据不存在时，当做默认值使用。
         let defaultData = PropertyFactory<Float64, Float64>(0.0, 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。
-        //defaultData.propType = false
 
         //数据来源分析：textAnimatorAnimatables  ==  animatorProps.a  <=  this._textData.a[i].a  =>  layer.t.a[i].a(AnimatableTextProperties)
         let textAnimatorAnimatables: AnimatableTextProperties = animatorProps.a
@@ -104,12 +97,9 @@ public class TextAnimatorDataProperty {
         var vLen: Int64 = 0
 
         let sw: PropertyFactory<Array<Keyframe<Float64>>, Float64>
-        //TODO: sw/sc 为空数组时，需单独处理。
+        // sw/sc 为空数组时，需单独处理。
         if (textAnimatorAnimatables.sw.size == 0) {
-            //sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             sw = empty_pf_Array_Keyframe_Float64
-            //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。
-            //sw.propType = false
         } else if (textAnimatorAnimatables.sw.size == 1) {//走【分支1】
             sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(textAnimatorAnimatables.sw, textAnimatorAnimatables.sw[0].k ?? 0.0, 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         } else {//走【分支3】

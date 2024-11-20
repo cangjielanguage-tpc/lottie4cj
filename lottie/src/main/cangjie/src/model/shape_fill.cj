@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -9,7 +9,7 @@ package lottie.model
 
 public class ShapeFill <: FillStroke {
 
-    //TODO:新增成员变量，解析部分暂未补上。
+    //新增成员变量，解析部分待补充。
     public let mn: String = ""
 
     //将 ShapeFill._c 的值再次加工处理，保存在 c_k 中
@@ -65,20 +65,6 @@ public class ShapeFill <: FillStroke {
     public override prop types: Int8 {
         get() { 3 }
     }
-
-    /**
-     * Obtain the c of ShapeFill.
-     */
-    //public prop c: Array<Keyframe<Array<Float64>>> {
-    //    get() { this._c.clone() }
-    //}
-
-    /**
-     * Obtain the o of ShapeFill.
-     */
-    //public prop o: Array<Keyframe<Int64>> {
-    //    get() { this._o.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

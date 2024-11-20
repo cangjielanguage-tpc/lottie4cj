@@ -1,32 +1,11 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is a Mask structure.
  */
 package lottie.model
-
-
-//TODO: 未完全实现，编译用
-//TODO: 需要合并  --  E:\spaces\idea_space\lottie4cj\feature_base_element\lottie4cj\src\mask_util.cj
-//public class ViewData {
-//    var elem: CreateNS = CreateNS("")
-//    var lastPath: String = ""
-//    var op: PropertyFactory<Array<Keyframe<Int64>>, Int64>
-//    var props: ShapePropertyFactory
-//    
-//    var invRect: CreateNS = CreateNS("")
-//    
-//    public init(elem!: CreateNS = CreateNS(""),
-//        lastPath!: String = "",
-//        op!: PropertyFactory<Array<Keyframe<Int64>>, Int64> = PropertyFactory<Array<Keyframe<Int64>>, Int64>(elem: BaseElement, Array<Keyframe<Int64>>(), 0.0, container: DynamicPropertyContainer(elem: BaseElement)),
-//        props!: ShapePropertyFactory = ShapePropertyFactory(elem: BaseElement, ContentModel(), 0),
-//        invRect!: CreateNS = CreateNS("")
-//    ){
-//    
-//    }
-//}
 
 
 //Mask 不是 layer.shapes 中的类型，但是处理 layer.shapes 部分逻辑会涉及 Mask，所以空继承 ContentModel。
@@ -39,8 +18,6 @@ public class Mask <: ContentModel {
     public let o: Array<Keyframe<Int64>>          // 4 = opacity
     public let x: Array<Keyframe<Int64>>          // 5 = x
     public let nm: String                           // 6 = nm
-    
-    //public var viewData: Array<ViewData> = Array<ViewData>()
 
     public open prop ty: String {
         get() { "Mask" }
@@ -81,27 +58,6 @@ public class Mask <: ContentModel {
         this.x = x
         this.nm = nm
     }
-
-    /**
-     * Obtain the pt of Mask.
-     */
-    //public prop pt: Array<Keyframe<ShapeData>> {
-    //    get() { this._pt.clone() }
-    //}
-
-    /**
-     * Obtain the o of Mask.
-     */
-    //public prop o: Array<Keyframe<Int64>> {
-    //    get() { this._o.clone() }
-    //}
-
-    /**
-     * Obtain the x of Mask.
-     */
-    //public prop x: Array<Keyframe<Int64>> {
-    //    get() { this._x.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

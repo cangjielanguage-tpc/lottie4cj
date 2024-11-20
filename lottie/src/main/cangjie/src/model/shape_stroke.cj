@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -9,27 +9,16 @@ package lottie.model
 
 public class ShapeStroke <: FillStroke {
 
-    //TODO:新增成员变量，解析部分暂未补上。
+    //新增成员变量，解析部分待补充。
     public let mn: String = ""
 
     //将 ShapeStroke._c 的值再次加工处理，保存在 c_k 中
-    //TODO: 将原来的 ShapeStroke.c，储存到 c_k 中；将再次加工处理的数据，储存到 ShapeStroke.c
-    //public var c_k: Array<KeyframeArrayFloat64> = Array<KeyframeArrayFloat64>()    // 1 = color
     public var c_k: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
 
     /**
      * 1. "layers"."shapes".{"ty": "st"} = ShapeStrokeParser
      */
     public let nm: String                              // 0 = name
-    //public let c: Array<Keyframe<Array<Float64>>>    // 1 = color
-    //public let w: Array<Keyframe<Float64>>           // 2 = width
-    //public let o: Array<Keyframe<Int64>>             // 3 = opacity
-    //public let lc: Int64                               // 4 = capType
-    //public let lj: Int64                               // 5 = joinType
-    //public let ml: Float64                             // 6 = miterLimit
-    //public let hd: Bool                                // 7 = hidden
-    //public let d: Array<ContentModelD>               // 8 = lineDashPattern
-    //"d": [{"n": "String "v": Array<Keyframe<T>>}]
 
     let _ty: String = "st"
     public open prop ty: String {
@@ -78,34 +67,6 @@ public class ShapeStroke <: FillStroke {
     public override prop types: Int8 {
         get() { 1 }
     }
-
-    /**
-     * Obtain the c of ShapeStroke.
-     */
-    //public prop c: Array<Keyframe<Array<Float64>>> {
-    //    get() { this._c.clone() }
-    //}
-
-    /**
-     * Obtain the w of ShapeStroke.
-     */
-    //public prop w: Array<Keyframe<Float64>> {
-    //    get() { this._w.clone() }
-    //}
-
-    /**
-     * Obtain the o of ShapeStroke.
-     */
-    //public prop o: Array<Keyframe<Int64>> {
-    //    get() { this._o.clone() }
-    //}
-
-    /**
-     * Obtain the d of ShapeStroke.
-     */
-    //public prop d: Array<ContentModelD> {
-    //    get() { this._d.clone() }
-    //}
 
     /**
      * Return to convert the instance into a string and return.

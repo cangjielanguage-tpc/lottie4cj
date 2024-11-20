@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 package lottie.inner
@@ -45,7 +45,7 @@ public func getDefaultCurveSegments(): Int64 {
      defaultCurveSegments
 }
 
-//TODO: 是否将和 rgb 颜色有关的都改为 Int64 ？？？
+//是否将和 rgb 颜色有关的都改为 Int64 ？？？
 func hsvToRGB(h: Float64, s: Float64, v: Float64): Array<Float64> {
     var r: Float64 = 0.0
     var g: Float64 = 0.0
@@ -86,7 +86,7 @@ func hsvToRGB(h: Float64, s: Float64, v: Float64): Array<Float64> {
     return [r, g, b]
 }
 
-//TODO: 是否将和 rgb 颜色有关的都改为 Int64 ？？？
+// 是否将和 rgb 颜色有关的都改为 Int64 ？？？
 func rgbToHSV(r: Float64, g: Float64, b: Float64): Array<Float64> {
     let maxs: Float64 = max(max(r, g), b)
     let mins: Float64 = min(min(r, g), b)
@@ -119,7 +119,7 @@ func rgbToHSV(r: Float64, g: Float64, b: Float64): Array<Float64> {
     return [h, s, v]
 }
 
-//TODO: 是否将和 rgb 颜色有关的都改为 Int64 ？？？
+// 是否将和 rgb 颜色有关的都改为 Int64 ？？？
 public func addSaturationToRGB(color: Array<Float64>, offset: Float64) {
     if (color.size < 3) {
         throw IndexOutOfBoundsException("[addSaturationToRGB]: color.size = ${color.size}")
@@ -137,7 +137,7 @@ public func addSaturationToRGB(color: Array<Float64>, offset: Float64) {
     return hsvToRGB(hsv[0], hsv[1], hsv[2])
 }
 
-//TODO: 是否将和 rgb 颜色有关的都改为 Int64 ？？？
+// 是否将和 rgb 颜色有关的都改为 Int64 ？？？
 public func addBrightnessToRGB(color: Array<Float64>, offset: Float64): Array<Float64> {
     if (color.size < 3) {
         throw IndexOutOfBoundsException("[addBrightnessToRGB]: color.size = ${color.size}")
@@ -156,7 +156,7 @@ public func addBrightnessToRGB(color: Array<Float64>, offset: Float64): Array<Fl
     return hsvToRGB(hsv[0], hsv[1], hsv[2])
 }
 
-//TODO: 是否将和 rgb 颜色有关的都改为 Int64 ？？？
+// 是否将和 rgb 颜色有关的都改为 Int64 ？？？
 public func addHueToRGB(color: Array<Float64>, offset: Float64): Array<Float64> {
     if (color.size < 3) {
         throw IndexOutOfBoundsException("[addHueToRGB]: color.size = ${color.size}")

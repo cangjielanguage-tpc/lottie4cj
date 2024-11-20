@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
@@ -31,14 +31,8 @@ package lottie.model
  * ]
 */
 public class Effect <: LayerEF {
-    //TODO: [EffectsExpressionInterface用到] Effect(layers[i].ef.ef[i]) 中增加成员变量 mn/ix ？？？
-    //public var mn: String = ""
-    //public var ix: Int64 = 0
 
-    //public let ty: Int64
-    //public let nm: String
     public let v: ContentModelPK
-    //public let isNull: Bool
 
     /**
      * Create a Effect instance based on parameters.
@@ -53,8 +47,6 @@ public class Effect <: LayerEF {
                 isNull!: Bool = true
     ){
         super(ty, nm, Array<Effect>())
-        //this.ty = ty
-        //this.nm = nm
         this.v = v
         this.mn = mn
         this.ix = ix

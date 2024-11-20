@@ -1,18 +1,16 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
 /**
  * @file This file is PropertyFactory.
  */
-//package lottie.utils
 package lottie.property
 
 public let empty_Array_Int64_to_Float64: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>()
 
 public let empty_ContentModelElement: ContentModelElement = ContentModelElement()
 
-//public let empty_globalData: GlobalData = GlobalData()
 public let empty_dynamicProperties: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>()
 public let empty_dp: DynamicPropertyContainer = DynamicPropertyContainer(empty_globalData, empty_layer, dynamicProperties: empty_dynamicProperties)
 public let empty_Array_dp: Array<DynamicPropertyContainer> = Array<DynamicPropertyContainer>()

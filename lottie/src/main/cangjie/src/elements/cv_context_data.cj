@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 package lottie.elements
 
@@ -70,12 +70,6 @@ public class CvContextData {
     }
 
     public func push() {
-        //TODO: [45] TransformElement.renderTransform 中 this.finalTransform.mProp.v.props 的值不正确。
-        //TODO: [45] 暂未处理，测试先赋正确的值。
-        //this.cTr.props[12] = -0.7269230484962463
-        //this.cTr.props[13] = 42.93653869628906
-
-
         var props = this.cTr.props
         if (this._length <= this.cArrPos) {
             this.duplicate()

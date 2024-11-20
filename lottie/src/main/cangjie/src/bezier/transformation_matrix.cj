@@ -1,5 +1,5 @@
 /*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 package lottie.bezier
 
@@ -15,21 +15,8 @@ public class Matrix {
 
     public init() {
         this.props[0] = 1.0
-        //this.props[1] = 0.0
-
-        //this.props[2] = 0.0
-        //this.props[3] = 0.0
-        //this.props[4] = 0.0
         this.props[5] = 1.0
-        //this.props[6] = 0.0
-        //this.props[7] = 0.0
-        //this.props[8] = 0.0
-        //this.props[9] = 0.0
         this.props[10] = 1.0
-        //this.props[11] = 0.0
-        //this.props[12] = 0.0
-        //this.props[13] = 0.0
-        //this.props[14] = 0.0
         this.props[15] = 1.0
     }
 
@@ -125,26 +112,14 @@ public class Matrix {
         p2: Float64) {
         var _p = this.props
 
-        //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p = ${_p}")
-
         if (a2 == 1.0 && b2 == 0.0 && c2 == 0.0 && d2 == 0.0 && e2 == 0.0 && f2 == 1.0 && g2 == 0.0 && h2 == 0.0 &&
             i2 == 0.0 && j2 == 0.0 && k2 == 1.0 && l2 == 0.0) {
             // NOTE: commenting this condition because TurboFan deoptimizes code when present
-            // if(m2 !== 0 || n2 !== 0 || o2 !== 0){
-            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[12] = ${_p[12]}")
             _p[12] = _p[12] * a2 + _p[15] * m2
-            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[12] = ${_p[12]}")
-            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[13]= ${_p[13]}")
             _p[13] = _p[13] * f2 + _p[15] * n2
-            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[13]= ${_p[13]}")
-            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[14] = ${_p[14]}")
             _p[14] = _p[14] * k2 + _p[15] * o2
-            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[14] = ${_p[14]}")
-            //Hilog.error(0, "--Renderer--", "[transform]--[1]----> _p[15] = ${_p[15]}")
             _p[15] *= p2
-            // }
             this._identityCalculated = false
-            //Hilog.error(0, "--Renderer--", "[transform]--[2]----> _p = ${_p}")
             return this
         }
 
