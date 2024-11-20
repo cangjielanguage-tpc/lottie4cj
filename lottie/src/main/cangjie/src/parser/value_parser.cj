@@ -3,7 +3,7 @@
  */
 package lottie.parser
 
-internal import encoding.json.stream.JsonReader as JsonStreamReader
+internal import encoding.json.stream.JsonReader
 internal import encoding.json.stream.JsonToken
 internal import lottie.model.*
 internal import std.collection.*

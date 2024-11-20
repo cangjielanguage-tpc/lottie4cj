@@ -11,15 +11,14 @@ public class ShapeDataParser <: ValueParser<ShapeData> {
      */
     public static let INSTANCE: ShapeDataParser = ShapeDataParser()
 
-    let defaultPointF = Array<PointF>()
     public func parse(reader: JsonReader): ShapeData {
         if (reader.peek() == JsonToken.BeginArray) {
             reader.startArray()
         }
         var closed: Bool = false
-        var pointsArray: Array<PointF> = defaultPointF
-        var inTangents: Array<PointF> = defaultPointF
-        var outTangents: Array<PointF> = defaultPointF
+        var pointsArray: Array<PointF> = Array<PointF>()
+        var inTangents: Array<PointF> = Array<PointF>()
+        var outTangents: Array<PointF> = Array<PointF>()
 
         var hasv: Bool = false
         var hasi: Bool = false

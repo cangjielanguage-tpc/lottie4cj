@@ -4,12 +4,6 @@
 package lottie.parser
 
 class KeyframeParser {
-    //    private static let MAX_CP_VALUE = 100.0
-    //
-    //    static let NAMES: Array<String> = ["t", "s", "e", "o", "i", "h", "to", "ti", "n"]
-    //
-    //    static let INTERPOLATOR_NAMES: Array<String> = ["x", "y"]
-
     static func parse<T>(reader: JsonReader, valueParser: ValueParser<T>, animated: Bool): Keyframe<T> where T <: ToString {
         if (animated) {
             return parseKeyframe<T>(reader, valueParser)

@@ -12,11 +12,11 @@ class ContentModelParser {
         // Unfortunately, for an ellipse, d is before "ty" which means that it will get parsed
         // before we are in the ellipse parser.
         // "d" is 2 for normal and 3 for reversed.
-        var d: Int32 = 2
+        var d: Int64 = 2
         reader.startObject()
         while (reader.peek() != EndObject) {
             match (reader.readName()) {
-                case "d" => d = reader.readValue<Int32>()
+                case "d" => d = reader.readValue<Int64>()
                 case "ty" =>
                     types = reader.readValue<String>()
                     break
@@ -36,7 +36,7 @@ class ContentModelParser {
             case "gf" => model = GradientFillParser.parse(reader)
             case "tr" => model = AnimatableTransformParser.parse(reader, types)
             case "sh" => model = ShapePathParser.parse(reader)
-            case "el" => model = CircleShapeParser.parse(reader)
+            case "el" => model = CircleShapeParser.parse(reader, d)
             case "rc" => model = RectangleShapeParser.parse(reader)
             case "tm" => model = ShapeTrimPathParser.parse(reader)
             case "sr" => model = PolystarShapeParser.parse(reader)

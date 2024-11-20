@@ -4,14 +4,12 @@
 package lottie.parser
 
 class ShapeTrimPathParser {
-    static let _defaultFloat64: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
-
     static func parse(reader: JsonReader): ShapeTrimPath {
         var name: String = ""
         var types: Int64 = 0
-        var start: ArrayKeyframeFloat64 = _defaultFloat64
-        var end: ArrayKeyframeFloat64 = _defaultFloat64
-        var offset: ArrayKeyframeFloat64 = _defaultFloat64
+        var start: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+        var end: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+        var offset: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
         var hidden = false
         while (reader.peek() != EndObject) {
             match (reader.readName()) {
