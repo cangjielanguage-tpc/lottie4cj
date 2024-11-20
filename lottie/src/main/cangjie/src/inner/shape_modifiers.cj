@@ -13,6 +13,6 @@ public class ShapeModifiers {
     //TODO: 未实现                                                                                 ???---lp---20240516--
     public func addShape(data: Layer): Unit {}
     public func isAnimatedWithShape(data: Layer): Bool { return true }
-    public func processShapes(flag: Bool): Bool { return true }
+    public func processShapes(flag: Bool): Bool { return false }
 
 }

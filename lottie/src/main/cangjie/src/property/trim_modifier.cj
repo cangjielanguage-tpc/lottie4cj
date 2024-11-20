@@ -363,7 +363,7 @@ public open class TrimModifier <: ShapeModifier {
                 this.shapes[i].shape._mdf = true
             }
         }
-        return true
+        return false
     }
 
     public func addPaths(newPaths: ArrayList<ShapeData>, localShapeCollection: ShapeCollection): Unit {

@@ -164,7 +164,7 @@ public open class ZigZagModifier <: ShapeModifier {
         if (this.dynamicProperties.size == 0) {
             this._mdf = false
         }
-        return true
+        return false
     }
 
 }

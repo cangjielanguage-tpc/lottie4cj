@@ -61,21 +61,9 @@ public class PoolFactory<T> where T <: ToString {
      * @param element - Type of T, release it.
      */
     public func release(element: T): Unit {
-        //TODO: Element 是未确认数据类型，编译用
-        //TODO: 扩容。cj中用的是 ArrayList，不用扩容。
-        //if (this._length == this._maxLength) {
-        //    this.pool = pooling.double(pool)
-        //    this._maxLength *= 2
-        //}
         if (let Some(v) <- this._release) {
             v(element)
         }
-        if (this.pool.size > this._length) {
-            this.pool[this._length] = element
-        } else {
-            this.pool.append(element)
-        }
-        this._length += 1
     }
 
 }
