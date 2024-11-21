@@ -632,8 +632,10 @@ public class TransformProperty <: DynamicPropertyContainer {
                 } else {
                     this.pre.scale(sv.v[0], sv.v[1])
                 }
+                this.appliedTransformations = 2
+            } else {
+                return
             }
-            this.appliedTransformations = 2
         } else {
             return
         }
