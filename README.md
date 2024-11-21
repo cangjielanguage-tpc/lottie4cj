@@ -5,7 +5,7 @@
 <p align="center">
 <img alt="" src="https://img.shields.io/badge/release-v0.0.1-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/build-pass-brightgreen" style="display: inline-block;" />
-<img alt="" src="https://img.shields.io/badge/cjc-v0.55.3-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/cjc-v0.53.13-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/cjcov-91.9%25-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/project-open-brightgreen" style="display: inline-block;" />
 </p>
@@ -16,15 +16,7 @@ lottie4cj是一个动画库，它可以解析Adobe After Effects软件通过Body
 
 ### 特性
 
-- 🚀 支持播放动画/播放动画片段
-
-- 💪 支持控制动画播放/暂停/停止
-
-- 🛠️ 支持设置播放速度
-
-- 🌍 支持设置动画播放方向
-
-- 💡 支持获取动画时长/帧数
+- 🚀 支持播放动画
 
 ## 软件架构
 
@@ -37,12 +29,14 @@ lottie4cj是一个动画库，它可以解析Adobe After Effects软件通过Body
 ### 源码目录
 
 ```shell
-├── README.md              #整体介绍
-├── doc                    #文档目录
-│   ├── assets             #文档资源目录
-│   └── feature_api.md     #API接口文档
-├── src                    #源码目录
-└── test                   #测试代码目录
+/lottie4cj                   # 项目根目录
+├── doc                      #文档目录
+│   ├── assets               #文档资源目录
+│   └── feature_api.md       #API接口文档
+├── entry                    # 示例代码文件夹
+├── lottie                   # lottie库文件夹
+│    └─ src/main/cangjie/src # 核心代码，包含json解析，动画绘制，操作动画                  
+├── README.md                # 安装使用方法      
 ```
 
 ### 接口说明
@@ -52,86 +46,197 @@ lottie4cj是一个动画库，它可以解析Adobe After Effects软件通过Body
 
 ## 使用说明
 
-### 编译构建
+前提：数据准备
 
-具体的编译过程：
+lottie动画文件是由设计人员使用Adobe After Effects软件通过bodymovin插件导出json格式的文件。
 
-拉取代码后执行命令
-```shell
-cjpm update
-cjpm build
+AE软件创建动画时需要设置动画的宽(w)、高(h)、bodymovin插件的版本号(v)、帧率(fr)、开始帧(ip)、
+结束帧(op)、静态资源信息(assets)、图层信息(layers)等重要信息。
+
+如果仅是用于demo测试，可以使用[工程示例中的json文件](https://gitcode.com/Cangjie-TPC/lottie4cj/tree/develop/entry/src/main/resources/rawfile) 。
+
+1.在相应的类中引入组件：
+
 ```
+internal import lottie.animation.*
+internal import lottie.utils.helpers.*
+internal import lottie.model.*
+```
+
+2.构建渲染上下文
+
+```
+var mainRenderingSettings: RenderingContextSettings = RenderingContextSettings(antialias: true)
+var mainCanvasRenderingContext: CanvasRenderingContext2D = CanvasRenderingContext2D(this.settings)
+```
+
+3.將动画需要的json文件放到resources/rawfile目录下，然后引用。(json路径为entry/src/main/resources/rawfile/data.json)
+
+
+注意：json文件路径不能使用 ./ 或者 ../ 等相对路径，相对路径获取不到动画源数据，会导致动画加载不出来,
+
+传递给loadAnimation 方法的路径是相对于resources/rawfile文件夹为基准的。
+
+```
+  let path: String = "data.json"
+  或
+  let jsonData: String = {"v":"4.6.6","fr":24,"ip":0,"op":72,"w":1000,"h":1000,"nm":"Comp 2","ddd":0,"assets":[],...}
+  let animationData: AnimationData = AnimationDataParser.parse(jsonData)
+```
+
+4.关联画布
+
+```
+Canvas(this.canvasRenderingContext).width(45.percent).height(200).backgroundColor(Color.GRAY)
+.onReady({ =>
+    //抗锯齿的设置
+    this.mainCanvasRenderingContext.imageSmoothingEnabled(true)
+    this.mainCanvasRenderingContext.imageSmoothingQuality(QualityType.Medium)
+})
+```
+注意：canvas设置的宽高比例建议和动画json资源里面的宽高比例一致，如：json动画资源里的宽高比例是 1:2 ，则canvas设置的宽高也是 1:2
+- 想要的抗锯齿效果：mainCanvasRenderingContext.imageSmoothingEnabled(true) 与 mainCanvasRenderingContext.imageSmoothingQuality(QualityType.Medium)
+
+- 动画绘制前会对canvas画布进行清空处理，画布清空后再绘制动画。
+
+5.加载动画
+
+- 加载动画的时机需要注意，点击按钮加载动画可按照正常逻辑放在点击事件内，如果想要实现进入页面自动播放动画，需要结合Canvas组件的onReady()生命回调周期实现，加载动画时机需放置在onReady()生命周期回调内或及之后。
+- 同一Canvas组件加载多次/不同动画资源，需要手动销毁动画(lottie.destroy('name'))，之后才可再次加载其他动画资源。
+```      
+    lottie.destroy("2016") //加载动画前先销毁之前加载的动画
+    this.animateItem = lottie.loadAnimation(AnimationConfig(
+        container: this.canvasRenderingContext,           // 渲染上下文
+        renderer: "canvas",                               // canvas 渲染模式
+        loop: -1,                                         // 是否循环播放,默认 -1 循环。
+        autoplay: true,                                   // 是否自动播放，默认true
+        name: "2016",                                     // 动画名称
+        contentMode: "Contain",                           // 填充的模式
+        path: "data.json",                                // 路径加载动画只支持raw文件夹下的相对路径
+        animationData: AnimationData(isNull: true),       // json动画解析的对象
+        context: globalAbilityContext
+    ))
+    或      
+    this.animateItem = lottie.loadAnimation(AnimationConfig(
+        container: this.canvasRenderingContext,           // 渲染上下文
+        renderer: "canvas",                               // canvas 渲染模式
+        loop: 1,                                          // 是否循环播放,默认 -1 循环。
+        autoplay: true,                                   // 是否自动播放，默认true
+        name: "2016",                                     // 动画名称
+        contentMode: "Contain",                           // 填充的模式
+        path: "",                                         // 路径加载动画只支持raw文件夹下的相对路径
+        animationData: animationData,                     // json动画解析的对象
+        context: globalAbilityContext
+    ))
+```
+
+- 加载动画时，path 参数和 animationData 参数，二者选其一。
+- path 参数：只支持加载entry/src/main/resources/rawfile/ 文件夹下的相对路径，不支持跨包查找文件。
+- animationData 参数：可结合ResourceManager进行读取资源文件内容进行设置，调用AnimationDataParser.parse 进行解析。
+- 加载外部资源图片：应用默认读取rawfile下的对应资源图片
+
+6.控制动画
+
+- 播放动画
+
+  ```
+  animationItem.play() //当前指定animationItem动画播放
+  ```
 
 ### 功能示例
 #### 动画json数据解析 功能示例
 
 功能示例描述:      
-将动画json数据读取转为字符串，解析成AnimationData格式。
+加载动画json文件，进行动画播放。
 
 示例代码如下：
 
 ```cangjie
-public import std.fs.*
-public import std.sync.*
+package ohos_app_cangjie_entry
 
-public import lottie4cj.parser.*
-public import lottie4cj.model.*
+internal import ohos.base.*
+internal import ohos.component.*
+internal import ohos.state_manage.*
+import ohos.state_macro_manage.*
 
-main (){
+import ohos.hilog.*
 
-    var sum: Int64 = test_01()
-    if (sum != 0) {
-        return sum
+internal import lottie.animation.*
+internal import lottie.utils.helpers.*
+internal import lottie.model.*
+internal import lottie.parser.*
+
+@Entry
+@Component
+class LottieSample {
+    @State var isCanvasVisible: Visibility = Visibility.Visible
+    var settings: RenderingContextSettings = RenderingContextSettings(antialias: true)
+    var canvasRenderingContext: CanvasRenderingContext2D = CanvasRenderingContext2D(this.settings)
+    private var lottie: AnimationManager = AnimationManager(this.canvasRenderingContext)
+    private var animateItem: Option<AnimationItem> = None
+
+    protected override func onBackPress(): Bool {
+        lottie.destroy("")
+        return false
     }
-    println("数据解析成功")
 
-    return 0
-}
+    func build() {
+        Scroll() {
+            Flex(
+                FlexParams(direction: FlexDirection.Column, alignItems: ItemAlign.Center,
+                justifyContent: FlexAlign.Center)) {
+                Column() {
+                    Row(10) {
+                        Canvas(this.canvasRenderingContext).width(45.percent).height(200).backgroundColor(Color.GRAY)
+                    }.backgroundColor(0xF0F0F0).justifyContent(FlexAlign.Center).width(100.percent)
+                }.height(30.percent).width(100.percent)
 
-func test_01(): Int64 {
-    let filename: String = "benchmark.json"
-    let str: String = readFile(filename)
+                Scroll() {
+                    Column() {
+                        Row() {
+                             Button("加载2016").onClick {
+                                evt =>
+                                if (this.animateItem.isNone()) {
+                                     this.animateItem = lottie.loadAnimation(AnimationConfig(
+                                        wrapper_ns: CreateNS("doc"),
+                                        container: this.canvasRenderingContext,
+                                        renderer: "canvas", // canvas 渲染模式
+                                        autoplay: true,
+                                        name: "2016",
+                                        contentMode: "Contain",
+                                        path: "data.json", // 路径加载动画只支持raw文件夹下的相对路径
+                                        animationData: AnimationData(isNull: true),
+                                        context: globalAbilityContext
+                                    ))
+                                }
+                         }
+                        }.margin(top: 5)
 
-    let data: AnimationData = AnimationDataParser.parse(str)
-    let assets: Array<Asset> = data.assets
-    let assets0: Asset = assets[0]
+                        Row() {
+                        }.margin(top: 5)
+                        Row() {}.margin(top: 5)
+                    }
+                }.nestedScroll(NestedScrollOptions(NestedScrollMode.SELF_FIRST, NestedScrollMode.PARENT_FIRST)).
+                    scrollBar(BarState.Off).height(75.percent)
 
-    if(assets.size != 1 || assets0.id != "image_0" || assets0.w != 80 || assets0.h != 80) {
-        return -1
+            }
+        }.scrollBar(BarState.Off).width(100.percent)
     }
-    let p: String = "data:image/png;base64,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"
-
-    if(assets0.p != p || assets0.u != "") {
-        return -2
-    }
-    if(assets0.layers.size != 0) {
-        return -3
-    }
-    if(assets0.toString() == "") {
-        return -4
-    }
-    return 0
-}
-
-func readFile(path: String): String {
-    let file: File = File(path, OpenOption.Open(true, true))
-    let len: Int64 = file.length
-    var buf: Array<Byte> = Array<Byte>(len, repeat: 0)
-    file.read(buf)
-    file.close()
-
-    return String.fromUtf8(buf)
 }
 ```
 
 执行结果如下：
 
 ```shell
-数据解析成功
+动画正常播放
 ```
 
 ## 约束与限制
-暂无
+在下述版本验证通过：
+
+    DevEco Studio NEXT Developer Beta2(5.0.3.906) 
+    Cangjie Support Plugin 5.0.3.906
+    Cangjie Compiler: 0.53.13 (cjnative)
 
 ## 开源协议
 本项目基于 [The MIT License](./LICENSE)，请自由的享受和参与开源。
