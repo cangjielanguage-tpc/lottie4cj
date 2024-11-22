@@ -5,14 +5,8 @@
 /**
  * @file This file is a ContentModel structure.
  */
-//package lottie.shape_items
+
 package lottie.property
-
-//internal import lottie.property.*
-//internal import lottie.global_data.*
-//internal import lottie.model.*
-//internal import lottie.elements.*
-
 
 
 /*
@@ -28,10 +22,6 @@ package lottie.property
  * 原来抽象出来的 ElementData/ElementData2，更换为 ContentModelElement。
  */
 
-//TODO: ContentModelElement 就是命名的 CreatSearchElement
 public open class ContentModelElement {
     public var ty: String = "ContentModel"
-    //public open prop ty: String {
-    //    get() { "ContentModel" }
-    //}
 }

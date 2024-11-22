@@ -3,7 +3,7 @@
  */
 
 /**
- * @file This file is BaseElement.
+ * @file This file is getFontProperties.
  */
 package lottie.utils
 

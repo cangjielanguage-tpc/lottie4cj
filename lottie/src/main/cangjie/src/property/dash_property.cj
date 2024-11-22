@@ -51,15 +51,15 @@ public class DashProperty <: DynamicPropertyContainer {
             var props: PropertyFactory<ContentModelDK, Float64>
 
             if (data[i].v.k.size == 1) {//走【分支1】 // data[i].v  =>  ContentModelDK(k!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>())
-                //"v":{"a":0,"k":0,"ix":7}
+                /* "v":{"a":0,"k":0,"ix":7} */
                 props = PropertyFactory<ContentModelDK, Float64>.getProp(data[i].v, data[i].v.k[0].k ?? 0.0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             } else if (data[i].v.k.size > 1) {//走【分支3】
-                //"v":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":30,"s":[0],"e":[140]},{"t":60.0000024438501}],"ix":1}
+                /* "v":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":30,"s":[0],"e":[140]},{"t":60.0000024438501}],"ix":1} */
                 props = PropertyFactory<ContentModelDK, Float64>.getProp(data[i].v, data[i].v.k, 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             } else {
                 props = PropertyFactory<ContentModelDK, Float64>(data[i].v, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             }
-            props.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            props.containerType = 3  /*  1-FrameElement; 2-TransformPropertyFactory; 3-其他Property  */
             props.container = [this]
             this.k = props.k || this.k
 
@@ -67,7 +67,6 @@ public class DashProperty <: DynamicPropertyContainer {
                 value[i] = DataProp<ContentModelDK, Float64>(n: data[i].n, p: props)
             }
 
-//            this.dataProps[i] = DataProp<ContentModelDK, Float64>(n: data[i].n, p: props)
         }
         if (!this.k) {
             this.getValue(true)
@@ -84,7 +83,7 @@ public class DashProperty <: DynamicPropertyContainer {
             return
         }
         this.frameId = this.elemGlobalData.frameId
-        //TODO：调用父类 DynamicPropertyContainer.iterateDynamicProperties
+
         this.iterateDynamicProperties()
         this._mdf = this._mdf || forceRender
         if (this._mdf) {
@@ -94,7 +93,6 @@ public class DashProperty <: DynamicPropertyContainer {
             	0
             }
 
-//            let len: Int64 = this.dataProps.size
             if (this.renderer == "svg") {
                 this.dashStr = ""
             }
@@ -113,17 +111,6 @@ public class DashProperty <: DynamicPropertyContainer {
                 }
             }
 
-//            for (i in 0..len) {
-//                if (this.dataProps[i].n != "o") {
-//                    if (this.renderer == "svg") {
-//                        this.dashStr += " " + this.dataProps[i].p.v[0].toString()
-//                    } else {
-//                        this.dashArray[i] = this.dataProps[i].p.v[0]
-//                    }
-//                } else {
-//                    this.dashoffset[0] = this.dataProps[i].p.v[0]
-//                }
-//            }
         }
     }
 

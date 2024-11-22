@@ -36,8 +36,6 @@ class LottieSample {
     private var animateItem2:Option<AnimationItem> = None
     private var animateName: String = "grunt"
 
-    var fId: UInt32 = UInt32(@r(app.media.img_0).id)
-
     protected override func onBackPress(): Bool {
         lottie.destroy("")
         return false

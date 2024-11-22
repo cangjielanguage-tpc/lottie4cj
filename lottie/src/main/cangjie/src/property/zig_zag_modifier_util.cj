@@ -2,7 +2,6 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-//package lottie.utils.shapes
 package lottie.property
 
 func setPoint(outputBezier: ShapeData, point: PointF, angle: Float64, direction: Float64, amplitude: Float64, outAmplitude: Float64, inAmplitude: Float64): Unit {
@@ -52,8 +51,8 @@ func getProjectingAngle(path: ShapeData, cur: Int64): Float64 {
      * atan2（y，x）求的是y/x的反正切，其返回值为[-pi,+pi]之间的一个数。
      * atan（x）表示求的是x的反正切，其返回值为[-pi/2,+pi/2]之间的一个数。
      * atan2(p[1], p[0]) = atan(p[1] / p[0])
+     * 注意 0/1 ，0 作为除数。
      */
-    //TODO: 注意 0/1 ，0 作为除数。
     return atan(0.0 / 1.0) - atan(pVector[1] / pVector[0])
 }
 
@@ -89,7 +88,6 @@ func zigZagCorner(outputBezier: ShapeData, path: ShapeData, cur: Int64, amplitud
         amplitude,
         nextDist / ((frequency + 1.0) * 2.0),
         prevDist / ((frequency + 1.0) * 2.0)
-        //TODO: this.setPoint 中只有 7 个参数  //pointType
     )
 }
 
@@ -113,7 +111,6 @@ func zigZagSegment(outputBezier: ShapeData, segment: PolynomialBezier, amplitude
             amplitude,
             dist / ((Float64(frequency) + 1.0) * 2.0),
             dist / ((Float64(frequency) + 1.0) * 2.0)
-            //TODO: this.setPoint 中只有 7 个参数   //pointType
         )
 
         direction = -direction

@@ -14,28 +14,6 @@ public class GradientStroke <: FillStroke {
      */
     public let nm: String                       //0 = name
 
-    // "g": {"p": points/Int64, "k": color/Array<Keyframe<T>>} => Array<Keyframe<Array<Float64>>>
-    //public let g: ContentModelP                 //1 = {points, color}
-
-    //public let o: Array<Keyframe<Int64>>      //2 = opacity
-    //public let t: Int64                         //3 = gradientType
-    
-    ////private let _s: Array<Keyframe<PointF>>     //4 = startPoint
-    ////private let _e: Array<Keyframe<PointF>>     //5 = endPoint
-    //public let s: Array<Keyframe<Array<Float64>>>      //4 = startPoint
-    //public let e: Array<Keyframe<Array<Float64>>>      //5 = endPoint
-    
-    //public let w: Array<Keyframe<Float64>>    //6 = width
-    //public let lc: Int64                        //7 = capType
-    //public let lj: Int64                        //8 = joinType
-    //public let ml: Float64                      //9 = miterLimit
-    //public let hd: Bool                         //10 = hidden
-
-    //"d": [{"n": "String", "v": Array<Keyframe<Float64>>}]  =>  Array<ContentModelD>
-    //public let d: Array<ContentModelD>        //11 = lineDashPattern
-    
-    //public let a: AK                             //12 = mn
-
     let _ty: String = "gs"
     public open prop ty: String {
         get() { _ty }

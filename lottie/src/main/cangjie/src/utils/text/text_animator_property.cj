@@ -6,7 +6,6 @@
  * @file This file is TextAnimatorProperty.
  */
 package lottie.utils.text
-//package lottie.property
 
 internal import lottie.bezier.*
 internal import lottie.inner.*
@@ -15,14 +14,13 @@ internal import lottie.pool.*
 internal import lottie.property.*
 
 public class TextAnimatorProperty <: DynamicPropertyContainer {
-    //TODO：拆分多继承问题 -- extendPrototype([DynamicPropertyContainer], TextAnimatorProperty)
 
     var _isFirstFrame: Bool = true
     var _hasMaskedPath: Bool = false
     var _frameId: Int64 = -1
 
     var _animatorsData: Array<TextAnimatorDataProperty> = Array<TextAnimatorDataProperty>()
-    //TODO: 暂时在 json 中找不到 layer.t.p。 this._pathData 是空对象。
+    /* 暂时在 json 中找不到 layer.t.p。 this._pathData 是空对象。 */
     var _pathData: PathData
     var _moreOptions: MoreOptions
     public var renderedLetters: ArrayList<LetterProps> = ArrayList<LetterProps>(24)
@@ -33,7 +31,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
 
     public var _textData: LayerT
     public var _renderType: String
-    //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
+    /* elem 中用到的成员变量，在初始化后需要单独赋值过来。*/
     public let elemTextPropertyCurrentData: DocumentData
 
     public init(textData: LayerT, renderType: String, elemGlobalData: GlobalData, elemData: Layer, elemTextPropertyCurrentData: DocumentData, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
@@ -42,8 +40,6 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         this._renderType = renderType
 
         this.elemTextPropertyCurrentData = elemTextPropertyCurrentData
-        //TODO: 初始化放在后面。
-        //this._animatorsData = Array<TextAnimatorDataProperty>(this._textData.a.size)
 
         let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         let emptyPF: PropertyFactory<Float64, Float64> = PropertyFactory<Float64, Float64>(0.0, 0.0, dp, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
@@ -59,7 +55,6 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
 
         this._moreOptions = MoreOptions( alignment: PropertyFactory<LayerTMA, Array<Float64>>(LayerTMA(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties) )
 
-        //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
         this.initDynamicPropertyContainer(elemGlobalData, elemData)
     }
 
@@ -69,33 +64,18 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
 
         this._animatorsData = Array<TextAnimatorDataProperty>(len, item: TextAnimatorDataProperty(animatorProps, this, this.elemGlobalData, this.elemData, this.elemTextPropertyCurrentData, dynamicProperties: this.dynamicProperties))
         for (i in 0..len) {
-            //数据类型分析: animatorProps  =>  this._textData.a[i]  =>  layer.t.a[i](AnimatableTextPropertiesA)
+            /* 数据类型分析: animatorProps  =>  this._textData.a[i]  =>  layer.t.a[i](AnimatableTextPropertiesA) */
             animatorProps = this._textData.a[i]
             this._animatorsData[i] = TextAnimatorDataProperty(animatorProps, this, this.elemGlobalData, this.elemData, this.elemTextPropertyCurrentData, dynamicProperties: this.dynamicProperties)
         }
 
-        //TODO: 暂时在 json 中找不到 layer.t.p。 this._pathData 是空对象。
         this._hasMaskedPath = false
-        //if (this._textData.p && 'm' in this._textData.p) {
-        //TODO: this._pathData 是空对象。
-        //    this._pathData = {
-        //      // this._textData.p  =>  layer.t(LayerT).p
-        //      a: getProp(this._elem, this._textData.p.a, 0, 0, this),
-        //      f: getProp(this._elem, this._textData.p.f, 0, 0, this),
-        //      l: getProp(this._elem, this._textData.p.l, 0, 0, this),
-        //      r: getProp(this._elem, this._textData.p.r, 0, 0, this),
-        //      p: getProp(this._elem, this._textData.p.p, 0, 0, this),
-        //      //TODO: this._pathData.m == ShapePropertyFactory
-        //      m: this._elem.maskManager.getMaskProperty(this._textData.p.m),
-        //    }
-        //    this._hasMaskedPath = true
-        //} else {
-        //    this._hasMaskedPath = false
-        //}
 
-        //数据类型分析: this._textData.m.a  =>  layer.t.m.a(LayerTMA)
-        //走【分支2】 => "a": {"a": 0, "k": [0, 0]}
-        //TODO：需要将 this._textData.m.a.k 的 Array<Int64> 转为 Array<Float64>。
+        /*
+         * 数据类型分析: this._textData.m.a  =>  layer.t.m.a(LayerTMA)
+         * 走【分支2】 => "a": {"a": 0, "k": [0, 0]}
+         * 需要将 this._textData.m.a.k 的 Array<Int64> 转为 Array<Float64>。
+         */
         let lens: Int64 = this._textData.m.a.k.size
         var arr: Array<Float64> = Array<Float64>()
         if (lens > 0) {
@@ -115,7 +95,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
      */
     public func getMeasures(documentData: DocumentData, lettersChangedFlag: Bool): Unit {
         this.lettersChangedFlag = lettersChangedFlag
-        //TODO: 暂时在 json 中找不到 layer.t.p。 this._pathData 是空对象。
+
         if (!this._mdf && !this._isFirstFrame && !lettersChangedFlag && (!this._hasMaskedPath || !this._pathData.m._mdf)) {
             return
         }
@@ -132,7 +112,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         var i: Int64 = 0
         var len: Int64 = 0
         let letters: ArrayList<Letter> = documentData.l
-        //TODO: PathInfo 是自定义数据类型。
+
         var pathInfo: PathInfo = PathInfo()
         var currentLength: Float64 = 0.0
         var currentPoint: PointData = PointData()
@@ -148,7 +128,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         var perc: Float64 = 0.0
         var tanAngle: Float64 = 0.0
         var mask: ShapePropertyFactory = ShapePropertyFactory(ContentModel(), 0, this.elemGlobalData, this.elemData, dynamicProperties: this.dynamicProperties)
-        //TODO: 暂时在 json 中找不到 layer.t.p。 <=  //this._hasMaskedPath = false 
+        /* 暂时在 json 中找不到 layer.t.p。 <=  this._hasMaskedPath = false  */
         if (this._hasMaskedPath) {
             mask = this._pathData.m
             if (!this._pathData.n || this._pathData._mdf) {
@@ -156,12 +136,6 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                 if (this._pathData.r.v.size != 0) {
                     paths = paths.reverse()
                 }
-                //TODO:释放从前面的 pathInfo 缓存的 bezier 数据：this_pathData.pi
-                //TODO: PathInfo 是自定义数据类型。前面已经初始化。
-                //pathInfo = PathInfo(
-                //    tLength: 0,
-                //    segments: []
-                //)
 
                 len = paths._length - 1
                 var bezierData: BezierData = BezierData()
@@ -231,8 +205,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         var letterValue: LetterProps = LetterProps()
     
         let jLen: Int64 = animators.size
-    
-        //TODO: 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64>
+
         var mult: Float64 = 0.0
         var ind: Int64 = -1
         var offf: Float64 = 0.0
@@ -284,13 +257,9 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                                 animatorFirstCharOffset += animatorProps.t.v[0] * justifyOffsetMult
                             }
                             animatorSelector = animators[j].s
-                            //TODO: 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64>
+                            /* 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64> */
                             mult = animatorSelector.getMult(letters[i].anIndexes[j], textData.a[j].s.totalChars)
-                            //if (mult.size != 0) {
-                            //    animatorJustifyOffset += animatorProps.t.v[0] * mult[0] * justifyOffsetMult
-                            //} else {
-                                animatorJustifyOffset += animatorProps.t.v[0] * mult * justifyOffsetMult
-                            //}
+                            animatorJustifyOffset += animatorProps.t.v[0] * mult * justifyOffsetMult
                         }
                     }
                     isNewLine = false
@@ -328,10 +297,6 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                 }
                 letterM = ""
                 letterFc = Color(0,0,0)
-                //TODO: letterSw 是 Int64 类型.
-                //letterSw = ""
-                //TODO: letterSw 是 Int64 类型.
-                //letterO = ""
                 letterP = this.defaultPropsArray
             } else {
                 if (this._hasMaskedPath) {
@@ -356,28 +321,19 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                         animatorProps = animators[j].a
                         if (animatorProps.p.propType != "") {
                             animatorSelector = animators[j].s
-                            //TODO: 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64>
+                            /* 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64> */
                             mult = animatorSelector.getMult(letters[i].anIndexes[j], textData.a[j].s.totalChars)
-                            //if (mult.length) {
-                            //    animatorOffset += animatorProps.p.v[0] * mult[0]
-                            //} else {
-                                animatorOffset += animatorProps.p.v[0] * mult
-                            //}
+                            animatorOffset += animatorProps.p.v[0] * mult
                         }
-                        //TODO: 暂时未完全实现 AnimatableTextProperty。
                         if (animatorProps.a.propType != "") {
                             animatorSelector = animators[j].s
-                            //TODO: 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64>
+                            /* 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64> */
                             mult = animatorSelector.getMult(letters[i].anIndexes[j], textData.a[j].s.totalChars)
-                            //if (mult.length) {
-                            //    animatorOffset += animatorProps.a.v[0] * mult[0]
-                            //} else {
-                                animatorOffset += animatorProps.a.v[0] * mult
-                            //}
+                            animatorOffset += animatorProps.a.v[0] * mult
                         }
                     }
                     flag = true
-                    //目前，力对齐仅适用于单线
+                    /* 目前，力对齐仅适用于单线 */
                     if (this._pathData.a.v.size > 0) {
                         currentLength = letters[0].an * 0.5 + ((totalLength - this._pathData.f.v[0] - letters[0].an * 0.5 - letters[letters.size - 1].an * 0.5) * Float64(ind)) / Float64(len - 1)
                         currentLength += this._pathData.f.v[0]
@@ -421,7 +377,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                     offf = letters[i].an / 2.0 - letters[i].add
                     matrixHelper.translate(-offf, 0.0, tz: 0.0)
 
-                    //分组对齐
+                    /* 分组对齐 */
                     matrixHelper.translate((-alignment[0] * letters[i].an) * 0.005, (-alignment[1] * yOff) * 0.01, tz: 0.0)
                 }
     
@@ -429,20 +385,13 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                     animatorProps = animators[j].a
                     if (animatorProps.t.propType != "") {
                         animatorSelector = animators[j].s
-                        //TODO: 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64>
+                        /* 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64> */
                         mult = animatorSelector.getMult(letters[i].anIndexes[j], textData.a[j].s.totalChars)
-                        //此条件是为了防止对每行中的第一个字符应用跟踪。使用布尔值“isNewLine”可能更好.
+                        /* 此条件是为了防止对每行中的第一个字符应用跟踪。使用布尔值“isNewLine”可能更好. */
                         if (xPos != 0.0 || documentData.j != 0) {
                             if (this._hasMaskedPath) {
-                                //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                                //if (mult.size != 0) {
-                                //    currentLength += animatorProps.t.v[0] * mult[0]
-                                //} else {
-                                    currentLength += animatorProps.t.v[0] * mult
-                                //}
-                            //} else if (mult.size != 0) {
-                            //    //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                            //    xPos += animatorProps.t.v[0] * mult[0]
+                                /* 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64> */
+                                currentLength += animatorProps.t.v[0] * mult
                             } else {
                                 xPos += animatorProps.t.v[0] * mult
                             }
@@ -466,125 +415,73 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                     animatorProps = animators[j].a
                     if (animatorProps.a.propType != "") {
                         animatorSelector = animators[j].s
-                        //TODO: 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64>
+                        /* 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64> */
                         mult = animatorSelector.getMult(letters[i].anIndexes[j], textData.a[j].s.totalChars)
-    
-                        //if (mult.size > 0) {
-                        //    matrixHelper.translate(-animatorProps.a.v[0] * mult[0], -animatorProps.a.v[1] * mult[1], animatorProps.a.v[2] * mult[2])
-                        //} else {
-                            matrixHelper.translate(-animatorProps.a.v[0] * mult, -animatorProps.a.v[1] * mult, tz: animatorProps.a.v[2] * mult)
-                        //}
+  
+                        matrixHelper.translate(-animatorProps.a.v[0] * mult, -animatorProps.a.v[1] * mult, tz: animatorProps.a.v[2] * mult)
                     }
                 }
                 for (j in 0..jLen) {
                     animatorProps = animators[j].a
                     if (animatorProps.s.propType != "") {
                         animatorSelector = animators[j].s
-                        //TODO: 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64>
+                        /* 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64> */
                         mult = animatorSelector.getMult(letters[i].anIndexes[j], textData.a[j].s.totalChars)
-                        //if (mult.size != 0) {
-                        //    matrixHelper.scale(1 + ((animatorProps.s.v[0] - 1) * mult[0]), 1 + ((animatorProps.s.v[1] - 1) * mult[1]), 1)
-                        //} else {
-                            matrixHelper.scale(1.0 + ((animatorProps.s.v[0] - 1.0) * mult), 1.0 + ((animatorProps.s.v[1] - 1.0) * mult), sz: 1.0)
-                        //}
+                        matrixHelper.scale(1.0 + ((animatorProps.s.v[0] - 1.0) * mult), 1.0 + ((animatorProps.s.v[1] - 1.0) * mult), sz: 1.0)
                     }
                 }
                 for (j in 0..jLen) {
                     animatorProps = animators[j].a
                     animatorSelector = animators[j].s
-                    //TODO: 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64>
+                    /* 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64> */
                     mult = animatorSelector.getMult(letters[i].anIndexes[j], textData.a[j].s.totalChars)
                     if (animatorProps.sk.propType != "") {
-                        //if (mult.size != 0) {
-                        //    matrixHelper.skewFromAxis(-animatorProps.sk.v[0] * mult[0], animatorProps.sa.v[0] * mult[1])
-                        //} else {
-                            matrixHelper.skewFromAxis(-animatorProps.sk.v[0] * mult, animatorProps.sa.v[0] * mult)
-                        //}
+                        matrixHelper.skewFromAxis(-animatorProps.sk.v[0] * mult, animatorProps.sa.v[0] * mult)
                     }
                     if (animatorProps.r.propType != "") {
-                        //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                        //if (mult.size != 0) {
-                        //    matrixHelper.rotateZ(-animatorProps.r.v[0] * mult[2])
-                        //} else {
-                            matrixHelper.rotateZ(-animatorProps.r.v[0] * mult)
-                        //}
+                        /* 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64> */
+                        matrixHelper.rotateZ(-animatorProps.r.v[0] * mult)
                     }
                     if (animatorProps.ry.propType != "") {
-                        //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                        //if (mult.size != 0) {
-                        //    matrixHelper.rotateY(animatorProps.ry.v[0] * mult[1])
-                        //} else {
-                            matrixHelper.rotateY(animatorProps.ry.v[0] * mult)
-                        //}
+                        /* 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64> */
+                        matrixHelper.rotateY(animatorProps.ry.v[0] * mult)
                     }
                     if (animatorProps.rx.propType != "") {
-                        //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                        //if (mult.size != 0) {
-                        //    matrixHelper.rotateX(animatorProps.rx.v[0] * mult[0])
-                        //} else {
-                            matrixHelper.rotateX(animatorProps.rx.v[0] * mult)
-                        //}
+                        /* 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64> */
+                        matrixHelper.rotateX(animatorProps.rx.v[0] * mult)
                     }
                     if (animatorProps.o.propType != "") {
-                        //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                        //if (mult.size != 0) {
-                        //    elemOpacity += ((animatorProps.o.v[0]) * mult[0] - elemOpacity) * mult[0]
-                        //} else {
-                            elemOpacity += ((animatorProps.o.v[0]) * mult - elemOpacity) * mult
-                        //}
+                        /* 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64> */
+                        elemOpacity += ((animatorProps.o.v[0]) * mult - elemOpacity) * mult
                     }
                     if (documentData.strokeWidthAnim && animatorProps.sw.propType != "") {
-                        //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                        //if (mult.size != 0) {
-                        //    sw += animatorProps.sw.v[0] * mult[0]
-                        //} else {
-                            sw += animatorProps.sw.v[0] * mult
-                        //}
+                        /* 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64> */
+                        sw += animatorProps.sw.v[0] * mult
                     }
                     if (documentData.strokeColorAnim && animatorProps.sc.propType != "") {
                         for (k in 0..3) {
-                            //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                            //if (mult.size != 0) {
-                            //    sc[k] += (animatorProps.sc.v[k] - sc[k]) * mult[0]
-                            //} else {
-                                sc[k] += (animatorProps.sc.v[k] - sc[k]) * mult
-                            //}
+                            /* 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64> */
+                            sc[k] += (animatorProps.sc.v[k] - sc[k]) * mult
                         }
                     }
                     if (documentData.fillColorAnim && documentData.fc.size > 0) {
                         if (animatorProps.fc.propType != "") {
                             for (k in 0..3) {
-                                //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                                //if (mult.size != 0) {
-                                //    fc[k] += (animatorProps.fc.v[k] - fc[k]) * mult[0]
-                                //} else {
-                                    fc[k] += (animatorProps.fc.v[k] - fc[k]) * mult
-                                //}
+                                /* 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64> */
+                                fc[k] += (animatorProps.fc.v[k] - fc[k]) * mult
                             }
                         }
                         if (animatorProps.fh.propType != "") {
-                            //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                            //if (mult.size != 0) {
-                            //    fc = addHueToRGB(fc, animatorProps.fh.v[0] * mult[0])
-                            //} else {
-                                fc = addHueToRGB(fc, animatorProps.fh.v[0] * mult)
-                            //}
+                            /* 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64> */
+                            fc = addHueToRGB(fc, animatorProps.fh.v[0] * mult)
                         }
                         if (animatorProps.fs.propType != "") {
-                            //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                            //if (mult.size != 0) {
-                            //    fc = addSaturationToRGB(fc, animatorProps.fs.v[0] * mult[0])
-                            //} else {
-                                fc = addSaturationToRGB(fc, animatorProps.fs.v[0] * mult)
-                            //}
+                            /* 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64> */
+                            fc = addSaturationToRGB(fc, animatorProps.fs.v[0] * mult)
                         }
                         if (animatorProps.fb.propType != "") {
-                            //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                            //if (mult.size != 0) {
-                            //    fc = addBrightnessToRGB(fc, animatorProps.fb.v[0] * mult[0])
-                            //} else {
-                                fc = addBrightnessToRGB(fc, animatorProps.fb.v[0] * mult)
-                            //}
+                            /* 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64> */
+                            fc = addBrightnessToRGB(fc, animatorProps.fb.v[0] * mult)
                         }
                     }
                 }
@@ -594,18 +491,11 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
     
                     if (animatorProps.p.propType != "") {
                         animatorSelector = animators[j].s
-                        //TODO: 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64>
+                        /* 冲突。animatorSelector.getMult 返回值是 Float64，但此处结果是 Float64/Array<Float64> */
                         mult = animatorSelector.getMult(letters[i].anIndexes[j], textData.a[j].s.totalChars)
                         if (this._hasMaskedPath) {
-                            //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                            //if (mult.size != 0) {
-                            //    matrixHelper.translate(0.0, animatorProps.p.v[1] * mult[0], tz: -animatorProps.p.v[2] * mult[1])
-                            //} else {
-                                matrixHelper.translate(0.0, animatorProps.p.v[1] * mult, tz: -animatorProps.p.v[2] * mult)
-                            //}
-                        //} else if (mult.size != 0) {
-                        //    //TODO: 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64>
-                        //    matrixHelper.translate(animatorProps.p.v[0] * mult[0], animatorProps.p.v[1] * mult[1], tz: -animatorProps.p.v[2] * mult[2])
+                            /* 冲突。animatorSelector.getMult 返回值 mult 是 Float64，但此处 mult 是 Float64/Array<Float64> */
+                            matrixHelper.translate(0.0, animatorProps.p.v[1] * mult, tz: -animatorProps.p.v[2] * mult)
                         } else {
                             matrixHelper.translate(animatorProps.p.v[0] * mult, animatorProps.p.v[1] * mult, tz: -animatorProps.p.v[2] * mult)
                         }
@@ -619,14 +509,9 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                     }
                 }
                 if (documentData.strokeColorAnim) {
-                    //TODO: 是否将和 rgb 颜色有关的都改为 Int64 ？？？
-                    //letterSc = "rgb(" + round(sc[0] * 255.0).toString() + "," + round(sc[1] * 255.0).toString() + "," + round(sc[2] * 255.0).toString() + ")"
-                    //letterSc = Color(UInt8(round(sc[0] * 255.0)), UInt8(round(sc[1] * 255.0)), UInt8(round(sc[2] * 255.0)))
                     letterSc = Color(UInt8(round(sc[0] * 255.0)), UInt8(round(sc[1] * 255.0)), UInt8(round(sc[2] * 255.0)))
                 }
                 if (documentData.fillColorAnim && documentData.fc.size > 0) {
-                    //TODO: 是否将和 rgb 颜色有关的都改为 Int64 ？？？
-                    //letterFc = "rgb(" + round(fc[0] * 255.0).toString() + "," + round(fc[1] * 255.0).toString() + "," + round(fc[2] * 255.0).toString() + ")"
                     letterFc = Color(UInt8(round(fc[0] * 255.0)),UInt8(round(fc[1] * 255.0)),UInt8(round(fc[2] * 255.0)))
                 }
     
@@ -692,7 +577,6 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
             return
         }
         this._frameId = this.elemGlobalData.frameId
-        //TODO：调用父类 DynamicPropertyContainer.iterateDynamicProperties
         this.iterateDynamicProperties()
     }
 

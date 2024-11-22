@@ -6,15 +6,11 @@
 package lottie.property
 
 public class RoundCornersModifier <: ShapeModifier {
-    //TODO：拆分多继承问题 -- extendPrototype([ShapeModifier], RoundCornersModifier)
 
     public var rd: Option<PropertyFactory<ArrayKeyframeFloat64, Float64>>
     
     public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>){
         super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        
-//        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
-//        this.rd = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.rd = None
     }
     
@@ -23,8 +19,6 @@ public class RoundCornersModifier <: ShapeModifier {
     }
 
     public func initModifierProperties(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer): Unit {
-        //TODO: 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
-
         if (data.ty == "rd") {
             let rc: RoundedCorners = (data as RoundedCorners).getOrThrow()
             
@@ -40,14 +34,11 @@ public class RoundCornersModifier <: ShapeModifier {
                 value.container = [this]
                 this._isAnimated = value.effectsSequence.size != 0
             }
-//            this.rd.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-//            this.rd.container = [this]
         }
-//        this._isAnimated = this.rd.effectsSequence.size != 0
     }
 
     public func processPath(path: ShapeData, round: Float64): ShapeData {
-        var clonedPath: ShapeData = ShapeData()  //shapePool.newElement()
+        var clonedPath: ShapeData = ShapeData()
         
         clonedPath.c = path.c
         var len: Int64 = path._length
@@ -129,7 +120,6 @@ public class RoundCornersModifier <: ShapeModifier {
         var shapePaths: ArrayList<ShapeData> = ArrayList<ShapeData>()
         let len: Int64 = this.shapes.size
         var jLen: Int64 = 0
-//        var rd_v: Array<Float64> = this.rd.v
         var rd_v: Array<Float64> = if (let Some(value) <- rd) {
                 value.v
             } else {

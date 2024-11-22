@@ -74,13 +74,10 @@ public class DocumentData <: ToString & Equatable<DocumentData> {
     public var sc: Array<Float64>         // 8  = strokeColor
     public var sw: Float64                // 9  = strokeWidth
     public var of: Bool                   // 10 = strokeOverFill
+    public var ps: Array<Float64>         // 11 = boxPosition
+    public var sz: Array<Float64>         // 12 = boxSize
 
-    //public let ps: PointF                 // 11 = boxPosition
-    //public let sz: PointF                 // 12 = boxSize
-    public var ps: Array<Float64>                 // 11 = boxPosition
-    public var sz: Array<Float64>                 // 12 = boxSize
-
-    //TODO: 应用于 TextProperty.currentData 中数据结构
+    //应用于 TextProperty.currentData 中数据结构
     public var ascent: Float64 = 0.0
     public var boxWidth: Array<Float64> = Array<Float64>()
     public var fStyle: String = ""
@@ -90,7 +87,6 @@ public class DocumentData <: ToString & Equatable<DocumentData> {
     public var l: ArrayList<Letter> = ArrayList<Letter>()
     public var lineWidths: ArrayList<Float64> = ArrayList<Float64>()
 
-    //public var t: Int64 = 0  //理解错误，t就是字符串，只是js中开始赋值的是 0
     public var fillColorAnim: Bool = false
     public var strokeColorAnim: Bool = false
     public var strokeWidthAnim: Bool = false
@@ -131,8 +127,6 @@ public class DocumentData <: ToString & Equatable<DocumentData> {
         sc!: Array<Float64> = Array<Float64>(),
         sw!: Float64 = 0.0,
         of!: Bool = false,
-        //ps!: PointF = PointF(),
-        //sz!: PointF = PointF()
         ps!: Array<Float64> = Array<Float64>(),
         sz!: Array<Float64> = Array<Float64>()
     ){
@@ -188,7 +182,7 @@ public class DocumentData <: ToString & Equatable<DocumentData> {
                this.ps == that.ps &&
                this.sz == that.sz &&
 
-               //TODO: 应用于 TextProperty.currentData 中数据结构
+               //应用于 TextProperty.currentData 中数据结构
                this.ascent   == that.ascent &&
                this.boxWidth == that.boxWidth &&
                this.fStyle   == that.fStyle &&

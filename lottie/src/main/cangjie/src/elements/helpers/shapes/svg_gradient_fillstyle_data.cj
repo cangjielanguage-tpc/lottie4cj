@@ -7,21 +7,18 @@ import std.collection.*
 
 import lottie.utils.*
 import lottie.inner.*
-//DynamicPropertyContainer类继承关系
+
 public class SVGGradientFillStyleData <: SVGNoStyleData{
 
     var g: ElementDatag = ElementDatag()
-    // var style: Object
     var stops: ArrayList<CreateNS> = ArrayList<CreateNS>()
     var cst: ArrayList<CreateNS> = ArrayList<CreateNS>()
     var ost: ArrayList<CreateNS> = ArrayList<CreateNS>()
-    //data,styleOb类型未确定
     public init(elem: Object, data: Datas, styleOb: SVGStyleData) {
         super(elem,data,styleOb)
     }
 
     public func initGradientData(elem: Object, data: Datas, styleOb: Object) {
-        //TODO
     }
 
     public func setGradientData(pathElement: CreateNS, data: Datas) {
@@ -42,7 +39,7 @@ public class SVGGradientFillStyleData <: SVGNoStyleData{
             gfill.appendChild(stop)
             stops.append(stop)
         }
-        //TODO
+
         if (data.ty == "gf") {
             pathElement.setAttribute("fill" , "url(" + "" + "#" + gradientId + ")")
         }else {
@@ -52,7 +49,7 @@ public class SVGGradientFillStyleData <: SVGNoStyleData{
         this.cst = stops
     }
 
-    //未完全实现
+    /* 未完全实现 */
     public func setGradientOpacity(data: Datas, styleOb: Object) {
         if (this.g._hasOpacity!= 0 && !this.g._collapsable) {
             var stop: CreateNS
@@ -70,7 +67,7 @@ public class SVGGradientFillStyleData <: SVGNoStyleData{
             opFill.setAttribute("id", opacityId)
             opFill.setAttribute("spreadMethod", "pad")
             opFill.setAttribute("gradientUnits", "userSpaceOnUse")
-            //TODO  编译用
+
             var jLen = 10
             var stops = this.stops
             for (j in data.g.p * 4..jLen:2) {
@@ -80,7 +77,7 @@ public class SVGGradientFillStyleData <: SVGNoStyleData{
                 stops.append(stop)
             }
             if (data.ty == "gf") {
-                //getLocationHref() = ""
+
                 maskElement.setAttribute("fill" , "url(" + "" + "#" + opacityId + ")")
             }else{
                 maskElement.setAttribute("stroke", "url(" + "" + "#" + opacityId + ")")

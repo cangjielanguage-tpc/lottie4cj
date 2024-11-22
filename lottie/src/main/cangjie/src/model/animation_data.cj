@@ -17,11 +17,8 @@ internal import std.collection.*
 public class AnimationData <: ToString {
 
     public var __complete: Bool = false
-    //TODO: AnimationItem.loadNextSegment 用到。
-    //动画片段声明 AnimationSegment = [number, number]，写为元组类型(Int64, Int64)
-    //public var segments: Array<(Int64, Int64)> = Array<(Int64, Int64)>()
+    //动画片段声明 AnimationSegment = [number, number]，写为数组类型(Int64, Int64)--AnimationItem.loadNextSegment 用到。
     public var segments: ArrayList<Array<Float64>> = ArrayList<Array<Float64>>()
-
 
     public let w: Int64                          // 0 = width       // View width
     public let h: Int64                          // 1 = height      // View height
@@ -29,11 +26,11 @@ public class AnimationData <: ToString {
     public var op: Float64                       // 3 = endFrame    // End key frame
     public let fr: Float64                       // 4 = frameRate   // Frame rate
     public let v: String                         // 5 = version     // bodymovin version
-    public let layers: Array<Layer>            // 6 = layers      // Layer information
-    public var assets: Array<Asset>            // 7 = assets      // Resource information
+    public let layers: Array<Layer>              // 6 = layers      // Layer information
+    public var assets: Array<Asset>              // 7 = assets      // Resource information
     public let fonts: Fonts                      // 8 = fonts       // typeface
-    public let chars: Array<FontCharacter>     // 9 = chars
-    public let markers: Array<Marker>          // 10 = markers    // Mask set
+    public let chars: Array<FontCharacter>       // 9 = chars
+    public let markers: Array<Marker>            // 10 = markers    // Mask set
     public let nm: String                        // 11 = nm         // name
     public let ddd: Int64                        // 12 = ddd        // Whether it is 3D
 

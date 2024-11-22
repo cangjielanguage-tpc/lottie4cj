@@ -16,7 +16,7 @@ public class AnimatableSplitDimensionPathValue <: ToString {
     public let x: Array<Keyframe<Float64>>
     public let y: Array<Keyframe<Float64>>
 
-    //TODO: 暂未在 json 中找到 z。暂定为 Array<Keyframe<Float64>>。TransformProperty中编译用。
+    //暂未在 json 中找到 z。暂定为 Array<Keyframe<Float64>>。TransformProperty中编译用。
     public var z: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
     public var s: Bool
 

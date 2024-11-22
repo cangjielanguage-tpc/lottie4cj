@@ -84,13 +84,11 @@ func getElementByIdEmpty(ind: Int64): Option<BaseElement> {
     return Option<BaseElement>.None
 }
 
-
-//cj继承关系：BaseElement <: RenderableDOMElement <: RenderableElement <: TransformElement <: HierarchyElement <: FrameElement
 public open class BaseElement <: Equatable<BaseElement> {
 
-    //comp数据类型：1-Element；2-Renderer；3-其他
+    /* comp数据类型：1-Element；2-Renderer；3-其他 */
     public var compType: Int8 = 0
-    //comp数据类型是 Element，对应的 Element.data.ind
+    /* comp数据类型是 Element，对应的 Element.data.ind */
     public var compDataInd: Int64 = -1
     /*
      * comp 在arkts中是多种数据类型，cangjie没有办法完全兼容。
@@ -104,7 +102,7 @@ public open class BaseElement <: Equatable<BaseElement> {
     
     public var getElementByIdInRender: (Int64) -> Option<BaseElement> = getElementByIdEmpty
 
-//FrameElement-1-----------------------------------------------------------------------------
+    /* FrameElement-1----------------------------------------------------------------------------- */
     /* 渲染inpoint时设置为true */
     public var _isFirstFrame: Bool = false
 
@@ -116,12 +114,12 @@ public open class BaseElement <: Equatable<BaseElement> {
     public var _isParent: Bool = false
     public var globalData: GlobalData
     public var isNull: Bool
-//FrameElement-2-----------------------------------------------------------------------------
+    /* FrameElement-2----------------------------------------------------------------------------- */
 
-//HierarchyElement-1-----------------------------------------------------------------------------
+    /* HierarchyElement-1----------------------------------------------------------------------------- */
     public var finalTransform: FinalTransform = FinalTransform(isNull: true, dynamicProperties: ArrayList<DynamicPropertyContainer>())
 
-    //元素的父列表
+    /* 元素的父列表 */
     public var hierarchy: ArrayList<BaseElement> = ArrayList<BaseElement>()
     public var data: Layer
     public var buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit = {m,n,o => ()}
@@ -129,45 +127,44 @@ public open class BaseElement <: Equatable<BaseElement> {
     public var getElementByPathInt64: (Array<Int64>) -> Option<BaseElement> = { m => None }
     public var getElementByPathString: (Array<String>) -> Option<BaseElement> = { m => None }
 
-//HierarchyElement-2-----------------------------------------------------------------------------
+    /* HierarchyElement-2----------------------------------------------------------------------------- */
 
-//RenderableElement-1-----------------------------------------------------------------------------
+    /* RenderableElement-1----------------------------------------------------------------------------- */
     public var canvasContext: LottieCanvasRenderingContext2D
     public var transformCanvas: TransformCanvas = TransformCanvas()
     public var renderableEffectsManager: CvEffects = unsafe {zeroValue<CvEffects>()}
     public var effectsManager: EffectsManager = unsafe {zeroValue<EffectsManager>()}
 
-    // BaseElement 里面的函数迁移到 RenderableElement
+    /* BaseElement 里面的函数迁移到 RenderableElement */
     public var layerId: String = ""
 
-    //层的可见性与内点和外点有关。将isVisible重命名为isInRange
+    /* 层的可见性与内点和外点有关。将isVisible重命名为isInRange */
     public var isInRange: Bool = false
-    //层的显示状态
+    /* 层的显示状态 */
     public var hidden: Bool = false
-    //如果层的透明度等于0，则可以将其隐藏
+    /* 如果层的透明度等于0，则可以将其隐藏 */
     public var isTransparent: Bool = false
-    //public var maskManager: CvMaskElement = unsafe {zeroValue<CvMaskElement>()}
     public var maskManager: Array<CvMaskElement> = Array<CvMaskElement>()
 
-    //动画组件列表
+    /* 动画组件列表 */
     public var renderableComponents1: ArrayList<CvEffects> = ArrayList<CvEffects>()
     public var renderableComponents: ArrayList<BaseElement> = ArrayList<BaseElement>()
 
-//RenderableElement-2-----------------------------------------------------------------------------
+    /* RenderableElement-2----------------------------------------------------------------------------- */
 
-//RenderableDOMElement-1-----------------------------------------------------------------------------
+    /* RenderableDOMElement-1----------------------------------------------------------------------------- */
     public var baseElement: CreateNS = CreateNS("")
     public var layerElement: CreateNS = CreateNS("")
     var innerElem: CreateNS = CreateNS("")
 
-//RenderableDOMElement-2-----------------------------------------------------------------------------
+    /* RenderableDOMElement-2----------------------------------------------------------------------------- */
 
 
-    //[ICompElement]--中移过来的。------------------------------------------------------
+    /* [ICompElement]--中移过来的。------------------------------------------------------ */
     public var layers: Array<Layer> = empty_Array_layer
     public var elements: Array<BaseElement> = Array<BaseElement>()
     var completeLayers: Bool = false
-    //[ICompElement]--中移过来的。------------------------------------------------------
+    /* [ICompElement]--中移过来的。------------------------------------------------------ */
 
 
     public var maskedElement: CreateNS = CreateNS("")
@@ -220,21 +217,21 @@ public open class BaseElement <: Equatable<BaseElement> {
         } else if (layer.ty == 5) {
             return CvTextElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender, compDataInd: this.data.ind)
         } else if (layer.ty == 6) {
-            //暂不实现  //return this.createAudio(layer)
+            /* 暂不实现  //return this.createAudio(layer) */
             return NullElement(layer, this.globalData)
         } else if (layer.ty == 13) {
-            //暂不实现  //return this.createCamera(layer)
+            /* 暂不实现  //return this.createCamera(layer) */
             throw Exception("You\'re using a 3d camera. Try the html renderer.")
         } else if (layer.ty == 15) {
-            //暂不实现  //return this.createFootage(layer)
+            /* 暂不实现  //return this.createFootage(layer) */
             return NullElement(layer, this.globalData)
         } else {
             return NullElement(layer, this.globalData)
         }
     }
-    //BaseRenderer.prototype.createItem----------------------------------------------------------------
+    /* BaseRenderer.prototype.createItem---------------------------------------------------------------- */
 
-    //HierarchyElement.prototype.checkParenting----------------------------------------------------------------
+    /* HierarchyElement.prototype.checkParenting---------------------------------------------------------------- */
     public func checkParenting(): Unit {
         let parent = this.data.parent
 
@@ -246,9 +243,9 @@ public open class BaseElement <: Equatable<BaseElement> {
             }
         }
     }
-    //HierarchyElement.prototype.checkParenting----------------------------------------------------------------
+    /* HierarchyElement.prototype.checkParenting---------------------------------------------------------------- */
 
-    //BaseRenderer.prototype.buildElementParenting----------------------------------------------------------------
+    /* BaseRenderer.prototype.buildElementParenting---------------------------------------------------------------- */
     public func addPendingElement(element: BaseElement): Unit {
         this.pendingElements.append(element)
     }
@@ -257,7 +254,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         let layers: Array<Layer> = this.layers
         let len: Int64 = layers.size
         for (i in 0..len) {
-            if (layers[i].ind == parentName) {                   // eslint-disable-line eqeqeq
+            if (layers[i].ind == parentName) {                   /* eslint-disable-line eqeqeq */
                 if (elements.size > i && elements[i].isNull) {
                     this.buildItem(i)
                     this.addPendingElement(element)
@@ -277,10 +274,9 @@ public open class BaseElement <: Equatable<BaseElement> {
             }
         }
     }
-    //BaseRenderer.prototype.buildElementParenting----------------------------------------------------------------
+    /* BaseRenderer.prototype.buildElementParenting---------------------------------------------------------------- */
 
 
-    //-------------------------------------------------------------------------------------
     public var createItem: (Layer) -> BaseElement = emptyCreateItem
     public var pendingElements: ArrayList<BaseElement> = ArrayList<BaseElement>()
 
@@ -319,7 +315,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.completeLayers = true
 
         for(i in ((len - 1)..=0 : -1)) {
-            //如果当层无 element，代表该层 layer 未处理。
+            /* 如果当层无 element，代表该层 layer 未处理。 */
             if (this.elements[i].isNull) {
                 data = this.layers[i]
                 if ((data.ip - data.st) <= (num - this.layers[i].st) && (data.op - data.st) > (num - this.layers[i].st)) {
@@ -362,17 +358,17 @@ public open class BaseElement <: Equatable<BaseElement> {
         return this.types
     }
 
-//FrameElement-1-----------------------------------------------------------------------------
+    /* FrameElement-1----------------------------------------------------------------------------- */
 
     /**
      * 初始化与帧相关的属性。
      */
     public func initFrame(): Unit {
-        //渲染inpoint时设置为true
+        /* 渲染inpoint时设置为true */
         this._isFirstFrame = false
-        //动画特性列表
+        /* 动画特性列表 */
         this.dynamicProperties = ArrayList<DynamicPropertyContainer>(24)
-        //如果层在当前刻度中已修改，则为真
+        /* 如果层在当前刻度中已修改，则为真 */
         this._mdf = false
     }
     /**
@@ -410,15 +406,15 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.dynamicProperties.append(props)
     }
 
-//FrameElement-2-----------------------------------------------------------------------------
+    /* FrameElement-2----------------------------------------------------------------------------- */
 
 
-//HierarchyElement-1-----------------------------------------------------------------------------
+    /* HierarchyElement-1----------------------------------------------------------------------------- */
 
     public func initHierarchy() {
-        //元素的父列表
+        /* 元素的父列表 */
         this.hierarchy = ArrayList<HierarchyElement>()
-        //如果元素是另一层的父元素_isPparent将为true
+        /* 如果元素是另一层的父元素_isPparent将为true */
         this._isParent = false
         this.checkParenting()
     }
@@ -442,9 +438,9 @@ public open class BaseElement <: Equatable<BaseElement> {
         this._isParent = true
     }
 
-//HierarchyElement-2-----------------------------------------------------------------------------
+    /* HierarchyElement-2----------------------------------------------------------------------------- */
 
-//TransformElement-1-----------------------------------------------------------------------------
+    /* TransformElement-1----------------------------------------------------------------------------- */
 
     public func initTransform(data: Layer, globalData: GlobalData): Unit {
         this.data = data
@@ -478,7 +474,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         }
 
         if (this.data.ty != 11) {
-            //TODO: 为什么要注掉？？？ // this.createElements()
+            /* 为什么要注掉？？？ -- this.createElements() */
         }
     }
 
@@ -490,7 +486,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
         let finalMat: Matrix = this.finalTransform.mat
         let len: Int64 = this.hierarchy.size
-        //检查层次结构链中的任何变换矩阵是否已更改。
+        /* 检查层次结构链中的任何变换矩阵是否已更改。 */
         if (!this.finalTransform._matMdf) {
             for (i in 0..len) {
                 if (this.hierarchy[i].finalTransform.mProp._mdf) {
@@ -525,11 +521,11 @@ public open class BaseElement <: Equatable<BaseElement> {
     }
 
 
-//TransformElement-2-----------------------------------------------------------------------------
+    /* TransformElement-2----------------------------------------------------------------------------- */
 
 
 
-//RenderableElement-1-----------------------------------------------------------------------------
+    /* RenderableElement-1----------------------------------------------------------------------------- */
 
     public open func renderFrame(): Unit {
         this.renderFrame(false)
@@ -651,7 +647,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.globalData = globalData
         this.layerId = CreateElementID.createID()
 
-        //缺少此属性的旧动画的拉伸因子。
+        /* 缺少此属性的旧动画的拉伸因子。 */
         if (this.data.sr == 0.0) {
             this.data.sr = 1.0
         }
@@ -670,19 +666,19 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     public open func exitLayer () {
         if (this.data.tt >= 1) {
-            //恢复图层  //this.canvasContext.restoreLayer()
+            /* 恢复图层 */
             this.canvasContext.restore()
-            //将递归图层和mask动效图层进行指定混合
+            /* 将递归图层和mask动效图层进行指定混合 */
             match (operationsMap[this.data.tt]) {
                case "destination-in" => this.canvasContext.globalCompositeOperation(CompositeOperation.DestinationIn)
                case "destination-out" => this.canvasContext.globalCompositeOperation(CompositeOperation.DestinationOut)
                case _ =>  this.canvasContext.globalCompositeOperation(CompositeOperation.DestinationIn)
             }
-            //保存mask动效层  //this.canvasContext.saveLayer()
+            /* 保存mask动效层 */
             this.canvasContext.save()
             
-            //对之前的混合模式还原成默认模式
-            this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)// We draw the mask
+            /* 对之前的混合模式还原成默认模式 */
+            this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
 
             var tp: Int64 = this.data.tp
             if (tp == -1){
@@ -697,7 +693,7 @@ public open class BaseElement <: Equatable<BaseElement> {
             if(let Some(v) <- mask) {
                 v.renderFrame(true)
             }
-            //恢复图层  //this.canvasContext.restoreLayer()  //this.canvasContext.restoreLayer()
+            /* 恢复图层 */
             this.canvasContext.restore()
             this.canvasContext.restore()
 
@@ -722,9 +718,9 @@ public open class BaseElement <: Equatable<BaseElement> {
             this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
 
             this.canvasContext.save()
-            //保存递归图层
+            /* 保存递归图层 */
             this.canvasContext.save()
-            //对之前的混合模式还原成默认模式
+            /* 对之前的混合模式还原成默认模式 */
             this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
          }
     }
@@ -743,25 +739,25 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.renderRenderable()
         this.setBlendMode()
         let forceRealStack = (this.data.ty == 0)
-        //开始处理mask数据：包含两层layer数据，需要创建两个离屏绘制上下文
+        /* 开始处理mask数据：包含两层layer数据，需要创建两个离屏绘制上下文 */
         this.prepareLayer()
 
-        this.globalData.save(forceRealStack)  //CanvasRendererBase
+        this.globalData.save(forceRealStack)
 
         var tmps = this.finalTransform.mat.props
 
-        this.globalData.ctxTransform(this.finalTransform.mat.props) //CanvasRendererBase
+        this.globalData.ctxTransform(this.finalTransform.mat.props)
 
         if (let Some(ov) <- this.finalTransform.mProp.o) {
-            this.globalData.ctxOpacity(ov.v[0])   //CanvasRendererBase
+            this.globalData.ctxOpacity(ov.v[0])
         }
 
-        this.renderInnerContent() //CVShapeElement
+        this.renderInnerContent()
         this.globalData.restore(forceRealStack)
-        //将两个layer数据分别绘制到两个离屏画布上，通过将离屏绘制数据结合混合模式绘制到当前显示画布上，实现mask效果
-        this.exitLayer() // CVBaseElement
+        /* 将两个layer数据分别绘制到两个离屏画布上，通过将离屏绘制数据结合混合模式绘制到当前显示画布上，实现mask效果 */
+        this.exitLayer()
 
-        //恢复高斯模糊的默认值，防止非高斯模糊图层也高斯模糊 shadowBlur(blur: Int64): Unit
+        /* 恢复高斯模糊的默认值，防止非高斯模糊图层也高斯模糊 shadowBlur(blur: Int64): Unit */
         this.canvasContext.shadowBlur(0)
 
         if (this.maskManager.size > 0 && this.maskManager[0].hasMasks) {
@@ -816,7 +812,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     public open func changeColor(color: Array<Int64>, endColor: Array<Int64>) {
         this._isFirstFrame = true
-        this.renderShapeColor(color, endColor, 0) //CvCompElement
+        this.renderShapeColor(color, endColor, 0)
     }
 
     public open func changeColor(color: Array<Int64>, endColor: Int64) {
@@ -844,47 +840,35 @@ public open class BaseElement <: Equatable<BaseElement> {
         return Matrix()
     }
 
-//RenderableElement-2-----------------------------------------------------------------------------
+    /* RenderableElement-2----------------------------------------------------------------------------- */
 
 
 
-//RenderableDOMElement-1-----------------------------------------------------------------------------
+    /* RenderableDOMElement-1----------------------------------------------------------------------------- */
 
     public open func renderElement(): Unit {}
     public open func destroyBaseElement(): Unit {}
 
     public open func initElement(data: Layer, globalData: GlobalData) {
-        //调用 FrameElement.initFrame
         this.initFrame()
-        //调用 BaseElement.initBaseData
         this.initBaseData(data, globalData)
-        //调用 TransformElement.initTransform
         this.initTransform(data, globalData)
-        //调用 HierarchyElement.initHierarchy
         this.initHierarchy()
-        //调用 RenderableElement.initRenderable
         this.initRenderable()
-        //调用 CVBaseElement.initRendererElement
         this.initRendererElement()
-        //调用 CVBaseElement.createContainerElements
         this.createContainerElements()
-        //调用 CVBaseElement.createRenderableComponents
         this.createRenderableComponents()
-        //调用 CVBaseElement.createContent
         this.createContent()
         this.hide()
     }
 
     public open func prepareFrame(num: Float64): Unit {
         this._mdf = false
-        //调用 RenderableElement.prepareRenderableFrame
         this.prepareRenderableFrame(num)
-        //调用 FrameElement.prepareProperties
         this.prepareProperties(num, this.isInRange)
-        //调用 RenderableElement.checkTransparency
         this.checkTransparency()
     }
 
-//RenderableDOMElement-2-----------------------------------------------------------------------------
+    /* RenderableDOMElement-2----------------------------------------------------------------------------- */
 
 }

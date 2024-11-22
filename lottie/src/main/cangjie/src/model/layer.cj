@@ -14,7 +14,7 @@ public class Layer <: ToString {
     public var tp: Int64 = -1
 
     //ICompElement编译用。
-    public var xt: Bool = false //不确认xt数据类型，暂定为Bool。
+    public var xt: Bool = false
     //当 layer.ty == 101 && isAsset == true 时，此 Layer 实际代表的是 Asset。兼容 BaseRenderer.searchExtraCompositions 中 createComp 函数应用。
     public var asset: Asset = Asset("", Array<Layer>(), 0, 0, "", "", 0)
     public var isAsset: Bool = false
@@ -45,10 +45,10 @@ public class Layer <: ToString {
     public let sc: String                            // 7 = solidColor
     public let ks: AnimatableTransform               // 8 = transform
     public let tt: Int64                             // 9 = matteType
-    public let masksProperties: Array<Mask>        // 10 = masks
-    public let shapes: Array<ContentModel>         // 11 = shapes
+    public let masksProperties: Array<Mask>          // 10 = masks
+    public let shapes: Array<ContentModel>           // 11 = shapes
     public let t: LayerT                             // 12 = t
-    public let ef: Array<LayerEF>                  // 13 = ef
+    public let ef: Array<LayerEF>                    // 13 = ef
     public var sr: Float64                           // 14 = timeStretch
     public let st: Float64                           // 15 = startFrame
     public let w: Float64                            // 16 = preCompWidth
@@ -59,7 +59,7 @@ public class Layer <: ToString {
     public let cl: String                            // 21 = cl
     public let hd: Bool                              // 22 = hidden
     public let ao: Int64                             // 23 = autoOrient
-    public let bm: UnionType                             // 24 = blendMode
+    public let bm: UnionType                         // 24 = blendMode
 
     /**
      * Create a Layer instance based on parameters.
@@ -181,8 +181,8 @@ public class Layer <: ToString {
         "cl = ${cl}\n" +                // 21 = cl
         "hd = ${hd}\n" +                // 22 = hidden
         "ao = ${ao}\n" +                // 23 = autoOrient
-        "bm = ${bm}\n}" +                 // 24 = blendMode
-        "ddd = ${ddd}\n}"                 // 24 = blendMode
+        "bm = ${bm}\n}" +               // 24 = blendMode
+        "ddd = ${ddd}\n}"               // 24 = blendMode
     }
 
 }
@@ -242,7 +242,7 @@ public class LayerTM <: ToString {
 
 public class LayerT <: ToString {
 
-    //TODO: 编译用，暂时在 json 中找不到 layer.t.p。
+    //编译用，暂时在 json 中找不到 layer.t.p。
     public var p: String = ""
 
     public let d: LayerTD
@@ -292,10 +292,10 @@ public class LayerT <: ToString {
  *   ]
  * ]
 */
-//TODO: LayerEF 和 Effect 进行关联继承。 Effect <: LayerEF
+//LayerEF 和 Effect 进行关联继承。 Effect <: LayerEF
 public open class LayerEF <: ToString {
 
-    //TODO: [EffectsExpressionInterface用到] LayerEF 中增加成员变量 mn/np/en/ix ？？？
+    //[EffectsExpressionInterface用到] LayerEF 中增加成员变量 mn/np/en/ix ？？？
     public var mn: String = ""
     public var np: Int64 = 0
     public var en: Int64 = 0

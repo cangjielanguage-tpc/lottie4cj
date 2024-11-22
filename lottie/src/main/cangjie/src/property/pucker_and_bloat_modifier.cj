@@ -2,21 +2,16 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-//package lottie.utils.shapes
 package lottie.property
 
 public class PuckerAndBloatModifier <: ShapeModifier { 
-    //TODO：拆分多继承问题 -- extendPrototype([ShapeModifier], PuckerAndBloatModifier)
 
-    //"a": {"a": 0, "k": 0, "ix": 7} => 走【分支1】
+    /* "a": {"a": 0, "k": 0, "ix": 7} => 走【分支1】 */
     var amount: Option<PropertyFactory<AK, Float64>>
     var lineJoin: Int64 = 0
 
     public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>){
         super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        
-//        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
-//        this.amount = PropertyFactory<AK, Float64>(AK(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.amount = None
     }
     
@@ -25,8 +20,6 @@ public class PuckerAndBloatModifier <: ShapeModifier {
     }
     
     public func initModifierProperties(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer) {
-        //TODO: 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
-
         /*
          * 只在 GradientStroke-"gs"/GradientFill-"gf" 中找到成员变量 a（已新增） 
          * "a": {"a": 0, "k": 0, "ix": 7} => 走【分支1】
@@ -35,7 +28,6 @@ public class PuckerAndBloatModifier <: ShapeModifier {
         if (data.ty == "gf") {
             let gf: GradientFill = (data as GradientFill).getOrThrow()
             a = gf.a
-            //TODO: 传入的 tr.a 必须存在，否则代码运行异常。
             this.amount = PropertyFactory<AK, Float64>.getProp(gf.a, Float64(gf.a.k), 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         } else if (data.ty == "gs") {
             let gs: GradientStroke = (data as GradientStroke).getOrThrow()
@@ -49,10 +41,6 @@ public class PuckerAndBloatModifier <: ShapeModifier {
             this._isAnimated = value.effectsSequence.size != 0
         }
 
-//        this.amount.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-//        this.amount.container = [this]
-//
-//        this._isAnimated = this.amount.effectsSequence.size != 0
     }
     
     public func processPath(path: ShapeData, amount: Float64): ShapeData {
@@ -67,7 +55,7 @@ public class PuckerAndBloatModifier <: ShapeModifier {
         centerPoint[0] /= Float64(pathLength)
         centerPoint[1] /= Float64(pathLength)
 
-        var clonedPath: ShapeData = ShapeData()  //shapePool.newElement()
+        var clonedPath: ShapeData = ShapeData()
         
         clonedPath.c = path.c
         var vX: Float64 = 0.0
@@ -92,7 +80,7 @@ public class PuckerAndBloatModifier <: ShapeModifier {
         var shapePaths: ArrayList<ShapeData> = ArrayList<ShapeData>()
         let len: Int64 = this.shapes.size
         var jLen: Int64 = 0
-//        var amount_v: Array<Float64> = this.amount.v
+
         var amount_v: Array<Float64> = if (let Some(value) <- amount) {
             value.v
         } else {

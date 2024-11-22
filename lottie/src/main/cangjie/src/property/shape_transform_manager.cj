@@ -1,7 +1,6 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
-//package lottie.shape_items
 package lottie.property
 
 internal import std.collection.*
@@ -19,7 +18,6 @@ public class ShapeTransformManager {
         this.transform_key_count = 0
     }
 
-    //lp--20241012
     public func addTransformSequence(transforms: ArrayList<AnimatableTransformElement>): Sequence {
         let len: Int64 = transforms.size
         var key: String = "_"
@@ -74,7 +72,6 @@ public class ShapeTransformManager {
     }
 }
 
-//lp--20241012
 public class Sequence {
 
     protected var transforms: ArrayList<AnimatableTransformElement>

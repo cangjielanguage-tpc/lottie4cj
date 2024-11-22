@@ -34,11 +34,11 @@ public class TagStyle {
 
 public class CreateNS <: ToString & Equatable<CreateNS> {
 
-    //------CreateTag---------------------------------------------------------------------
+    /* ------CreateTag--------------------------------------------------------------------- */
     public var types: String = ""
     public var style: TagStyle = TagStyle()
     public var innerText: String = ""
-    //------CreateTag---------------------------------------------------------------------
+    /* ------CreateTag--------------------------------------------------------------------- */
 
     public var crossOrigin: String = ""
     public var src: String = ""
@@ -49,8 +49,6 @@ public class CreateNS <: ToString & Equatable<CreateNS> {
     var ks: HashMap<String, String> = HashMap<String, String>()
     var childs: ArrayList<CreateNS> = ArrayList<CreateNS>()
 
-    //TODO: 暂时无成员变量 style 的数据类型
-    //TODO: style 是一个对象??? 还是一个 HashMap<String, String> ???
     public var styles: HashMap<String, String> = HashMap<String, String>()
     
     public let isNull: Bool
@@ -171,7 +169,6 @@ public class CreateNS <: ToString & Equatable<CreateNS> {
                 }
             }
         }
-        //TODO: 暂时无成员变量 style 的数据类型，顾暂时不做相同比较
         return true
     }
 

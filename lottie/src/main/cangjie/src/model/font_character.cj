@@ -41,10 +41,10 @@ public class CharsData <: ToString {
     }
 }
 
-//"chars" - The corresponding data type in json.
+/* "chars" - The corresponding data type in json. */
 public class FontCharacter <: Hashable & ToString {
 
-    //TODO: 编译用，暂时在 json 中找不到 chars[i].t。
+    /* 编译用，暂时在 json 中找不到 chars[i].t。*/
     public var t: Int64 = -1
 
     private static let CHARS_HASH_DEFAULT: Int64 = 31

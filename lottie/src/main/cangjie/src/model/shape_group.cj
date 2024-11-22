@@ -19,7 +19,7 @@ public class ShapeGroup <: ContentModel {
      */
     public let nm: String                    // 0 = name
 
-    public let it: Array<ContentModel>     // 2 = items
+    public let it: Array<ContentModel>       // 2 = items
 
     public var cix: Int64 = 0
 

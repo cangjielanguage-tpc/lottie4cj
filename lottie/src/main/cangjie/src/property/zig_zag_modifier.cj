@@ -125,12 +125,6 @@ public open class ZigZagModifier <: ShapeModifier {
         	Array<Float64>()
         }
 
-//        var amplitude_v: Array<Float64> = this.amplitude.v
-        
-//        let frequency_v: Float64 = max(0.0, round(this.frequency.v[0]))
-        
-//        var pointType_v: Array<Float64> = this.pointsType.v
-    
         if (amplitude_v.size > 0 && amplitude_v[0] != 0.0) {
 
             var localShapeCollection: ShapeCollection = ShapeCollection()

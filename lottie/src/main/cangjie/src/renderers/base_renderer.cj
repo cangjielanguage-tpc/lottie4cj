@@ -30,7 +30,7 @@ public type CreateTag = CreateNS
 public open class BaseRenderer {
 
     /*
-     * TODO：解构以下 AnimationItem 和 Renderer。
+     * 解构以下 AnimationItem 和 Renderer。
      * this.animationItem.wrapper
      * this.animationItem.container
      * this.animationItem._isFirstFrame
@@ -45,7 +45,6 @@ public open class BaseRenderer {
      * [AnimationItem] this.wrapper = params.wrapper || params.container ( params <=> loadAnimation(params) )
      *   =>  CanvasRenderingContext2D = this.canvasContext = this.renderConfig.context
      */
-    //CanvasRendererBase 中挪过来的。
     public var canvasContext: LottieCanvasRenderingContext2D
 
     public var _isFirstFrameInAnimationItem: () -> Float64 = { => 0.0 }
@@ -92,7 +91,7 @@ public open class BaseRenderer {
         this.completeLayers = true
 
         for(i in ((len - 1)..=0 : -1)) {
-            //如果当层无 element，代表该层 layer 未处理。
+            /* 如果当层无 element，代表该层 layer 未处理。 */
             if (this.elements[i].isNull) {
                 data = this.layers[i]
                 if ((data.ip - data.st) <= (num - this.layers[i].st) && (data.op - data.st) > (num - this.layers[i].st)) {
@@ -137,12 +136,12 @@ public open class BaseRenderer {
         } else if (layer.ty == 5) {
             return this.createText(layer)
         } else if (layer.ty == 6) {
-            //暂不实现  //return this.createAudio(layer)
+            /* 暂不实现  --return this.createAudio(layer) */
             return this.createNull(layer)
         } else if (layer.ty == 13) {
             return this.createCamera(layer)
         } else if (layer.ty == 15) {
-            //暂不实现  //return this.createFootage(layer)
+            /* 暂不实现  --return this.createFootage(layer) */
             return this.createNull(layer)
         } else {
             return this.createNull(layer)
@@ -191,7 +190,7 @@ public open class BaseRenderer {
         for (i in 0..len) {
             j = 0
             while (j < jLen) {
-                // this.layers[j].id 是 Layer.ind ？？？ -- 暂时用this.layers[j].ind 代替 this.layers[j].id
+                /* this.layers[j].id 是 Layer.ind ？？？ -- 暂时用this.layers[j].ind 代替 this.layers[j].id */
                 if (this.layers[j].ind == newLayers[i].ind) {
                     this.layers[j] = newLayers[i]
                     break
@@ -200,8 +199,6 @@ public open class BaseRenderer {
             }
         }
     }
-
-    //TODO: 未实现 ProjectInterface  //public func setProjectInterface(pInterface: ProjectInterface) { this.globalData.projectInterface = pInterface }
 
     /**
      * Initialize all elements.
@@ -219,30 +216,23 @@ public open class BaseRenderer {
      * @param parentName - Type of Int64.
      * @param hierarchy - Type of ArrayList<BaseElement>.
      */
-    //TODO： element 数据类型未确认，暂定 BaseElement
     public func buildElementParenting(element: BaseElement, parentName: Int64, hierarchy: ArrayList<BaseElement>): Unit {
         let elements: Array<BaseElement> = this.elements
         let layers: Array<Layer> = this.layers
         let len: Int64 = layers.size
         for (i in 0..len) {
-            if (layers[i].ind == parentName) {                   // eslint-disable-line eqeqeq
-                //if (!elements[i] || elements[i] == true)
-                //(this.elements.size > i && !this.elements[i].isNull)
+            if (layers[i].ind == parentName) {                   /* eslint-disable-line eqeqeq */
                 if (elements.size <= i || elements[i].isNull) {
-                    //在子类 CanvasRendererBase 中具体实现
                     this.buildItem(i)
                     this.addPendingElement(element)
                 } else {
                     hierarchy.append(elements[i])
-                    //TODO[lp]: - HierarchyElement.setAsParent => elements 中保存的是 HierarchyElement ？？？
                     elements[i].setAsParent()
                     if (layers[i].parent != -1) {
                         this.buildElementParenting(element, layers[i].parent, hierarchy)
                     } else {
-                        //TODO[lp]: - HierarchyElement.setHierarchy => element 是 HierarchyElement ？？？
                         let bes: ArrayList<HierarchyElement> = ArrayList<HierarchyElement>(hierarchy.size)
                         for(i in 0..hierarchy.size) {
-                            //bes[i] = hierarchy[i]
                             bes.append(hierarchy[i])
                         }
                         element.setHierarchy(bes)
@@ -257,7 +247,6 @@ public open class BaseRenderer {
      *
      * @param element - Type of BaseElement.
      */
-    //TODO： element 数据类型未确认，暂定 BaseElement
     public func addPendingElement(element: BaseElement): Unit {
         this.pendingElements.append(element)
     }
@@ -270,16 +259,12 @@ public open class BaseRenderer {
     public func searchExtraCompositions(assets: Array<Asset>): Unit {
         let len: Int64 = assets.size
         for (i in 0..len) {
-            //TODO: 暂未在 json 中找到成员变量 xt。
             if (assets[i].xt) {
-                //TODO: 当 layer.ty == 101 && isNull == true 时，此 Layer 实际代表的是 Asset。兼容 BaseRenderer.searchExtraCompositions 中 createComp 函数应用。
                 let layer: Layer = Layer()
                 layer.isAsset = true
                 layer.asset = assets[i]
                 let comp: ICompElement = this.createComp(layer)
                 comp.initExpressions()
-                //TODO: GlobalData 中暂未实现 ProjectInterface。
-                //this.globalData.projectInterface.registerComposition(comp)
             }
         }
     }
@@ -306,7 +291,6 @@ public open class BaseRenderer {
      * @param paths - Type of Array<Int64>.
      * @return Type of Option<BaseElement>.
      */
-    //TODO: 返回值类型是 element，数据类型未确认，暂定是 BaseElement
     public func getElementByPath(paths: Array<Int64>): Option<BaseElement> {
         if (paths.size <= 0) {
             throw Exception("[BaseRenderer.getElementByPath] the param is empty.")
@@ -317,9 +301,6 @@ public open class BaseRenderer {
             return element
         }
         let path: Array<Int64> = paths.slice(1, paths.size)
-        //TODO：未找到 element.getElementByPath，elements 数据类型是 BaseElement/BaseRenderer ？？？
-        //TODO：需要后续再确认 this.elements 中的数据类型。
-        //return element.getElementByPath(path)
         return element.getElementByPathInt64(path)
     }
 
@@ -329,7 +310,6 @@ public open class BaseRenderer {
      * @param paths - Type of Array<String>.
      * @return Type of Option<BaseElement>.
      */
-    //TODO: 返回值类型是 element，数据类型未确认，暂定是 BaseElement
     public func getElementByPath(paths: Array<String>): Option<BaseElement> {
         if (paths.size <= 0) {
             throw Exception("[BaseRenderer.getElementByPath] the param is empty!")
@@ -351,9 +331,6 @@ public open class BaseRenderer {
             return element
         }
         let path: Array<String> = paths.slice(1, paths.size)
-        //TODO：未找到 element.getElementByPath，elements 数据类型是 BaseElement/BaseRenderer ？？？
-        //TODO：需要后续再确认 this.elements 中的数据类型。
-        //return this.elements[index].getElementByPath(path)
         return this.elements[index].getElementByPathString(path)
     }
 
@@ -363,20 +340,12 @@ public open class BaseRenderer {
      * @param animData - Type of AnimationData, an instance of the json data that encapsulates the animation.
      * @param fontsContainer - Type of CreateTag.
      */
-    //在 canvas 渲染时，fontsContainer是 None。
     public func setupGlobalData(animData: AnimationData, fontsContainer: CreateTag): Unit {
         this.globalData.fontManager = FontManager()
         this.globalData.fontManager.rendererType = this.rendererType
 
         this.globalData.fontManager.addChars(animData.chars)
         this.globalData.fontManager.addFonts(animData.fonts, fontsContainer)
-        //TODO: 未实现 animationItem.getAssetData/getAssetsPath/imagePreloader/audioController
-        //TODO：以下 3 个赋值， 移到 [AnimationItem].[setParams] 初始化 Renderer 时。
-        //this.globalData.getAssetData = this.animationItem.getAssetData
-        //this.globalData.getAssetsPath = this.animationItem.getAssetsPath
-        //this.globalData.imageLoader = this.animationItem.imagePreloader
-        //TODO：循环依赖。AudioControllerFactory 和 GlobalData 大循环依赖。暂时未实现。
-        //this.globalData.audioController = this.animationItem.audioController
 
         this.globalData.frameId = 0
         this.globalData.frameRate = animData.fr

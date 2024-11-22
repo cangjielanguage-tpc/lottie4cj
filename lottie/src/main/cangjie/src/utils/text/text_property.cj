@@ -38,33 +38,24 @@ public class TextProperty {
 
     var data: LayerT
 
-    //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
     public var addDynamicPropertyInTextElement: (TextProperty) -> Unit = default_addDynamicProperty
     let elemGlobalData: GlobalData
-    //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInElemComp】间接获取当时值。
+    /* this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInElemComp】间接获取当时值。*/
     public var renderedFrameInElemComp: () -> Float64 = { => 0.0}
-    //TODO: 暂时没有引入 BaseElement.comp--【不会再直接引入comp，具体用到comp的什么，再单独处理。】  //var comp = this.elem.comp
 
     var keysIndex: Int64 = 0
     var canResize: Bool = false
     var minimumFontSize: Float64 = 1.0
-    //TODO: 为了兼容，增加 2 个暂时不用的参数。
+    /* 为了兼容，增加 2 个暂时不用的参数。*/
     var effectsSequence: ArrayList<(DocumentData, String) -> DocumentData> = ArrayList<(DocumentData, String) -> DocumentData>()
 
     public var currentData: DocumentData = DocumentData()
 
     let defaultBoxWidth: Array<Float64> = [0.0, 0.0]
-    
 
-    //TODO:需要解构 ITextElement 和 TextProperty 互调用。改成 TextProperty 中只传入 ITextElement 中部分函数和值
-    //public TextProperty(data: LayerT, elemGlobalData: GlobalData, addDynamicProperty: (TextProperty) -> Unit) {
     public TextProperty(data: LayerT, elemGlobalData: GlobalData) {
         this.data = data
-        
         this.elemGlobalData = elemGlobalData
-        //this.addDynamicPropertyInTextElement = addDynamicProperty
-
-        //this.currentData = DocumentData()
         this.currentData.boxWidth = this.defaultBoxWidth
 
         /*
@@ -85,7 +76,7 @@ public class TextProperty {
             /*
              * 数据来源分析： this.currentData.t  =>  this.data.d.k[this.keysIndex].s.t => layer.t.d.k[i].s.t
              *  => Layer.t(LayerT).d(LayerTD).k[i](Array<Keyframe<DocumentData>>[i]).s(Option<DocumentData>).t
-             * obj.t  = k.t //原生的 t 改为 _t，现在的 t == layer.t.d.k[i].s.t，后续单独处理
+             * obj.t  = k.t   -- 原生的 t 改为 _t，现在的 t == layer.t.d.k[i].s.t，后续单独处理
              * 理解错误，t就是字符串，只是js中开始赋值的是 0
              */
             obj.t  = k.t
@@ -125,20 +116,16 @@ public class TextProperty {
     }
 
     public func searchKeyframes(): Bool {
-        //数据来源分析： this.data.d.k => layer.t.d.k => Layer.t(LayerT).d(LayerTD).k(Array<Keyframe<DocumentData>>)
+        /* 数据来源分析： this.data.d.k => layer.t.d.k => Layer.t(LayerT).d(LayerTD).k(Array<Keyframe<DocumentData>>) */
         this.kf = this.data.d.k.size > 1
         if (this.kf) {
-            //this.addEffect(this.getKeyframeValue.bind(this))
             this.addEffect(this.getKeyframeValue)
         }
         return this.kf
     }
 
-    //TODO: 为了兼容，增加 2 个不用的参数                                                           ???---lp---20240521--
     public func addEffect(effectFunction: (DocumentData, String) -> DocumentData) {
         this.effectsSequence.append(effectFunction)
-        //TODO: 未实现 elem.addDynamicProperty。
-        //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
         this.addDynamicPropertyInTextElement(this)
     }
 
@@ -176,12 +163,10 @@ public class TextProperty {
         }
 
         for (i in 0..len) {
-            //检查索引是否已更改，以防止每次表达式更新时都创建新对象。
+            /* 检查索引是否已更改，以防止每次表达式更新时都创建新对象。 */
             if (currentIndex != this.keysIndex) {
-                //TODO: 未实现 effectsSequence 带参重载函数                                         ???---lp---20240517--
                 finalValue = this.effectsSequence[i](finalValue, finalValue.t)
             } else {
-                //TODO: 未实现 effectsSequence 带参重载函数                                         ???---lp---20240517--
                 finalValue = this.effectsSequence[i](this.currentData, finalValue.t)
             }
         }
@@ -195,12 +180,12 @@ public class TextProperty {
         this.frameId = this.elemGlobalData.frameId
     }
 
-    //TODO: 为了兼容，增加 2 个暂时不用的参数。
+    /* 为了兼容，增加 2 个暂时不用的参数。*/
     public func getKeyframeValue(data: DocumentData, t: String): DocumentData {
-        //数据来源分析： this.data.d.k => layer.t.d.k => Layer.t(LayerT).d(LayerTD).k(Array<Keyframe<DocumentData>>)
+        /* 数据来源分析： this.data.d.k => layer.t.d.k => Layer.t(LayerT).d(LayerTD).k(Array<Keyframe<DocumentData>>) */
         let textKeys: Array<Keyframe<DocumentData>> = this.data.d.k
 
-        //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInElemComp】间接获取当时值。
+        /* this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInElemComp】间接获取当时值。*/
         var frameNum: Float64 = this.renderedFrameInElemComp()
 
         var i: Int64 = 0
@@ -228,7 +213,6 @@ public class TextProperty {
         let chars: Array<Rune> = text.toRuneArray()
 
         while (i < len) {
-            //charCode = text.charCodeAt(i)
             charCode = UInt32(chars[i])
             if (FontManager.isCombinedCharacter(charCode)) {
                 charactersArray[charactersArray.size - 1] = charactersArray[charactersArray.size - 1] + chars[i].toString()
@@ -254,7 +238,6 @@ public class TextProperty {
                 } else {
                     charactersArray.append(chars[i].toString())
                 }
-            //} else if (FontManager.isZeroWidthJoiner(charCode)) {
             } else if (FontManager.isZeroWidthJoiner(charCode, 0)) {
                 charactersArray[charactersArray.size - 1] = charactersArray[charactersArray.size - 1] + chars[i].toString()
                 shouldCombine = true
@@ -268,7 +251,6 @@ public class TextProperty {
 
     public func completeTextData(documentData: DocumentData) {
         documentData.__complete = true
-        //TODO: 未实现 FontManager                                                                ???---lp---20240520--
         var fontManager: FontManager = this.elemGlobalData.fontManager
         var data: LayerT = this.data
         var letters: ArrayList<Letter> = ArrayList<Letter>()
@@ -284,14 +266,11 @@ public class TextProperty {
         var lineWidth: Float64 = 0.0
         var maxLineWidth: Float64 = 0.0
 
-        //TODO: 未实现 FontManager.getFontByName                                                 ???---lp---20240520--
         var fontData: Font = fontManager.getFontByName(documentData.f)
-        //TODO: 未确认使用位置                                                                     ???---lp---20240520--
         var charData: FontCharacter = FontCharacter(CharsData(shapes: Array<ContentModel>()), "", 0.0, 0.0, "", "")
 
         var cLength: Float64 = 0.0
 
-        //TODO: 未实现 FontManager                                                               ???---lp---20240520--
         var fontProps: FontProps = getFontProperties(fontData)
 
         documentData.fWeight = fontProps.weight
@@ -327,7 +306,6 @@ public class TextProperty {
                     } else if (charCode == 13 || charCode == 3) {
                         lineWidth = 0.0
                         newLineFlag = true
-                        //currentHeight += documentData.finalLineHeight || documentData.finalSize * 1.2
                         if (documentData.finalLineHeight != 0.0) {
                             currentHeight += documentData.finalLineHeight
                         } else {
@@ -336,18 +314,12 @@ public class TextProperty {
 
                     }
                     if (fontManager.chars.size > 0) {
-                        //TODO: 未实现 FontManager.getCharData                                    ???---lp---20240520--
                         charData = fontManager.getCharData(finalText[idx], fontData.fStyle, fontData.fFamily)
-                        //cLength = newLineFlag ? 0 : (charData.w * documentData.finalSize) / 100
                         if (newLineFlag) {
                             cLength = 0.0
                         } else {
                             cLength = (charData.w * documentData.finalSize) / 100.0
                         }
-                    } else {
-                        // tCanvasHelper.font = documentData.s + "px "+ fontData.fFamily
-                        //TODO: 未实现 FontManager.measureText                                    ???---lp---20240520--
-                        //cLength = fontManager.measureText(finalText[idx], documentData.f, documentData.finalSize)
                     }
                     if (lineWidth + cLength > boxWidth && finalText[idx] != " ") {
                         if (lastSpaceIndex == -1) {
@@ -355,21 +327,19 @@ public class TextProperty {
                         } else {
                             idx = lastSpaceIndex
                         }
-                        //currentHeight += documentData.finalLineHeight || documentData.finalSize * 1.2
+
                         if (documentData.finalLineHeight != 0.0) {
                             currentHeight += documentData.finalLineHeight
                         } else {
                             currentHeight += documentData.finalSize * 1.2
                         }
 
-                        //finalText.splice(i, lastSpaceIndex === i ? 1 : 0, "\r")
                         if (lastSpaceIndex == idx) {
                             finalText.remove(idx)
                         } else {
                             finalText.insert(idx, "\r")
                         }
 
-                        // finalText = finalText.substr(0,i) + "\r" + finalText.substr(i === lastSpaceIndex ? i + 1 : i)
                         lastSpaceIndex = -1
                         lineWidth = 0.0
                     } else {
@@ -396,12 +366,12 @@ public class TextProperty {
         for (i in 0..len) {
             newLineFlag = false
             currentChar = documentData.finalText[i]
-            //charCode = currentChar.charCodeAt(0)
+
             charCode = UInt32(currentChar.toRuneArray()[0])
             if (charCode == 13 || charCode == 3) {
                 uncollapsedSpaces = 0.0
                 lineWidths.append(lineWidth)
-                //maxLineWidth = lineWidth > maxLineWidth ? lineWidth : maxLineWidth
+
                 if (lineWidth > maxLineWidth) {
                     maxLineWidth = lineWidth
                 }
@@ -414,30 +384,23 @@ public class TextProperty {
                 val = currentChar
             }
             if (fontManager.chars.size > 0) {
-                //TODO: 未实现 FontManager.getCharData                                          ???---lp---20240520--
                 charData = fontManager.getCharData(currentChar, fontData.fStyle, fontManager.getFontByName(documentData.f).fFamily)
-                //cLength = newLineFlag ? 0 : (charData.w * documentData.finalSize) / 100
                 cLength = (charData.w * documentData.finalSize) / 100.0
                 if (newLineFlag) {
                     cLength = 0.0
                 }
             } else {
-                // var charWidth = fontManager.measureText(val, documentData.f, documentData.finalSize)
-                // tCanvasHelper.font = documentData.finalSize + "px "+ fontManager.getFontByName(documentData.f).fFamily
-                //TODO: 未实现 FontManager.measureText                                           ???---lp---20240520--
-                //cLength = fontManager.measureText(val, documentData.f, documentData.finalSize)
+                /* 未实现 FontManager.measureText */
             }
 
-            //
             if (currentChar == " ") {
                 uncollapsedSpaces += (cLength + trackingOffset)
             } else {
                 lineWidth += (cLength + trackingOffset + uncollapsedSpaces)
                 uncollapsedSpaces = 0.0
             }
-            //TODO: 未确认 anIndexes: [] 数据类型                                                  ???---lp---20240520--
             letters.append(Letter(l: cLength, an: cLength, add: currentSize, n: newLineFlag, anIndexes: Array<Int64>(), val: val, line: currentLine, animatorJustifyOffset: 0.0))
-            if (anchorGrouping == 2) { // eslint-disable-line eqeqeq
+            if (anchorGrouping == 2) { /* eslint-disable-line eqeqeq */
                 currentSize += cLength
                 if (val == "" || val == " " || i == len - 1) {
                     if (val == "" || val == " ") {
@@ -452,7 +415,7 @@ public class TextProperty {
                     index += 1
                     currentSize = 0.0
                 }
-            } else if (anchorGrouping == 3) { // eslint-disable-line eqeqeq
+            } else if (anchorGrouping == 3) { /* eslint-disable-line eqeqeq */
                 currentSize += cLength
                 if (val == "" || i == len - 1) {
                     if (val == "") {
@@ -474,7 +437,7 @@ public class TextProperty {
             }
         }
         documentData.l = letters
-        //maxLineWidth = lineWidth > maxLineWidth ? lineWidth : maxLineWidth
+
         if (lineWidth > maxLineWidth) {
             maxLineWidth = lineWidth
         }
@@ -495,9 +458,11 @@ public class TextProperty {
         }
         documentData.lineWidths = lineWidths
 
-        // this.data.a => layer.t.a  => Layer.t(LayerT).a(Array<AnimatableTextPropertiesA>)
-        // animatorData => this.data.a[i] => layer.t.a[i]  => Layer.t(LayerT).a[i](Array<AnimatableTextPropertiesA>)
-
+        /*
+         * 数据来源分析：
+         * this.data.a => layer.t.a  => Layer.t(LayerT).a(Array<AnimatableTextPropertiesA>)
+         * animatorData => this.data.a[i] => layer.t.a[i]  => Layer.t(LayerT).a[i](Array<AnimatableTextPropertiesA>)
+         */
 
         var animators: Array<AnimatableTextPropertiesA> = data.a
         var animatorData: AnimatableTextPropertiesA = AnimatableTextPropertiesA()
@@ -508,28 +473,31 @@ public class TextProperty {
         var indexes: ArrayList<Int64> = ArrayList<Int64>()
         for (j in 0..jLen) {
             animatorData = animators[j]
-            // animatorData => this.data.a[i] => layer.t.a[i]  => Layer.t(LayerT).a[i](Array<AnimatableTextPropertiesA>)
-            // animatorData.a.sc => this.data.a[i].a.sc => layer.t.a[i].a.sc
-            // => Layer.t(LayerT).a[i](Array<AnimatableTextPropertiesA>).a(AnimatableTextProperties).sc(Array<Keyframe<Array<Float64>>>)
+            /*
+             * 数据来源分析：
+             * animatorData => this.data.a[i] => layer.t.a[i]  => Layer.t(LayerT).a[i](Array<AnimatableTextPropertiesA>)
+             * animatorData.a.sc => this.data.a[i].a.sc => layer.t.a[i].a.sc
+             * => Layer.t(LayerT).a[i](Array<AnimatableTextPropertiesA>).a(AnimatableTextProperties).sc(Array<Keyframe<Array<Float64>>>)
+             */
             if (animatorData.a.sc.size > 0) {
                 documentData.strokeColorAnim = true
             }
             if (animatorData.a.sw.size > 0) {
                 documentData.strokeWidthAnim = true
             }
-            //TODO: 未确认 animatorData.a.fh/fs/fb 数据类型                                         ???---lp---20240521--
-            //if (animatorData.a.fc.k.size > 0 || animatorData.a.fh || animatorData.a.fs || animatorData.a.fb) {
-            //    documentData.fillColorAnim = true
-            //}
+            /* 未确认 animatorData.a.fh/fs/fb 数据类型 */
             ind = 0
 
-            // animatorData.s.b => this.data.a[i].s.b => layer.t.a[i].s.b
-            // => Layer.t(LayerT).a[i](Array<AnimatableTextPropertiesA>).s(AnimatableTextPropertiesS).b(Int64)
+            /*
+             * 数据来源分析：
+             * animatorData.s.b => this.data.a[i].s.b => layer.t.a[i].s.b
+             * => Layer.t(LayerT).a[i](Array<AnimatableTextPropertiesA>).s(AnimatableTextPropertiesS).b(Int64)
+             */
             based = animatorData.s.b
             for (i in 0..len) {
                 letterData = letters[i]
                 letterData.anIndexes[j] = ind
-                if ((based == 1 && letterData.val != "") || (based == 2 && letterData.val != "" && letterData.val != " ") || (based == 3 && (letterData.n || letterData.val == " " || i == len - 1)) || (based == 4 && (letterData.n || i == len - 1))) { // eslint-disable-line eqeqeq
+                if ((based == 1 && letterData.val != "") || (based == 2 && letterData.val != "" && letterData.val != " ") || (based == 3 && (letterData.n || letterData.val == " " || i == len - 1)) || (based == 4 && (letterData.n || i == len - 1))) { /* eslint-disable-line eqeqeq */
                     if (animatorData.s.rn == 1) {
                         indexes.append(ind)
                     }
@@ -543,7 +511,7 @@ public class TextProperty {
             if (animatorData.s.rn == 1) {
                 for (i in 0..len) {
                     letterData = letters[i]
-                    if (currentInd != letterData.anIndexes[j]) { // eslint-disable-line eqeqeq
+                    if (currentInd != letterData.anIndexes[j]) { /* eslint-disable-line eqeqeq */
                         currentInd = letterData.anIndexes[j]
 
                         let m: Random = Random()
@@ -579,14 +547,16 @@ public class TextProperty {
         let dData: Option<DocumentData> = this.copyData(dd, newData)
         this.data.d.k[index].s = dData
         this.recalculate(index)
-        //TODO: 未实现 ITextElement.addDynamicProperty。
-        //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
+
         this.addDynamicPropertyInTextElement(this)
     }
 
     public func recalculate(index: Int64): Unit {
-        // this.data.d.k[this.keysIndex].s => layer.t.d.k[i].s
-        // => Layer.t(LayerT).d(LayerTD).k[i](Array<Keyframe<DocumentData>>[i]).s(Option<DocumentData>)
+        /*
+         * 数据来源分析：
+         * this.data.d.k[this.keysIndex].s => layer.t.d.k[i].s
+         * => Layer.t(LayerT).d(LayerTD).k[i](Array<Keyframe<DocumentData>>[i]).s(Option<DocumentData>)
+         */
         var dData: DocumentData = this.data.d.k[index].s ?? DocumentData()
         dData.__complete = false
         this.keysIndex = 0
@@ -597,8 +567,6 @@ public class TextProperty {
     public func canResizeFont(_canResize: Bool): Unit {
         this.canResize = _canResize
         this.recalculate(this.keysIndex)
-        //TODO: 未实现 ITextElement.addDynamicProperty。
-        //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
         this.addDynamicPropertyInTextElement(this)
     }
 
@@ -609,8 +577,6 @@ public class TextProperty {
             this.minimumFontSize = 1.0
         }
         this.recalculate(this.keysIndex)
-        //TODO: 未实现 ITextElement.addDynamicProperty。
-        //TODO: elem 中用到的成员变量，在初始化后需要单独赋值过来。---------------------------------------2024.09.14
         this.addDynamicPropertyInTextElement(this)
     }
 

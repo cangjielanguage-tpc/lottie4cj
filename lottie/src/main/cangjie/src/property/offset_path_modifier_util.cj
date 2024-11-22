@@ -1,8 +1,6 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
-
-//package lottie.utils.shapes
 package lottie.property
 
 func linearOffset(p1: Array<Float64>, p2: Array<Float64>, amount: Float64): Array<Array<Float64>> {
@@ -47,13 +45,13 @@ func joinLines(outputBezier: ShapeData, seg1: PolynomialBezier, seg2: Polynomial
     var p0: Array<Float64> = seg1.points[3]
     var p1: Array<Float64> = seg2.points[0]
 
-    //斜面
+    /* 斜面 */
     if (lineJoin == 3) { return p0 }
 
-    //连接，他们不需要关节
+    /* 连接，他们不需要关节 */
     if (pointEqual(p0, p1)) { return p0 }
 
-    //圆形
+    /* 圆形 */
     if (lineJoin == 2) {
         let angleOut: Float64 = -seg1.tangentAngle(1.0)
         let angleIn: Float64 = -seg2.tangentAngle(0.0) + Float64.PI
@@ -82,7 +80,7 @@ func joinLines(outputBezier: ShapeData, seg1: PolynomialBezier, seg2: Polynomial
         return p1
     }
 
-    // Miter  斜接
+    /* Miter  斜接 */
     var t0: Array<Float64> = seg1.points[2]
     if (pointEqual(p0, seg1.points[2])) {
         t0 = seg1.points[0]
@@ -121,7 +119,6 @@ func getIntersection(a: PolynomialBezier, b: PolynomialBezier): Array<Float64> {
 }
 
 func pruneSegmentIntersection(a: Array<PolynomialBezier>, b: Array<PolynomialBezier>): Array<Array<PolynomialBezier>> {
-    //TODO：js中slice()复制数组对象后，操作原数组 a/b 中的对象，也会影响复制的 outa/outb 中的对象
     var outa: Array<PolynomialBezier> = a.clone()
     var outb: Array<PolynomialBezier> = b.clone()
     var intersect: Array<Float64> = getIntersection(a[a.size - 1], b[0])

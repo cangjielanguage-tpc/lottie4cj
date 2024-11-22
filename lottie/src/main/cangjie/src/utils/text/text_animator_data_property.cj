@@ -88,16 +88,16 @@ public class TextAnimatorDataProperty {
         this.elemData = elemData
         this.elemTextPropertyCurrentData = elemTextPropertyCurrentData
 
-        //空的 PropertyFactor，为了 this.a 中数据不存在时，当做默认值使用。
+        /* 空的 PropertyFactor，为了 this.a 中数据不存在时，当做默认值使用。 */
         let defaultData = PropertyFactory<Float64, Float64>(0.0, 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
 
-        //数据来源分析：textAnimatorAnimatables  ==  animatorProps.a  <=  this._textData.a[i].a  =>  layer.t.a[i].a(AnimatableTextProperties)
+        /* 数据来源分析：textAnimatorAnimatables  ==  animatorProps.a  <=  this._textData.a[i].a  =>  layer.t.a[i].a(AnimatableTextProperties) */
         let textAnimatorAnimatables: AnimatableTextProperties = animatorProps.a
 
         var vLen: Int64 = 0
 
         let sw: PropertyFactory<Array<Keyframe<Float64>>, Float64>
-        // sw/sc 为空数组时，需单独处理。
+        /* sw/sc 为空数组时，需单独处理。 */
         if (textAnimatorAnimatables.sw.size == 0) {
             sw = empty_pf_Array_Keyframe_Float64
         } else if (textAnimatorAnimatables.sw.size == 1) {//走【分支1】
@@ -106,12 +106,9 @@ public class TextAnimatorDataProperty {
             sw = PropertyFactory<Array<Keyframe<Float64>>, Float64>.getProp(textAnimatorAnimatables.sw, textAnimatorAnimatables.sw, 0, 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         }
         let sc: PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>
-        //TODO: sw/sc 为空数组时，需单独处理。
+        /* sw/sc 为空数组时，需单独处理。 */
         if (textAnimatorAnimatables.sw.size == 0) {
-            //sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>(Array<Keyframe<Array<Float64>>>(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
             sc = empty_pf_Array_Keyframe_Array_Float64
-            //TODO: PropertyFactor.propType 是 String 类型，不是 Bool 类型。
-            //sc.propType = false
         } else if (textAnimatorAnimatables.sw.size == 1) {//走【分支2】
             sc = PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>.getProp(textAnimatorAnimatables.sc, textAnimatorAnimatables.sc[0].k ?? Array<Float64>(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         } else {//走【分支4】
@@ -133,9 +130,11 @@ public class TextAnimatorDataProperty {
             defaultData: defaultData
         )
 
-        //数据来源分析：animatorProps.s  =>  this._textData.a[i].s  =>  layer.t.a[i].s(AnimatableTextPropertiesS)
-        //数据来源分析：container  =>  TextAnimatorProperty
-        //TODO: TextSelectorProp.getTextSelectorProp 只用到前 2 个参数。
+        /*
+         * 数据来源分析：animatorProps.s  =>  this._textData.a[i].s  =>  layer.t.a[i].s(AnimatableTextPropertiesS)
+         * 数据来源分析：container  =>  TextAnimatorProperty
+         * TextSelectorProp.getTextSelectorProp 只用到前 2 个参数。
+         */
         this.s = TextSelectorProp.getTextSelectorProp(animatorProps.s, elemGlobalData, elemData, elemTextPropertyCurrentData, dynamicProperties: dynamicProperties)
         this.s.t = animatorProps.s.t
     }

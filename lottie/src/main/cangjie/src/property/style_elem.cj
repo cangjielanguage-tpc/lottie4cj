@@ -11,7 +11,7 @@ internal import ohos.base.Color
 internal import ohos.component.CanvasGradient
 
 
-//(arr[i].ty === 'fl'/'st'/'gf'/'gs')
+/* (arr[i].ty === 'fl'/'st'/'gf'/'gs') */
 public class StyleElem {
     protected var data: ContentModel
     protected var types: String

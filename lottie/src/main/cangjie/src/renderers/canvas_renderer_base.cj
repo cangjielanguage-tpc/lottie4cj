@@ -43,7 +43,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             this.renderConfig.id = v.id
             this.renderConfig.dpr = v.dpr
         }
-        // initRenderConfig 函数中同时处理了 dpr
+
         this.globalData = GlobalData(
             frameNum: -1.0,
             _mdf: false,
@@ -91,27 +91,27 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         if (props[0] == 1.0 && props[1] == 0.0 && props[4] == 0.0 && props[5] == 1.0 && props[12] == 0.0 && props[13] == 0.0) {
             return
         }
-        if (!this.renderConfig.clearCanvas) {//canvasContext 是画布组件中的 CanvasRenderingContext2D
+        if (!this.renderConfig.clearCanvas) {/* canvasContext 是画布组件中的 CanvasRenderingContext2D */
             this.canvasContext.transform(props[0], props[4], props[1], props[5], props[12], props[13])
             return
         }
 
-        ///将画布变换矩阵重置为新的变换
+        /* 将画布变换矩阵重置为新的变换 */
         this.transformMat.cloneFromProps(props)
-        //从存储的转换堆栈中获取最后一个转换值
+        /* 从存储的转换堆栈中获取最后一个转换值 */
         let currentTransform: Matrix = this.contextData.getTransform()
         let cProps: Array<Float64> = currentTransform.props
-        //在新变换之后应用最后一个变换值，以尊重变换的顺序
+        /* /在新变换之后应用最后一个变换值，以尊重变换的顺序 */
         this.transformMat.transform(
             cProps[0], cProps[1], cProps[2], cProps[3], cProps[4], cProps[5], cProps[6], cProps[7], cProps[8],
             cProps[9], cProps[10], cProps[11], cProps[12], cProps[13], cProps[14], cProps[15]
         )
 
-        //在存储的转换中存储新的转换值
+        /* 在存储的转换中存储新的转换值 */
         currentTransform.cloneFromProps(this.transformMat.props)
         var trProps = currentTransform.props
 
-        //在画布上应用新的变换
+        /* 在画布上应用新的变换 */
         this.canvasContext.setTransform(trProps[0], trProps[4], trProps[1], trProps[5], trProps[12], trProps[13])
     }
 
@@ -124,12 +124,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         var tmps = this.contextData.getTransform().props;
 
         var currentOpacity: Float64 = this.contextData.getOpacity()
-        if (!this.renderConfig.clearCanvas) { //canvasContext 是画布组件中的 CanvasRenderingContext2D
+        if (!this.renderConfig.clearCanvas) {
             if (op < 0.0) {
                 this.canvasContext.globalAlpha(0)
             } else {
-                //TODO:怎么获取原来的透明度呢？？？
-                //this.canvasContext.globalAlpha( *= op)
+                /* TODO:怎么获取原来的透明度呢？？？ -- this.canvasContext.globalAlpha( *= op) */
             }
 
             this.globalData.currentGlobalAlpha = currentOpacity
@@ -143,7 +142,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         }
 
         this.contextData.setOpacity(currentOpacity)
-        //设置当前画布的透明度，防止 this.globalData.currentGlobalAlpha 不为 1 时画布被隐藏
+        /* 设置当前画布的透明度，防止 this.globalData.currentGlobalAlpha 不为 1 时画布被隐藏 */
         this.canvasContext.globalAlpha(currentOpacity)
         if (this.globalData.currentGlobalAlpha != currentOpacity) {
             this.globalData.currentGlobalAlpha = currentOpacity
@@ -155,7 +154,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      */
     public func reset(): Unit {
         if (!this.renderConfig.clearCanvas) {
-            this.canvasContext.restore()   //canvasContext 是画布组件中的 CanvasRenderingContext2D
+            this.canvasContext.restore()
             return
         }
         this.contextData.reset()
@@ -281,9 +280,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
     public func updateContainerSize(width: ?Int64, height: ?Int64): Unit {
 
         this.canvasContext.restore()
-        this.canvasContext.setTransform(1, 0, 0, 1, 0, 0) //resetting the transform
-        this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h) //清空之前画布
-        this.canvasContext.clearRect(0, 0, 0, 0) //清空之前画布
+        this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
+        this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h) /* 清空之前画布 */
+        this.canvasContext.clearRect(0, 0, 0, 0) /* 清空之前画布 */
         this.canvasContext.save()
 
         this.reset()
@@ -361,27 +360,13 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * Destroy the CanvasRendererBase.
      */
     public func destroy(): Unit {
-        /*
-        //TODO： animationItem 未开发
-        if (this.renderConfig.clearCanvas && this.wrapperInAnimationItem && this.transformCanvas) {
-            //TODO： animationItem 未开发
-            this.wrapperInAnimationItem.clearRect(0, 0, this.transformCanvas.w, this.transformCanvas.h)
-        }
-        */
         let len: Int64 = this.layers.size
         for (i in (len - 1)..=0: -1) {
             if (this.elements.size > i && !this.elements[i].isNull) {
-            //if (this.elements.size > i) {
                 this.elements[i].destroy()
             }
         }
-
         this.elements = Array<BaseElement>()
-        //this.elements.size = 0
-        /*
-        this.globalData.canvasContext = Option<CanvasRenderingContext2D>.None
-        this.containerInAnimationItem = Option<CanvasRenderingContext2D>.None
-        */
         this.destroyed = true
     }
 
@@ -398,13 +383,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             let len: Int64 = this.layers.size
             for (i in 0..len) {
                 if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
-                //if (this.completeLayers || this.elements.size > i) {
                     this.elements[i].changeColor(color, endColor)
                 }
             }
         } else {
             if (this.completeLayers || (this.elements.size > layer - 1 && !this.elements[layer - 1].isNull)) {
-            //if (this.completeLayers || this.elements.size > layer - 1) {
                 this.elements[layer - 1].changeColor(color, endColor, index)
             }
         }
@@ -423,13 +406,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             let len: Int64 = this.layers.size
             for (i in 0..len) {
                 if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
-                //if (this.completeLayers || this.elements.size > i) {
                     this.elements[i].changeColor(color, 0)
                 }
             }
         } else {
             if (this.completeLayers || (this.elements.size > endColor - 1 && !this.elements[endColor - 1].isNull)) {
-            //if (this.completeLayers || this.elements.size > endColor - 1) {
                 this.elements[endColor - 1].changeColor(color, layer, index)
             }
         }
@@ -446,8 +427,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         let len: Int64 = this.layers.size
         for (i in 0..len) {
             if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
-            //if (this.completeLayers || this.elements.size > i) {
-                this.elements[i].changeColor(color, 0)  //RenderableElement
+                this.elements[i].changeColor(color, 0)
             }
         }
     }
@@ -467,7 +447,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.globalData.frameNum = num - this._isFirstFrameInAnimationItem()
         this.globalData.frameId += 1
         this.globalData._mdf = !this.renderConfig.clearCanvas || forceRender
-        //TODO: 未实现 ProjectInterface  //this.globalData.projectInterface.currentFrame = num
 
         let len: Int64 = this.layers.size
         if (!this.completeLayers) {
@@ -475,18 +454,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         }
 
         for (i in 0..len) {
-            //TODO: 测试用后续删除
-            //if (i == 18) {
-            //    Hilog.error(0, "--Renderer--", "[renderFrame]--[1]----> i = ${i}")
-            //}
-
             if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
-            //if (this.completeLayers || this.elements.size > i) {
                 this.elements[i].prepareFrame(num - this.layers[i].st)
             }
         }
 
-        //TODO: this.globalData._mdf = false 为什么会是false？是之前那块赋值出错了么？？？//if (true) {
         if (this.globalData._mdf) {
             if (this.renderConfig.clearCanvas) {
                 this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h)
@@ -494,28 +466,13 @@ public abstract class CanvasRendererBase <: BaseRenderer {
                 this.save(false)
             }
 
-            //TODO: 暂时不定位 CVShapeElement 的渲染逻辑。先注掉，先测试 this.elements[0] 即 CVCompElement。//this.elements[0].renderFrame()
-            var index: Int64 = 0
-
-            //todo: 测试用。后续删除。
-            //var ind = 12  //红包json
-            //if (this.completeLayers || (this.elements.size > ind && !this.elements[ind].isNull)) {
-            //    this.elements[ind].renderFrame(false)
-            //}
-
             for (i in (len - 1)..=0:-1) {
-                index = i
                 if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
-                //if (this.completeLayers || this.elements.size > i) {
-                    //this.elements[i].renderFrame()
-                    //TODO: 暂时先将 CvBaseElement 和 BaseElement 合并。避免后面 CVXXXElement 多继承 XXXElement和 CVBaseElement。
-                    //TODO：renderFrame 在 canvas元素 相关中，是带有参数的。此处直接改为带参调用。
                     this.elements[i].renderFrame(false)
                 }
             }
 
             if (!this.renderConfig.clearCanvas) {
-                //this.restore()
                 this.restore(false)
             }
         }
@@ -529,16 +486,12 @@ public abstract class CanvasRendererBase <: BaseRenderer {
     public func buildItem(pos: Int64): Unit {
         let elements: Array<BaseElement> = this.elements
         if ((this.elements.size > pos && !this.elements[pos].isNull) || this.layers[pos].ty == 99) {
-        //if (this.elements.size > pos || this.layers[pos].ty == 99) {
             return
         }
-        //TODO: 函数参数不一致，有 2 个参数暂时未传递。
+        /* 函数参数不一致，有 2 个参数暂时未传递。 */
         let element: BaseElement = this.createItem(this.layers[pos])
-        //TODO: 【暂未处理】ArrayList 直接指定下标赋值报错。暂时改为append。 //this.elements.append(element)
         this.elements[pos] = element
 
-
-        //this.elements.size++
         element.initExpressions()
     }
 
@@ -548,24 +501,24 @@ public abstract class CanvasRendererBase <: BaseRenderer {
     public func checkPendingElements(): Unit {
         while (this.pendingElements.size != 0) {
             let element: BaseElement = this.pendingElements.remove(this.pendingElements.size - 1)
-
-            //TODO[lp]: - HierarchyElement.checkParenting => element 是 HierarchyElement ？？？
             element.checkParenting()
         }
     }
 
     public func hide(): Unit {
-        //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-        //TODO: 不确定 this.animationItem.container数据类型暂定为 CreateNS。【对应的是html渲染的 hide/show】。
-        //改为调用 【通用属性】中 显隐控制 visibility(Visibility)，达到相同的效果。控制的是 Canvas 组件。
-        //this.containerInAnimationItem.style.display = "none"
+        /*
+         * 不确定 this.animationItem.container数据类型暂定为 CreateNS。【对应的是html渲染的 hide/show】。
+         * 改为调用 【通用属性】中 显隐控制 visibility(Visibility)，达到相同的效果。控制的是 Canvas 组件。
+         * this.containerInAnimationItem.style.display = "none"
+         */
     }
 
     public func show(): Unit {
-        //TODO：CanvasRenderingContext2D 是仓颉UI中的画布组件，暂时不联合编译
-        //TODO: 不确定 this.animationItem.container数据类型暂定为 CreateNS。【对应的是html渲染的 hide/show】。
-        //改为调用 【通用属性】中 显隐控制 visibility(Visibility)，达到相同的效果。控制的是 Canvas 组件。
-        //this.containerInAnimationItem.style.display = "block"
+        /*
+         * 不确定 this.animationItem.container数据类型暂定为 CreateNS。【对应的是html渲染的 hide/show】。
+         * 改为调用 【通用属性】中 显隐控制 visibility(Visibility)，达到相同的效果。控制的是 Canvas 组件。
+         * this.containerInAnimationItem.style.display = "block"
+         */
     }
 
 }
