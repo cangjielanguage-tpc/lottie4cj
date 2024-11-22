@@ -55,8 +55,11 @@ public class CvImageElement <: IImageElement {
     }
 
     public func destroy() {
-        if (let Some(v) <- this.img.pixel_map) {
-            v.Release()
+        if (!this.assetData.hasDestroy) {
+            if (let Some(v) <- this.img.pixel_map) {
+                v.Release()
+                this.assetData.hasDestroy = true
+            }
         }
         this.img = ImgOB()
     }

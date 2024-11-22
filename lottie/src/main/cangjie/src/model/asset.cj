@@ -11,7 +11,8 @@ package lottie.model
  * A data class that describes an image asset embedded in a Lottie json file.
  */
 public class Asset <: ToString & Equatable<Asset> {
-
+    //后续ELement中，释放图片使用。一张图片可能在复合图层中多个图层被引用，容易造成重复释放报错。
+    public var hasDestroy: Bool = false
     //编译用，暂时在 json 中找不到 assets[i].t。
     public var t: String = ""
     public var xt: Bool = false
