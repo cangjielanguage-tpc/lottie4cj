@@ -14,9 +14,9 @@ public class Mask <: ContentModel {
     public let cl: Bool                             // 0 = cl
     public let inv: Bool                            // 1 = inverted
     public let mode: String                         // 2 = maskMode
-    public let pt: Array<Keyframe<ShapeData>>     // 3 = maskPath   //走PropertyFactory.getProp中 0 分支逻辑
-    public let o: Array<Keyframe<Int64>>          // 4 = opacity
-    public let x: Array<Keyframe<Int64>>          // 5 = x
+    public let pt: Array<Keyframe<ShapeData>>       // 3 = maskPath   //走PropertyFactory.getProp中 0 分支逻辑
+    public let o: Array<Keyframe<Int64>>            // 4 = opacity
+    public let x: Array<Keyframe<Int64>>            // 5 = x
     public let nm: String                           // 6 = nm
 
     public open prop ty: String {

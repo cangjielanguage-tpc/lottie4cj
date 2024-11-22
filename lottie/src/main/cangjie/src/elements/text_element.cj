@@ -38,31 +38,29 @@ public open class ITextElement <: BaseElement {
     public func initElement(data: Layer, globalData: GlobalData) {
         this.lettersChangedFlag = true
         this.initFrame()
-        //设置改图层参数
+        /* 设置改图层参数 */
         this.initBaseData(data, globalData)
         /*
          * 数据来源分析：data.t == LayerT  <=  data == layer
          * 文本属性
-         * TODO：TextProperty初始化只接收到2个参数，未传入的 this.dynamicProperties 后续根据实际应用情况再做处理。
+         * TextProperty初始化只接收到2个参数，未传入的 this.dynamicProperties 后续根据实际应用情况再做处理。
          */
         this.textProperty = TextProperty(data.t, globalData)
-        //文本动画属性
+        /* 文本动画属性 */
         this.textAnimator = TextAnimatorProperty(data.t, this.renderType, globalData, data, this.textProperty.currentData, dynamicProperties: this.dynamicProperties)
-        //获取transform（layer.ks）相关的数据
+        /* 获取transform（layer.ks）相关的数据 */
         this.initTransform(data, globalData) 
         this.initHierarchy()
         this.initRenderable()
         this.initRendererElement()
-        //创建一个会包含子元素的g元素，并根据前面初始化的参与，设置g元素的属性（transform、filter、蒙层、id等）
+        /* 创建一个会包含子元素的g元素，并根据前面初始化的参与，设置g元素的属性（transform、filter、蒙层、id等） */
         this.createContainerElements()
         this.createRenderableComponents()
         this.createContent()
         this.hide()
-        //TODO: TextAnimatorProperty.searchProperties() 是无参的，未传入的 this.dynamicProperties 后续根据实际应用情况再做处理。
         this.textAnimator.searchProperties()
     }
 
-    //TODO: 编译用，具体实现在子类 CVTextElement.buildNewText
     public open func buildNewText(): Unit {}
 
     /**
@@ -75,7 +73,6 @@ public open class ITextElement <: BaseElement {
         this.prepareRenderableFrame(num)
         this.prepareProperties(num, this.isInRange)
         if (this.textProperty._mdf || this.textProperty._isFirstFrame) {
-            //TODO: buildNewText => CVTextElement.buildNewText  
             this.buildNewText()
             this.textProperty._isFirstFrame = false
             this.textProperty._mdf = false
@@ -95,9 +92,9 @@ public open class ITextElement <: BaseElement {
         var shapeStr: String = ""
         var sp: ShapePath = ShapePath()
         for (j in 0..jLen) {
-            //数据来源分析： "layers"."shapes".{"ty": "sh"} = ShapePathParser
+            /* 数据来源分析： "layers"."shapes".{"ty": "sh"} = ShapePathParser */
             if (shapes[j].ty == "sh") {
-                //数据来源分析： ks.k  ==>  ShapeData ==> pathNodes = shapes[j].ks.k
+                /* 数据来源分析： ks.k  ==>  ShapeData ==> pathNodes = shapes[j].ks.k */
                 sp = (shapes[j] as ShapePath) ?? sp
                 pathNodes = sp.ks[0].k ?? pathNodes
                 shapeStr += buildShapeString(pathNodes, pathNodes.i.size, true, matrixHelper)
@@ -143,7 +140,7 @@ public open class ITextElement <: BaseElement {
      * @param xPos - Type of Float64.
      * @param yPos - Type of Float64.
      */
-    //数据来源分析：lineNumber => documentData.l[i].line
+    /* 数据来源分析：lineNumber => documentData.l[i].line */
     public func applyTextPropertiesToMatrix(documentData: DocumentData, matrixHelper: Matrix, lineNumber: Int64, xPos: Float64, yPos: Float64): Unit {
         if (documentData.ps.size > 0) {
             matrixHelper.translate(documentData.ps[0], documentData.ps[1] + documentData.ascent, tz: 0.0)
@@ -164,7 +161,7 @@ public open class ITextElement <: BaseElement {
      * @param colorData - Type of Array<Float64>, color data values..
      * @return Type of String.
      */
-    //数据来源分析：colorData => documentData.fc
+    /* 数据来源分析：colorData => documentData.fc */
     public func buildColor(colorData: Array<Float64>): Color {
         return Color(UInt8(round(colorData[0] * 255.0)), UInt8(round(colorData[1] * 255.0)), UInt8(round(colorData[2] * 255.0)))
     }

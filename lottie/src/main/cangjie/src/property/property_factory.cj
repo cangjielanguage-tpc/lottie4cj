@@ -5,13 +5,11 @@
 /**
  * @file This file is PropertyFactory.
  */
-//package lottie.utils
 package lottie.property
 
 internal import std.math.*
 internal import std.collection.*
 
-//internal import lottie.global_data.*
 internal import lottie.bezier.*
 internal import lottie.inner.*
 internal import lottie.pool.*
@@ -20,9 +18,6 @@ import ohos.hilog.*
 
 public type Caching = CachingAtTime
 
-//internal import lottie.model.*
-//internal import lottie.elements.*
-
 let initialDefaultFrame: Int64 = -999999
 let initialDefaultFrameFloat64: Float64 = -999999.0
 
@@ -30,22 +25,15 @@ func defalut_fnc(num: Float64): Float64 {
     return 0.0
 }
 
-//TODO: 将 Caching 和 CachingAtTime 进行合并。
 public class CachingAtTime {
-    //CachingAtTime--------------------
-    //clone(shape: ShapeData): ShapeData
+
     public var shapeValue: ShapeData
     public var lastIndex: Int64
     public var lastTime: Float64
 
-    //TODO: value 既可以是数组，也可以是数值。
     public var value: Array<Float64>
 
-    //Caching-----------------------------------------
     public var lastFrame: Float64
-    //public var lastIndex: Int64 = 0
-    //TODO: value 既可以是数组，也可以是数值。
-    //public var value: Array<Float64> = Array<Float64>()
     public var _lastKeyframeIndex: Int64
 
     public var _lastAddedLength: Float64 = 0.0
@@ -59,51 +47,11 @@ public class CachingAtTime {
         this.lastTime = lastTime
 
         this.lastFrame = lastFrame
-        //this.lastIndex = lastIndex
         this.value = value
         this._lastKeyframeIndex = _lastKeyframeIndex
     }
 }
 
-//TODO: 将 Caching 和 CachingAtTime 进行合并。
-/*
-public class Caching {
-    public var lastFrame: Int64
-    public var lastIndex: Int64
-    //TODO: value 既可以是数组，也可以是数值。
-    public var value: Array<Float64>
-    public var _lastKeyframeIndex: Int64
-
-    public var _lastAddedLength: Int64 = 0
-    public var _lastPoint: Int64 = 0
-    
-    public init(lastFrame!: Int64 = 0, lastIndex!: Int64 = 0, value!: Array<Float64> = Array<Float64>(), _lastKeyframeIndex!: Int64 = 0){
-        this.lastFrame = lastFrame
-        this.lastIndex = lastIndex
-        this.value = value
-        this._lastKeyframeIndex = _lastKeyframeIndex
-    }
-}
-*/
-
-//TODO: 将 Caching 和 CachingAtTime 进行合并。
-/*
-public class CachingAtTime {
-    //clone(shape: ShapeData): ShapeData
-    public var shapeValue: ShapeData
-    public var lastIndex: Int64
-    public var lastTime: Float64
-
-    //TODO: value 既可以是数组，也可以是数值。
-    public var value: Array<Float64> = Array<Float64>()
-
-    public init(shapeValue!: ShapeData = ShapeData(), lastIndex!: Int64 = 0, lastTime!: Float64 = initialDefaultFrameFloat64){
-        this.shapeValue = shapeValue
-        this.lastIndex = lastIndex
-        this.lastTime = lastTime
-    }
-}
-*/
 
 /*
  * 初始化后需要传入2个函数：
@@ -112,48 +60,29 @@ public class CachingAtTime {
 public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToString , E <: ToString {
 
     static var initFrameFloat64: Float64 = -999999.0
-    //static var initFrame: Int64 = initialDefaultFrame
     static var initFrame: Float64 = -999999.0
 
-    //TODO: ICompElement编译用。
     public var _placeholder: Bool = false
 
-    //TODO: 暂未实现 getValueAtTime。在扩展中实现？？？
     var hasGetValueAtTime: Bool = false
-    //public var getValueAtTime: (Float64, Float64) -> Array<Float64> = { m, n => return Array<Float64>() }
 
-    //TODO: expression 中扩展的函数.
-    //public var getValueAtTime: (Float64) -> Array<Float64> = { n => return [n] }
-    //TODO: 未确定 propertyGroup 数据类型
     var propertyGroup: PropertyInterface = PropertyInterface()
-    //public var setGroupProperty: (PropertyInterface) -> Unit = { m => ()}
-    //public var loopOut: (String, Int64, Bool) -> Array<Float64> = { s, m, n => return [0.0] }
-    //public var loopIn: (String, Int64, Bool) -> Array<Float64> = { s, m, n => return [0.0] }
-    //public var smooth: (Float64, Float64) -> Array<Float64> = { m, n => return [m, n] }
-    //public var getVelocityAtTime: (Float64) -> Array<Float64> = { n => return [n] }
-    //public var getSpeedAtTime: (Float64) -> Float64 = { n => return n }
     public var numKeys: Int64 = 0
-    //TODO：成员变量，data: T 增加成员变量 ix ？？？
-    //public var propertyIndex = data.ix
     public var _cachingAtTime: CachingAtTime = CachingAtTime()
-//-----------------------------------------------------------------------------------------------------------------
 
-    //TODO: dataK 是否保存成 E 泛型结构？还是修改保存为 data_k_xxxProperty ???
+    /* dataK 是否保存成 E 泛型结构？还是修改保存为 data_k_xxxProperty ??? */
     var dataK_Number: Array<Float64> = empty_Array_Float64
     var dataK_Keyframed: Array<Keyframe<E>> = Array<Keyframe<E>>()
     
     public var data: T
-    //TODO: 暂时没有引入 BaseElement.comp--【不会再直接引入comp，具体用到comp的什么，再单独处理。】
     /*
-     * TODO: container 在arkts中是多种数据类型，cangjie没有办法完全兼容。
+     * container 在arkts中是多种数据类型，cangjie没有办法完全兼容。
      * 【暂时】保存为两类，一类代表各种 Factory，存在成员变量 container[0]中；一个代表各种 Element，通过操作成员变量 dynamicPropertiesInElem达到效果。
      * 处理方案分为 3 类，参考成员变量 containerType。
      * containerType：1-FrameElement; 2-TransformPropertyFactory; 3-其他Property/DynamicPropertyContainer
      * 间接用 addDynamicPropertyContainer 函数进行分别处理。
      */
-    //public var container: DynamicPropertyContainer
-    
-    //在父类DynamicPropertyContainer中已经定义成员变量 //public var propType: String = ""
+
     public var mult: Float64 = 1.0
     public var v: Array<Float64> = empty_Array_Float64
     public var pv: Array<Float64> = empty_Array_Float64
@@ -175,16 +104,8 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     var keyframesMetadata: Array<KeyframeMetadata> = Array<KeyframeMetadata>()
     var _caching: Caching = Caching()
     
-    //public var isNull: Bool = true
-    
-    //TODO: 未确认 this.sh 数据类型，为了编译暂定为Bool。----------------------------------------------------------------------2024.08.17
     var sh: Bool = false
 
-    //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInElemComp】间接获取当时值。
-    //public var renderedFrameInElemComp: () -> Float64 = { => 0.0}
-
-    //TODO: container 数据类型不固定，是否提取出来一个接口？？？-----------------------------------------------------------------2024.08.19
-    //TODO: 已知 container 的数据类型：ShapeModifier的子类/ShapePropertyFactory  --都继承于 DynamicPropertyContainer。
     public init(data: T, mult: Float64, container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer,
         types!: Int64 = -1, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
         compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(), compDataInd!: Int64 = -1
@@ -194,7 +115,6 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         this.compDataInd = compDataInd
         this.getRenderedFrame = renderedFrame
         this.isNull = true
-        //this.dynamicProperties = dynamicProperties
         this.data = data
         this.mult = mult
         this.container = [container]
@@ -207,7 +127,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     public func interpolateValue(frameNum: Float64, caching: Caching) {
         var offsetTime: Float64 = this.offsetTime
         var newValue: Array<Float64> = Array<Float64>()
-        //移到后面处理？
+        /* 移到后面处理？ */
         if (this.propType == "multidimensional") {
             newValue = Array<Float64>(this.pv.size, item: 0.0)
         }
@@ -270,11 +190,10 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 case _ => throw IllegalArgumentException()
             }
         } else {
-            //Hilog.error(0, "PropertyFactory", "[interpolateValue]: keyData.s is not Float64/Array<Float64>/PointF")
             Array<Float64>()
         }
 
-        //TODO: 加一层数组越界拦截处理
+        /* 加一层数组越界拦截处理 */
         if (this.pv.size < keyData_s.size && this.propType == "multidimensional") {
             newValue = Array<Float64>(keyData_s.size, item: 0.0)
         }
@@ -296,7 +215,6 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 case _ => throw IllegalArgumentException()
             }
         } else {
-            //Hilog.error(0, "PropertyFactory", "[interpolateValue]: keyData.e is not Float64/Array<Float64>/PointF")
             Array<Float64>()
         }
         let nextKeyData_s: Array<Float64> =
@@ -315,20 +233,15 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 case _ => throw IllegalArgumentException()
             }
         } else {
-            //Hilog.error(0, "PropertyFactory", "[interpolateValue]: nextKeyData.s is not Float64/Array<Float64>/PointF")
             Array<Float64>()
         }
 
-        if (keyData.to.size != 0) { // to: PointF 改为 Array<Float64>
+        if (keyData.to.size != 0) {
             if (keyframeMetadata.bezierData.isNull()) {
                 var arr: Array<Float64> = nextKeyData_s
                 if (nextKeyData_s.size == 0) {
                     arr = keyData_e
                 }
-                //Hilog.error(0, "--29--", "[interpolateValue]--[1]--------------------------------keyData_s = ${keyData_s}")
-                //Hilog.error(0, "--29--", "[interpolateValue]--[1]--------------------------------arr = ${arr}")
-                //Hilog.error(0, "--29--", "[interpolateValue]--[1]--------------------------------keyData.to = ${keyData.to}")
-                //Hilog.error(0, "--29--", "[interpolateValue]--[1]--------------------------------keyData.ti = ${keyData.ti}")
                 keyframeMetadata.bezierData = Bez.buildBezierData(keyData_s, arr, keyData.to, keyData.ti)
             }
             var bezierData: BezierData = keyframeMetadata.bezierData
@@ -348,7 +261,6 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 }
                 perc = fnc((frameNum - keyTime) / (nextKeyTime - keyTime))
                 var distanceInLine: Float64 = bezierData.segmentLength * perc
-                //Hilog.error(0, "--29--", "[interpolateValue]--[1]----> distanceInLine = ${distanceInLine}")
 
                 var segmentPerc: Float64 = 0.0
                 var addedLength: Float64 = 0.0
@@ -357,11 +269,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                     addedLength = caching._lastAddedLength
                     j = caching._lastPoint
                 }
-                //Hilog.error(0, "--29--", "[interpolateValue]--[1]----> addedLength = ${addedLength}")
-                //j = 0
-                //if (Float64(caching.lastFrame) < frameNum && caching._lastKeyframeIndex == i) {
-                //    j = caching._lastPoint
-                //}
+
                 flag = true
                 jLen = bezierData.points.size
                 while (flag) {
@@ -404,7 +312,6 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 endValue = nextKeyData_s
             }
 
-            //TODO: 未确认 this.sh 数据类型，为了编译暂定为Bool。--------------------------------------------------------------2024.08.17
             if (this.sh && keyData.h != 1) {
                 if (frameNum >= nextKeyTime) {
                     if (endValue.size > 2) {
@@ -442,8 +349,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                         } else if (frameNum < keyTime) {
                             perc = 0.0
                         } else {
-                            // ??? -- "o":{"x":[0.167],"y":[0.167]}     // Keyframe<T>.o/i = PointF
-                            //TODO： 此处的 [0.167] 需要做单独处理吗？？？ if (keyData.o.x.constructor === Array) {......}
+
                             if (let Some(val) <- keyframeMetadata.__fnct) {
                                 fnc = val
                             } else {
@@ -451,7 +357,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                                 outY = keyData.o.y
                                 inX = keyData.i.x
                                 inY = keyData.i.y
-                                //因为关键字，BezierFactory.getBezierEasing(outX, outY, inX, inY).get 中 get 重新命名为 getOfBezierEasing
+                                /* 因为关键字，BezierFactory.getBezierEasing(outX, outY, inX, inY).get 中 get 重新命名为 getOfBezierEasing */
                                 fnc = BezierFactory.getBezierEasing(outX, outY, inX, inY, "").getOfBezierEasing
                                 keyData.keyframeMetadata = fnc
                             }
@@ -559,15 +465,10 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         return [x, y, z, w]
     }
 
-    //只在 getProp【分支2】相关中使用；data.k是复杂架构，不能是数组或者空。  // data == ContentModel.s/e/h/a等
+    /* 只在 getProp【分支2】相关中使用；data.k是复杂架构，不能是数组或者空。  -- data == ContentModel.s/e/h/a等 */
     func getValueAtCurrentTime(): Array<Float64> {
-        //TODO：this.elem.comp.renderedFrame 的值是可变的，故不能直接传值，需要通过函数【renderedFrameInElemComp】间接获取当时值。
-        //let frameNum: Float64 = this.elemGlobalData.renderedFrameInElemComp() - this.offsetTime
-        //Hilog.error(0, "--29--", "[getValueAtCurrentTime]--[3]--------------------------------layerId = ")
         let renderedFrameNum: Float64 = this.getRenderedFrameInElemComp(this.compDataInd)
         let frameNum: Float64 = renderedFrameNum - this.offsetTime
-        //Hilog.error(0, "--29--", "[getValueAtCurrentTime]--[3]--------------------------------layerId = this.comp.renderedFrame = ${renderedFrameNum}")
-        //let frameNum: Float64 = this.getRenderedFrameInElemComp() - this.offsetTime
 
         let initTime: Float64 = this.keyframes[0].t - this.offsetTime
         let endTime: Float64 = this.keyframes[this.keyframes.size - 1].t - this.offsetTime
@@ -623,14 +524,11 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         let len: Int64 = this.effectsSequence.size
 
         var finalValue: Array<Float64> = this.pv
-        if (!this.kf) { //当 this.kf = false 时，this.data.k 是【分支1/2】对应的，数据类型是 number/Array<number>。
+        if (!this.kf) { /* 当 this.kf = false 时，this.data.k 是【分支1/2】对应的，数据类型是 number/Array<number>。 */
             finalValue = this.dataK_Number
         }
-        //Hilog.error(0, "--29--", "[processEffectsSequence]--[1]----> finalValue = ${finalValue}")
         for (i in 0..len) {
-            //TODO： 确认此处用法。finalValue = this.effectsSequence[i](finalValue)
             finalValue = this.effectsSequence[i]()
-            //Hilog.error(0, "--29--", "[processEffectsSequence]--[2]----> finalValue = ${finalValue}")
         }
         this.setVValue(finalValue)
         this._isFirstFrame = false
@@ -640,9 +538,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
 
     public func addEffect(effectFunction: () -> Array<Float64>): Unit {
         this.effectsSequence.append(effectFunction)
-        // TODO: 暂时不调用 CvShapeData 中 addDynamicProperty 函数
         this.container[0].addDynamicProperty(this)
-        //addDynamicPropertyContainer(this)
     }
 
     /**
@@ -651,13 +547,12 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
      * 将 ValueProperty/MultiDimensionalProperty/KeyframedValueProperty/KeyframedMultidimensionalProperty数据类型进行合并
      *  =>  此处实现直接返回当前类
      */
-    //DashProperty => data = Array<ContentModelD>  =>  【分支3】
-    
+
     /**
-     * TODO: 解析后的数据结构和 json 不太一样。实际调用哪个分支，不能按照 arkts 原来的路径直接用。需要在调用 PropertyFactory.getProp 【之前】做一下特殊处理。
+     * 解析后的数据结构和 json 不太一样。实际调用哪个分支，不能按照 arkts 原来的路径直接用。需要在调用 PropertyFactory.getProp 【之前】做一下特殊处理。
      * 这块的数据解析的结构和json有些不一样，要注意对应。（或者修改之前解析封装的结构）
+     * 【分支1-变种】: dataK 不是数组，是数值 Int64，进入此分支。
      */
-    //【分支1-变种】: dataK 不是数组，是数值 Int64，进入此分支。
     public static func getProp<T>(data: T, dataK: Int64, mult: Float64, container: DynamicPropertyContainer,
         elemGlobalData: GlobalData, elemData: Layer,
         types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1,
@@ -668,14 +563,12 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         let p: PropertyFactory<T, Int64> = valueProperty(data, Float64(dataK), mult, container, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
         p.containerType = containerType
         if (p.effectsSequence.size != 0) {
-            //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？----------------------------------------------------------2024.08.17
-            //container[0].addDynamicProperty(p)
             addDynamicPropertyContainer(p)
         }
         getPropInExpressionPropertyDecorator<T, Int64>(p, 1, dataA: dataA, types: types, vLen: vLen)
         return p
     }
-    //【分支1】: dataK 不是数组，是数值/对象，进入此分支。
+    /*【分支1】: dataK 不是数组，是数值/对象，进入此分支。 */
     public static func getProp<T>(data: T, dataK: Float64, mult: Float64, container: DynamicPropertyContainer,
         elemGlobalData: GlobalData, elemData: Layer,
         types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1,
@@ -686,15 +579,13 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         let p: PropertyFactory<T, Float64> = valueProperty(data, dataK, mult, container, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
         p.containerType = containerType
         if (p.effectsSequence.size != 0) {
-            //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？----------------------------------------------------------2024.08.17
-            //container[0].addDynamicProperty(p)
             addDynamicPropertyContainer(p)
         }
         getPropInExpressionPropertyDecorator<T, Float64>(p, 1, dataA: dataA, types: types, vLen: vLen)
         return p
     }
     
-    //【分支2-变种】: dataK 是PointF，但是json中是数组 [number, number]，进入此分支。
+    /* 【分支2-变种】: dataK 是PointF，但是json中是数组 [number, number]，进入此分支。 */
     public static func getProp<T>(data: T, dataK: PointF, mult: Float64, container: DynamicPropertyContainer,
         elemGlobalData: GlobalData, elemData: Layer,
         types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1,
@@ -702,19 +593,16 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
         compDataInd!: Int64 = -1
     ): PropertyFactory<T, PointF> where T <: ToString {
-        //针对json中是[Float64, Float64]，解析后是 PointF的部分。
-        //, types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1
+        /* 针对json中是[Float64, Float64]，解析后是 PointF的部分。 */
         var p: PropertyFactory<T, PointF> = multiDimensionalProperty(data, [dataK.x, dataK.y, 0.0], mult, container, dataK, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
         p.containerType = containerType
         if (p.effectsSequence.size != 0) {
-            //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？----------------------------------------------------------2024.08.17
-            //container[0].addDynamicProperty(p)
             addDynamicPropertyContainer(p)
         }
         getPropInExpressionPropertyDecorator<T, PointF>(p, 2, dataA: dataA, types: types, vLen: vLen)
         return p
     }
-    //【分支2】: dataK 是数组Array<number>，进入此分支。
+    /* 【分支2】: dataK 是数组Array<number>，进入此分支。 */
     public static func getProp<T>(data: T, dataK: Array<Float64>, mult: Float64, container: DynamicPropertyContainer,
         elemGlobalData: GlobalData, elemData: Layer,
         types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1,
@@ -725,17 +613,16 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         var p: PropertyFactory<T, Array<Float64>> = multiDimensionalProperty(data, dataK, mult, container, dataK, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
         p.containerType = containerType
         if (p.effectsSequence.size != 0) {
-            //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？----------------------------------------------------------2024.08.17
-            //container[0].addDynamicProperty(p)
             addDynamicPropertyContainer(p)
         }
         getPropInExpressionPropertyDecorator<T, Array<Float64>>(p, dataK.size, dataA: dataA, types: types, vLen: vLen)
         return p
     }
     
-    //[很重要，赶紧确认]-TODO: dataK 是否保存成 E 泛型结构？还是修改保存为 data_k_xxxProperty ???-----------------------------------2024.08.17
-    //【分支3】://TODO：此处传入的 data.k 是一个 Keyframe<E> 对象？？？----------------------------------------------------------2024.08.17
-    //【分支4】://此处的 data.k 是一个数组Array<Keyframe<T>>
+    /*
+     *【分支3】:此处传入的 data.k 是一个 Keyframe<E> 对象？？？
+     *【分支4】:此处的 data.k 是一个数组Array<Keyframe<T>>
+     */
     public static func getProp<T, E>(data: T, dataK: Array<Keyframe<E>>, types: Int64, mult: Option<Float64>,
         container: DynamicPropertyContainer, elemGlobalData: GlobalData, elemData: Layer,
         dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>, containerType!: Int8 = 3,
@@ -743,24 +630,17 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     ): PropertyFactory<T, E> where T <: ToString , E <: ToString {
         var vLen2: Int64 = vLen
         var p: PropertyFactory<T, E>
-        //if( dataK.size == 1){//TODO: 这种情况，需要修改上一级调用，否则会产生严重的冲突。
-        //    p = valueProperty<T, E>(data, Float64((dataK[0].k.getOrThrow() as Int64).getOrThrow()), mult, container, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties)
-        //} else {
-            if (types == 0) {
-                //dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!
-                p = keyframedValueProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
-            } else if (types == 1) {
-                p = keyframedMultidimensionalProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
-                vLen2 = p.v.size
-            } else {
-                throw Exception("调用分支错误。")
-            }
-        //}
+        if (types == 0) {
+            p = keyframedValueProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
+        } else if (types == 1) {
+            p = keyframedMultidimensionalProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
+            vLen2 = p.v.size
+        } else {
+            throw Exception("调用分支错误。")
+        }
         p.containerType = containerType
         
         if (p.effectsSequence.size != 0) {
-            //TODO: 暂未确认 addDynamicProperty 调用的是那一级的？？？
-            //container[0].addDynamicProperty(p)
             addDynamicPropertyContainer(p)
         }
         getPropInExpressionPropertyDecorator<T, E>(p, dataK.size, dataA: dataA, types: types, vLen: vLen2)
@@ -777,7 +657,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         p.isNull = false
         
         p.propType = "unidimensional"
-        //在mults处理中，统一处理了
+        /* 在mults处理中，统一处理了 */
         if (let Some(mult_v) <- mult) {
             if (mult_v == 0.0) {
                 p.mult = 1.0
@@ -798,9 +678,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         p.kf = false
         p.vel = [0.0]
         p._isFirstFrame = true
-        
-        //getPropInExpressionPropertyDecorator<T, E>(p, 1, dataA: dataA, types: types, vLen: vLen)
-        
+
         return p
     }
     
@@ -834,16 +712,14 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         p.vel = Array<Float64>(len, item: 0.0)
         var num: Float64 = 0.0
         for (i in 0..len) {
-            //此处的 dataK 是一个数组Array<number>
+            /* 此处的 dataK 是一个数组Array<number> */
             num = dataK[i]
             p.v[i] = num * p.mult
             p.pv[i] = num
         }
 
         p._isFirstFrame = true
-        
-        //getPropInExpressionPropertyDecorator<T, E>(p, dataK.size, dataA: dataA, types: types, vLen: vLen)
-        
+
         return p
     }
 
@@ -857,7 +733,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         p.isNull = false
 
         p.propType = "unidimensional"
-        //TODO: 此处的 dataK: E 也是 Keyframe<E>类型？？？
+        /*  此处的 dataK: E 也是 Keyframe<E>类型？？？ */
         p.keyframes = dataK
         p.offsetTime = elemData.st
         p.frameId = -1
@@ -876,8 +752,6 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         p.v = [initFrameFloat64]
         p.pv = [initFrameFloat64]
         p._isFirstFrame = true
-
-        //getPropInExpressionPropertyDecorator<T, E>(p, dataK.size, dataA: dataA, types: types, vLen: vLen)
 
         return p
     }
@@ -920,21 +794,18 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         p.pv = Array<Float64>(arrLen, item: initFrameFloat64)
 
         p._caching = Caching(lastFrame: initFrame, lastIndex: 0, value: Array<Float64>(arrLen, item: 0.0))
-        
-        //getPropInExpressionPropertyDecorator<T, E>(p, dataK.size, dataA: dataA, types: types, vLen: arrLen)
-        
+
         return p
     }
 
-//[扩展中赋值]【ExpressionPropertyDecorator】PropertyFactory.getProp ----------------------------------------------------------------------------------------------
+    /* [扩展中赋值]【ExpressionPropertyDecorator】PropertyFactory.getProp ------------------------------------------- */
 
     static func getPropInExpressionPropertyDecorator<T, E>(p: PropertyFactory<T, E>, dataKSize: Int64, dataA!: Int64 = 0, types!: Int64 = 0, vLen!: Int64 = 1): Unit where T <: ToString , E <: ToString {
-        //TODO：此时的dataA 是空值，后续排查的时候，需要校验传入data.a的值。
+        /* 此时的dataA 是空值，后续排查的时候，需要校验传入data.a的值。 */
         p.numKeys = 0
         if (dataA == 1) {
             p.numKeys = dataKSize
         }
-        //p.propertyIndex = data.ix
         var len: Int64 = 0
         var value: Array<Float64> = [0.0]
         if (types != 0) {
@@ -942,28 +813,17 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             if (dataA == 1) {
                 len = vLen
             }
-            //value = createTypedArray('float32', dataA === 1 ? data.k[0].s.length : data.k.length)
             value = Array<Float64>(len, item: 0.0)
         }
-        //p._cachingAtTime = {
-        //  lastFrame: initialDefaultFrame,
-        //  lastIndex: 0,
-        //  value: value,
-        //}
         p._cachingAtTime.value = value
-        //TODO: 暂不实现。
-        //expressionHelpers.searchExpressions(elem, data, prop)
         if (p.k) {
-            //TODO: 确认是否调用此层级的  addDynamicProperty 函数？？？--【调用的是上一层级的addDynamicProperty】
-            //container[0].addDynamicProperty(p)
             addDynamicPropertyContainer(p)
         }
 
     }
 
-    //TODO：
     public static func addDynamicPropertyContainer<T, E>(dp: PropertyFactory<T, E>): Unit where T <: ToString , E <: ToString {
-        //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property/DynamicPropertyContainer
+        /*  1-FrameElement; 2-TransformPropertyFactory; 3-其他Property  */
         if (dp.containerType == 2 && dp.container.size == 1) {
             dp.container[0].addDynamicProperty(dp)
         } else if (dp.containerType == 1) {
@@ -973,16 +833,13 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         }
     }
 
-//----------------------------------------------------------------------------------------------
     public func getValueAtTime(frameNumber: Float64, num: Float64): Array<Float64> {
         this.getValueAtTime(frameNumber)
     }
     public func getValueAtTime(frameNumber: Float64): Array<Float64> {
         if (this.kf) {
-            //p.getValueAtTime = expressionHelpers.getValueAtTime.bind(prop)
             this.getValueAtTimeInExpressionHelpers(frameNumber)
         } else {
-            //p.getValueAtTime = expressionHelpers.getStaticValueAtTime.bind(prop)
             this.getStaticValueAtTime()
         }
     }
@@ -991,26 +848,20 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         this.propertyGroup = propertyGroup
     }
 
-    //TODO: 返回值既可以是数组，也可以是数值。 => 数值按照一个值的数组处理
     public func getVelocityAtTime(frameNum: Float64): Array<Float64> {
-        //if (this.vel !== undefined)
         if (this.vel.size > 1) {
             return this.vel
         }
         var delta: Float64 = -0.001
-        // frameNum += this.elem.data.st
-        //TODO: v1/v2 既可以是数组，也可以是数值。 => 数值按照一个值的数组处理
+
         var v1: Array<Float64> = this.getValueAtTime(frameNum)
         var v2: Array<Float64> = this.getValueAtTime(frameNum + delta)
         var velocity: Array<Float64> = Array<Float64>(v1.size, item: 0.0)
         if (v1.size == 1) {
             velocity = [(v2[0] - v1[0]) / delta]
         } else if (v1.size != 0) {
-            //velocity = createTypedArray('float32', v1.length)
             for (i in 0..v1.size) {
-                //删除帧率
-                //如果需要，不要在这里添加
-                // velocity[i] = this.elemGlobalData.frameRate*((v2[i] - v1[i])/delta)
+                /* 删除帧率。如果需要，不要在这里添加 */
                 velocity[i] = (v2[i] - v1[i]) / delta
             }
         }
@@ -1019,7 +870,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
 
     public func getSpeedAtTime(frameNum: Float64): Float64 {
         let delta: Float64 = -0.01
-        //TODO: v1/v2 既可以是数组，也可以是数值。 => 数值按照一个值的数组处理
+        /* v1/v2 既可以是数组，也可以是数值。 => 数值按照一个值的数组处理 */
         let v1: Array<Float64> = this.getValueAtTime(frameNum)
         let v2: Array<Float64> = this.getValueAtTime(frameNum + delta)
         var speed: Float64 = 0.0
@@ -1034,12 +885,12 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         return speed
     }
 
-//getValueAtTime-1------------------------------------------------------------------------------------------------
+    /* getValueAtTime-1-------------------------------------------------------------------------------------------- */
 
     func getStaticValueAtTime(): Array<Float64> {
         return this.pv
     }
-    //TODO: 返回值 既可以是数组，也可以是数值。 => 数值按照一个值的数组处理
+    /* 返回值 既可以是数组，也可以是数值。 => 数值按照一个值的数组处理 */
     public func getValueAtTimeInExpressionHelpers(frameNumber: Float64): Array<Float64> {
         var frameNum: Float64 = frameNumber
         frameNum *= this.elemGlobalData.frameRate
@@ -1055,9 +906,9 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         return this._cachingAtTime.value
     }
 
-//getValueAtTime-2------------------------------------------------------------------------------------------------
+    /* getValueAtTime-2---------------------------------------------------------------------------------------------- */
 
-    //TODO：PropertyFactory 扩展，增加函数 loopOut/loopIn/smooth。
+    /* PropertyFactory 扩展，增加函数 loopOut/loopIn/smooth。 */
     func loopOut(types2: String, duration2: Int64, durationFlag: Bool): Array<Float64> {
         if (!this.k || this.keyframes.size == 0) {
             return this.pv
@@ -1065,10 +916,6 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         let types: String = types2.toAsciiLower()
         var duration: Int64 = duration2
 
-        //TODO: 暂时没有引入 BaseElement.comp
-        //TODO: CanvasRendererBase.renderedFrame = Int64
-        //var currentFrame: Float64 = this.comp.renderedFrame
-        //var currentFrame: Float64 = this.elemGlobalData.renderedFrameInElemComp()
         var currentFrame: Float64 = this.getRenderedFrameInElemComp(this.compDataInd)
 
         var keyframes: Array<Keyframe<E>> = this.keyframes
@@ -1098,13 +945,12 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         if (types == "pingpong") {
             var iterations: Int64 = Int64(floor((currentFrame - firstKeyFrame) / cycleDuration))
             if (iterations % 2 != 0) {
-                return this.getValueAtTime(((cycleDuration - Float64(Int64(currentFrame - firstKeyFrame) % Int64(cycleDuration)) + firstKeyFrame)) / this.elemGlobalData.frameRate) // eslint-disable-line
+                return this.getValueAtTime(((cycleDuration - Float64(Int64(currentFrame - firstKeyFrame) % Int64(cycleDuration)) + firstKeyFrame)) / this.elemGlobalData.frameRate) /*  eslint-disable-line  */
             }
         } else if (types == "offset") {
-            //TODO: expressionHelpers.getValueAtTime 返回值 既可以是数组，也可以是数值。 => 数值按照一个值的数组处理
             let initV: Array<Float64> = this.getValueAtTime(firstKeyFrame / this.elemGlobalData.frameRate)
             let endV: Array<Float64> = this.getValueAtTime(lastKeyFrame / this.elemGlobalData.frameRate)
-            let current: Array<Float64> = this.getValueAtTime((Float64(Int64(currentFrame - firstKeyFrame) % Int64(cycleDuration)) + firstKeyFrame) / this.elemGlobalData.frameRate) // eslint-disable-line
+            let current: Array<Float64> = this.getValueAtTime((Float64(Int64(currentFrame - firstKeyFrame) % Int64(cycleDuration)) + firstKeyFrame) / this.elemGlobalData.frameRate) /*  eslint-disable-line  */
             let repeats: Float64 = floor((currentFrame - firstKeyFrame) / cycleDuration)
             if (this.pv.size != 0) {
                 ret = Array<Float64>(initV.size, item: 0.0)
@@ -1122,17 +968,16 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 ret = Array<Float64>(lastValue.size, item: 0.0)
                 len = ret.size
                 for (i in 0..len) {
-                    ret[i] = lastValue[i] + (lastValue[i] - nextLastValue[i]) * ((currentFrame - lastKeyFrame) / this.elemGlobalData.frameRate) / 0.0005 // eslint-disable-line
+                    ret[i] = lastValue[i] + (lastValue[i] - nextLastValue[i]) * ((currentFrame - lastKeyFrame) / this.elemGlobalData.frameRate) / 0.0005 /*  eslint-disable-line  */
                 }
                 return ret
             }
             return [lastValue[0] + (lastValue[0] - nextLastValue[0]) * (((currentFrame - lastKeyFrame)) / 0.001)]
         }
-        return this.getValueAtTime(((Float64(Int64(currentFrame - firstKeyFrame) % Int64(cycleDuration)) + firstKeyFrame)) / this.elemGlobalData.frameRate) // eslint-disable-line
+        return this.getValueAtTime(((Float64(Int64(currentFrame - firstKeyFrame) % Int64(cycleDuration)) + firstKeyFrame)) / this.elemGlobalData.frameRate) /*  eslint-disable-line  */
 
     }
 
-    //TODO：PropertyFactory 扩展，增加函数 loopOut/loopIn/smooth。
     func loopIn(types2: String, duration2: Int64, durationFlag: Bool): Array<Float64> {
         if (!this.k) {
             return this.pv
@@ -1140,9 +985,6 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         let types: String = types2.toAsciiLower()
         var duration: Int64 = duration2
 
-        //TODO: 暂时没有引入 BaseElement.comp
-        //TODO: CanvasRendererBase.renderedFrame = Int64
-        //var currentFrame: Float64 = this.elemGlobalData.renderedFrameInElemComp()
         var currentFrame: Float64 = this.getRenderedFrameInElemComp(this.compDataInd)
 
         var keyframes: Array<Keyframe<E>> = this.keyframes
@@ -1172,10 +1014,9 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         if (types == "pingpong") {
             var iterations: Int64 = Int64(floor((firstKeyFrame - currentFrame) / cycleDuration))
             if (iterations % 2 == 0) {
-                return this.getValueAtTime(((Float64(Int64(firstKeyFrame - currentFrame) % Int64(cycleDuration)) + firstKeyFrame)) / this.elemGlobalData.frameRate) // eslint-disable-line
+                return this.getValueAtTime(((Float64(Int64(firstKeyFrame - currentFrame) % Int64(cycleDuration)) + firstKeyFrame)) / this.elemGlobalData.frameRate) /*  eslint-disable-line  */
             }
         } else if (types == "offset") {
-            //TODO: expressionHelpers.getValueAtTime 返回值 既可以是数组，也可以是数值。 => 数值按照一个值的数组处理
             let initV: Array<Float64> = this.getValueAtTime(firstKeyFrame / this.elemGlobalData.frameRate)
             let endV: Array<Float64> = this.getValueAtTime(lastKeyFrame / this.elemGlobalData.frameRate)
             let current: Array<Float64> = this.getValueAtTime((cycleDuration - Float64(Int64(firstKeyFrame - currentFrame) % Int64(cycleDuration)) + firstKeyFrame) / this.elemGlobalData.frameRate)
@@ -1202,39 +1043,37 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             }
             return [firstValue[0] + ((firstValue[0] - nextFirstValue[0]) * (firstKeyFrame - currentFrame)) / 0.001]
         }
-        return this.getValueAtTime(((cycleDuration - (Float64(Int64(firstKeyFrame - currentFrame) % Int64(cycleDuration)) + firstKeyFrame))) / this.elemGlobalData.frameRate) // eslint-disable-line
+        return this.getValueAtTime(((cycleDuration - (Float64(Int64(firstKeyFrame - currentFrame) % Int64(cycleDuration)) + firstKeyFrame))) / this.elemGlobalData.frameRate) /*  eslint-disable-line  */
 
     }
 
-    //TODO：PropertyFactory 扩展，增加函数 loopOut/loopIn/smooth。
     func smooth(width2: Float64, samples2: Float64): Array<Float64> {
         if (!this.k) {
             return this.pv
         }
-        //var width: Float64 = (width2 || 0.4) * 0.5
+
         var width: Float64 = width2
         if (width2 != 0.0) {
             width2 * 0.5
         } else {
             0.4 * 0.5
         }
-        //samples = floor(samples || 5.0)
+
         var samples: Float64 = samples2
         if (samples != 0.0) {
             samples = floor(samples)
         } else {
-            //samples = floor(5.0)
             samples = 5.0
         }
 
         if (samples <= 1.0) {
             return this.pv
         }
-        //let currentTime: Float64 = this.elemGlobalData.renderedFrameInElemComp() / this.elemGlobalData.frameRate
+
         let currentTime: Float64 = this.getRenderedFrameInElemComp(this.compDataInd) / this.elemGlobalData.frameRate
         let initFrame: Float64 = currentTime - width
         let endFrame: Float64 = currentTime + width
-        //var sampleFrequency = samples > 1.0 ? (endFrame - initFrame) / (samples - 1) : 1
+
         var sampleFrequency: Float64 = 1.0
         if (samples > 1.0) {
             sampleFrequency = (endFrame - initFrame) / (samples - 1.0)
@@ -1248,7 +1087,6 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         var sampleValue: Array<Float64> = Array<Float64>()
         let len: Int64 = Int64(samples)
         while (i < len) {
-            //TODO: expressionHelpers.getValueAtTime 返回值 既可以是数组，也可以是数值。 => 数值按照一个值的数组处理
             sampleValue = this.getValueAtTime(initFrame + Float64(i) * sampleFrequency)
             if (this.pv.size > 0) {
                 for (j in 0..this.pv.size) {

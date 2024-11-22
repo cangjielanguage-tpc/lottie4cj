@@ -25,8 +25,6 @@ public class Keyframe<T> <: ToString where T <: ToString {
     public let o: PointF        // 3
     public let i: PointF        // 4
     public let h: Int64         // 5
-    //public let to: PointF       // 6
-    //public let ti: PointF       // 7
 
     public let to: Array<Float64>       // 6
     public let ti: Array<Float64>       // 7
@@ -56,8 +54,6 @@ public class Keyframe<T> <: ToString where T <: ToString {
         o!: PointF = PointF(),
         i!: PointF = PointF(),
         h!: Int64 = 0,
-        //to!: PointF = PointF(),
-        //ti!: PointF = PointF()
         to!: Array<Float64> = Array<Float64>(),
         ti!: Array<Float64> = Array<Float64>(),
         n!: Array<String> = Array<String>()
@@ -116,7 +112,7 @@ public class Keyframe<T> <: ToString where T <: ToString {
             return this.isNoneK
         }
         this.handleKIsNone = true
-        if (let Some(v) <- k) {  //"k"
+        if (let Some(v) <- k) {
             this.isNoneK = false
             return false
         }

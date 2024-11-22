@@ -183,21 +183,6 @@ public class GlobalData {
 
 }
 
-/*
-public class FinalTransform {
-
-    public var mProp: Mprop
-    public var _matMdf: Bool
-    public var _opMdf: Bool
-    public var mat: Matrix
-
-    public init(mProp!: Mprop = Mprop(), _matMdf!: Bool= false, _opMdf!: Bool= false, mat!: Matrix= Matrix()) {
-        this.mProp = mProp
-        this._matMdf = _matMdf
-        this._opMdf = _opMdf
-        this.mat = mat
-    }
-}*/
 
 public class Mprop {
     public var o: Mpropo = Mpropo()

@@ -1,12 +1,9 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
-
-//package lottie.utils.shapes
 package lottie.property
 
 public open class TrimModifier <: ShapeModifier {
-    //TODO：拆分多继承问题 -- extendPrototype([ShapeModifier], TrimModifier)
 
     public var s: Option<PropertyFactory<Array<Keyframe<Float64>>, Float64>>
     public var e: Option<PropertyFactory<Array<Keyframe<Float64>>, Float64>>
@@ -22,10 +19,6 @@ public open class TrimModifier <: ShapeModifier {
         this.s = None
         this.e = None
         this.o = None
-//        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
-//        this.s = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-//        this.e = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-//        this.o = PropertyFactory<Array<Keyframe<Float64>>, Float64>(Array<Keyframe<Float64>>(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
     }
 
     public func getValue(): Unit {
@@ -46,8 +39,6 @@ public open class TrimModifier <: ShapeModifier {
             	value.containerType = 3
                 value.container = [this]
             }
-//            this.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-//            this.s.container = [this]
 
             //"e":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":37,"s":[0],"e":[100]},{"t":58.0000023623884}],"ix":2}
             if (tm.e.k.size == 1) {//走【分支1】  //_e: Array<Keyframe<Float64>>
@@ -59,8 +50,6 @@ public open class TrimModifier <: ShapeModifier {
             	value.containerType = 3
                 value.container = [this]
             }
-//            this.e.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-//            this.e.container = [this]
 
             //"o":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"n":["0p833_0p833_0p167_0p167"],"t":37,"s":[18],"e":[0]},{"t":58.0000023623884}],"ix":3}
             if (tm.o.k.size == 1) {//走【分支1】   //_o: Array<Keyframe<Float64>>
@@ -72,16 +61,12 @@ public open class TrimModifier <: ShapeModifier {
             	value.containerType = 3
                 value.container = [this]
             }
-//            this.o.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-//            this.o.container = [this]
 
             this.m = tm.m
         }
 
         this.sValue = 0.0
         this.eValue = 0.0
-
-        //TODO: 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
 
         this._isAnimated = (if (let Some(value) <- s) {
             value.effectsSequence.size != 0
@@ -97,11 +82,9 @@ public open class TrimModifier <: ShapeModifier {
         	false
         })
 
-//        this._isAnimated = this.s.effectsSequence.size != 0 || this.e.effectsSequence.size != 0 || this.o.effectsSequence.size != 0
     }
 
     public func addShapeToModifier(shapeData: ShapeDataShapeModifiers): Unit {
-        //TODO: ShapeDataShapeModifiers 暂未找到成员变量 pathsData，需确认参数类型。
         shapeData.pathsData = Array<SegmentsLengthElement>()
     }
 
@@ -109,7 +92,6 @@ public open class TrimModifier <: ShapeModifier {
         var segments: Array<Array<Float64>> = Array<Array<Float64>>(2, item: Array<Float64>())
         var len: Int64 = 0
         if (e <= 1.0) {
-            //TODO: [注意]-直接用 Array<Int64> 代替 [s: s, e: e]，s 代表下标 0，e 代表下标 1。  //segments.push([s: s, e: e])
             segments[0] = [s, e]
             len = 1
         } else if (s >= 1.0) {
@@ -126,7 +108,7 @@ public open class TrimModifier <: ShapeModifier {
         var segmentOb: Array<Float64> = Array<Float64>()
         for (i in 0..len) {
             segmentOb = segments[i]
-            //TODO: [注意]-直接用 Array<Int64> 代替 [s: s, e: e]，s 代表下标 0，e 代表下标 1。
+            /* [注意]-直接用 Array<Int64> 代替 [s: s, e: e]，s 代表下标 0，e 代表下标 1。 */
             let addedLengthFloat64: Float64 = Float64(addedLength)
             if (!(segmentOb[1] * totalModifierLength < addedLength || segmentOb[0] * totalModifierLength > addedLength + shapeLength)) {
                 var shapeS: Float64 = 0.0
@@ -155,15 +137,11 @@ public open class TrimModifier <: ShapeModifier {
         return shapeSegments
     }
 
-    // 数据类型分析推测：pathsData  =>  [segmentsLengthPool.newElement(), ......]
-    //TODO: 未确认 pathsData 数据类型，暂定为 SegmentsLengthElement。
     public func releasePathsData(pathsData: Array<SegmentsLengthElement>): Array<SegmentsLengthElement> {
-        //TODO: pathsData.length ??? length 是成员变量。
         let len: Int64 = pathsData.size
         for (i in 0..len) {
             segmentsLengthPool.release(pathsData[i])
         }
-        //TODO: 没有办法清空 clean 参数数组，只能返回值为空，在调用处做赋值为空处理。  //pathsData.length = 0
         return Array<SegmentsLengthElement>()
     }
 
@@ -171,24 +149,6 @@ public open class TrimModifier <: ShapeModifier {
         var s_v: Float64 = 0.0
         var e_v: Float64 = 0.0
         if (this._mdf || _isFirstFrame) {
-//            var o_v: Float64 = Float64(Int64(this.o.v[0]) % 360) / 360.0
-//            if (o_v < 0.0) {
-//                o_v += 1.0
-//            }
-//            if (this.s.v[0] > 1.0) {
-//                s_v = 1.0 + o_v
-//            } else if (this.s.v[0] < 0.0) {
-//                s_v = 0.0 + o_v
-//            } else {
-//                s_v = this.s.v[0] + o_v
-//            }
-//            if (this.e.v[0] > 1.0) {
-//                e_v = 1.0 + o_v
-//            } else if (this.e.v[0] < 0.0) {
-//                e_v = 0.0 + o_v
-//            } else {
-//                e_v = this.e.v[0] + o_v
-//            }
 
             var o_v: Float64 = Float64(Int64(if (let Some(value) <- this.o) {
                     value.v[0]
@@ -242,7 +202,7 @@ public open class TrimModifier <: ShapeModifier {
         var shapePaths: ShapeCollection = ShapeCollection()
         var len: Int64 = this.shapes.size
         var jLen: Int64 = 0
-        //TODO: 还需要确认 pathsData 和 pathData 数据类型。
+
         var pathsData: Array<SegmentsLengthElement> = Array<SegmentsLengthElement>()
         var pathData: SegmentsLengthElement = SegmentsLengthElement()
 
@@ -255,8 +215,6 @@ public open class TrimModifier <: ShapeModifier {
                 this.shapes[i].shape._mdf = true
                 this.shapes[i].shape.paths = this.shapes[i].localShapeCollection.clone()
                 if (this._mdf) {
-                    //TODO: ShapeDataShapeModifiers 中新增成员变量 pathsData 数据类型还未确定。
-                    //TODO: 手动清除数据。 // this.shapes[i].pathsData.length = 0
                     this.shapes[i].pathsData = Array<SegmentsLengthElement>()
                 }
             }
@@ -265,27 +223,24 @@ public open class TrimModifier <: ShapeModifier {
             var localShapeCollection: ShapeCollection = ShapeCollection()
             for (i in 0..len) {
                 var shapeData: ShapeDataShapeModifiers = this.shapes[i]
-                //如果形状没有改变，修剪属性也没有改变，则可以使用缓存的先前路径
+                /* 如果形状没有改变，修剪属性也没有改变，则可以使用缓存的先前路径 */
                 if (!shapeData.shape._mdf && !this._mdf && !_isFirstFrame && this.m != 2) {
                     shapeData.shape.paths = shapeData.localShapeCollection
                 } else {
                     shapePaths = shapeData.shape.paths
                     jLen = shapePaths._length
                     totalShapeLength = 0.0
-                    //TODO: ShapeDataShapeModifiers 中新增成员变量 pathsData 数据类型还未确定。
                     if (!shapeData.shape._mdf && shapeData.pathsData.size != 0) {
                         totalShapeLength = shapeData.totalShapeLength
                     } else {
-                        //TODO: ShapeDataShapeModifiers 中新增成员变量 pathsData 数据类型还未确定。
                         pathsData = this.releasePathsData(shapeData.pathsData)
-                        //TODO: 在函数 releasePathsData 中没有办法清空 clean 参数数组 shapeData.pathsData，只能返回值为空，再赋值为空。
                         shapeData.pathsData = pathsData
                         pathsData = Array<SegmentsLengthElement>(jLen, item: SegmentsLengthElement())
                         for (j in 0..jLen) {
-                            // 数据类型分析推测：pathData = segmentsLengthPool.newElement()  =>   pathData.lengths[i] = bezierLengthPool.newElement()
+                            /* 数据类型分析推测：pathData = segmentsLengthPool.newElement()  =>   pathData.lengths[i] = bezierLengthPool.newElement() */
                             pathData = Bez.getSegmentsLength(shapePaths.shapes[j])
 
-                            // 数据类型分析推测：pathsData[pathData]  =>  pathsData[segmentsLengthPool.newElement(), ......]
+                            /* 数据类型分析推测：pathsData[pathData]  =>  pathsData[segmentsLengthPool.newElement(), ......] */
                             pathsData[j] = pathData
                             totalShapeLength += pathData.totalLength
                         }
@@ -306,9 +261,8 @@ public open class TrimModifier <: ShapeModifier {
                 if (shapeData.shape._mdf) {
                     localShapeCollection = shapeData.localShapeCollection
                     localShapeCollection.releaseShapes()
-                    //如果m===2表示路径是单独修剪的，因此需要找到相对于whoel组的特定形状的边
+                    /* 如果m===2表示路径是单独修剪的，因此需要找到相对于whoel组的特定形状的边 */
                     if (this.m == 2 && len > 1) {
-                        //TODO: calculateShapeEdges 中传入的参数 s/e 数据类型是 Int64，需要对齐。
                         edges = this.calculateShapeEdges(s_v, e_v, Float64(shapeData.totalShapeLength), Float64(addedLength), totalModifierLength)
                         addedLength += shapeData.totalShapeLength
                     } else {
@@ -324,7 +278,7 @@ public open class TrimModifier <: ShapeModifier {
                         var segmentsLength: Int64 = 0
                         let shapeData_totalShapeLength: Float64 = shapeData.totalShapeLength
                         if (shapeE <= 1.0) {
-                            //TODO: [注意]-直接用 Array<Int64> 代替 [s: s, e: e]，s 代表下标 0，e 代表下标 1。
+                            /* [注意]-直接用 Array<Int64> 代替 [s: s, e: e]，s 代表下标 0，e 代表下标 1。 */
                             segments.append([shapeData_totalShapeLength * shapeS, shapeData_totalShapeLength * shapeE])
                             segmentsLength = 1
                         } else if (shapeS >= 1.0) {
@@ -340,7 +294,7 @@ public open class TrimModifier <: ShapeModifier {
                             if (segments.size > 1) {
                                 var lastShapeInCollection = shapeData.shape.paths.shapes[shapeData.shape.paths._length - 1]
                                 if (lastShapeInCollection.c) {
-                                    //pop() 方法用于删除数组的最后一个元素并返回删除的元素。
+                                    /* pop() 方法用于删除数组的最后一个元素并返回删除的元素。 */
                                     var lastShape: ShapeData = newShapesData.remove(newShapesData.size - 1)
                                     this.addPaths(newShapesData, localShapeCollection)
                                     newShapesData = this.addShapes(shapeData, segments[1], lastShape)
@@ -357,8 +311,8 @@ public open class TrimModifier <: ShapeModifier {
             }
         } else if (this._mdf) {
             for (i in 0..len) {
-                //如果形状在其间被修改，则当没有应用修剪时，重新调整修剪缓存路径数据。
-                //即使它丢失了缓存信息，也不要删除它。  //this.shapes[i].pathsData.length = 0
+                /* 如果形状在其间被修改，则当没有应用修剪时，重新调整修剪缓存路径数据。 */
+                /* 即使它丢失了缓存信息，也不要删除它。 */
                 this.shapes[i].pathsData = Array<SegmentsLengthElement>()
                 this.shapes[i].shape._mdf = true
             }
@@ -403,7 +357,6 @@ public open class TrimModifier <: ShapeModifier {
         shapePath.setXYAt(points[3], points[7], "v", pos + 1)
     }
 
-    //TODO: [注意]-直接用 Array<Float64> 代替 [s: s, e: e]，s 代表下标 0，e 代表下标 1。
     public func addShapes(shapeData: ShapeDataShapeModifiers, shapeSegment: Array<Float64>, shapePathOld: ShapeData): ArrayList<ShapeData> {
         var pathsData: Array<SegmentsLengthElement> = shapeData.pathsData
         var shapePaths: ArrayList<ShapeData> = shapeData.shape.paths.shapes
@@ -423,7 +376,7 @@ public open class TrimModifier <: ShapeModifier {
 
         var shapePath: ShapeData = shapePathOld
         if (shapePath.isNull()) {
-            shapePath = ShapeData()  //shapePool.newElement()
+            shapePath = ShapeData()
             segmentCount = 0
             initPos = 0
         } else {

@@ -115,7 +115,7 @@ public class ShapeData <: ToString {
                "o = ${o}\n}"
     }
 
-//融合 utils.shapes.ShapePath 分割线-------------------------------------------------------------------------------
+    /* 融合 utils.shapes.ShapePath 分割线----------------------------------------------------------------------------- */
     public func isNull(): Bool {
         return v.size == 0 && i.size == 0 && o.size == 0
     }
@@ -128,7 +128,6 @@ public class ShapeData <: ToString {
         this.setLength(len)
         
         for (i in 0..len) {
-            //TODO: pointPool.newElement() => 直接在数组中放入，初始化的空的 PointF ？？？
             this.v[i] = PointF()
             this.o[i] = PointF()
             this.i[i] = PointF()
@@ -142,13 +141,11 @@ public class ShapeData <: ToString {
      */
     public func setLength(len: Int64): Unit {
         if (this._maxLength < len) {
-            //TODO: 需要设置扩容逻辑么？？？--类似于缓存结构
             this.doubleArrayLength(len)
         }
         this._length = len
     }
 
-    //TODO: 需要设置扩容逻辑么？？？--类似于缓存结构
     public func doubleArrayLength() {
         let empty_point: PointF = PointF()
         empty_point.isNull = true
@@ -164,7 +161,6 @@ public class ShapeData <: ToString {
             maxLength = 8
         }
         while (maxLength < len) {
-            //TODO: 需要设置扩容逻辑么？？？--类似于缓存结构
             maxLength *= 2
         }
         let empty_point: PointF = PointF()
@@ -268,7 +264,6 @@ public class ShapeData <: ToString {
      * Release the ShapeCollection.
      */
     public func release(): Unit {
-        //TODO: this.v/i/o 是否需要做清空处理？？？
         this.c = false
         this.v = Array<PointF>()
         this.i = Array<PointF>()

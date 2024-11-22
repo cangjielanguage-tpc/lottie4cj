@@ -11,26 +11,21 @@ internal import lottie.property.*
 
 public class TextSelectorProp {
 
-    //数据来源分析：data  =>  layer.t.a[i].s(AnimatableTextPropertiesS)
-    //数据来源分析：arr  <=  TextAnimatorDataProperty.container 中  =>  TextAnimatorProperty
-    //public static func getTextSelectorProp(elem: ITextElement, data: AnimatableTextPropertiesS, arr: TextAnimatorProperty): TextSelectorPropFactory {
+    /*
+     * 数据来源分析：data  =>  layer.t.a[i].s(AnimatableTextPropertiesS)
+     * 数据来源分析：arr  <=  TextAnimatorDataProperty.container 中  =>  TextAnimatorProperty
+     */
     public static func getTextSelectorProp(data: AnimatableTextPropertiesS, elemGlobalData: GlobalData, elemData: Layer, elemTextPropertyCurrentData: DocumentData, dynamicProperties!: ArrayList<DynamicPropertyContainer>): TextSelectorPropFactory {
-        //TODO: TextSelectorPropFactory 的 init 是 2 个参数。
-        //return TextSelectorPropFactory(elem, data, arr)
         return TextSelectorPropFactory(data, elemGlobalData, elemData, elemTextPropertyCurrentData, dynamicProperties: dynamicProperties)
     }
 }
 
 public class TextSelectorPropFactory <: DynamicPropertyContainer {
-    //TODO：拆分多继承问题 -- extendPrototype([DynamicPropertyContainer], TextSelectorPropFactory)
 
-    //TODO：TextAnimatorDataProperty 用到，增加成员变量 t，编译用。
     public var t: Int64 = 0
 
     var elemTextPropertyCurrentData: DocumentData = DocumentData()
-    //var elem: ITextElement
     var data: AnimatableTextPropertiesS
-    //TODO: elem 中还未引入 comp 成员变量。--【不会再直接引入comp，具体用到comp的什么，再单独处理。】
 
     var _currentTextLength: Int64 = -1
     var k: Bool = false
@@ -42,18 +37,13 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
     var ne: PropertyFactory<AK, Int64>
     var a: PropertyFactory<AK, Int64>
 
-    //TODO: s/e/o/sm 在 json 中暂未找到
-    //TODO: 是否将 s/e/o/sm 当成空的 AK
+    /* s/e/o/sm 在 json 中暂未找到， 是否将 s/e/o/sm 当成空的 AK  */
     var s: PropertyFactory<AK, Int64>
-    //TODO: 是否将 e 当成空的 PropertyFactory
     var e: PropertyFactory<AK, Int64>
     var o: PropertyFactory<AK, Int64>
     var sm: PropertyFactory<AK, Int64>
 
-    //TODO: 未确认 dynamicProperties 的数据类型，暂定为 DynamicPropertyContainer
-    //在父类 DynamicPropertyContainer 中 //public var dynamicProperties: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>()
-
-    //数据来源分析：data  =>  layer.t.a[i].s(AnimatableTextPropertiesS)
+    /* 数据来源分析：data  =>  layer.t.a[i].s(AnimatableTextPropertiesS) */
     public init(data: AnimatableTextPropertiesS, elemGlobalData: GlobalData, elemData: Layer, elemTextPropertyCurrentData: DocumentData, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
         super(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.elemTextPropertyCurrentData = elemTextPropertyCurrentData
@@ -61,7 +51,7 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
 
         let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         let emptypf = PropertyFactory<AK, Int64>(AK(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        //TODO: 是否将 s/e/o/sm 当成空的 AK 进行初始化？？？
+
         this.s = emptypf
         this.e = PropertyFactory<AK, Int64>(AK(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.o = emptypf
@@ -72,51 +62,38 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
 
         this.initDynamicPropertyContainer(elemGlobalData, elemData)
 
-        //TODO: s/e 在 json 中暂未找到
-        //TODO: 是否将 s/e/o/sm 当成空的 AK 进行初始化？？？
         this.s = PropertyFactory<AK, Int64>.getProp(AK(), 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.s.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.s.containerType = 3  /*  1-FrameElement; 2-TransformPropertyFactory; 3-其他Property  */
         this.s.container = [this]
-        
-        //TODO: 是否将 e 当成空的 PropertyFactory？？？
-        this.e.v = [100.0]
-        //if ('e' in data) {
-        //    this.e = PropertyFactory.getProp(data.e, 0, 0.0, this, elemGlobalData, elemData)
-        //} else {
-        //    this.e = { v: 100 }
-        //}
 
-        //TODO: o 在 json 中暂未找到
-        //TODO: 是否将 s/e/o/sm 当成空的 AK 进行初始化？？？
+        this.e.v = [100.0]
+
         this.o = PropertyFactory<AK, Int64>.getProp(AK(), 0, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.o.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.o.containerType = 3  /*  1-FrameElement; 2-TransformPropertyFactory; 3-其他Property  */
         this.o.container = [this]
             
-        //"xe": {"a": 0, "k": 0} //走【分支1】
+        /* "xe": {"a": 0, "k": 0} -- 走【分支1】 */
         this.xe = PropertyFactory<AK, Int64>.getProp(data.xe, data.xe.k, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.xe.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.xe.containerType = 3  /*  1-FrameElement; 2-TransformPropertyFactory; 3-其他Property  */
         this.xe.container = [this]
-        //"ne": {"a": 0, "k": 0} //走【分支1】
+        /* "ne": {"a": 0, "k": 0} -- 走【分支1】 */
         this.ne = PropertyFactory<AK, Int64>.getProp(data.ne, data.ne.k, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.ne.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.ne.containerType = 3  /*  1-FrameElement; 2-TransformPropertyFactory; 3-其他Property  */
         this.ne.container = [this]
-        //"a": {"a": 0, "k": 100} //走【分支1】
+        /* "a": {"a": 0, "k": 100} -- 走【分支1】 */
         this.a = PropertyFactory<AK, Int64>.getProp(data.a, data.a.k, 0.01, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.a.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.a.containerType = 3  /*  1-FrameElement; 2-TransformPropertyFactory; 3-其他Property  */
         this.a.container = [this]
-        
-        //TODO: sm 在 json 中暂未找到
-        //TODO: 是否将 s/e/o/sm 当成空的 AK 进行初始化？？？
+
         this.sm = PropertyFactory.getProp(AK(k: 100), 100, 0.0, this, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        this.sm.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+        this.sm.containerType = 3  /*  1-FrameElement; 2-TransformPropertyFactory; 3-其他Property  */
         this.sm.container = [this]
 
         if (this.dynamicProperties.size == 0) {
             this.getValue()
         }
     }
-    
-    //TODO: 在 getMult == TextExpressionSelectorPropFactory.getValueProxy 扩展？？？
+
     public open func getMult(index: Int64, total: Int64): Float64 { return 0.0 }
 
     public func getMult(ind2: Float64): Float64 {
@@ -188,7 +165,7 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
                 mult = 0.0
             } else {
                 ind = min(max(0.0, ind + 0.5 - s), e - s)
-                mult = (1.0 + (cos((Float64.PI + Float64.PI * 2.0 * (ind) / (e - s))))) / 2.0   // eslint-disable-line
+                mult = (1.0 + (cos((Float64.PI + Float64.PI * 2.0 * (ind) / (e - s))))) / 2.0   /*  eslint-disable-line  */
             }
             mult = easer(mult)
         } else {
@@ -237,23 +214,20 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
     }
 
     public func getValue(newCharsFlag: Bool) {
-        //TODO: 是 DynamicPropertyContainer.iterateDynamicProperties ???
         this.iterateDynamicProperties()
         this._mdf = newCharsFlag || this._mdf
         this._currentTextLength = this.elemTextPropertyCurrentData.l.size
         if (newCharsFlag && this.data.r == 2) {
-            //TODO: s/e 在 json 中暂未找到
+            /*  s/e 在 json 中暂未找到 */
             this.e.v = [ Float64(this._currentTextLength) ]
         }
-        //var divisor: Int64 = this.data.r == 2 ? 1 : 100 / this.data.totalChars
+
         var divisor: Float64 = 1.0
         if (this.data.r != 2) {
             divisor = Float64(100 / this.data.totalChars)
         }
 
-        //TODO: o 在 json 中暂未找到
         let o: Float64 = this.o.v[0] / divisor
-        //TODO: s/e 在 json 中暂未找到
         var s: Float64 = this.s.v[0] / divisor + o
         var e: Float64 = (this.e.v[0] / divisor) + o
         if (s > e) {

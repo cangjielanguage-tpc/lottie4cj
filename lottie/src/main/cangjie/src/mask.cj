@@ -42,7 +42,7 @@ public open class MaskElement <: BaseElement {
 
         var len: Int64 = this.masksProperties.size
         
-        //需要初始化一个空的 ViewData。
+        /* 需要初始化一个空的 ViewData。 */
         let dp: DynamicPropertyContainer = DynamicPropertyContainer(globalData, data, dynamicProperties: this.dynamicProperties)
         let pf: PropertyFactory<Array<Keyframe<Int64>>, Int64> = empty_pf_Array_Keyframe_Int64
         let spf: ShapePropertyFactory = empty_spf
@@ -63,13 +63,13 @@ public open class MaskElement <: BaseElement {
         var expansor: CreateNS = empty_createNS
         var feMorph: CreateNS = empty_createNS
 
-        //先初始化一个空的 x
+        /* 先初始化一个空的 x */
         var x: PropertyFactory<Array<Keyframe<Int64>>, Int64> = empty_pf_Array_Keyframe_Int64
         
         var maskType: String = "clipPath"
         var maskRef: String = "clip-path"
         for (i in 0..len) {
-            //暂时在 json 中未找到 masksProperties.o.x 
+            /* 暂时在 json 中未找到 masksProperties.o.x */ 
             if ((properties[i].mode != "a" && properties[i].mode != "n") || properties[i].inv) {
                 maskType = "mask"
                 maskRef = "mask"
@@ -90,7 +90,7 @@ public open class MaskElement <: BaseElement {
                 rect = empty_createNS
             }
 
-            //数据来源分析：masksProperties.o => "o":{"k":100}   =>  properties[i].o = _o: Array<Keyframe<Int64>>
+            /* 数据来源分析：masksProperties.o => "o":{"k":100}   =>  properties[i].o = _o: Array<Keyframe<Int64>> */
             let op: PropertyFactory<Array<Keyframe<Int64>>, Int64>
             if (properties[i].o.size == 1) {
                 op = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].o, properties[i].o[0].k ?? 0, 0.01, dp, globalData, data, dynamicProperties: dynamicProperties, containerType: 1)
@@ -99,15 +99,14 @@ public open class MaskElement <: BaseElement {
             } else {
                 op = PropertyFactory<Array<Keyframe<Int64>>, Int64>(properties[i].o, 0.01, dp, globalData, data, dynamicProperties: dynamicProperties)
             }
-            op.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            op.containerType = 1  /*  1-FrameElement; 2-TransformPropertyFactory; 3-其他Property  */
 
             let props: ShapePropertyFactory = ShapePropertyFactory.getShapeProp(properties[i], 3, globalData, data, dynamicProperties: dynamicProperties)
-            props.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+            props.containerType = 1  /*  1-FrameElement; 2-TransformPropertyFactory; 3-其他Property  */
 
 
             path = CreateNS("path")
             if (properties[i].mode == "n") {
-                // TODO move this to a factory or to a constructor
                 this.viewData[i] = ViewData(
                     op: op,
                     props: props,
@@ -150,12 +149,12 @@ public open class MaskElement <: BaseElement {
                         path.setAttribute("stroke", fillStr)
                     } else {
                         feMorph = empty_createNS
-                        //x 在定义式已经先初始化一个空的 PropertyFactory。
+                        /*  x 在定义式已经先初始化一个空的 PropertyFactory。  */
                     }
                 } else if (properties[i].x.size > 1) {
                     x = PropertyFactory<Array<Keyframe<Int64>>, Int64>.getProp(properties[i].x, properties[i].x, 0, 0.0, dp, globalData, data, dynamicProperties: dynamicProperties, containerType: 1)
                 }
-                x.containerType = 1  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
+                x.containerType = 1  /*  1-FrameElement; 2-TransformPropertyFactory; 3-其他Property  */
 
                 this.storedData[i] = StoredData(
                     elem: path,
@@ -185,7 +184,7 @@ public open class MaskElement <: BaseElement {
                     currentMasks.append(path)
                 }
                 /*
-                 * TODO: 无法在此处初始化 solidPath。
+                 * 无法在此处初始化 solidPath。
                  * 调用条件：if (properties[i].mode != 'n') && (properties[i].inv && !this.solidPath)
                  * 处理方案：1. 在使用时进行符合条件判断，符合时调用 createLayerSolidPath() 赋值？？？
                  * 2. 在 MaskElement 初始化后，手动调用一下包装过的函数 【initEndDrawPath】。 -- 【应用此方案】
@@ -302,7 +301,7 @@ public open class MaskElement <: BaseElement {
         return path
     }
 
-    //path 相关的 (x, y) 位置点，是否需要换成 Int64 数据类型？？？
+    /* path 相关的 (x, y) 位置点，是否需要换成 Int64 数据类型？？？  */
     public func drawPath(pathData: Mask, pathNodes: ShapeData, viewData: ViewData): Unit {
         var pathString: String = " M" + pathNodes.v[0].x.toString() + "," + pathNodes.v[0].y.toString()
         let len: Int64 = pathNodes._length

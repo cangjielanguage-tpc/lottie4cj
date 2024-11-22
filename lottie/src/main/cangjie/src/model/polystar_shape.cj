@@ -9,10 +9,6 @@ package lottie.model
 
 public class PolystarShape <: ContentModel {
 
-    //TODO：循环依赖
-    //TODO: ShapeExpressionInterface 中编译用。
-    //public var sh: ShapePropertyFactory = ShapePropertyFactory(ContentModel(), 0, GlobalData(), Layer())
-
     public var mn: String = ""
 
     public var ix: Int64 = -1
@@ -35,9 +31,8 @@ public class PolystarShape <: ContentModel {
     //"ir":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[54.99]},{"t":59,"s":[61.99]}],"ix":6},
     public let ir: ArrayKeyframeFloat64                    // 7  = innerRadius
     //"is":{"a":1,"k":[{"i":{"x":[0.833],"y":[0.833]},"o":{"x":[0.167],"y":[0.167]},"t":0,"s":[0]},{"t":59,"s":[5]}],"ix":8},
-    public let is2: ArrayKeyframeFloat64                    // 8  = innerRoundedness
-    //public let hd: Bool                                     // 9  = hidden
-    public let d: Int64                                     // 10 = reversed
+    public let is2: ArrayKeyframeFloat64                   // 8  = innerRoundedness   // 9  = hidden
+    public let d: Int64                                    // 10 = reversed
 
     let _ty: String = "sr"
     public open prop ty: String {

@@ -12,20 +12,21 @@ public class ShapeFill <: FillStroke {
     //新增成员变量，解析部分待补充。
     public let mn: String = ""
 
-    //将 ShapeFill._c 的值再次加工处理，保存在 c_k 中
-    //TODO: 将原来的 ShapeFill.c，储存到 c_k 中；将再次加工处理的数据，储存到 ShapeFill.c
-    //public var c_k: Array<KeyframeArrayFloat64> = Array<KeyframeArrayFloat64>()    // 1 = color
+    //将原来的 ShapeFill.c，储存到 c_k 中；将再次加工处理的数据，储存到 ShapeFill.c
     public var c_k: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
     
     /**
      * 3. "layers"."shapes".{"ty": "fl"} = ShapeFillParser
+     * 
+     * 0 = nm = name
+     * 1 = c = color
+     * 2 = o = opacity
+     * 3 = fillEnabled = fillEnabled
+     * 4 = r = fillTypeInt
+     * 5 = hd = hidden
      */
-    public let nm: String                               // 0 = name
-    //public let c: Array<Keyframe<Array<Float64>>>     // 1 = color
-    //public let o: Array<Keyframe<Int64>>              // 2 = opacity
-    public let fillEnabled: Bool                        // 3 = fillEnabled
-    //public let r: Int64                                 // 4 = fillTypeInt
-    //public let hd: Bool                                 // 5 = hidden
+    public let nm: String                               // 0 = nm = name
+    public let fillEnabled: Bool                        // 3 = fillEnabled = fillEnabled
 
     let _ty: String = "fl"
     public open prop ty: String {

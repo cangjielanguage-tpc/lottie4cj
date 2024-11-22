@@ -9,14 +9,12 @@ package lottie.model
 
 public open class ContentModel <: ToString {
 
-    //TODO: 在 CVShapeElement.createStyleElement 编译用。
     public var hd: Bool = false
 
-     //TODO：编译调试用，后续要再确认。
     public var _processed: Bool = false
     public var _render: Bool = false
     public var _shouldRender: Bool = false
-    //TODO: 逐级实现 clone() 函数.
+
     public open func clone(): ContentModel {
         return this
     }

@@ -16,8 +16,7 @@ public class ShapePath <: ContentModel {
      */
     public let nm: String                          //0 = name
     public let ind: Int64                          //1 = ind
-    public let ks: Array<Keyframe<ShapeData>>    //2 = shape   //暂时未找到调用PropertyFactory.getProp
-    //public let hd: Bool                            //3 = hidden
+    public let ks: Array<Keyframe<ShapeData>>      //2 = shape   //暂时未找到调用PropertyFactory.getProp
 
     let _ty: String = "sh"
     public open prop ty: String {

@@ -31,7 +31,6 @@ public open class IShapeElement <: BaseElement {
      *
      * @param data - Type of Layer, an instance of the "layers" data that encapsulates the animation.
      */
-    // data => CVShapeData/SVGShapeData 抽象一个父类 BaseShapeData 出来
     public func addShapeToModifiers(data: CvShapeData): Unit {
         let len: Int64 = this.shapeModifiers.size
         for (i in 0..len) {
@@ -78,7 +77,7 @@ public open class IShapeElement <: BaseElement {
         var shouldBreakProcess: Bool = false
         for (i in (len - 1)..=0:-1) {
             shouldBreakProcess = this.shapeModifiers[i].processShapes(this._isFirstFrame)
-            //解决中继器重置形状以使以下进程被调用两次的情况的变通方法
+            /* 解决中继器重置形状以使以下进程被调用两次的情况的变通方法 */
             if (shouldBreakProcess) {
                 break
             }
@@ -91,7 +90,7 @@ public open class IShapeElement <: BaseElement {
      * @param elem - Type of BaseElement, search the processed elements.
      * @return Type of Int64, return the pos of the processed element.
      */
-    //数据来源分析：elem == ContentModel  <= arr[i] == ContentModel  <=  arr == this.shapesData == Layer.shapes == Array<ContentModel>
+    /* 数据来源分析：elem == ContentModel  <= arr[i] == ContentModel  <=  arr == this.shapesData == Layer.shapes == Array<ContentModel> */
     public func searchProcessedElement(elem: ContentModel): Int64 {
         let elements: ArrayList<ProcessedElement> = this.processedElements
         let len: Int64 = elements.size
@@ -109,7 +108,7 @@ public open class IShapeElement <: BaseElement {
      * @param elem - Type of BaseElement, add processed elements.
      * @param elem - Type of Int64, processed element's pos..
      */
-    //数据来源分析：elem == ContentModel  <= arr[i] == ContentModel  <=  arr == this.shapesData == Layer.shapes == Array<ContentModel>
+    /* 数据来源分析：elem == ContentModel  <= arr[i] == ContentModel  <=  arr == this.shapesData == Layer.shapes == Array<ContentModel> */
     public func addProcessedElement(elem: ContentModel, pos: Int64): Unit {
         let elements: ArrayList<ProcessedElement> = this.processedElements
         var i: Int64 = elements.size
@@ -127,8 +126,7 @@ public open class IShapeElement <: BaseElement {
         this.prepareRenderableFrame(num)
         this.prepareProperties(num, this.isInRange)
     }
-    
-    //TODO: 配合 RepeaterModifier 编译用，暂未实现。
+
     public open func reloadShapes(): Unit {}
 
 }

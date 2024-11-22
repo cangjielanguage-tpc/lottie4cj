@@ -18,10 +18,10 @@ public type CreateTag = CreateNS
 public class FontManager {
 
     var maxWaitingTime: Int32 = 5000
-    //json中的"chars"部分
+    /* json中的"chars"部分 */
     var emptyChar: FontCharacter = FontCharacter(CharsData(), "", 0.0, 0.0, "", "")
 
-    // Hindi characters
+    /* Hindi characters */
     public static let combinedCharacters: Array<UInt32> = [2304, 2305, 2306, 2307, 2362, 2363, 2364, 2364, 2366,
       2367, 2368, 2369, 2370, 2371, 2372, 2373, 2374, 2375, 2376, 2377, 2378, 2379,
       2380, 2381, 2382, 2383, 2387, 2388, 2389, 2390, 2391, 2402, 2403]
@@ -43,7 +43,7 @@ public class FontManager {
     var _warned: Bool = false
     var initTime: Int64 = 0
 
-    // BaseRenderer 中成员变量，用于辨别是否是 "canvas"
+    /* BaseRenderer 中成员变量，用于辨别是否是 "canvas" */
     public var rendererType: String = ""
 
     /**
@@ -51,7 +51,7 @@ public class FontManager {
      */
     public init() { }
 
-    //数据来源分析：fontData == animData.fonts == Fonts
+    /* /数据来源分析：fontData == animData.fonts == Fonts */
     public func addFonts(fontData: Fonts, defs: CreateTag): Unit {
         if (fontData.isEmpty()) {
             this.isLoaded = true
@@ -59,16 +59,16 @@ public class FontManager {
         }
         if (this.chars.size > 0) {
             this.isLoaded = true
-            this.fonts = fontData.list  //Fonts.list
+            this.fonts = fontData.list
             return
         }
-        //TODO: 非 canvas 部分暂未实现。【适配 HTML 和 svg】
+        /* 非 canvas 部分暂未实现。【适配 HTML 和 svg】 */
         if (rendererType != "canvas") {
             return
         }
     }
 
-    //数据来源分析：fchars == animData.chars == Array<FontCharacter>
+    /* 数据来源分析：fchars == animData.chars == Array<FontCharacter> */
     public func addChars(fchars: Array<FontCharacter>): Unit {
         if (fchars.size <= 0) {
             return

@@ -11,7 +11,7 @@ import lottie.bezier.*
 internal import lottie.utils.helpers.*
 import lottie.model.*
 public type RenderFunction = (Datas, ElementData, Bool) -> Unit
-//TODO
+
 public class SVGElementsRenderer {
 
     var _identityMatrix = Matrix()
@@ -44,9 +44,7 @@ public class SVGElementsRenderer {
         }
     }
 
-    func renderNull(styleData: Datas, itemData: ElementData, isFirstFrame: Bool): Unit {
-        //TODO
-    }
+    func renderNull(styleData: Datas, itemData: ElementData, isFirstFrame: Bool): Unit {}
 
     func renderContentTransform(styleData: Datas, itemData: ElementData, isFirstFrame: Bool): Unit {
         if (isFirstFrame || itemData.transform.op._mdf) {
@@ -103,7 +101,6 @@ public class SVGElementsRenderer {
                 for (j in 0..jLen) {
                     pathNodes = paths.shapes[j]
                     if (pathNodes.isSome() && pathNodes.getOrThrow()._length != 0) {
-                        //TODO
                     }
                 }
                 itemData.caches[l] = pathStringTransformed

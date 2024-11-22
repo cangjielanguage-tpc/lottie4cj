@@ -5,10 +5,8 @@
 /**
  * @file This file is a AnimatableTransform structure.
  */
-//package lottie.shape_items
 package lottie.property
 
-//TODO: AnimatableTransformElement 就是命名的 CreateTransformElement
 public class AnimatableTransformElement <: ContentModelElement {
 
     /**
@@ -19,14 +17,8 @@ public class AnimatableTransformElement <: ContentModelElement {
         this.transform = transform
         this.ty = "tr"
     }
-    //public let _ty: String = "tr"
-    //public open prop ty: String {
-    //    get() { _ty }
-    //}
-
 }
 
-//TODO: TransformInElement 就是命名的 TransformHelpers
 public class TransformInElement <: ContentModelElement {
 
     public var opacity: Float64 = 1.0
@@ -49,5 +41,3 @@ public class TransformInElement <: ContentModelElement {
     }
 
 }
-
-

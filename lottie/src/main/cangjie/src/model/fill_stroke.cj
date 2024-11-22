@@ -20,7 +20,7 @@ public open class FillStroke <: ContentModel {
 
     public var g: ContentModelP = ContentModelP()                                          //1 = {points, color}  //ContentModelP
     //指向的是已经处理的 c，即 "fl"/"st" 的 c_k
-    public var c: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()    //1 = color
+    public var c: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()      //1 = color
 
     public var o: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>()                        //2 = opacity
     public var s: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()      //4 = startPoint
@@ -28,7 +28,7 @@ public open class FillStroke <: ContentModel {
     public var w: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()                    //6 = width
     //"d": [{"n": "String", "v": Array<Keyframe<Float64>>}]  =>  Array<ContentModelD>
     public var d: Array<ContentModelD> = Array<ContentModelD>()                            //11 = lineDashPattern  //Array<ContentModelD>
-    //TODO: h 成员变量暂时是空的。
+    // h 成员变量暂时是空的。
     public var a: AK = AK()                                                                //12 = mn
 
     public var lc: Int64 = -1                          //7 = capType
@@ -37,7 +37,5 @@ public open class FillStroke <: ContentModel {
     public var r: Int64 = 0
 
     public var t: Int64 = 0
-
-    //public init(){ }
 
 }

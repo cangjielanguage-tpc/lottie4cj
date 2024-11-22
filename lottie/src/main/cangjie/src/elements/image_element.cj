@@ -7,12 +7,6 @@
  */
 package lottie.elements
 
-
-
-
-/*
- * TODO：初始化后需要单独执行 this.initElement(data, globalData)，放在 init 中编译报错。
- */
 public open class IImageElement <: BaseElement {
     var assetData: Asset = empty_asset
     var sourceRect: SourceRect = SourceRect()
@@ -37,7 +31,7 @@ public open class IImageElement <: BaseElement {
         this.innerElem = CreateNS("image")
         this.innerElem.setAttribute("width", this.assetData.w.toString() + "px")
         this.innerElem.setAttribute("height", this.assetData.h.toString() + "px")
-        //未找到 .assetData.pr 和 imagePreserveAspectRatio 实际赋值点，暂时用空的 CreateNS 代替???  //this.innerElem.setAttribute("preserveAspectRatio", this.assetData.pr || this.globalData.renderConfig.imagePreserveAspectRatio)
+        //未找到 .assetData.pr 和 imagePreserveAspectRatio 实际赋值点，暂时用空的 CreateNS 代替???  
         this.innerElem.setAttributeNS("http://www.w3.org/1999/xlink", "href", assetPath)
     
         this.layerElement.appendChild(this.innerElem)

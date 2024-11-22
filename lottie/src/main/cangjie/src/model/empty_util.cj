@@ -25,5 +25,3 @@ public let empty_ArrayKeyframeInt64: ArrayKeyframeInt64 = ArrayKeyframeInt64(k: 
 
 public let empty_asset: Asset = Asset("", empty_Array_layer, 0, 0, "", "", 0)
 public let empty_size: Size = Size()
-
-

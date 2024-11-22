@@ -1,29 +1,22 @@
 /*
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
-
-//package lottie.utils.shapes
 package lottie.property
 
 internal import lottie.inner.*
 
-//"op", OffsetPathModifier       //偏移路径修改器
+/* "op", OffsetPathModifier -- 偏移路径修改器 */
 public class OffsetPathModifier <: ShapeModifier {
-    //TODO：拆分多继承问题 -- extendPrototype([ShapeModifier], OffsetPathModifier)
 
-    //"a": {"a": 0, "k": 0, "ix": 7} => 走【分支1】
+    /* "a": {"a": 0, "k": 0, "ix": 7} => 走【分支1】 */
     var amount: Option<PropertyFactory<AK, Float64>>
     
-    //TODO： data.ml 是一个数值，走 PropertyFactory.getProp 无意义。改为数值类型 ml: Float64。  //var miterLimit: Option<PropertyFactory> = None
     var miterLimit: Float64 = 0.0
     
     var lineJoin: Int64 = 0
 
     public init(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>){
         super(data, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-        
-//        let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-//        this.amount = PropertyFactory<AK, Float64>(AK(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.amount = None
     }
     
@@ -31,17 +24,16 @@ public class OffsetPathModifier <: ShapeModifier {
         this.processKeys()
     }
 
-    //data类型：tm/rd/pb/zz/op / rp /ms
+    /* data类型：tm/rd/pb/zz/op / rp /ms */
     public func initModifierProperties(data: ContentModel, elemGlobalData: GlobalData, elemData: Layer): Unit {
-        //TODO: 调用父级 ShapeModifier.init 时，会触发调用 this.initModifierProperties。也就是初始化会执行 this.getValue = this.processKeys
 
         /*
-         * 只在 GradientStroke-"gs"/GradientFill-"gf" 中找到成员变量 a（已新增） //"a": {"a": 0, "k": 0, "ix": 7} => 走【分支1】
+         * 只在 GradientStroke-"gs"/GradientFill-"gf" 中找到成员变量 a（已新增） -- "a": {"a": 0, "k": 0, "ix": 7} => 走【分支1】
          * 只在 GradientStroke-"gs"/ShapeStroke-"st" 中找到成员变量 ml 和 lj。
          */
         if (data.ty == "gf") {//"a": {"a": 0, "k": 0, "ix": 7} => 走【分支1】
             let gf: GradientFill = (data as GradientFill).getOrThrow()
-            //TODO: 传入的 tr.a 必须存在，否则代码运行异常。
+            /* 传入的 tr.a 必须存在，否则代码运行异常。 */
             this.amount = PropertyFactory<AK, Float64>.getProp(gf.a, Float64(gf.a.k), 0.0, this, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         } else if (data.ty == "gs") {
             let gs: GradientStroke = (data as GradientStroke).getOrThrow()
@@ -60,10 +52,6 @@ public class OffsetPathModifier <: ShapeModifier {
             this._isAnimated = value.effectsSequence.size != 0
         }
 
-//        this.amount.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-//        this.amount.container = [this]
-//
-//        this._isAnimated = this.amount.effectsSequence.size != 0
     }
     
     public func processPath(inputBezier: ShapeData, amount: Float64, lineJoin: Int64, miterLimit: Float64): ShapeData {
@@ -99,7 +87,7 @@ public class OffsetPathModifier <: ShapeModifier {
     
         multiSegments = pruneIntersections(multiSegments)
     
-        //将贝塞尔线段添加到输出中并应用线关节
+        /* 将贝塞尔线段添加到输出中并应用线关节 */
         var lastPoint: Array<Float64> = Array<Float64>()
         var lastSeg: PolynomialBezier = PolynomialBezier()
     
@@ -161,9 +149,6 @@ public class OffsetPathModifier <: ShapeModifier {
             Array<Float64>()
         }
 
-//        var amount_v: Array<Float64> = this.amount.v
-        
-        //TODO： data.ml 是一个数值，走 PropertyFactory.getProp 无意义。改为数值类型 ml: Float64。 //var miterLimitv = this.miterLimit.v
         var miterLimitv: Float64 = this.miterLimit
         
         var lineJoin: Int64 = this.lineJoin

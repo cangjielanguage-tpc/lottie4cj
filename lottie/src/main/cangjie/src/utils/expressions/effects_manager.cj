@@ -2,20 +2,14 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 
-//package lottie.effects
 package lottie.utils.expressions
 
 
 public class EffectsManager <: SuperEffect {
 
-    //var effectElements: ArrayList<GroupEffect> = ArrayList<GroupEffect>()
-
     public init(datas: Effect, element: GlobalData, data: Layer, container: GroupEffect, propertyGroup: LayerExpressionInterface, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
         super(datas, element, data, propertyGroup, dynamicProperties: dynamicProperties)
-        //TODO: 此句代码作用是什么？？？
-        //this.p = PropertyFactory<ContentModelPK, Array<Float64>>.getProp(datas.v, Array<Float64>(), 0.0, container, element, data)
         let effects = data.ef
-        //this.effectElements = ArrayList<GroupEffect>()
         let len = effects.size
         var effectItem: GroupEffect
         for (i in 0..len) {
@@ -48,15 +42,11 @@ public class GroupEffect <: SuperEffect {
 
     public init(data: LayerEF, element: GlobalData, datas: Layer, propertyGroup: LayerExpressionInterface, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
         super(data, element, datas, propertyGroup, dynamicProperties: dynamicProperties)
-        //this.initDynamicPropertyContainer(element, datas)
-        //public func initDynamicPropertyContainer(elemGlobalData: GlobalData, elemData: Layer): Unit {
-            //this.container = container
-            this.elemGlobalData = elemGlobalData
-            this.elemData = elemData
-            this.dynamicProperties.clear()
-            this._mdf = false
-            this._isAnimated = false
-        //}
+        this.elemGlobalData = elemGlobalData
+        this.elemData = elemData
+        this.dynamicProperties.clear()
+        this._mdf = false
+        this._isAnimated = false
 
         let len = data.ef.size
         
@@ -80,9 +70,7 @@ public class GroupEffect <: SuperEffect {
                     eff = LayerIndexEffect(effects[i],element,datas, this, propertyGroup, dynamicProperties: dynamicProperties)
                 case 11 =>
                     eff = MaskIndexEffect(effects[i],element,datas, this, propertyGroup, dynamicProperties: dynamicProperties)
-                //未实现，编译用
-                //  case 5 =>
-                //     eff = EffectsManager(effects[i],element,datas, this, propertyGroup)
+                /* 未实现，编译用  case 5 => eff = EffectsManager(effects[i],element,datas, this, propertyGroup) */
                 case _ =>
                     eff = NoValueEffect(effects[i],element,datas, this, propertyGroup, dynamicProperties: dynamicProperties)
             }

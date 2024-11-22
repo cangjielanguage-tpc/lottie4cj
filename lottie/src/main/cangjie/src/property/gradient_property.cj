@@ -25,18 +25,14 @@ public class GradientProperty <: DynamicPropertyContainer {
     var props: Option<PropertyFactory<ContentModelP, Array<Float64>>>
     var k: Bool = false
 
-    //public var isNull: Bool = false
-    
-    //在父类 DynamicPropertyContainer 中 var _mdf: Bool = false
     public init(isNull!: Bool, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
         super()
         this.isNull = isNull
         this.data = empty_ContentModelP
         this.c = empty_Array_Float64
         this.o = empty_Array_Float64
-        //为了后续编译，提前初始化一个空的成员变量 this.props
+        /* 为了后续编译，提前初始化一个空的成员变量 this.props */
         this.props = None
-//        this.props = PropertyFactory<ContentModelP, Array<Float64>>(ContentModelP(), 0.0, DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties), elemGlobalData, elemData, dynamicProperties: dynamicProperties)
     }
 
 
@@ -56,13 +52,11 @@ public class GradientProperty <: DynamicPropertyContainer {
         }
         this.o = Array<Float64>(cLength, item: 0.0)
 
-        //为了后续编译，提前初始化一个空的成员变量 this.props
-        //this.props = PropertyFactory<ContentModelP, Array<Float64>>(ContentModelP(), 0.0, DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties), elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        /* 为了后续编译，提前初始化一个空的成员变量 this.props */
         this.props = Option<PropertyFactory<ContentModelP, Array<Float64>>>.None
 
         this._collapsable = this.checkCollapsable()
         this._hasOpacity = cLength
-        //TODO: 直接调用的 DynamicPropertyContainer.initDynamicPropertyContainer。
         this.initDynamicPropertyContainer(elemGlobalData, elemData)
 
         var vLen: Int64 = 0
@@ -75,10 +69,6 @@ public class GradientProperty <: DynamicPropertyContainer {
             value.container = [this]
             this.k = value.k
         }
-//        this.props.containerType = 3  //1-FrameElement; 2-TransformPropertyFactory; 3-其他Property
-//        this.props.container = [this]
-
-//        this.k = this.props.k
         this.getValue(true)
     }
     
@@ -165,46 +155,6 @@ public class GradientProperty <: DynamicPropertyContainer {
             }
         }
 
-
-//        this.props.getValue()
-//        this._mdf = false
-//        this._cmdf = false
-//        this._omdf = false
-//        if (this.props._mdf || forceRender) {
-//            var len: Int64 = this.data.p * 4
-//            var mult: Float64 = 0.0
-//            var val: Float64 = 0.0
-//            for (i in 0..len) {
-//                mult = 255.0
-//                if (i % 4 == 0) {
-//                    mult = 100.0
-//                }
-//                val = round(this.props.v[i] * mult)
-//                if (this.c[i] != val) {
-//                    this.c[i] = val
-//                    this._cmdf = !forceRender
-//                }
-//            }
-//            if (this.o.size > 0) {
-//                len = this.props.v.size
-//                for (i in (this.data.p * 4) ..len) {
-//                    mult = 1.0
-//                    if (i % 2 == 0) {
-//                        mult = 100.0
-//                    }
-//                    val = this.props.v[i]
-//                    if (i % 2 == 0) {
-//                        val = round(this.props.v[i] * 100.0)
-//                    }
-//
-//                    if (this.o[i - this.data.p * 4] != val) {
-//                        this.o[i - this.data.p * 4] = val
-//                        this._omdf = !forceRender
-//                    }
-//                }
-//            }
-//            this._mdf = !forceRender
-//        }
     }
 
 }

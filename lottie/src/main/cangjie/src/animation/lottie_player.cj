@@ -44,7 +44,7 @@ public open class LottiePlayer {
      * @param name 被指定的动画名, 同loadAnimation接口参数name, 缺省时设置所有动画方向
      * @param direction 1为正向, -1为反向 当设置为反向时, 从当前播放进度开始回播直到首帧, loop值为true时可无限倒放, speed<0叠加时也是倒放
      */
-    //TODO: 未实现 //func setDirection(direction: AnimationDirection, name: String): Unit {}
+    // 未实现 //func setDirection(direction: AnimationDirection, name: String): Unit {}
 
     /**
      * 通过动画名称控制，暂停或播放动画

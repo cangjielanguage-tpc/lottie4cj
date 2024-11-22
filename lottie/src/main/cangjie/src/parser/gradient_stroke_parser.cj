@@ -10,8 +10,6 @@ class GradientStrokeParser {
         var g: ContentModelP = ContentModelP()
         var opacity: Array<Keyframe<Int64>> = Array<Keyframe<Int64>>()
         var gradientType: Int64 = 0
-        //var startPoint: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
-        //var endPoint: Array<Keyframe<PointF>> = Array<Keyframe<PointF>>()
         var startPoint: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
         var endPoint: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
 
@@ -23,8 +21,6 @@ class GradientStrokeParser {
 
         var lineDashPattern = ArrayList<ContentModelD>()
         var a: AK = AK()
-
-        // reader.startObject()
 
         while (reader.peek() != EndObject) {
             match (reader.readName()) {

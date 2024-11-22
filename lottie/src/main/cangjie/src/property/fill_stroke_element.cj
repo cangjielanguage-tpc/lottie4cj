@@ -7,7 +7,7 @@
  */
 package lottie.property
 
-//兼容(arr[i].ty === 'fl'/'st'/'gf'/'gs') 
+/* 兼容(arr[i].ty === 'fl'/'st'/'gf'/'gs') */ 
 public class FillStrokeElement <: ContentModelElement {
 
     /**
@@ -22,7 +22,7 @@ public class FillStrokeElement <: ContentModelElement {
     public var g: GradientProperty                                                      //1 = {points, color}  //ContentModelP
 
     //指向的是已经处理的 c，即 "fl"/"st" 的 c_k
-    public var c: PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>    //1 = color
+    public var c: PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>      //1 = color
 
     public var o: PropertyFactory<Array<Keyframe<Int64>>, Int64>                        //2 = opacity
     public var s: PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>      //4 = startPoint
@@ -30,10 +30,8 @@ public class FillStrokeElement <: ContentModelElement {
     public var w: PropertyFactory<Array<Keyframe<Float64>>, Float64>                    //6 = width
     //"d": [{"n": "String", "v": Array<Keyframe<Float64>>}]  =>  Array<ContentModelD>
     public var d: DashProperty                                                          //11 = lineDashPattern  //Array<ContentModelD>
-    //TODO: h 成员变量暂时是空的。
+    // h 成员变量暂时是空的。
     public var a: PropertyFactory<AK, Int64>                                            //12 = mn
-
-    //public let ty: String = "gs"
 
     public var isNull: Bool = false
 
@@ -43,14 +41,12 @@ public class FillStrokeElement <: ContentModelElement {
 
         let container: DynamicPropertyContainer = DynamicPropertyContainer(GlobalData(), Layer(), dynamicProperties: dynamicProperties)
         this.g = GradientProperty(isNull: true, dynamicProperties: dynamicProperties)
-        //let arr: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
         this.c = empty_pf_Array_Keyframe_Array_Float64
         this.o = empty_pf_Array_Keyframe_Int64
         this.s = empty_pf_Array_Keyframe_Array_Float64
         this.e = empty_pf_Array_Keyframe_Array_Float64
         this.w = empty_pf_Array_Keyframe_Float64
         this.d = empty_dp_Array_ContentModelD
-        //TODO: h 成员变量暂时是空的。
         this.a = empty_pf_ak
     }
 

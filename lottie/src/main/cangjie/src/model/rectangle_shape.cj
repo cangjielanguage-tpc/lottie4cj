@@ -7,17 +7,10 @@
  */
 package lottie.model
 
-//TODO：循环依赖
-//internal import lottie.property.*
-
 public class RectangleShape <: ContentModel {
 
     //新增成员变量，解析部分待补充。
     public var ix: Int64 = 0
-
-    //TODO：循环依赖
-    //TODO: ShapeExpressionInterface 中编译用。
-    //public var sh: ShapePropertyFactory = ShapePropertyFactory(ContentModel(), 0, GlobalData(), Layer())
 
     public var mn: String = ""
 
@@ -25,12 +18,9 @@ public class RectangleShape <: ContentModel {
      * 8. "layers"."shapes".{"ty": "rc"} = RectangleShapeParser
      */
     public let nm: String                                // 0 = name
-    //TODO: 是否要改成 Array<Keyframe<Array<Float64>>>？？？-----------------------------------------------------------------2024.08.19
     public let p: AnimatableSplitDimensionPathValue      // 1 = position
-    //TODO: 是否要改成 Array<Keyframe<Array<Float64>>>？？？-----------------------------------------------------------------2024.08.19
     public let s: ArrayKeyframePointF                    // 2 = size
     public let r: ArrayKeyframeFloat64                   // 3 = roundedness
-    //public let hd: Bool                                  // 4 = hidden
     
     public let d: Int64
 

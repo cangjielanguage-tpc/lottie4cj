@@ -16,16 +16,11 @@ package lottie.utils.expressions
  */
 public open class EffectsInterfaceFunction <: ExpressionInterface {
 
-    //父类中已有  //var _name: String = ""
     var enabled: Bool = false
     var active: Bool = false
-    //父类中已有  //public var isNull: Bool = false
     public var selfCalling: (Int64, String, Bool) -> ExpressionInterface = { m,n,b => return ExpressionInterface() }
 
     public init(){}
-    //public init(selfCalling: (Int64, String, Bool) -> ExpressionInterface){
-    //    this.selfCalling = selfCalling
-    //}
 
     public open mut prop numProperties: Int64 {
         get() { -1 }
@@ -42,36 +37,20 @@ public open class EffectsInterfaceFunction <: ExpressionInterface {
     }
 }
 
-//createGroupInterface
 public class EffectsInterfaceFunctionGroup <: EffectsInterfaceFunction {
 
-    //TODO：effectElements[i] 的数据类型未确认。暂定是自定义数据类型 EffectsInterfaceFunction。
     var effectElements: ArrayList<EffectsInterfaceFunction>
     var propertyGroup: (Option<Int64>) -> ExpressionInterface = { m => return ExpressionInterface() }
 
     var data: LayerEF
 
     init(data: LayerEF, effectElements: ArrayList<EffectsInterfaceFunction>, isNull!: Bool = false){
-        //super(selfCalling)
         this.data = data
         this.effectElements = effectElements
         this.isNull = isNull
     }
 
-    /*
-    public mut prop color: Option<ExpressionInterface> {
-        get() {
-            //TODO: LayerEF 中增加成员变量 mn ？？？
-            if (data.mn == "ADBE Color Control") {
-                //TODO: 未参调用？？？少一个参数？？？
-                return this.effectElements[0].selfCalling(0, "", false)
-            }
-            return None
-        }
-    }*/
-
     public mut prop numProperties: Int64 {
-        //TODO: LayerEF 中增加成员变量 np ？？？
         get() { this.data.np }
         set(value) {
             _numProperties = value
@@ -87,13 +66,11 @@ public class EffectsInterfaceFunctionGroup <: EffectsInterfaceFunction {
 
 }
 
-//createEffectsInterface
 public class EffectsInterfaceFunctionEffects <: EffectsInterfaceFunction {
 
     var effects: Array<LayerEF>
 
     init(effects: Array<LayerEF>, isNull!: Bool = false){
-        //super(selfCalling)
         this.effects = effects
         this.isNull = isNull
     }

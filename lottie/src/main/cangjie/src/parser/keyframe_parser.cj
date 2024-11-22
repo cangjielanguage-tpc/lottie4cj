@@ -26,9 +26,6 @@ class KeyframeParser {
         var pathCp1: Array<Float64> = Array<Float64>()
         var pathCp2: Array<Float64> = Array<Float64>()
 
-        //        var pathCp1: PointF = PointF()
-        //        var pathCp2: PointF = PointF()
-
         reader.startObject()
         while (reader.peek() != EndObject) {
             match (reader.readName()) {
@@ -51,9 +48,6 @@ class KeyframeParser {
             }
         }
         reader.endObject()
-        //        if (hold == 0) {
-        //            endValue = startValue
-        //        }
 
         Keyframe<T>(
             t: startFrame,
@@ -81,9 +75,6 @@ class KeyframeParser {
         var hold: Int64 = 0
         var pathCp1: Array<Float64> = Array<Float64>()
         var pathCp2: Array<Float64> = Array<Float64>()
-
-        //        var pathCp1: PointF = PointF()
-        //        var pathCp2: PointF = PointF()
 
         var holdns: Array<String> = Array<String>()
 

@@ -26,7 +26,7 @@ public class CompExpressionInterface {
      * @param comp - Type of ICompElement, composition layer element instance.
      * @return Type of ThisLayerFunctionComp.
      */
-    public func selfCalling(comp: ICompElement): ThisLayerFunctionComp {  //此行函数名称 inside-1
+    public func selfCalling(comp: ICompElement): ThisLayerFunctionComp {  /* 此行函数名称 inside-1 */
         let _thisLayerFunction = ThisLayerFunctionComp(comp, this)
         /**
          * 1.返回的_thisLayerFunction是函数，但同时具备对象功能。
@@ -73,7 +73,7 @@ public class ThisLayerFunctionComp {
      * Obtain the nm value of Layer in ICompElement.
      */
     public prop _name: String {
-        get() { return comp.data.nm }  //BaseElement.data = Layer
+        get() { return comp.data.nm }
     }
 
     /**
@@ -86,7 +86,7 @@ public class ThisLayerFunctionComp {
         let len: Int64 = comp.layers.size
         for (i in 0..len) {
             if (comp.layers[i].nm == name || comp.layers[i].ind.toString() == name) {
-                //TODO: 未实现 BaseElement.layerInterfac(LayerExpressionInterface) //return comp.elements[i].layerInterface
+                /* 待实现 BaseElement.layerInterfac(LayerExpressionInterface) --return comp.elements[i].layerInterface  */
                 return None
             }
         }

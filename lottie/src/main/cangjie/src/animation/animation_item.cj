@@ -408,7 +408,7 @@ public class AnimationItem <: BaseEvent {
     }
     
     public func gotoFrame(): Unit {
-        if (this.isSubframeEnabled) {// eslint-disable-line no-bitwise
+        if (this.isSubframeEnabled) {/*  eslint-disable-line  no-bitwise*/
             this.currentFrame = this.currentRawFrame
         } else {
             //~~ 和对 Bool 类型的做两次 ! 操作是一个意思，只不过是把小数位给去掉了，即取整数。等同于 floor
@@ -600,7 +600,7 @@ public class AnimationItem <: BaseEvent {
             if (!this.checkSegments(num)) {
                 //loop 表示是否循环; loopNum 定为 Int64 数据类型，<= 1 表示不循环，相当于 false。
                 this.playCount--
-                if ((this.loop == TRUE) && !(this.playCount <= 0 && this.loop != TRUE)) { // eslint-disable-line no-plusplus
+                if ((this.loop == TRUE) && !(this.playCount <= 0 && this.loop != TRUE)) { /*  eslint-disable-line  no-plusplus */
                     this.setCurrentRawFrameValue(this.totalFrames + Float64(num))
                     if (!this._completedLoop) {
                         this._completedLoop = true
