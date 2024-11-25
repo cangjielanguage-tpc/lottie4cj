@@ -49,7 +49,6 @@ class GradientFillParser {
             match (reader.readName()) {
                 case "nm" =>
                     name = reader.readValue<String>()
-                    break
                 case "g" =>
                     var points: Int64 = -1
                     var gp: Int64 = 0
@@ -59,16 +58,13 @@ class GradientFillParser {
                         match (reader.readName()) {
                             case "p" =>
                                 gp = reader.readValue<Int64>()
-                                break
                             case "k" =>
                                 gk = AnimatableValueParser.parseGradientColor(reader, points)
-                                break
                             case _ => reader.skip()
                         }
                     }
                     g = ContentModelP(p: gp, k: gk)
                     reader.endObject()
-                    break
                 case "o" => opacity = AnimatableValueParser.parseInteger(reader)
                 case "t" => gradientType = reader.readValue<Int64>()
                 case "s" => startPoint = AnimatableValueParser.parseArrayFloat(reader)

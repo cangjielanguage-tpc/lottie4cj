@@ -102,6 +102,15 @@ public class AnimatableTransform <: ContentModel {
                "sa = ${sa.k}\n}"
     }
 
+    public func clone(): AnimatableTransform {
+        var sc = AnimatableTransform(a: this.a.clone(), p: this.p.clone(),s: this.s.clone(), r: this.r.clone(),o: this.o.clone(), so: this.so.clone(),eo: this.eo.clone(), sk: this.sk.clone(),sa: this.sa.clone(),ty: this.ty, nm: this.nm)
+        sc.hd = this.hd
+        sc._processed = this._processed
+        sc._render = this._render
+        sc._shouldRender = this._shouldRender
+        return sc
+    }
+
     /**
      * The instance is empty.
      *

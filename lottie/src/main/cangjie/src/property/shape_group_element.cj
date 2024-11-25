@@ -12,8 +12,8 @@ public class ShapeGroupElement <: ContentModelElement {
     /**
      * 0. "layers"."shapes".{"ty": "gr"} = ShapeGroup
      */
-    public var it: Array<ContentModelElement> = Array<ContentModelElement>()
-    public var prevViewData: Array<ContentModelElement> = Array<ContentModelElement>()
+    public var it: ArrayList<ContentModelElement> = ArrayList<ContentModelElement>()
+    public var prevViewData: ArrayList<ContentModelElement> = ArrayList<ContentModelElement>()
 
     public init(){
         this.ty = "gr"

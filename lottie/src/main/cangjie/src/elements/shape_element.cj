@@ -11,10 +11,10 @@ internal import lottie.elements.helpers.shapes.*
 
 public open class IShapeElement <: BaseElement {
 
-    var shapeModifiers: ArrayList<ShapeModifier> = ArrayList<ShapeModifier>()
+    var shapeModifiers: ArrayList<ShapeModifier> = ArrayList<ShapeModifier>(4)
 
-    var processedElements: ArrayList<ProcessedElement> = ArrayList<ProcessedElement>()
-    public var shapes: ArrayList<CvShapeData> = ArrayList<CvShapeData>()
+    var processedElements: ArrayList<ProcessedElement> = ArrayList<ProcessedElement>(4)
+    public var shapes: ArrayList<CvShapeData> = ArrayList<CvShapeData>(4)
 
     /**
      * Create a IShapeElement instance based on parameters.

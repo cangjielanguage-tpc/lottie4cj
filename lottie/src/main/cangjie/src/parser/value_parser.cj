@@ -106,7 +106,11 @@ public class ArrayFloat64Parser <: ValueParser<Array<Float64>> {
         if (reader.peek() == JsonToken.BeginArray) {
             return reader.readValue<Array<Float64>>()
         } else {
-            return [reader.readValue<Float64>()]
+            var pointArray: ArrayList<Float64> = ArrayList<Float64>()
+            while (reader.peek() != EndArray) {
+                pointArray.append(reader.readValue<Float64>())
+            }
+            return pointArray.toArray()
         }
     }
 }

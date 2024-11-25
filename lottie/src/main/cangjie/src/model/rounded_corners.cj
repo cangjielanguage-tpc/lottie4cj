@@ -48,6 +48,14 @@ public class RoundedCorners <: ContentModel {
         get() { 13 }
     }
 
+    public func clone(): RoundedCorners {
+        var sc = RoundedCorners(nm: this.nm,r: this.r.clone(), hd: this.hd,ix: this.ix)
+        sc._processed = this._processed
+        sc._render = this._render
+        sc._shouldRender = this._shouldRender
+        return sc
+    }
+
     /**
      * Return to convert the instance into a string and return.
      *

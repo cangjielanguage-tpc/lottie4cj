@@ -9,7 +9,7 @@ package lottie.elements
 
 public open class IImageElement <: BaseElement {
     var assetData: Asset = empty_asset
-    var sourceRect: SourceRect = SourceRect()
+    var sourceRect: SourceRect
 
     /**
      * Create a IImageElement instance based on parameters.

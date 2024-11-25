@@ -13,7 +13,7 @@ public class CvMaskElement <: RenderableElement {
     protected var masksProperties: Array<Mask>
     protected var viewData: Array<ShapePropertyFactory>
     protected var list: ArrayList<Array<Float64>>
-    protected var ptsds: Array<Float64>
+    protected var ptsds: Array<Float64> = unsafe {zeroValue<Array<Float64>>()}
 
     public init(data: Layer, element: RenderableElement) {
         super(data, element.globalData)
@@ -21,7 +21,6 @@ public class CvMaskElement <: RenderableElement {
         this.masksProperties = this.data.masksProperties
         this.viewData = Array<ShapePropertyFactory>(this.masksProperties.size,item: unsafe {zeroValue<ShapePropertyFactory>()})
         this.list = ArrayList<Array<Float64>>()
-        this.ptsds = Array<Float64>()
         var len = this.masksProperties.size
         var hasMasks = false
         for (i in 0..len) {

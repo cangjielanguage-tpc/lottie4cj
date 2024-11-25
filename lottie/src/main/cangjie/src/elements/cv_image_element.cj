@@ -6,7 +6,7 @@ package lottie.elements
 import ohos.image.*
 public class CvImageElement <: IImageElement {
 
-    var img =ImgOB()
+    var img:ImgOB
     public init(data: Layer, globalData: GlobalData,
         buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
         compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>(),

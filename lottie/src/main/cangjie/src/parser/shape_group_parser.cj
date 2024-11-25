@@ -25,6 +25,6 @@ class ShapeGroupParser {
                 case _ => reader.skip()
             }
         }
-        return ShapeGroup(nm: name, it: items.toArray(), hd: hidden, cix: cix, np: np)
+        return ShapeGroup(nm: name, it: items, hd: hidden, cix: cix, np: np)
     }
 }

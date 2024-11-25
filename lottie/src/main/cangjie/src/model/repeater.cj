@@ -65,6 +65,14 @@ public class Repeater <: ContentModel {
         get() { 12 }
     }
 
+    public func clone(): Repeater {
+        var sc = Repeater(nm: this.nm,c: this.c.clone(), o: this.o.clone(),tr: this.tr.clone(), hd: this.hd,ix: this.ix, m: this.m)
+        sc._processed = this._processed
+        sc._render = this._render
+        sc._shouldRender = this._shouldRender
+        return sc
+    }
+
     /**
      * Return to convert the instance into a string and return.
      *

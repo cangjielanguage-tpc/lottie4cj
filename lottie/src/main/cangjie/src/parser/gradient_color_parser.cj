@@ -26,6 +26,10 @@ public class GradientColorParser <: ValueParser<Array<Float64>> {
      * @return Type of Array<Float64>. An array of instances of the specified data that encapsulates the animation.
      */
     public func parse(reader: JsonReader): Array<Float64> {
-        return reader.readValue<Array<Float64>>()
+        var pointArray: ArrayList<Float64> = ArrayList<Float64>()
+        while (reader.peek() != EndArray) {
+            pointArray.append(reader.readValue<Float64>())
+        }
+        return pointArray.toArray()
     }
 }

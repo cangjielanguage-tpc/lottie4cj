@@ -44,7 +44,7 @@ public class LayerParser {
         var autoOrient: Int64 = 0
         var ddd: Int64 = 0
         var tdss: Int64 = 0
-        var tpValue: Int64 = 0
+        var tpValue: Int64 = -1
         var matteType: Int64 = 0
         var blendMode: Int64 = 0
         var transform: AnimatableTransform = AnimatableTransform()
@@ -207,7 +207,7 @@ public class LayerParser {
             ks: transform,
             tt: matteType,
             masksProperties: masks.toArray(),
-            shapes: shapes.toArray(),
+            shapes: shapes,
             t: t,
             ef: ef.toArray(),
             sr: timeStretch,

@@ -62,4 +62,26 @@ public class AnimatableSplitDimensionPathValue <: ToString {
     public func isNull(): Bool {
         return k.size == 0 && x.size == 0 && y.size == 0
     }
+
+    public func clone(): AnimatableSplitDimensionPathValue {
+        var tmpk = Array<Keyframe<PointF>>(this.k.size,{i => unsafe {zeroValue<Keyframe<PointF>>()}})
+        for (i in 0..this.k.size) {
+            tmpk[i] = this.k[i].clone()
+        }
+        var tmpx = Array<Keyframe<Float64>>(this.x.size,{i => unsafe {zeroValue<Keyframe<Float64>>()}})
+        for (i in 0..this.x.size) {
+            tmpx[i] = this.x[i].clone()
+        }
+        var tmpy = Array<Keyframe<Float64>>(this.y.size,{i => unsafe {zeroValue<Keyframe<Float64>>()}})
+        for (i in 0..this.y.size) {
+            tmpy[i] = this.y[i].clone()
+        }
+        var tmpz= Array<Keyframe<Float64>>(this.z.size,{i => unsafe {zeroValue<Keyframe<Float64>>()}})
+        for (i in 0..this.z.size) {
+            tmpz[i] = this.z[i].clone()
+        }
+        var sc = AnimatableSplitDimensionPathValue(a: this.a, ix: this.ix, s: this.s,k: tmpk, x: tmpx, y: tmpz)
+        sc.z = tmpz
+        return sc
+    }
 }

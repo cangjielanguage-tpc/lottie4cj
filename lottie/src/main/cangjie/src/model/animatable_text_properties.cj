@@ -17,6 +17,9 @@ public class AK <: ToString {
     public func toString(): String {
         return "AK: {a = ${a}, k = ${k}}"
     }
+    public func clone(): AK {
+        return AK(a:this.a,k:this.k)
+    }
 }
 
 public class AnimatableTextPropertiesS <: ToString {

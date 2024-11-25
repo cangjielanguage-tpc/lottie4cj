@@ -46,7 +46,7 @@ public class Layer <: ToString {
     public let ks: AnimatableTransform               // 8 = transform
     public let tt: Int64                             // 9 = matteType
     public let masksProperties: Array<Mask>          // 10 = masks
-    public let shapes: Array<ContentModel>           // 11 = shapes
+    public let shapes: ArrayList<ContentModel>           // 11 = shapes
     public let t: LayerT                             // 12 = t
     public let ef: Array<LayerEF>                    // 13 = ef
     public var sr: Float64                           // 14 = timeStretch
@@ -102,7 +102,7 @@ public class Layer <: ToString {
         ks!: AnimatableTransform = AnimatableTransform(),
         tt!: Int64 = 0,
         masksProperties!: Array<Mask> = Array<Mask>(),
-        shapes!: Array<ContentModel> = Array<ContentModel>(),
+        shapes!: ArrayList<ContentModel> = ArrayList<ContentModel>(),
         t!: LayerT = LayerT(),
         ef!: Array<LayerEF> = Array<LayerEF>(),
         sr!: Float64 = 0.0,

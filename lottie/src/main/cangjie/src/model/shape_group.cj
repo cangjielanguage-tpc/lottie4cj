@@ -19,7 +19,7 @@ public class ShapeGroup <: ContentModel {
      */
     public let nm: String                    // 0 = name
 
-    public let it: Array<ContentModel>       // 2 = items
+    public let it: ArrayList<ContentModel>       // 2 = items
 
     public var cix: Int64 = 0
 
@@ -36,7 +36,7 @@ public class ShapeGroup <: ContentModel {
      * @param hd - Type of Bool, the value of hd.
      * @param cix - Type of Int64, the value of cix.
      */
-    public init(nm!: String, it!: Array<ContentModel>, hd!: Bool = false, cix!: Int64 = 0, np!: Int64 = 0) {
+    public init(nm!: String, it!: ArrayList<ContentModel>, hd!: Bool = false, cix!: Int64 = 0, np!: Int64 = 0) {
         this.nm = nm
         this.it = it
         this.hd = hd
@@ -51,10 +51,24 @@ public class ShapeGroup <: ContentModel {
      * @param it - Type of Array<ContentModel>, the value of it.
      * @param hd - Type of Bool, the value of hd.
      */
-    public init(nm: String, it: Array<ContentModel>, hd: Bool) {
+    public init(nm: String, it: ArrayList<ContentModel>, hd: Bool) {
         this.nm = nm
         this.it = it
         this.hd = hd
+    }
+
+    public func clone(): ShapeGroup {
+        var tmpit = ArrayList<ContentModel>(this.it.size,{i => unsafe {zeroValue<ContentModel>()}})
+        for (i in 0..this.it.size) {
+            tmpit[i] = this.it[i].clone()
+        }
+        var sc = ShapeGroup(nm: this.nm, it: tmpit, hd: this.hd, cix: this.cix,np: this.np)
+        sc.np = this.np
+        sc.ix = this.ix
+        sc._processed = this._processed
+        sc._render = this._render
+        sc._shouldRender = this._shouldRender
+        return sc
     }
 
     /**

@@ -18,7 +18,7 @@ class RepeaterParser {
                 case "nm" => name = reader.readValue<String>()
                 case "c" => copies.k = AnimatableValueParser.parseFloat(reader)
                 case "o" => offset.k = AnimatableValueParser.parseFloat(reader)
-                case "tr" => transform = AnimatableTransformParser.parse(reader, reader.readName())
+                case "tr" => transform = AnimatableTransformParser.parse(reader, "tr")
                 case "hd" => hidden = reader.readValue<Bool>()
                 case "ix" => ix = reader.readValue<Int64>()
                 case "m" => m = reader.readValue<Int64>()

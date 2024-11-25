@@ -295,3 +295,9 @@ public class ShapeData <: ToString {
     }
 
 }
+extend ShapeData <: Clone<ShapeData> {
+
+    public func deepClone(): ShapeData {
+        this.clone()
+    }
+}

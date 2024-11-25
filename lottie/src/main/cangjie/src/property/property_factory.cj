@@ -118,10 +118,6 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         this.data = data
         this.mult = mult
         this.container = [container]
-        
-        if (types == 0 || types == 1) {
-            this.effectsSequence.append(getValueAtCurrentTime)
-        }
     }
 
     public func interpolateValue(frameNum: Float64, caching: Caching) {
@@ -630,13 +626,17 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     ): PropertyFactory<T, E> where T <: ToString , E <: ToString {
         var vLen2: Int64 = vLen
         var p: PropertyFactory<T, E>
-        if (types == 0) {
-            p = keyframedValueProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
-        } else if (types == 1) {
-            p = keyframedMultidimensionalProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
-            vLen2 = p.v.size
-        } else {
-            throw Exception("调用分支错误。")
+        if (dataK[0].k.isSome() && (dataK[0].k.getOrThrow() is Array<Float64>)) {
+            p = multiDimensionalProperty<T, E>(data, (dataK[0].k.getOrThrow() as Array<Float64>).getOrThrow(), mult, container,Option<E>.None, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
+        }else {
+            if (types == 0) {
+                p = keyframedValueProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
+            } else if (types == 1) {
+                p = keyframedMultidimensionalProperty<T, E>(data, dataK, mult, container, types, elemGlobalData, elemData, dataA: dataA, vLen: vLen2, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
+                vLen2 = p.v.size
+            } else {
+                throw Exception("调用分支错误。")
+            }
         }
         p.containerType = containerType
         
@@ -683,7 +683,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     }
     
     static func multiDimensionalProperty<T, E>(data: T, dataK: Array<Float64>, mult: Option<Float64>, container: DynamicPropertyContainer,
-        dataE: E, elemGlobalData: GlobalData, elemData: Layer,
+        dataE: Option<E>, elemGlobalData: GlobalData, elemData: Layer,
         types!: Int64 = 0, dataA!: Int64 = 0, vLen!: Int64 = 1, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
         compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(), compDataInd!: Int64 = -1
     ): PropertyFactory<T, E> where T <: ToString , E <: ToString {
@@ -752,7 +752,9 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         p.v = [initFrameFloat64]
         p.pv = [initFrameFloat64]
         p._isFirstFrame = true
-
+        if (types == 0 || types == 1) {
+            p.effectsSequence.append(p.getValueAtCurrentTime)
+        }
         return p
     }
 
@@ -794,7 +796,9 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         p.pv = Array<Float64>(arrLen, item: initFrameFloat64)
 
         p._caching = Caching(lastFrame: initFrame, lastIndex: 0, value: Array<Float64>(arrLen, item: 0.0))
-
+        if (types == 0 || types == 1) {
+            p.effectsSequence.append(p.getValueAtCurrentTime)
+        }
         return p
     }
 

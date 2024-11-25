@@ -62,6 +62,16 @@ public class RectangleShape <: ContentModel {
         get() { 8 }
     }
 
+    public func clone(): RectangleShape {
+        var sc = RectangleShape(nm: this.nm,p: this.p.clone(), s: this.s.clone(),r: this.r.clone(), hd: this.hd,d: this.d)
+        sc.ix = this.ix
+        sc.mn = this.mn
+        sc._processed = this._processed
+        sc._render = this._render
+        sc._shouldRender = this._shouldRender
+        return sc
+    }
+
     /**
      * Return to convert the instance into a string and return.
      *

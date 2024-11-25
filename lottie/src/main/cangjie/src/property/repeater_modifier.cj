@@ -23,14 +23,14 @@ public class RepeaterModifier <: ShapeModifier {
 
     public var reloadShapesInShapeElement: () -> Unit = { => ()}
 
-    var arr: Array<ContentModel> = Array<ContentModel>()
+    var arr: ArrayList<ContentModel> = ArrayList<ContentModel>()
     var pos: Int64 = 0
     
-    var elemsData: Array<ContentModelElement> = Array<ContentModelElement>()
+    var elemsData: ArrayList<ContentModelElement> = ArrayList<ContentModelElement>()
 
     var _currentCopies: Int64 = 0
     var _elements: ArrayList<ContentModel> = ArrayList<ContentModel>()
-    var _groups: Array<ShapeGroup> = Array<ShapeGroup>()
+    var _groups: ArrayList<ShapeGroup> = ArrayList<ShapeGroup>()
 
     public init(data: Repeater, elemGlobalData: GlobalData, elemData: Layer,
         reloadShapes: () -> Unit, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
@@ -54,7 +54,7 @@ public class RepeaterModifier <: ShapeModifier {
         this.tr = TransformPropertyFactory.getTransformProperty(data.tr, elemGlobalData, elemData, dynamicProperties: this.dynamicProperties, compType: compType, renderedFrame: renderedFrame)
     }
 
-    public init(arr: Array<ContentModel>, pos: Int64, elemsData: Array<ContentModelElement>,
+    public init(arr: ArrayList<ContentModel>, pos: Int64, elemsData: ArrayList<ContentModelElement>,
         elemGlobalData: GlobalData, elemData: Layer,
         reloadShapes: () -> Unit, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
         compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
@@ -68,11 +68,9 @@ public class RepeaterModifier <: ShapeModifier {
         this.initDynamicPropertyContainer(elemGlobalData, elemData)
         let rp: Repeater = (arr[pos] as Repeater).getOrThrow()
         this.initModifierProperties(rp, elemGlobalData, elemData)
-        if (pos > 0) {
-            for (i in pos..0:-1) {
+        for (i in 0..pos) {
                 /* unshift() 方法可向数组的开头添加一个或更多元素，并返回新的长度。 -- this._elements.unshift(arr.splice(i,1)[0]) */
-                this._elements.prepend(arr[i])
-            }
+            this._elements.append(arr[i])
         }
         if (this.dynamicProperties.size > 0) {
             this.k = true
@@ -168,7 +166,7 @@ public class RepeaterModifier <: ShapeModifier {
         }
     }
     
-    public func resetElements(elements: Array<ContentModel>): Unit {
+    public func resetElements(elements: ArrayList<ContentModel>): Unit {
         let len: Int64 = elements.size
         for (i in 0..len) {
             elements[i]._processed = false
@@ -178,13 +176,16 @@ public class RepeaterModifier <: ShapeModifier {
         }
     }
     
-    public func cloneElements(elements: Array<ContentModel>): Array<ContentModel> {
-        var newElements: Array<ContentModel> = elements.clone()
+    public func cloneElements(elements: ArrayList<ContentModel>): ArrayList<ContentModel> {
+        var newElements: ArrayList<ContentModel> = ArrayList<ContentModel>(elements.size,{i => unsafe {zeroValue<ContentModel>()}})
+        for (i in 0..elements.size) {
+            newElements[i] = elements[i].clone()
+        }
         this.resetElements(newElements)
         return newElements
     }
     
-    public func changeGroupRender(elements: Array<ContentModel>, renderFlag: Bool): Unit {
+    public func changeGroupRender(elements: ArrayList<ContentModel>, renderFlag: Bool): Unit {
         let len: Int64 = elements.size
         for (i in 0..len) {
             elements[i]._render = renderFlag
@@ -195,7 +196,7 @@ public class RepeaterModifier <: ShapeModifier {
     }
 
     public func processShapes(_isFirstFrame: Bool): Bool {
-        var items: Array<ContentModelElement> = Array<ContentModelElement>()
+        var items: ArrayList<ContentModelElement> = ArrayList<ContentModelElement>()
         var itemsTransform: Array<Float64> = Array<Float64>()
         var i: Int64 = 0
         var dir: Int64 = 0
@@ -210,16 +211,9 @@ public class RepeaterModifier <: ShapeModifier {
                 }))
 
             if (this._groups.size < copies) {
-                var diffNum: Int64 = copies - this._groups.size
-                let empty_ShapeGroup: ShapeGroup = ShapeGroup("", Array<ContentModel>(), false)
-                let diffArr: Array<ShapeGroup> = Array<ShapeGroup>(diffNum, item: empty_ShapeGroup)
 
                 while (this._groups.size < copies) {
-                    let it: Array<ContentModel> = Array<ContentModel>(this._elements.size + 1, item: ContentModel())
-                    /* 将 this._elements 循环逐级 clone 的新对象，存储到 it 中 */
-                    for(j in 0..this._elements.size) {
-                        it[j] = this._elements[j].clone()
-                    }
+                    let it: ArrayList<ContentModel> = this.cloneElements(this._elements)
                     
                     let tr: AnimatableTransform = AnimatableTransform(
                         a: ArrayKeyframePointF(a: 0, ix: 1, k: [ Keyframe<PointF>(k: PointF(x: 0.0, y: 0.0)) ]),
@@ -233,7 +227,7 @@ public class RepeaterModifier <: ShapeModifier {
                         nm: "Transform"
                     )
 
-                    it[it.size - 1] = tr
+                    it.append(tr)
                     
                     let group: ShapeGroup = ShapeGroup(
                         nm: "",
@@ -241,24 +235,10 @@ public class RepeaterModifier <: ShapeModifier {
                     )
                     /* splice: 从数组中添加或删除元素。--此处都是添加--在下标0处，删除0个长度，添加group */
                     /* 单次扩展数组，改为最后一次性扩展 */
-                    diffNum--
-                    diffArr[diffNum] = group
+                    this.arr.prepend(group)
+                    this._groups.prepend(group)
                     this._currentCopies += 1
                 }
-
-                let diffArrSize: Int64 = diffArr.size
-                let len: Int64 = this.arr.size + diffArrSize
-                let arr_new: Array<ContentModel> = Array<ContentModel>(len, item: ContentModel())
-                for (i in 0..diffArrSize) {
-                    arr_new[i] = diffArr[i]
-                }
-                for (i in 0..this.arr.size) {
-                    arr_new[i + diffArrSize] = this.arr[i]
-                }
-                this.arr = arr_new
-                
-                this._groups = diffArr.concat(this._groups)
-
                 this.reloadShapesInShapeElement()
                 hasReloaded = true
             }
@@ -269,7 +249,7 @@ public class RepeaterModifier <: ShapeModifier {
                 this._groups[i]._render = renderFlag
                 this.changeGroupRender((this._groups[i] as ShapeGroup).getOrThrow().it, renderFlag)
                 if (!renderFlag) {
-                    let elems: Array<ContentModelElement> = (this.elemsData[i] as ShapeGroupElement).getOrThrow().it
+                    let elems: ArrayList<ContentModelElement> = (this.elemsData[i] as ShapeGroupElement).getOrThrow().it
                     let transformData: AnimatableTransformElement = (elems[elems.size - 1] as AnimatableTransformElement).getOrThrow()
                     if (transformData.transform.op.v[0] != 0.0) {
                         transformData.transform.op._mdf = true

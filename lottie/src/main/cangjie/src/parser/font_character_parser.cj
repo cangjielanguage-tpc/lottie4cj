@@ -41,7 +41,7 @@ class FontCharacterParser {
             }
         }
         reader.endObject()
-        let data: CharsData = CharsData(shapes: shapes.toArray())
+        let data: CharsData = CharsData(shapes: shapes)
         return FontCharacter(data, character, size, width, style, fontFamily)
     }
 }

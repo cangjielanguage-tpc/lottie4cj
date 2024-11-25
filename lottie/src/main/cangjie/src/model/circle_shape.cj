@@ -52,6 +52,20 @@ public class CircleShape <: ContentModel {
         this.d = d
     }
 
+    public func clone(): CircleShape {
+        var sc = CircleShape(
+            nm: this.nm,
+            p: this.p,
+            s: this.s,
+            hd: this.hd,
+            d: this.d
+        )
+        sc._processed = this._processed
+        sc._render = this._render
+        sc._shouldRender = this._shouldRender
+        return sc
+    }
+
     /**
      * Obtain the type of CircleShape.
      */

@@ -16,7 +16,12 @@ public open class ContentModel <: ToString {
     public var _shouldRender: Bool = false
 
     public open func clone(): ContentModel {
-        return this
+        var sc = ContentModel()
+        sc.hd = this.hd
+        sc._processed = this._processed
+        sc._render = this._render
+        sc._shouldRender = this._shouldRender
+        return sc
     }
 
     public open prop ty: String {
@@ -63,6 +68,14 @@ public open class ContentModelP <: ToString {
         return "ContentModelP: {\n" +
                "p = ${p},\n" +
                "k = ${k}\n}"
+    }
+    public func clone(): ContentModelP {
+        var tmpk = Array<Keyframe<Array<Float64>>>(this.k.size,{i => unsafe {zeroValue<Keyframe<Array<Float64>>>()}})
+        for (i in 0..this.k.size) {
+            tmpk[i] = this.k[i].clone()
+        }
+        var sc = ContentModelP(p: this.p, k: tmpk)
+        return sc
     }
 }
 
@@ -115,6 +128,10 @@ public open class ContentModelD <: ToString {
                "n = ${n},\n" +
                "v = ${v}\n}"
     }
+
+    public func clone(): ContentModelD {
+        return ContentModelD(n: this.n,v: this.v.clone())
+    }
 }
 
 public open class ContentModelDK <: ToString {
@@ -136,5 +153,13 @@ public open class ContentModelDK <: ToString {
      */
     public func toString(): String {
         return "ContentModelDK: { k = ${k} }"
+    }
+
+    public func clone(): ContentModelDK {
+        var tmpk = Array<Keyframe<Float64>>(this.k.size,{i => unsafe {zeroValue<Keyframe<Float64>>()}})
+        for (i in 0..this.k.size) {
+            tmpk[i] = this.k[i].clone()
+        }
+        return ContentModelDK(k:tmpk)
     }
 }
