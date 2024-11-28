@@ -102,15 +102,10 @@ class MyView {
     private var navidadCanvasRenderingContext: CanvasRenderingContext2D = CanvasRenderingContext2D(
         this.navidadRenderingSettings)
 
-    private var markus2RenderingSettings: RenderingContextSettings = RenderingContextSettings(antialias: true)
-    private var markus2CanvasRenderingContext: CanvasRenderingContext2D = CanvasRenderingContext2D(
-        this.markus2RenderingSettings)
-
     private var lottie: AnimationManager = AnimationManager(this.canvasRenderingContext)
     private var animateItem: Option<AnimationItem> = None //AnimationItem(animationManager)
     private var animateItem2: Option<AnimationItem> = None //AnimationItem(animationManager)
     private var animateItem3: Option<AnimationItem> = None //AnimationItem(animationManager)
-    private var animateItem4: Option<AnimationItem> = None //AnimationItem(animationManager)
 //    private var animateName: String = "grunt"
 //    private var animateItem2: String = "grunt"
 
@@ -156,9 +151,6 @@ class MyView {
                     evt =>
                         spawn {
                             if (this.animateItem2.isNone()) {
-                                let buffer: Array<UInt8> = loadMedia(Int32(@r(app.media.grunt).id), globalAbilityContext)
-                                let str: String = String.fromUtf8(buffer)
-                                let animationData: AnimationData = AnimationDataParser.parse(str)
                                 let ai: AnimationItem = lottie.loadAnimation(
                                     AnimationConfig(
                                         wrapper_ns: CreateNS("doc"),
@@ -168,11 +160,10 @@ class MyView {
                                         autoplay: true,
                                         name: "grunt",
                                         contentMode: "Contain",
-                                        //path: "common/lottie/data.json", // 路径加载动画只支持entry/src/main/ets 文件夹下的相对路径
+                                        path: "common/lottie/grunt.json", // 路径加载动画只支持entry/src/main/ets 文件夹下的相对路径
                                         // path: "common/lottie/data_rawfile.json"
                                         // path: "common/lottie/data_base64.json"
-                                        path: "",
-                                        animationData: animationData,
+                                        animationData: AnimationData(isNull: true),
                                         context: globalAbilityContext
                                     )
                                 )
@@ -183,16 +174,12 @@ class MyView {
             }
             Row {
                 Canvas(this.navidadCanvasRenderingContext).width(45.percent).height(20.percent).backgroundColor(Color.WHITE)
-                Canvas(this.markus2CanvasRenderingContext).width(45.percent).height(20.percent).backgroundColor(Color.WHITE)
             }
             Row {
                 Button("加载navidad").onClick {
                     evt =>
                         spawn {
                             if (this.animateItem3.isNone()) {
-                                let buffer: Array<UInt8> = loadMedia(Int32(@r(app.media.navidad).id), globalAbilityContext)
-                                let str: String = String.fromUtf8(buffer)
-                                let animationData: AnimationData = AnimationDataParser.parse(str)
                                 let ai: AnimationItem = lottie.loadAnimation(
                                     AnimationConfig(
                                         wrapper_ns: CreateNS("doc"),
@@ -202,11 +189,10 @@ class MyView {
                                         autoplay: true,
                                         name: "navidad",
                                         contentMode: "Contain",
-                                        //path: "common/lottie/data.json", // 路径加载动画只支持entry/src/main/ets 文件夹下的相对路径
+                                        path: "common/lottie/navidad.json", // 路径加载动画只支持entry/src/main/ets 文件夹下的相对路径
                                         // path: "common/lottie/data_rawfile.json"
                                         // path: "common/lottie/data_base64.json"
-                                        path: "",
-                                        animationData: animationData,
+                                        animationData: AnimationData(isNull: true),
                                         context: globalAbilityContext
                                     )
                                 )
@@ -214,34 +200,7 @@ class MyView {
                             }
                         }
                 }
-                Button("加载markus2").onClick {
-                    evt =>
-                        spawn {
-                            if (this.animateItem4.isNone()) {
-                                let buffer: Array<UInt8> = loadMedia(Int32(@r(app.media.markus2).id), globalAbilityContext)
-                                let str: String = String.fromUtf8(buffer)
-                                let animationData: AnimationData = AnimationDataParser.parse(str)
-                                let ai: AnimationItem = lottie.loadAnimation(
-                                    AnimationConfig(
-                                        wrapper_ns: CreateNS("doc"),
-                                        container: this.markus2CanvasRenderingContext,
-                                        renderer: "canvas", // canvas 渲染模式
-                                        //                                        loop: TEUE,
-                                        autoplay: true,
-                                        name: "markus2",
-                                        contentMode: "Contain",
-                                        //path: "common/lottie/data.json", // 路径加载动画只支持entry/src/main/ets 文件夹下的相对路径
-                                        // path: "common/lottie/data_rawfile.json"
-                                        // path: "common/lottie/data_base64.json"
-                                        path: "",
-                                        animationData: animationData,
-                                        context: globalAbilityContext
-                                    )
-                                )
-                                this.animateItem4 = ai
-                            }
-                        }
-                }
+
             }
         }
     }
