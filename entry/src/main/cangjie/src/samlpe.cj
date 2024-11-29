@@ -111,7 +111,7 @@ class LottieSample {
                         }.margin(top: 5)
 
                         Row() {
-                            Button("加载phonemony").onClick {
+                            Button("加载grunt").onClick {
                                 evt =>
                                 //lottie.destroy("phonemoney")
                                 if (this.animateItem2.isNone()) {
@@ -123,7 +123,7 @@ class LottieSample {
                                         autoplay: true,
                                         name: "phonemoney",
                                         contentMode: "Contain",
-                                        path: "phonemoney/phonemoney.json", // 路径加载动画只支持raw文件夹下的相对路径
+                                        path: "grunt.json", // 路径加载动画只支持raw文件夹下的相对路径
                                         animationData: AnimationData(isNull: true),
                                         context: globalAbilityContext
                                     ))

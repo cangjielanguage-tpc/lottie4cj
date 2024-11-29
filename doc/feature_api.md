@@ -4,6 +4,137 @@
 
 lottie是一个动画库，它可以解析Adobe After Effects软件通过Bodymovin插件导出的json格式的动画，并在移动设备上进行本地渲染。
 
+### class AnimationItem
+
+```cangjie
+public class AnimationItem <: BaseEvent {
+
+    /**
+     * 播放动画
+     * 参数 name - 被指定的动画名, 缺省默认为空
+     */
+    public func play(name!: String = ""): Unit
+
+    /**
+     * 停止动画
+     * 参数 name - 被指定的动画名, 缺省默认为空
+     */
+    public func stop(name: String): Unit
+
+    /**
+     * 暂停动画
+     * 参数 name - 被指定的动画名, 缺省默认为空
+     */
+    public func pause(name!: String = ""): Unit
+
+    /**
+     * 播放或暂停动画
+     * 参数 name - 被指定的动画名, 缺省默认为空
+     */
+    public func togglePause(name: String): Unit
+
+    /**
+     * 销毁动画
+     * 参数 name - 被指定的动画名, 缺省默认为空
+     */
+    public func destroy(name: String): Unit
+
+    /**
+     * 控制动画画面停止在某一帧或某个时刻
+     * 参数 value - 帧号(值>=0)或时刻(ms)
+     * 参数 isFrame - true按帧控制, false按时间控制, 缺省默认false
+     * 参数 name - 被指定的动画名, 可缺省默认为空
+     */
+    public func goToAndStop(value: String, isFrame: Bool, name: String): Unit
+
+    /**
+     * 控制动画画面从在某一帧或某个时刻开始播放
+     * 参数 value - 帧号(值>=0)或时刻(ms)
+     * 参数 isFrame - true按帧控制, false按时间控制, 缺省默认false
+     * 参数 name - 被指定的动画名, 可缺省默认为空
+     */
+    public func goToAndPlay(value: String, isFrame: Bool, name: String): Unit
+
+    /**
+     * 限定动画资源播放时的整体帧范围
+     * 参数 initNum - 起始帧号
+     * 参数 iend - 结束帧号
+     */
+    public func setSegment(initNum: Float64, end: Float64): Unit
+
+    /**
+     * 设置仅播放指定范围的帧动画
+     * 参数 arr - 片段或片段数组; 若传入的是数组, 且当前loop!=0, 播放结束后, 仅循环播放最后一个片段
+     * 参数 forceFlag - 值为true立刻生效, 值为false循环下次播放的时候生效
+     */
+    public func playSegments(arr: Array<Array<Float64>>, forceFlag: Bool): Unit
+
+    /**
+     * 重置动画播放片段, 使动画重新从第一帧开始播放完整动画
+     * 参数 forceFlag - 值为true立刻生效, 值为false循环下次播放的时候生效
+     */
+    public func resetSegments(forceFlag: Bool): Unit
+
+    /**
+     * 设置播放速度
+     * 参数 val - speed 值为浮点类型, speed>0正向播放, speed<0反向播放, speed=0暂停播放, speed=1.0/-1.0正常速度播放
+     */
+    public func setSpeed(val: Int64): Unit
+
+    /**
+     * 设置播放方向
+     * 参数 val - 1为正向, -1为反向
+     */
+    public func setDirection(val: Int64): Unit
+
+    /**
+     * 获取动画单次完整播放的时间(与播放速度无关)或帧数, 与Lottie.loadAnimation接口入参initialSegment有关
+     * 参数 isFrame - 值为true时获取帧数, 值为false时获取时间(单位ms)
+     * 返回值 Float64 - 动画单次完整播放的时间(与播放速度无关)或帧数
+     */
+    public func getDuration(isFrame: Bool): Float64
+
+    /**
+     * 添加侦听事件, 事件完成后会触发指定回调函数
+     * 参数 eventName - 事件名称, 有效范围见AnimationEventName声明
+     * 参数 callback - 用户自定义回调函数封装的对象
+     * 返回值 () -> Unit - 对应的删除侦听事件
+     */
+    public func addEventListener(eventName: String, callback: AnimationEventCallback): () -> Unit
+
+    /**
+     * 添删除侦听事件
+     * 参数 eventName - 事件名称, 有效范围见AnimationEventName声明
+     * 参数 callback - 用户自定义回调函数； 缺省为空时, 删除此事件的所有回调函数。
+     * 参数 hascallback - 是否直接清除此事件名称对应的回调函数。
+     */
+    public func removeEventListener(eventName: String, callback: AnimationEventCallback, hascallback!: Bool = true): Unit
+
+    /**
+     * 修改动画颜色
+     * 参数 color - 开始颜色数组RGBA
+     * 参数 endColor - 结束颜色数组RGBA
+     * 参数 layer - 层次的下标值
+     * 参数 inde - 对应层次里面的elements的下标值
+     */
+    public func changeColor(color: Array<Int64>, endColor: Array<Int64>, layer: Int64, index: Int64): Unit
+
+    /**
+     * 动画填充模式，默认的填充模式是：Contain
+     * 参数 contentMode - 模式：'Fill','Top','Bottom','Cover','Contain'
+     */
+    public func setContentMode(contentMode: String): Unit
+
+    /**
+     * 设置当前动画的播放帧率不超过该值，范围1~120。
+     * 当动画源帧率高于该值时，该动画的播放帧率会被强制降到该值，否则默认以动画源帧率进行播放，除非另有全局设置；
+     * 可通过设置0帧率来取消该限制。
+     * 参数 playingFrameRate - 播放帧率
+     */
+    public func setFrameRate(playingFrameRate: Float64): Unit
+}
+```
+
 ### class AnimationManager
 
 ```cangjie
