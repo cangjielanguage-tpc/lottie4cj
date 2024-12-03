@@ -161,6 +161,14 @@ public class AnimationManager {
      * 
      */
     public func destroy(name: String): Unit 
+
+    /**
+     * 清除缓存
+     *
+     * @param ac 具体动画被清除缓存的地址
+     * @param container 与canvas组件绑定的上下文CanvasRenderingContext2D,用于本地资源路径json文件
+     */
+    public func clearFileCache(url: String, container: Option<AbilityContext>): Unit
 }
 ```
 

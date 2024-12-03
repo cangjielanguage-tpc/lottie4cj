@@ -244,7 +244,7 @@ public class ImagePreloader {
         func addEventListener(types: String, callback: () -> Unit, flag: Bool): Unit {
             if (types == "load") {
                 //assetData.e值是不唯一的参数，所以由assetData.p值来判断图片资源是base64图片资源，还是外部图片资源
-                if (let Some(v) <- Regex(SOURCE_BASE64).matcher(assetData.p).fullMatch()) { //正则表达式判断是否含有data:image/;base64字段
+                if (let Some(v) <- Regex(SOURCE_BASE64).matcher(assetData.p).find()) { //正则表达式判断是否含有data:image/;base64字段
                     readBase64(assetData, ob, callback) //base64图片
                 } else { //rawfile资源图片
                     readRawFile(assetData, ob, callback)

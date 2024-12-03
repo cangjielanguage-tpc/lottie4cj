@@ -274,7 +274,7 @@ public class AnimationItem <: BaseEvent {
         //数据来源分析：SVGRenderer  =>  var defs = createNS("defs")
         var imagePath: String = params.imagePath
         this.imagePreloader.pathSourceFrom = params.pathSourceFrom
-        if (params.pathSourceFrom == 2) {
+        if (params.pathSourceFrom == 2 && params.path != "") {
             var str: String = ""
             let index1: Int64 = params.path.lastIndexOf("\\") ?? -1
             let index2: Int64 = params.path.lastIndexOf("/") ?? -1
