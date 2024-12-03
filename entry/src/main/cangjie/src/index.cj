@@ -29,7 +29,8 @@ internal import lottie.utils.helpers.*
 internal import lottie.model.*
 internal import lottie.parser.*
 
-internal import ohos.file_fs.*
+//internal import ohos.file_fs.*
+internal import std.fs.*
 internal import std.sync.*
 
 func parseAnimationData(filename: String): AnimationData {
@@ -40,40 +41,15 @@ func parseAnimationData(filename: String): AnimationData {
 }
 
 public func readFile(path: String): Array<Byte> {
-    return readFileWithError(path, "FileUtils readFile Method has error, err msg=")
+    return File.readFrom(path)
 }
 
-private func readFileWithError(path: String, err: String): Array<Byte> {
-    var buf: Array<Byte> = Array<Byte>()
-    let fd: Int32
-    try {
-        fd = FileFs.open(path, mode: READ_WRITE.mode).fd
-    } catch (e: Exception) {
-        ////Hilog.error(0, "", err + e.message)
-        return buf
-    }
-    try {
-        let len: Int64 = FileFs.stat(fd).size
-        buf = Array<Byte>(len, item: 0)
-        FileFs.read(fd, buf)
-    } catch (e: Exception) {
-        ////Hilog.error(0, "", err + e.message)
-    } finally {
-        FileFs.close(fd)
-    }
-    return buf
-}
 
 public func loadMedia(resId: Int32, context: Option<AbilityContext>): Array<UInt8> {
     if (let Some(v) <- context) {
         let stageContext = getStageContext(v)
         let rm: ResourceManager = ResourceManager.getResourceManager(stageContext)
-        //        try {
         return rm.getMediaContent(resId, 0)
-        //        } catch (e: Exception) {
-        //            //Hilog.error(0, "", "[loadMedia]: getMediaContent failed, err msg=" + e.message)
-        //            return Array<UInt8>()
-        //        }
     }
     ////Hilog.error(0, "", "[loadMedia]: the globalAbilityContext is None.")
     return Array<UInt8>()

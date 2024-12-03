@@ -7,6 +7,7 @@ package lottie.utils
 internal import ohos.hilog.*
 internal import ohos.system_date_time.*
 
+internal import std.regex.*
 internal import std.sync.*
 internal import std.time.*
 
@@ -23,7 +24,6 @@ internal import ohos.image.Region
 internal import ohos.image.ImageInfo
 internal import ohos.image.InitializationOptions
 internal import ohos.image.createPixelMap
-internal import ohos.file_fs.*
 
 internal import ohos.resource_manager.*
 internal import ohos.ability.*
@@ -38,7 +38,11 @@ public class ImagePreloader {
     var _createImageData: (Asset) -> OB = default_Asset_To_OB_CreateNS
 
     var assetsPath: String = ""
+    var imagePath: String = ""
     var path: String = ""
+    //区别json文件来源：1.来自\resources\rawfile\， 2.来自手机中保存的json。
+    public var pathSourceFrom: Int8 = 1
+
     var totalImages: Int64 = 0
     var totalFootages: Int64 = 0
     let loadedAssets: AtomicInt64 = AtomicInt64(0)
@@ -92,11 +96,11 @@ public class ImagePreloader {
         if (assetData.e != 0) {
             path = assetData.p
         } else if (assetsPath != "") {
-            var imagePath: String = assetData.p
-            if (imagePath.contains("images/")) {
-                imagePath = imagePath.split("/")[1]
+            var imagePaths: String = assetData.p
+            if (imagePaths.contains("images/")) {
+                imagePaths = imagePaths.split("/")[1]
             }
-            path = assetsPath + imagePath
+            path = assetsPath + imagePaths
         } else {
             path = originalPath
             path += assetData.u
@@ -239,69 +243,11 @@ public class ImagePreloader {
         
         func addEventListener(types: String, callback: () -> Unit, flag: Bool): Unit {
             if (types == "load") {
-                if (assetData.e == 0 || assetData.e == TYPE_IMAGE_SOURCE_RAWFILE) { //rawfile资源图片
-                    //拼接rawfile url
-                    let res: String = assetData.u + assetData.p       //->common/image/lottie/icon.png
-                    try {
-                        let filePath: String =
-                        if (let Some(v) <- context) {
-                            v.filesDir + "/" + res
-                        } else {
-                            "/" + res
-                        }
-
-                        let isExist = FileFs.access(filePath) //判断图片资源是否存在
-                        if (isExist) {
-                            spawn {
-                                /* 直接读取文件中所有数据 */
-                                try {
-                                    let file = FileFs.open(filePath, mode: READ_ONLY.mode)
-                                    let stat = FileFs.stat(filePath)
-                                    let arrayBuffer: Array<Byte> = Array<Byte>(stat.size, item: 0)
-
-                                    FileFs.read(file.fd, arrayBuffer)
-                                    FileFs.close(file)
-
-                                    generatePixelMapAndRefreshUI2(arrayBuffer, ob, callback)
-                                } catch (e: Exception) {
-                                    //加载依赖图片异常时，默认动画加载正常
-                                    callback()
-                                }
-                            }
-                        } else {
-                            //获取rawfile的字节数组数据
-                            if (let Some(v) <- context) {
-                                let stageContext = getStageContext(v)
-                                let rm: ResourceManager = ResourceManager.getResourceManager(stageContext)
-                                spawn {
-                                    try {
-                                        let buffer: Array<UInt8> = rm.getRawFileContent(res)
-                                        generatePixelMapAndRefreshUI2(buffer, ob, callback)
-                                    } catch (e: Exception) {
-                                        let message = e.message
-                                        //加载依赖图片异常时，默认动画加载正常
-                                        callback()
-                                    }
-                                }
-                            }
-
-                        }
-                    } catch (e: Exception) {
-                    }
-                } else if (assetData.e == TYPE_IMAGE_SOURCE_BASE64) { //base64图片
-                    //generatePixelMapAndRefreshUI的入参ob可能为undefined，所以这里需要每隔一段时间检测一下ob是否实例化好了
-                    func inside(): Unit {
-                        generatePixelMapAndRefreshUI2(assetData.p, ob, {
-                           isOB  =>
-                             if (!isOB) { // 加载失败，重新触发
-                                Timer.once(Duration.millisecond * 20, inside)
-                             } else {
-                             	callback()
-                             }
-                        })
-
-                    }
-                    Timer.once(Duration.millisecond * 20, inside)
+                //assetData.e值是不唯一的参数，所以由assetData.p值来判断图片资源是base64图片资源，还是外部图片资源
+                if (let Some(v) <- Regex(SOURCE_BASE64).matcher(assetData.p).fullMatch()) { //正则表达式判断是否含有data:image/;base64字段
+                    readBase64(assetData, ob, callback) //base64图片
+                } else { //rawfile资源图片
+                    readRawFile(assetData, ob, callback)
                 }
             }
         }
@@ -322,11 +268,82 @@ public class ImagePreloader {
         return ob
     }
 
+    func readBase64(assetData: Asset, ob: OB, callback: () -> Unit): Unit {
+        //generatePixelMapAndRefreshUI的入参ob可能为undefined，所以这里需要每隔一段时间检测一下ob是否实例化好了
+        func inside(): Unit {
+            generatePixelMapAndRefreshUI2(assetData.p, ob, {
+               isOB  =>
+                 if (!isOB) { // 加载失败，重新触发
+                    Timer.once(Duration.millisecond * 20, inside)
+                 } else {
+                 	callback()
+                 }
+            })
+
+        }
+        Timer.once(Duration.millisecond * 20, inside)
+    }
+
+    func readRawFile(assetData: Asset, ob: OB, callback: () -> Unit): Unit {
+        //拼接rawfile url
+        let res: String = assetData.u + assetData.p       //->common/image/lottie/icon.png
+        try {
+            //Asset.sourceFrom: 区别图片来源：1.来自\resources\rawfile\， 2.来自手机中保存的图片，3.来自网络下载。
+            let filePath: String =
+            if (this.pathSourceFrom == 2) {
+                if (res.startsWith("/data/storage/")) {
+                    res
+                } else {
+                    FileUtils.phoneFolder + "/" + res
+                }
+            } else if (assetData.sourceFrom == 3) {
+                FileUtils.downloadFolder + "/" + res
+            } else if (let Some(v) <- context) {
+                v.filesDir + "/" + res
+            } else {
+                "/" + res
+            }
+
+            let isExist = FileUtils.accessSync(filePath) //判断图片资源是否存在
+            if (isExist) {
+                spawn {
+                    /* 直接读取文件中所有数据 */
+                    try {
+                        let arrayBuffer: Array<Byte> = FileUtils.readToEnd(filePath)
+                        generatePixelMapAndRefreshUI2(arrayBuffer, ob, callback)
+                    } catch (e: Exception) {
+                        //加载依赖图片异常时，默认动画加载正常
+                        callback()
+                    }
+                }
+            } else {
+                //获取rawfile的字节数组数据
+                if (let Some(v) <- context) {
+                    let stageContext = getStageContext(v)
+                    let rm: ResourceManager = ResourceManager.getResourceManager(stageContext)
+                    spawn {
+                        try {
+                            let buffer: Array<UInt8> = rm.getRawFileContent(res)
+                            generatePixelMapAndRefreshUI2(buffer, ob, callback)
+                        } catch (e: Exception) {
+                            let message = e.message
+                            //加载依赖图片异常时，默认动画加载正常
+                            callback()
+                        }
+                    }
+                }
+
+            }
+        } catch (e: Exception) {
+        }
+    }
+
+
     func createFootageData(data: Asset): OB {
         let ob: OB = OB(assetData: data)
         let path: String = getAssetsPath(data, this.assetsPath, this.path)
 
-        func onComplete(footageData: AnimationData): Unit {
+        func onComplete(footageData: AnimationData, isNetLoad: Option<Bool>): Unit {
             ob.img.animationData = footageData
             ob.img.isCreateNS = false
             this.footageLoaded()
@@ -352,6 +369,9 @@ public class ImagePreloader {
         let len: Int64 = assets.size
         for (i in 0..len) {
             if (assets[i].layers.size <= 0) {
+                if (this.imagePath != "") {
+                    assets[i].u = this.imagePath
+                }
                 if (assets[i].t == "" || assets[i].t == "seq") {
                     this.totalImages += 1
                     this.images.append(this._createImageData(assets[i]))
@@ -433,8 +453,9 @@ public class ImagePreloader {
      * @param elementHelper - Type of CreateNS.
      * @param context - Type of AbilityContext.
      */
-    public func setCacheType(types: String, elementHelper: CreateNS, context: Option<AbilityContext>) {
+    public func setCacheType(types: String, elementHelper: CreateNS, context: Option<AbilityContext>, imagePath: String) {
         this.context = context
+        this.imagePath = imagePath
         if (types == "svg") {
             this._elementHelper = elementHelper
             this._createImageData = this.createImageData

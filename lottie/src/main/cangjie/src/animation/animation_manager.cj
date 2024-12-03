@@ -10,8 +10,10 @@ package lottie.animation
 internal import std.sync.*
 internal import std.time.*
 internal import std.math.*
+internal import std.fs.{FileInfo}
 internal import std.collection.HashMap
 internal import std.collection.ArrayList
+internal import std.io.{InputStream, ByteArrayStream}
 
 internal import lottie.inner.*
 internal import lottie.global_data.*
@@ -146,7 +148,7 @@ public class AnimationManager {
         return animItem
     }
 
-    public func setSpeed(val: Int64, animation: String): Unit {
+    public func setSpeed(val: Float64, animation: String): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.setSpeed(val)
@@ -398,6 +400,140 @@ public class AnimationManager {
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.unmute(animation)
             }
+        }
+    }
+
+
+
+
+    func readFile(context: Option<AbilityContext>, path: String): Array<Byte> {
+        var buf: Array<Byte> = Array<Byte>()
+        if(path.startsWith("/data/storage/")) {
+            buf = FileUtils.readToEnd(path)
+        } else if (this.params.pathSourceFrom == 2) {
+            buf = FileUtils.readToEnd(FileUtils.phoneFolder + "/" + path)
+        } else if(path.startsWith("file://") || path.startsWith("https:")) {
+            /* 通过URL.openStream获取数据 */
+        } else {
+            let stageContext = getStageContext(context.getOrThrow())
+            let resMgr = ResourceManager.getResourceManager(stageContext)
+            buf = resMgr.getRawFileContent(path)
+        }
+
+        return buf
+    }
+
+    func clearSingleFileCache(path: String, container: Option<AbilityContext>): Unit {
+        let isHttp = path.startsWith("http")
+        if (isHttp) {
+            let parts = path.split("/")
+            let secondLastSegment = parts[parts.size - 2]
+            let lastSegmentWithExtension = parts[parts.size - 1]
+            let lastSegment = lastSegmentWithExtension.replace(".zip", "").replace(".json", "")
+
+            var dirPath = FileUtils.downloadBase + "/lottie"  //getContext().filesDir
+            let dirPathFirst = "${dirPath}/${secondLastSegment}"
+            dirPath = "${dirPathFirst}/${lastSegment}"
+            rmdir(dirPath)
+        }
+        if (let Some(context) <- container) {
+            let arrayBuffer: Array<Byte> = readFile(container, path)
+            let bas: ByteArrayStream = ByteArrayStream(arrayBuffer.size)
+            bas.write(arrayBuffer)
+
+            // 解码的json数据
+            let jsonObj: AnimationData = AnimationDataParser.parse(bas)
+
+            let loadPath: String = FileUtils.downloadBase + "/lottie/loadImages/"   //getContext().filesDir
+
+            var isExitNetworkAssets: Bool = false
+            for (i in 0..jsonObj.assets.size) {
+                if (jsonObj.assets[i].p.startsWith("http")){
+                    isExitNetworkAssets = true
+                    break
+                }
+            }
+
+            if (isExitNetworkAssets) {
+                rmdir(loadPath, jsonObj: jsonObj)
+            }
+        }
+    }
+
+    public func clearFileCache(url: String, container: Option<AbilityContext>): Unit {
+        if (url != "") {
+            clearSingleFileCache(url, container)
+            return
+        }
+        let fileDir = FileUtils.downloadBase + "/lottie"
+        let cacheDir = FileUtils.downloadBase + "/lottie"
+        rmdir(fileDir)
+        rmdir(cacheDir)
+    }
+
+    func rmAssetsDir(path: String, assets: Asset, filenames: Array<String>): Unit {
+        if (assets.p.startsWith("http")) {
+
+            let index: Int64 = filenames.indexOf(assets.id + ".png") ?? -1
+            if (index != -1) {
+                try {
+                    FileUtils.deleteFile(path + filenames[index])
+                } catch (err: Exception) {
+                    Hilog.error(0, "[AnimationManager]", "[rmAssetsDir]-lottie remove file failed with error message: ${err.message}")
+                }
+            }
+        }
+    }
+
+    func rmDirByPath(path: String, filename: String, isDirectory!: Bool = true): Unit {
+        let dirPath = path + "/" + filename
+        // 判断是否文件夹
+        try {
+            if (isDirectory) {
+                FileUtils.deleteDirectory(dirPath)
+            } else {
+                try {
+                    FileUtils.deleteFile(dirPath)
+                } catch (errs: Exception) {
+                    Hilog.error(0, "[AnimationManager]", "[rmDirByPath]-lottie remove file failed with error message: ${errs.message}")
+                }
+            }
+        } catch (err: Exception) {
+            Hilog.error(0, "[AnimationManager]", "[rmDirByPath]-Method rmDirByPath execute error: ${err.message}")
+        }
+    }
+
+    func rmdir(path: String, jsonObj!: AnimationData = AnimationData(isNull: true)): Unit {
+        try {
+            let files: ArrayList<FileInfo> = FileUtils.fileList(path)
+            let filenames: Array<String> = Array<String>(files.size, item: "")
+            for (i in 0..files.size) {
+                let fileName: String = files[i].path.fileName ?? ""
+                filenames[i] = fileName
+            }
+
+            if (!jsonObj.isNull && jsonObj.assets.size > 0 && filenames.size > 0) {
+                for (i in 0..jsonObj.assets.size) {
+                    rmAssetsDir(path, jsonObj.assets[i], filenames)
+                }
+            } else {
+                for (i in 0..filenames.size) {
+                    rmDirByPath(path, filenames[i], isDirectory: false)
+                }
+
+                let directorys: ArrayList<FileInfo> = FileUtils.directoryList(path)
+                let directorynames: Array<String> = Array<String>(directorys.size, item: "")
+                for (i in 0..directorys.size) {
+                    let res: Array<String> = directorys[i].path.toString().split("/", removeEmpty: true)
+                    let fileName = res[res.size - 1]
+                    directorynames[i] = fileName
+                }
+                for (i in 0..directorynames.size) {
+                    rmDirByPath(path, directorynames[i])
+                }
+            }
+        } catch (err: Exception) {
+            Hilog.error(0, "[AnimationManager]", "lottie rmdir: ${err.message}")
         }
     }
 

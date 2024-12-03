@@ -29,6 +29,10 @@ public class AnimationDataParser {
      * @return Type of AnimationData, an instance of the json data that encapsulates the animation.
      */
     public static func parse(inputstr: String): AnimationData {
+        return parse(ByteArrayStream.fromString(inputstr))
+    }
+
+    public static func parse(bas: ByteArrayStream): AnimationData {
         var startFrame: Float64 = 0.0
         var endFrame: Float64 = 0.0
         var frameRate: Float64 = 0.0
@@ -48,7 +52,7 @@ public class AnimationDataParser {
         var nm: String = ""
         var ddd: Int64 = 0
 
-        let reader = JsonReader(ByteArrayStream.fromString(inputstr))
+        let reader = JsonReader(bas)
         /* Obtain key information by NAMES[0-10]. Other fields are skipped, not processed, and not saved. */
         reader.startObject()
         while (reader.peek() != EndObject) {

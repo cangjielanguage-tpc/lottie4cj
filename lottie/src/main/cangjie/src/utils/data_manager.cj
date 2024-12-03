@@ -9,9 +9,9 @@ package lottie.utils
 
 internal import std.convert.*
 
-import lottie.parser.*
+internal import lottie.parser.*
 
-import ohos.resource_manager.*
+internal import ohos.resource_manager.*
 internal import ohos.ability.*
 
 
@@ -48,8 +48,11 @@ public class DataManager {
     var workerInstance: WorkerProxy = WorkerProxy()
     
     var workerInstanceFlag: Bool = false
-    
-    var assetLoader: AssetLoader = AssetLoader()
+
+    public var onSetupError: () -> Unit = { => return () }
+
+    //区别json文件来源：1.来自\resources\rawfile\， 2.来自手机中保存的json。
+    public var pathSourceFrom: Int8 = 1
 
     func postMessage(data: Data) {
         /* workerProxy未单独使用，可以直接等于 workerProxy = workerInstance */
@@ -69,12 +72,64 @@ public class DataManager {
             this.processes.remove(id)
             if (data.status == "success") {
                 /* [6]-解析 json 后封装好的 AnimationData，结果在回调函数 onComplete 中。 */
-                process.onComplete(data.animation)
+                process.onComplete(data.animation, data.isNetLoad)
             } else if (data.status == "error") {
                 process.onError()
             }
         }
     }
+
+    func loadImage(context: Option<AbilityContext>, isNetwork: Bool, jsonData: AnimationData, callback: (AnimationData, Bool) -> Unit, errorCallback: () -> Unit): Unit {
+        // true 优先加载网络资源
+        if (isNetwork) {
+            try {
+                let downloadTasks: ArrayList<Future<Unit>> = downLoadImg(jsonData, context)
+                for (future in downloadTasks) {
+                    future.get()
+                }
+
+                // 下载成功加载网络
+                handleAssets(jsonData)
+                callback(jsonData, true)
+            } catch (err: Exception) {
+                // 处理网络异常加载缓存
+                let imgRouterFilesDir = createImageFilesDir(context)
+                let isImg = isHaveImg(imgRouterFilesDir) // 沙箱中是否有下载的图片资源
+                if (isImg) {
+                    handleAssets(jsonData)
+                    callback(jsonData, false)
+                } else {
+                    // 缓存无资源，返回加载异常
+                    errorCallback()
+                }
+            }
+
+        } else {
+            // false 优先加载缓存资源
+            let imgRouterFilesDir = createImageFilesDir(context)
+            let isImg = isHaveImg(imgRouterFilesDir) // 沙箱中是否有下载的图片资源
+            if (isImg) {
+                handleAssets(jsonData)
+                callback(jsonData, false)
+            } else {
+                try {
+                    let downloadTasks: ArrayList<Future<Unit>> = downLoadImg(jsonData, context)
+                    for (future in downloadTasks) {
+                        future.get()
+                    }
+
+                    // 下载成功加载网络
+                    handleAssets(jsonData)
+                    callback(jsonData, true)
+                } catch (err: Exception) {
+                    // 下载失败,返回加载异常
+                    errorCallback()
+                }
+
+            }
+        }
+    }
+
 
     /* 2. */
     func setupWorker(): Unit {
@@ -92,18 +147,19 @@ public class DataManager {
     func workerStart(data: Data): Unit {
         if (data.types == "loadAnimation") {
             /* [3]-回调函数 callback 的参数 animationData，就是拿到解析 json 后封装好的 AnimationData。 */
-            func callback(animationData: AnimationData): Unit {
+            func callback(animationData: AnimationData, isNetwork: Bool): Unit {
                 completeData(animationData)
-                postMessage(Data(id: data.id, animation: animationData, status: "success"))
+                postMessage(Data(id: data.id, animation: animationData, isNetwork: isNetwork, status: "success"))
             }
             func errorCallback(): Unit {
                 postMessage(Data(id: data.id, status: "error"))
             }
             
             /* [1]-在此函数调用时，拿到解析 json 后封装好的 AnimationData，结果在回调函数 callback 中。 */
-            assetLoader.load(
+            load(
                 this.context,
                 data.path,
+                data.isNetwork,
                 data.fullPath,
                 /* [2]-回调函数 callback 的参数 animationData，就是拿到解析 json 后封装好的 AnimationData。 */
                 callback,
@@ -115,19 +171,21 @@ public class DataManager {
             postMessage(Data(
               id: data.id,
               animation: animation,
+              isNetwork: data.isNetwork,
               status: "success"
             ))
         } else if (data.types == "loadData") {
-            func callback(animationData: AnimationData): Unit {
-                postMessage(Data(id: data.id, animation: animationData, status: "success"))
+            func callback(animationData: AnimationData, isNetwork: Bool): Unit {
+                postMessage(Data(id: data.id, animation: animationData, isNetwork: data.isNetwork, status: "success"))
             }
             func errorCallback(): Unit {
                 postMessage(Data(id: data.id, status: "error"))
             }
-            
-            assetLoader.load(
+
+            load(
                 this.context,
                 data.path,
+                false,        // isNetwork
                 data.fullPath,
                 callback,
                 errorCallback
@@ -294,7 +352,7 @@ public class DataManager {
         /* 在 json 中找不到 layers[i].t.p,此步执行无意义！ */
     }
 
-    func createProcess(onComplete: (AnimationData) -> Unit, onError: () -> Unit): String {
+    func createProcess(onComplete: (AnimationData, Option<Bool>) -> Unit, onError: () -> Unit): String {
         _counterId += 1
         let id: String = "processId_" + _counterId.toString()
         let p: Processes = Processes(onComplete, onError)
@@ -303,7 +361,7 @@ public class DataManager {
     }
 
     /* [7]-解析 json 后封装好的 AnimationData，结果在回调函数 onComplete 参数中。 */
-    public func loadAnimation(context: Option<AbilityContext>, path: String, onComplete: (AnimationData) -> Unit, onError: () -> Unit) {
+    public func loadAnimation(context: Option<AbilityContext>, path: String, isNetwork: Bool, onComplete: (AnimationData, Option<Bool>) -> Unit, onError: () -> Unit) {
         this.context = context
         setupWorker()
         let processId: String = createProcess(onComplete, onError)
@@ -311,12 +369,13 @@ public class DataManager {
         workerInstance.postMessage(Data(
             types: "loadAnimation",
             path: path,
+            isNetwork: isNetwork,
             fullPath: "",
             id: processId
         ))
     }
 
-    public func loadData(path: String, onComplete: (AnimationData) -> Unit, onError: () -> Unit) {
+    public func loadData(path: String, onComplete: (AnimationData, Option<Bool>) -> Unit, onError: () -> Unit) {
         setupWorker()
         let processId: String = createProcess(onComplete, onError)
         workerInstance.postMessage(Data(
@@ -327,7 +386,7 @@ public class DataManager {
         ))
     }
 
-    public func completeAnimation(anim: AnimationData, onComplete: (AnimationData) -> Unit, onError: () -> Unit) {
+    public func completeAnimation(anim: AnimationData, onComplete: (AnimationData, Option<Bool>) -> Unit, onError: () -> Unit) {
         setupWorker()
         let processId: String = createProcess(onComplete, onError)
         workerInstance.postMessage(Data(
@@ -337,32 +396,52 @@ public class DataManager {
         ))
     }
 
-
-}
-
-class AssetLoader {
-
-    func loadAsset(context: Option<AbilityContext>, path: String, fullPath: String, callback: (AnimationData) -> Unit, errorCallback: () -> Unit): Unit {
+    func loadAsset(context: Option<AbilityContext>, path: String, isNetwork: Bool, fullPath: String, callback: (AnimationData, Bool) -> Unit, errorCallback: () -> Unit): Unit {
         Timer.once(Duration.Zero, { =>
-            let jsonString: String = readFile(context, path)
+            let arrayBuffer: Array<Byte> = readFile(context, path)
             var jsonData: AnimationData = AnimationData(isNull: true)
-            if (jsonString != "") {
+            if (arrayBuffer.size > 0) {
                 /**
                  * 将字符串转为 json 对象.
                  * cj 直接调用 AnimationDataParser.parse(reader: String): AnimationData
                  */
-                jsonData = AnimationDataParser.parse(jsonString)
+                let bas: ByteArrayStream = ByteArrayStream(arrayBuffer.size)
+                bas.write(arrayBuffer)
+
+                // 解码的json数据
+                jsonData = AnimationDataParser.parse(bas)
                 /* 不用判断 jsonData 是否是 null，cj中如果解析封装失败会抛出异常。 */
-                callback(jsonData)
+
+                if (!jsonData.isNull) {
+                    var isExitNetworkAssets: Bool = false
+                    for (i in 0..jsonData.assets.size) {
+                        if (jsonData.assets[i].p.startsWith("http")) {
+                            isExitNetworkAssets = true
+                            break
+                        }
+                    }
+
+                    if (jsonData.assets.size != 0 && isExitNetworkAssets) {
+                        loadImage(context, isNetwork, jsonData, callback, this.onSetupError)
+                    } else {
+                        // 无网络图片
+                        callback(jsonData, false)
+                    }
+                }
+
             } else {
                 errorCallback()
             }
         })
     }
     
-    func readFile(context: Option<AbilityContext>, path: String): String {
-        var buf: Array<Byte> = Array<Byte>(1024, item: 0)
-        if(path.startsWith("file://") || path.startsWith("https:")) {
+    func readFile(context: Option<AbilityContext>, path: String): Array<Byte> {
+        var buf: Array<Byte> = Array<Byte>()
+        if(path.startsWith("/data/storage/")) {
+            buf = FileUtils.readToEnd(path)
+        } else if (this.pathSourceFrom == 2) {
+            buf = FileUtils.readToEnd(FileUtils.phoneFolder + "/" + path)
+        } else if(path.startsWith("file://") || path.startsWith("https:")) {
             /* 通过URL.openStream获取数据 */
         } else {
             let stageContext = getStageContext(context.getOrThrow())
@@ -370,11 +449,11 @@ class AssetLoader {
             buf = resMgr.getRawFileContent(path)
         }
 
-        return String.fromUtf8(buf)
+        return buf
     }
     
-    func load(context: Option<AbilityContext>, path: String, fullPath: String, callback: (AnimationData) -> Unit, errorCallback: () -> Unit): Unit {
-        this.loadAsset(context, path, fullPath, callback, errorCallback)
+    func load(context: Option<AbilityContext>, path: String, isNetwork: Bool, fullPath: String, callback: (AnimationData, Bool) -> Unit, errorCallback: () -> Unit): Unit {
+        this.loadAsset(context, path, isNetwork, fullPath, callback, errorCallback)
     }
 
 }
