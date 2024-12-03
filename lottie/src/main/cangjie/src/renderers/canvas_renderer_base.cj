@@ -265,7 +265,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         } else if (contentMode == "Contain") {
             this.renderConfig.preserveAspectRatio = "xMidYMid meet"
         }
-        this.updateContainerSize(0, 0)
+        this.updateContainerSize()
     }
 
     /**
@@ -360,6 +360,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * Destroy the CanvasRendererBase.
      */
     public func destroy(): Unit {
+        this.canvasContext.clearRect(0.0,0.0,this.transformCanvas.w, this.transformCanvas.h)
         let len: Int64 = this.layers.size
         for (i in (len - 1)..=0: -1) {
             if (this.elements.size > i && !this.elements[i].isNull) {

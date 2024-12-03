@@ -521,7 +521,7 @@ public class CvShapeElement <: IShapeElement {
         while ( i >= 0) {
             if (items[i].ty == "fl" || items[i].ty == "st") {
                 //  data[i] 类型为StyleElement
-                let fse: FillStrokeElement = (items[i] as FillStrokeElement).getOrThrow()
+                let fse: FillStrokeElement = (data[i] as FillStrokeElement).getOrThrow()
                 if (endColor.size > 0) {
                     var c_data_k_s: Array<Float64> = Array<Float64>()
                     if (let Some(v) <- fse.c.data[0].s) {
