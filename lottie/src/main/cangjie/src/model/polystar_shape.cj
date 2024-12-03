@@ -83,6 +83,16 @@ public class PolystarShape <: ContentModel {
         this.ix = ix
     }
 
+    public func clone(): PolystarShape {
+        var sc = PolystarShape(nm: this.nm, sy: this.sy, pt: this.pt.clone(), p: this.p.clone(),r: this.r.clone(), or: this.or.clone(),
+            os: this.os.clone(), ir: this.ir.clone(), is2: this.is2.clone(), hd: this.hd,d: this.d, ix: this.ix)
+        sc.mn = this.mn
+        sc._processed = this._processed
+        sc._render = this._render
+        sc._shouldRender = this._shouldRender
+        return sc
+    }
+
     /**
      * Obtain the type of PolystarShape.
      */

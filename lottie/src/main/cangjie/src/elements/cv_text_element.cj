@@ -93,7 +93,7 @@ public class CvTextElement <: ITextElement {
             var shapes = if (shapeData.shapes.size > 0) {
                 (shapeData.shapes[0] as ShapeGroup).getOrThrow().it
             } else {
-                Array<ContentModel>()
+                ArrayList<ContentModel>()
             }
             var jLen = shapes.size
             matrixHelper.scale(documentData.finalSize / 100.0, documentData.finalSize / 100.0)

@@ -122,7 +122,7 @@ func checkText(animationData: AnimationData): Unit {
     }
 }
 
-func checkChars(animationData: AnimationData, completeShapes: (Array<ContentModel>) -> Unit): Unit {
+func checkChars(animationData: AnimationData, completeShapes: (ArrayList<ContentModel>) -> Unit): Unit {
     var minimumVersion: Array<Int64> = [4, 7, 99]
 
     /* 不调用 checkChars，不执行 return func (animationData) 中的逻辑 */
@@ -153,7 +153,7 @@ func checkChars(animationData: AnimationData, completeShapes: (Array<ContentMode
 func checkColors(animationData: AnimationData): Unit {
     var minimumVersion: Array<Int64> = [4, 1, 9]
 
-    func iterateShapes(shapes: Array<ContentModel>): Unit {
+    func iterateShapes(shapes: ArrayList<ContentModel>): Unit {
         let len: Int64 = shapes.size
         var jLen: Int64 = 0
         for (i in 0..len) {
@@ -243,10 +243,10 @@ func checkColors(animationData: AnimationData): Unit {
     }
 }
 
-func checkShapes(animationData: AnimationData, completeShapes: (Array<ContentModel>) -> Unit, convertPathsToAbsoluteValues: (ShapeData) -> Unit): Unit {
+func checkShapes(animationData: AnimationData, completeShapes: (ArrayList<ContentModel>) -> Unit, convertPathsToAbsoluteValues: (ShapeData) -> Unit): Unit {
     var minimumVersion: Array<Int64> = [4, 4, 18]
 
-    func completeClosingShapes(arr: Array<ContentModel>): Unit {
+    func completeClosingShapes(arr: ArrayList<ContentModel>): Unit {
         let len: Int64 = arr.size
         var jLen: Int64 = 0
         var shape: ContentModel = ContentModel()

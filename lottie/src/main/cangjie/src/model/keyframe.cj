@@ -7,6 +7,47 @@
  */
 package lottie.model
 
+public interface Clone<T> {
+    func deepClone(): T
+}
+
+extend Int64 <: Clone<Int64> {
+    public func deepClone(): Int64 {
+        this
+    }
+}
+
+extend Float64 <: Clone<Float64> {
+    public func deepClone(): Float64 {
+        this
+    }
+}
+
+extend<T> Array<T> where T <: Clone<T>{
+    public func deepClone(): Array<T> {
+        var sc = Array<T>(this.size,item: unsafe {zeroValue<T>()})
+        for (i in 0..sc.size) {
+            sc[i] = this[i].deepClone()
+        }
+        return  sc
+    }
+}
+
+extend<T> Option<T> <: Clone<Option<T>> {
+    public func deepClone(): Option<T> {
+        return match (this) {
+            case None => None
+            case Some(v) =>
+                if (v is Clone<T>) {
+                    return (v as Clone<T>).getOrThrow().deepClone()
+                } else {
+                    v
+                }
+        }
+    }
+}
+
+
 public class Keyframe<T> <: ToString where T <: ToString {
 
     public var n: Array<String>
@@ -68,6 +109,14 @@ public class Keyframe<T> <: ToString where T <: ToString {
         this.to = to
         this.ti = ti
         this.n = n
+    }
+
+    public func clone(): Keyframe<T> {
+        var sc = Keyframe<T>(k: this.k.deepClone(), t: this.t, s: this.s.deepClone(), e: this.e.deepClone(),o: this.o.clone(),i: this.i.clone(), h: this.h, to: this.to.clone(), ti: this.ti.clone(),n: this.n.clone())
+        sc.handleKIsNone = this.handleKIsNone
+        sc.isNoneK = this.isNoneK
+        sc.keyframeMetadata = this.keyframeMetadata
+        return sc
     }
 
     /**

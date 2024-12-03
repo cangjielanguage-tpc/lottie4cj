@@ -87,40 +87,40 @@ func getElementByIdEmpty(ind: Int64): Option<BaseElement> {
 public open class BaseElement <: Equatable<BaseElement> {
 
     /* comp数据类型：1-Element；2-Renderer；3-其他 */
-    public var compType: Int8 = 0
+    public var compType: Int8 = unsafe {zeroValue<Int8>()}
     /* comp数据类型是 Element，对应的 Element.data.ind */
-    public var compDataInd: Int64 = -1
+    public var compDataInd: Int64 = unsafe {zeroValue<Int64>()}
     /*
      * comp 在arkts中是多种数据类型，cangjie没有办法完全兼容。
      * 【暂时】保存为两类，一类代表各种 Element；另一类是 Renderer，用到那个单独处理。
      * 处理方案分为 3 类，参考成员变量 compType。
      * comp数据类型：1-Element；2-Renderer；3-其他。
      */
-    public var comp: Array<BaseElement> = Array<BaseElement>()
+    public var comp: Array<BaseElement> = unsafe {zeroValue<Array<BaseElement>>()}
 
-    public var renderedFrame: Float64 = 0.0
+    public var renderedFrame: Float64 = unsafe {zeroValue<Float64>()}
     
     public var getElementByIdInRender: (Int64) -> Option<BaseElement> = getElementByIdEmpty
 
     /* FrameElement-1----------------------------------------------------------------------------- */
     /* 渲染inpoint时设置为true */
-    public var _isFirstFrame: Bool = false
+    public var _isFirstFrame: Bool = unsafe {zeroValue<Bool>()}
 
     /* 动画特性列表 */
     public var dynamicProperties: ArrayList<DynamicPropertyContainer> = ArrayList<DynamicPropertyContainer>()
 
     /* 如果层在当前刻度中已修改，则为真 */
-    public var _mdf: Bool = false
-    public var _isParent: Bool = false
+    public var _mdf: Bool = unsafe {zeroValue<Bool>()}
+    public var _isParent: Bool = unsafe {zeroValue<Bool>()}
     public var globalData: GlobalData
     public var isNull: Bool
     /* FrameElement-2----------------------------------------------------------------------------- */
 
     /* HierarchyElement-1----------------------------------------------------------------------------- */
-    public var finalTransform: FinalTransform = FinalTransform(isNull: true, dynamicProperties: ArrayList<DynamicPropertyContainer>())
+    public var finalTransform: FinalTransform = unsafe {zeroValue<FinalTransform>()}
 
     /* 元素的父列表 */
-    public var hierarchy: ArrayList<BaseElement> = ArrayList<BaseElement>()
+    public var hierarchy: ArrayList<BaseElement> = ArrayList<BaseElement>(4)
     public var data: Layer
     public var buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit = {m,n,o => ()}
 
@@ -131,49 +131,48 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     /* RenderableElement-1----------------------------------------------------------------------------- */
     public var canvasContext: LottieCanvasRenderingContext2D
-    public var transformCanvas: TransformCanvas = TransformCanvas()
+    public var transformCanvas: TransformCanvas = unsafe {zeroValue<TransformCanvas>()}
     public var renderableEffectsManager: CvEffects = unsafe {zeroValue<CvEffects>()}
     public var effectsManager: EffectsManager = unsafe {zeroValue<EffectsManager>()}
 
     /* BaseElement 里面的函数迁移到 RenderableElement */
-    public var layerId: String = ""
+    public var layerId: String = unsafe {zeroValue<String>()}
 
     /* 层的可见性与内点和外点有关。将isVisible重命名为isInRange */
-    public var isInRange: Bool = false
+    public var isInRange: Bool = unsafe {zeroValue<Bool>()}
     /* 层的显示状态 */
-    public var hidden: Bool = false
+    public var hidden: Bool = unsafe {zeroValue<Bool>()}
     /* 如果层的透明度等于0，则可以将其隐藏 */
-    public var isTransparent: Bool = false
-    public var maskManager: Array<CvMaskElement> = Array<CvMaskElement>()
+    public var isTransparent: Bool = unsafe {zeroValue<Bool>()}
+    public var maskManager: Array<CvMaskElement> = unsafe {zeroValue<Array<CvMaskElement>>()}
 
     /* 动画组件列表 */
-    public var renderableComponents1: ArrayList<CvEffects> = ArrayList<CvEffects>()
-    public var renderableComponents: ArrayList<BaseElement> = ArrayList<BaseElement>()
+    public var renderableComponents1: ArrayList<CvEffects> = ArrayList<CvEffects>(4)
+    public var renderableComponents: ArrayList<BaseElement> = ArrayList<BaseElement>(4)
 
     /* RenderableElement-2----------------------------------------------------------------------------- */
 
     /* RenderableDOMElement-1----------------------------------------------------------------------------- */
-    public var baseElement: CreateNS = CreateNS("")
     public var layerElement: CreateNS = CreateNS("")
-    var innerElem: CreateNS = CreateNS("")
+    var innerElem: CreateNS = unsafe {zeroValue<CreateNS>()}
 
     /* RenderableDOMElement-2----------------------------------------------------------------------------- */
 
 
     /* [ICompElement]--中移过来的。------------------------------------------------------ */
     public var layers: Array<Layer> = empty_Array_layer
-    public var elements: Array<BaseElement> = Array<BaseElement>()
+    public var elements: Array<BaseElement> = unsafe {zeroValue<Array<BaseElement>>()}
     var completeLayers: Bool = false
     /* [ICompElement]--中移过来的。------------------------------------------------------ */
 
 
     public var maskedElement: CreateNS = CreateNS("")
 
-    var types: String = ""
+    var types: String = unsafe {zeroValue<String>()}
 
     var style: HashMap<String, String> = HashMap<String, String>()
 
-    var shapesData: Array<ContentModel> = Array<ContentModel>()
+    var shapesData: ArrayList<ContentModel> = unsafe {zeroValue<ArrayList<ContentModel>>()}
 
     /**
      * Create a BaseElement instance based on parameters.

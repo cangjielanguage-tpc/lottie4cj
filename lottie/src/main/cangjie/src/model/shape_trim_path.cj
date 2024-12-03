@@ -63,6 +63,15 @@ public class ShapeTrimPath <: ContentModel {
         get() { 9 }
     }
 
+    public func clone(): ShapeTrimPath {
+        var sc = ShapeTrimPath(s: this.s.clone(), e: this.e.clone(), o: this.o.clone(), nm: this.nm,m: this.m, hd: this.hd)
+        sc.ix = this.ix
+        sc._processed = this._processed
+        sc._render = this._render
+        sc._shouldRender = this._shouldRender
+        return sc
+    }
+
     /**
      * Return to convert the instance into a string and return.
      *

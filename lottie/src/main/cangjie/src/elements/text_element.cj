@@ -86,7 +86,7 @@ public open class ITextElement <: BaseElement {
      * @param shapes - Type of Array<ContentModel>, the value of shapes.
      * @return Type of String.
      */
-    public func createPathShape(matrixHelper: Matrix, shapes: Array<ContentModel>): String {
+    public func createPathShape(matrixHelper: Matrix, shapes: ArrayList<ContentModel>): String {
         let jLen: Int64 = shapes.size
         var pathNodes: ShapeData = ShapeData()
         var shapeStr: String = ""

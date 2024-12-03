@@ -20,14 +20,14 @@ public class CharsData <: ToString {
     //从找到符合条件的 Asset 中拿到 Asset.layers，赋值到成员变量 layers 中。
     public var layers: Array<Layer> = empty_Array_layer
 
-    public let shapes: Array<ContentModel>
+    public let shapes: ArrayList<ContentModel>
 
     /**
      * Create a CharsData instance based on parameters.
      *
      * @param shapes - Type of Array<ContentModel>, the value of shapes.
      */
-    public init(shapes!: Array<ContentModel> = Array<ContentModel>()){
+    public init(shapes!: ArrayList<ContentModel> = ArrayList<ContentModel>()){
         this.shapes = shapes
     }
 

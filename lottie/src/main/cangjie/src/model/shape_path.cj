@@ -47,6 +47,18 @@ public class ShapePath <: ContentModel {
         this.closed = closed
     }
 
+    public func clone(): ShapePath {
+        var tmpks: Array<Keyframe<ShapeData>> = Array<Keyframe<ShapeData>>(this.ks.size,item: unsafe {zeroValue<Keyframe<ShapeData>>()})
+        for (i in 0..this.ks.size) {
+            tmpks[i] = this.ks[i].clone()
+        }
+        var sc = ShapePath(nm: this.nm, ind: this.ind, ks: tmpks, hd: this.hd,closed: this.closed)
+        sc._processed = this._processed
+        sc._render = this._render
+        sc._shouldRender = this._shouldRender
+        return sc
+    }
+
     /**
      * Obtain the type of ShapePath.
      */

@@ -37,6 +37,15 @@ public class ArrayKeyframeArrayFloat64 <: ToString {
         return "ArrayKeyframeArrayFloat64: { k = ${k} }"
     }
 
+    public func clone(): ArrayKeyframeArrayFloat64 {
+        var tmpk = Array<Keyframe<Array<Float64>>>(this.k.size,{i => unsafe {zeroValue<Keyframe<Array<Float64>>>()}})
+        for (i in 0..this.k.size) {
+            tmpk[i] = this.k[i].clone()
+        }
+        var sc = ArrayKeyframeArrayFloat64(a: this.a, ix: this.ix, k: tmpk)
+        return sc
+    }
+
     /**
      * The instance is empty.
      *
@@ -77,6 +86,15 @@ public class ArrayKeyframeFloat64 <: ToString {
         return "ArrayKeyframeFloat64: { k = ${k} }"
     }
 
+    public func clone(): ArrayKeyframeFloat64 {
+        var tmpk = Array<Keyframe<Float64>>(this.k.size,{i => unsafe {zeroValue<Keyframe<Float64>>()}})
+        for (i in 0..this.k.size) {
+            tmpk[i] = this.k[i].clone()
+        }
+        var sc = ArrayKeyframeFloat64(a: this.a, ix: this.ix, k: tmpk)
+        return sc
+    }
+
     /**
      * The instance is empty.
      *
@@ -107,7 +125,14 @@ public class ArrayKeyframeInt64 <: ToString {
         this.k = k
     }
 
-
+    public func clone(): ArrayKeyframeInt64 {
+        var tmpk = Array<Keyframe<Int64>>(this.k.size,{i => unsafe {zeroValue<Keyframe<Int64>>()}})
+        for (i in 0..this.k.size) {
+            tmpk[i] = this.k[i].clone()
+        }
+        var sc = ArrayKeyframeInt64(a: this.a, ix: this.ix, k: tmpk)
+        return sc
+    }
     /**
      * Return to convert the instance into a string and return.
      *
@@ -164,5 +189,14 @@ public class ArrayKeyframePointF <: ToString {
      */
     public func isNull(): Bool {
         return k.size == 0
+    }
+
+    public func clone(): ArrayKeyframePointF {
+        var tmpk = Array<Keyframe<PointF>>(this.k.size,{i => unsafe {zeroValue<Keyframe<PointF>>()}})
+        for (i in 0..this.k.size) {
+            tmpk[i] = this.k[i].clone()
+        }
+        var sc = ArrayKeyframePointF(a: this.a, ix: this.ix, k: tmpk)
+        return sc
     }
 }

@@ -40,6 +40,18 @@ public class MergePaths <: ContentModel {
         get() { 11 }
     }
 
+    public func clone(): MergePaths {
+        var sc = MergePaths(
+            nm: this.nm,
+            mm: this.mm,
+            hd: this.hd
+        )
+        sc._processed = this._processed
+        sc._render = this._render
+        sc._shouldRender = this._shouldRender
+        return sc
+    }
+
     /**
      * Return to convert the instance into a string and return.
      *

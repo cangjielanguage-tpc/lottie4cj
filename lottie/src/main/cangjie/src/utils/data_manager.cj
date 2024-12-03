@@ -227,7 +227,7 @@ public class DataManager {
         return Array<Layer>()
     }
 
-    func completeShapes(arr: Array<ContentModel>): Unit {
+    func completeShapes(arr: ArrayList<ContentModel>): Unit {
         let len: Int64 = arr.size
         var jLen: Int64 = 0
         var shape: ContentModel = ContentModel()

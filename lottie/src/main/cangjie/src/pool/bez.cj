@@ -189,7 +189,12 @@ public class Bez {
         var pathI: Array<PointF> = shapeData.i
 
         var len = shapeData._length
-        var segmentsLength: SegmentsLengthElement =SegmentsLengthElement(lengths: Array<BezierLengthElement>(len,item: BezierLengthElement()))
+        var tmplen = if (closed) {
+            len
+        } else {
+            len-1
+        }
+        var segmentsLength: SegmentsLengthElement =SegmentsLengthElement(lengths: Array<BezierLengthElement>(tmplen,item: BezierLengthElement()))
         var lengths: Array<BezierLengthElement> = segmentsLength.lengths
         var totalLength: Float64 = 0.0
         for (i in 0..(len - 1)) {

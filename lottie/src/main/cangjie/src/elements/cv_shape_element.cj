@@ -13,8 +13,8 @@ internal import ohos.component.CanvasGradient
 public class CvShapeElement <: IShapeElement {
 
     protected var stylesList: ArrayList<StyleElem>
-    protected var prevViewData: Array<ContentModelElement>
-    protected var itemsData: Array<ContentModelElement>
+    protected var prevViewData: ArrayList<ContentModelElement>
+    protected var itemsData: ArrayList<ContentModelElement>
     protected var transformsManager: ShapeTransformManager
 
     let dp: DynamicPropertyContainer
@@ -38,8 +38,8 @@ public class CvShapeElement <: IShapeElement {
         this.shapes = ArrayList<CvShapeData>()
         this.shapesData = data.shapes   //原生的 Layer.shapes
         this.stylesList = ArrayList<StyleElem>()
-        this.itemsData = Array<ContentModelElement>(this.shapesData.size, item: empty_ContentModelElement)  //储存的是处理后的 Layer.shapes
-        this.prevViewData = Array<ContentModelElement>(this.shapesData.size, item: empty_ContentModelElement)
+        this.itemsData = ArrayList<ContentModelElement>(this.shapesData.size, {i => empty_ContentModelElement})  //储存的是处理后的 Layer.shapes
+        this.prevViewData = ArrayList<ContentModelElement>(this.shapesData.size, {i => empty_ContentModelElement})
         this.shapeModifiers = ArrayList<ShapeModifier>()
         this.processedElements = ArrayList<ProcessedElement>()
         this.transformsManager = ShapeTransformManager()
@@ -166,8 +166,8 @@ public class CvShapeElement <: IShapeElement {
     public func createGroupElement(datas: ShapeGroup): ShapeGroupElement {
         let elementData = ShapeGroupElement()
         let len: Int64 = datas.it.size
-        elementData.it = Array<ContentModelElement>(len, item: empty_ContentModelElement)
-        elementData.prevViewData = Array<ContentModelElement>(len, item: empty_ContentModelElement)
+        elementData.it = ArrayList<ContentModelElement>(len, {i => empty_ContentModelElement})
+        elementData.prevViewData = ArrayList<ContentModelElement>(len, {i => empty_ContentModelElement})
         return elementData
     }
 
@@ -219,6 +219,7 @@ public class CvShapeElement <: IShapeElement {
     }
 
     public func reloadShapes() {
+        this._isFirstFrame = true
         var len = this.itemsData.size
         for (i in 0..len) {
             this.prevViewData[i] = this.itemsData[i]
@@ -228,6 +229,7 @@ public class CvShapeElement <: IShapeElement {
         for (i in 0..len) {
             this.dynamicProperties[i].getValue()
         }
+        this.renderModifiers()
         this.transformsManager.processSequences(this._isFirstFrame)
     }
 
@@ -256,7 +258,7 @@ public class CvShapeElement <: IShapeElement {
         }
     }
 
-    public func searchShapes(arr: Array<ContentModel>, itemsData: Array<ContentModelElement>, prevViewData: Array<ContentModelElement>, shouldRender2: Bool, transforms: ArrayList<AnimatableTransformElement>): Unit{
+    public func searchShapes(arr: ArrayList<ContentModel>, itemsData: ArrayList<ContentModelElement>, prevViewData: ArrayList<ContentModelElement>, shouldRender2: Bool, transforms: ArrayList<AnimatableTransformElement>): Unit{
         let cdInd: Int64 = getCompDataInd()
         var shouldRender: Bool = shouldRender2
         var len = arr.size - 1
@@ -274,6 +276,10 @@ public class CvShapeElement <: IShapeElement {
             if (processedPos == 0) {
                 arr[i]._shouldRender = shouldRender
             } else {
+                if(i > (itemsData.size-1) ) {
+                    itemsData.appendAll(ArrayList<ContentModelElement>(i -itemsData.size + 1, {i => ContentModelElement()}))
+                }
+                var sc = prevViewData[processedPos - 1]
                 itemsData[i] = prevViewData[processedPos - 1]
             }
             if (arr[i].ty == "fl" || arr[i].ty == "st" || arr[i].ty == "gf" || arr[i].ty == "gs") {
@@ -479,7 +485,7 @@ public class CvShapeElement <: IShapeElement {
     }
 
     // SEE
-    public func renderShapeColor(color: Array<Int64>, endColor:Int64, items: Array<ContentModel>, data: Array<ContentModelElement>): Unit {
+    public func renderShapeColor(color: Array<Int64>, endColor:Int64, items: ArrayList<ContentModel>, data: ArrayList<ContentModelElement>): Unit {
         var len = items.size - 1
         var i = len
         while ( i >= 0) {
@@ -497,15 +503,15 @@ public class CvShapeElement <: IShapeElement {
         }
     }
 
-    public func renderShapeColor(color2: Array<Int64>, endColor2: Array<Int64>, items: Array<ContentModel>, data: Array<ContentModelElement>): Unit {
+    public func renderShapeColor(color2: Array<Int64>, endColor2: Array<Int64>, items: ArrayList<ContentModel>, data: ArrayList<ContentModelElement>): Unit {
         var color: Array<Float64> = Array<Float64>(color2.size, {i => Float64(color2[i])})
         var endColor: Array<Float64> = Array<Float64>(endColor2.size, {i => Float64(endColor2[i])})
         this.renderShapeColor(color, endColor, items, data)
     }
 
-    public func renderShapeColor(color: Array<Float64>, endColor: Array<Float64>, items2: Array<ContentModel>, data2: Array<ContentModelElement>): Unit {
-        var items: Array<ContentModel> = items2
-        var data: Array<ContentModelElement> = data2
+    public func renderShapeColor(color: Array<Float64>, endColor: Array<Float64>, items2: ArrayList<ContentModel>, data2: ArrayList<ContentModelElement>): Unit {
+        var items: ArrayList<ContentModel> = items2
+        var data: ArrayList<ContentModelElement> = data2
         if (items.size == 0 || data.size == 0) {
             items = this.shapesData
             data = this.itemsData
@@ -601,7 +607,7 @@ public class CvShapeElement <: IShapeElement {
         }
     }
 
-    public func renderShape(parentTransform: TransformInElement, items: Array<ContentModel>, data: Array<ContentModelElement>,
+    public func renderShape(parentTransform: TransformInElement, items: ArrayList<ContentModel>, data: ArrayList<ContentModelElement>,
         isMain!: Bool = false): Unit {
         var len = items.size - 1
         var groupTransform = parentTransform
@@ -773,9 +779,9 @@ public class CvShapeElement <: IShapeElement {
     }
 
     public override func destroy() {
-        this.shapesData = Array<ContentModel>()
+        this.shapesData.clear()
         this.stylesList.clear()
-        this.itemsData =Array<ContentModelElement>()
+        this.itemsData.clear()
     }
 
 }

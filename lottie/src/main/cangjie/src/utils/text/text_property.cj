@@ -267,7 +267,7 @@ public class TextProperty {
         var maxLineWidth: Float64 = 0.0
 
         var fontData: Font = fontManager.getFontByName(documentData.f)
-        var charData: FontCharacter = FontCharacter(CharsData(shapes: Array<ContentModel>()), "", 0.0, 0.0, "", "")
+        var charData: FontCharacter = FontCharacter(CharsData(shapes: ArrayList<ContentModel>()), "", 0.0, 0.0, "", "")
 
         var cLength: Float64 = 0.0
 

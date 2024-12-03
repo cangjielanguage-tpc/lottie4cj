@@ -37,5 +37,10 @@ public class PointF <: ToString {
     public func clone(): PointF {
         return PointF(x:this.x,y:this.y)
     }
+}
+extend PointF <: Clone<PointF> {
 
+    public func deepClone(): PointF {
+        PointF(x:this.x,y:this.y)
+    }
 }

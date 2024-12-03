@@ -59,6 +59,27 @@ public class Mask <: ContentModel {
         this.nm = nm
     }
 
+    public func clone(): Mask {
+        var tmppt = Array<Keyframe<ShapeData>>(this.pt.size,{i => unsafe {zeroValue<Keyframe<ShapeData>>()}})
+        for (i in 0..this.pt.size) {
+            tmppt[i] = this.pt[i].clone()
+        }
+        var tmpo = Array<Keyframe<Int64>>(this.o.size,{i => unsafe {zeroValue<Keyframe<Int64>>()}})
+        for (i in 0..this.o.size) {
+            tmpo[i] = this.o[i].clone()
+        }
+        var tmpx = Array<Keyframe<Int64>>(this.x.size,{i => unsafe {zeroValue<Keyframe<Int64>>()}})
+        for (i in 0..this.x.size) {
+            tmpx[i] = this.x[i].clone()
+        }
+        var sc = Mask(cl: this.cl, inv: this.inv, mode: this.mode, pt: this.pt, o: this.o, x: this.x, nm: this.nm)
+        sc.hd = this.hd
+        sc._processed = this._processed
+        sc._render = this._render
+        sc._shouldRender = this._shouldRender
+        return sc
+    }
+
     /**
      * Return to convert the instance into a string and return.
      *
