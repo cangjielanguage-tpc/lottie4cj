@@ -16,7 +16,7 @@ public class ValueProp<E> where E <: ToString {
      * value 是泛型，没有办法直接拿到 value[0]，所以将 types 存入，后续获取 valueProp.value，根据 types 确定是拿value[0]还是整个value。
      * type == 'unidimensional' 时用成员变量 val； 否则用成员变量 value。
      */
-    var types: String = ""
+    var types: String = unsafe {zeroValue<String>()}
 
     var time: Float64 = 0.0
     var value: Option<E> = None
@@ -37,7 +37,7 @@ public class ExpressionValue<T, E> <: ExpressionInterface where T <: ToString , 
     var val: Array<Float64> = empty_Array_Float64
     
     var value: Array<Float64> = empty_Array_Float64
-    var numKeys: Int64 = 0
+    var numKeys: Int64 = unsafe {zeroValue<Int64>()}
     /* keyType代表要调用的 key 函数的区别。keyType：0-空；1-调用 key；2-调用 keyInSide */
     public var keyType: Int64 = 0
     public var keyInSide: (Int64) -> ValueProp<E> = { m => ValueProp<E>("") }
@@ -50,7 +50,7 @@ public class ExpressionValue<T, E> <: ExpressionInterface where T <: ToString , 
     }
 
     var elementProp: PropertyFactory<T, E>
-    var mult: Float64 = 0.0
+    var mult: Float64 = unsafe {zeroValue<Float64>()}
     var types: String = ""
 
     public init(elementProp: PropertyFactory<T, E>){
