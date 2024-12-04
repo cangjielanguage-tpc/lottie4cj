@@ -12,14 +12,20 @@ public class AnimationItem <: BaseEvent {
     public var _animationManager: AnimationManager
     public var name: String = ""
     public var path: String = ""
+    public var source: String = ""
     public var isLoaded: Bool = false
     public var currentFrame: Float64 = 0.0
     public var currentRawFrame: Float64 = 0.0
-    public var firstFrame: Float64 = 0.0
+
+    public var firstFrame: Float64 = 0.0            //the number of the started frame which is in playing segments
+    public var endFrame: Float64 = 0.0
+    public var offsetFrame: Float64 = 0.0           //the minimum number of segment frames. Note that it's not certainly firstFrame
+
     public var totalFrames: Float64 = 0.0
     public var frameRate: Float64 = 0.0
     public var frameMult: Float64 = 0.0
-    public var playSpeed: Int64 = 1
+    public var _direction: Float64 = 1.0
+    public var playSpeed: Float64 = 1.0
     public var playDirection: Int64 = 1
     public var playCount: Int64 = 0
     public var animationData: AnimationData = AnimationData()
@@ -58,9 +64,15 @@ public class AnimationItem <: BaseEvent {
 
     public var drawnFrameEvent: BMEnterFrameEvent
     public var context: Option<AbilityContext> = None
+    public var cacheDir: String = ""
+    public var filesDir: String = ""
 
     public var packageName: String = ""
     public var contentMode: String = ""
+
+    public var userPlayingFrameRate: Float64 = 0.0    // the max playing frame rate of this animation
+    public var isNetLoad: Bool = false
+    public var downLoadSource: DownLoadSource = DownLoadSource()
     
     public var _isFirstFrame: Float64 = -1.0
     public var frameModifier: Float64 = 0.0
@@ -104,6 +116,107 @@ public class AnimationItem <: BaseEvent {
         this.wrapper = animationManager.params.container
         //初始化一个或许为空的 BaseRenderer，实际 this.renderer 赋值是在 AnimationItem.setParams 函数中。
         this.renderer = BaseRenderer(animationManager.params.container)
+    }
+
+    public func readCacheData(uri: String, resultDir: JsonFilesDir) {
+        let existResult: FilePathObject = isCacheExist(uri, resultDir.route) // 沙箱中是否有下载的资源
+        if (existResult.isExist) {
+            let cacheData: AnimationData = readJson(uri, resultDir.route)
+            // 优先读取缓存
+            if (uri.endsWith(".json") || uri.endsWith(".js")) {
+                var isExitNetworkAssets: Bool = false
+                for (i in 0..cacheData.assets.size) {
+                    if (cacheData.assets[i].p.startsWith("http")) {
+                        isExitNetworkAssets = true
+                        break
+                    }
+                }
+                
+                if (cacheData.assets.size != 0 && isExitNetworkAssets) {
+                    handleAssets(cacheData)
+                    this.setupAnimation(cacheData) // 加载有图片资源的json资源
+                } else {
+                    this.setupAnimation(cacheData) // 加载无图片资源的json资源
+                }
+            } else if (uri.endsWith(".zip")) {
+                // 修改u路径
+                handleZipAssets(cacheData, resultDir.route)
+                this.setupAnimation(cacheData)
+            }
+            this.isNetLoad = false
+        } else {
+            func inside(jsonData: AnimationData, isNetLoad: Bool): Unit {
+                this.isNetLoad = isNetLoad
+                this.setupAnimation(jsonData)
+            }
+            // 若缓存无资源，加载网络资源
+            downLoadSource.downLoadNetworkSource(uri, inside, resultDir, false, this.context)
+        }
+    }
+
+    public func loadAnimationData(jsonData: AnimationData, isNetwork: Bool): Unit {
+        try {
+            var isExitNetworkAssets: Bool = false
+            for (i in 0..jsonData.assets.size) {
+                if (jsonData.assets[i].p.startsWith("http")) {
+                    isExitNetworkAssets = true
+                    break
+                }
+            }
+
+            if (jsonData.assets.size != 0 && isExitNetworkAssets) {
+                this.loadImage(jsonData, isNetwork)
+            } else {
+                // 无网络图片
+                this.setupAnimation(jsonData)
+            }
+        } catch (eror: Exception) {
+            Hilog.error(0, "[loadAnimationData]","${this.packageName}-${this.name}--lottie animation eror.message: ${eror.message}")
+        }
+    }
+
+    public func loadImage(jsonData: AnimationData, isNetwork: Bool): Unit {
+        if (isNetwork) {
+            try {
+                let res: ArrayList<Future<Unit>> = downLoadImg(jsonData, this.context)
+                for (future in res) {
+                    future.get()
+                }
+                handleAssets(jsonData)
+                this.setupAnimation(jsonData)
+            } catch (err: Exception) {
+                // 处理网络异常加载缓存
+                let imgRouterFilesDir = createImageFilesDir(this.context)
+                let isImg = isHaveImg(imgRouterFilesDir) // 沙箱中是否有下载的图片资源
+                if (isImg) {
+                    handleAssets(jsonData)
+                    this.setupAnimation(jsonData)
+                } else {
+                    // 缓存无资源，返回加载异常
+                    this.triggerEvent("error", BMConfigErrorEvent(err))
+                }
+            }
+        } else {
+            // false 优先加载缓存资源
+            let imgRouterFilesDir = createImageFilesDir(this.context)
+            let isImg = isHaveImg(imgRouterFilesDir) // 沙箱中是否有下载的图片资源
+            if (isImg) {
+                handleAssets(jsonData)
+                this.setupAnimation(jsonData)
+            } else {
+                try {
+                    let res: ArrayList<Future<Unit>> = downLoadImg(jsonData, this.context)
+                    for (future in res) {
+                        future.get()
+                    }
+                    handleAssets(jsonData)
+                    this.setupAnimation(jsonData)
+                } catch (err: Exception) {
+                    // 下载失败,返回加载异常
+                    this.triggerEvent("error", BMConfigErrorEvent(err))
+                }
+            }
+        }
     }
 
     func _isFirstFrameInAnimationItem(): Float64 {
@@ -155,9 +268,28 @@ public class AnimationItem <: BaseEvent {
         }
 
         this.context = params.context
+        this.dataManager.pathSourceFrom = params.pathSourceFrom
+        this.dataManager.onSetupError = onSetupError
 
         //数据来源分析：SVGRenderer  =>  var defs = createNS("defs")
-        this.imagePreloader.setCacheType(animTypes, this.renderer.globalData.defs, params.context)
+        var imagePath: String = params.imagePath
+        this.imagePreloader.pathSourceFrom = params.pathSourceFrom
+        if (params.pathSourceFrom == 2) {
+            var str: String = ""
+            let index1: Int64 = params.path.lastIndexOf("\\") ?? -1
+            let index2: Int64 = params.path.lastIndexOf("/") ?? -1
+            if (index1 != -1) {
+                //substr() 方法可在字符串中抽取从 开始 下标开始的指定数目的字符。
+                str = params.path[0..(index1 + 1)]
+            } else if (index2 != -1) {
+                str = params.path[0..(index2 + 1)]
+            }
+            if (params.imagePath != "") {
+                str += params.imagePath
+            }
+            imagePath = str
+        }
+        this.imagePreloader.setCacheType(animTypes, this.renderer.globalData.defs, params.context, imagePath)
  
         this.animType = animTypes
         this.loop = params.loop
@@ -178,7 +310,8 @@ public class AnimationItem <: BaseEvent {
         }
         // hasAudioFactory 表示 audioFactory 是否有实际代码逻辑。
         if (!params.animationData.isNull) {
-            this.setupAnimation(params.animationData)
+            this.source = "data"
+            this.loadAnimationData(params.animationData, params.isNetwork)
         } else if (params.path != "") {
             let index1: Int64 = params.path.lastIndexOf("\\") ?? -1
             let index2: Int64 = params.path.lastIndexOf("/") ?? -1
@@ -201,11 +334,29 @@ public class AnimationItem <: BaseEvent {
             dataManager.loadAnimation(
                 params.context,
                 params.path,
+                params.isNetwork,
                 this.configAnimation,
                 this.onSetupError
             )
+        } else if (params.uri != "") {
+            this.loadNetworkResource(params.uri, params.isNetwork, params.context)
         }
 
+    }
+    
+    public func loadNetworkResource(uri: String, isNetwork: Bool, acontext: Option<AbilityContext>) {
+        let resultDir: JsonFilesDir = createFilesDir(uri, acontext)
+        if (isNetwork) {
+            func inside(jsonData: AnimationData, isNetLoad: Bool): Unit {
+                this.isNetLoad = isNetLoad
+                this.setupAnimation(jsonData)
+            }
+            // true 优先加载网络资源
+            downLoadSource.downLoadNetworkSource(uri, inside, resultDir, true, acontext)
+        } else {
+            // false 优先加载缓存资源
+            this.readCacheData(uri, resultDir)
+        }
     }
 
     public func onSetupError(): Unit {
@@ -236,7 +387,7 @@ public class AnimationItem <: BaseEvent {
         this.setParams(params)
     }
 
-    public func includeLayers(data: AnimationData): Unit {
+    public func includeLayers(data: AnimationData, isNetLoad: Option<Bool>): Unit {
         if (data.op > this.animationData.op) {
             this.animationData.op = data.op
             this.totalFrames = floor(data.op - this.animationData.ip)
@@ -274,7 +425,7 @@ public class AnimationItem <: BaseEvent {
         )
     }
 
-    public func onSegmentComplete(data: AnimationData): Unit {
+    public func onSegmentComplete(data: AnimationData, isNetLoad: Option<Bool>): Unit {
         this.animationData = data
         this.loadNextSegment()
     }
@@ -316,7 +467,10 @@ public class AnimationItem <: BaseEvent {
         this.imagePreloader.loadAssets(this.animationData.assets, this.imagesLoaded)
     }
     
-    public func configAnimation(animData: AnimationData): Unit {
+    public func configAnimation(animData: AnimationData, isNetLoad: Option<Bool>): Unit {
+        if (let Some(v) <- isNetLoad) {
+            this.isNetLoad = v
+        }
         if (!hasRenderer) {
             return
         }
@@ -342,7 +496,7 @@ public class AnimationItem <: BaseEvent {
         this.trigger("config_ready")
         this.preloadImages()
         this.loadSegments()
-        this.updaFrameModifier()
+        this.updateFrameModifier()
         this.waitForFontsLoaded()
         if (this.isPaused) {
             this.audioController.pause()
@@ -391,6 +545,26 @@ public class AnimationItem <: BaseEvent {
         //防止this.renderer为null，导致读取updateContentMode属性失败
         if (hasRenderer && contentMode != "") {
             this.renderer.updateContentMode(contentMode)
+        }
+    }
+
+    /*
+     * 注意：这里虽然叫setFrameRate, 但本质是为了设置"播放帧率", 而不是动画源帧率. 动画源帧率是固定值.
+     */
+    public func setFrameRate(playingFrameRate: Float64): Unit {
+        this.userPlayingFrameRate = playingFrameRate
+    }
+
+    /*
+     * 注意：这里虽然叫getFrameRate, 但本质是为了获取"播放帧率", 而不是动画源帧率. 在获取动画源帧率时不可调用此接口.
+     * 此处保持与setFrameRate命名风格一致是为了保持对称. 由于setFrameRate接口已经开出去了, 不能再更改.
+     */
+    public func getFrameRate(): Float64 {
+        // 当用户指定更低帧率时，以用户的设置为准，否则以动画源为准，高于动画源帧率运行并无意义
+        if (this.userPlayingFrameRate > 0.0 &&  this.userPlayingFrameRate < this.frameRate) {
+            return this.userPlayingFrameRate
+        } else {
+            return this.frameRate
         }
     }
 
@@ -484,7 +658,23 @@ public class AnimationItem <: BaseEvent {
             this.pause()
         }
     }
+
+    public func getNextFrameToPlay(framesNum: Float64): Float64 {
+        var frames: Float64 = framesNum
+        if(frames < 0.0) {
+            frames = -frames
+        }
     
+        var nextFrame: Float64 = frames
+        // 逆序segment且正向播放 || 正序segment且逆向播放
+        if((this._direction > 0.0 && this.firstFrame > this.endFrame) || (this._direction < 0.0 && this.firstFrame < this.endFrame)) {
+            //改为用大值(初始值)作为起点
+            nextFrame = this.totalFrames - 1.0 - frames
+        }
+    
+        return nextFrame
+    }
+
     public func stop(name: String): Unit {
         if (name != "" && this.name != name) {
             return
@@ -626,7 +816,7 @@ public class AnimationItem <: BaseEvent {
         this.playCount = 0
         if (arr[1] < arr[0]) {
             if (this.frameModifier > 0.0) {
-                if (this.playSpeed < 0) {
+                if (this.playSpeed < 0.0) {
                     this.setSpeed(-this.playSpeed)
                 } else {
                     this.setDirection(-1)
@@ -638,7 +828,7 @@ public class AnimationItem <: BaseEvent {
             this.setCurrentRawFrameValue(this.totalFrames - 0.001 - offset)
         } else if (arr[1] > arr[0]) {
             if (this.frameModifier < 0.0) {
-                if (this.playSpeed < 0) {
+                if (this.playSpeed < 0.0) {
                     this.setSpeed(-this.playSpeed)
                 } else {
                     this.setDirection(1)
@@ -741,9 +931,9 @@ public class AnimationItem <: BaseEvent {
         this.gotoFrame()
     }
     
-    public func setSpeed(val: Int64): Unit {
+    public func setSpeed(val: Float64): Unit {
         this.playSpeed = val
-        this.updaFrameModifier()
+        this.updateFrameModifier()
     }
 
     public func setDirection(val: Int64): Unit {
@@ -752,7 +942,7 @@ public class AnimationItem <: BaseEvent {
         } else {
             this.playDirection = 1
         }
-        this.updaFrameModifier()
+        this.updateFrameModifier()
     }
 
     public func setLoop(isLooping: Bool): Unit {
@@ -788,9 +978,9 @@ public class AnimationItem <: BaseEvent {
         this.audioController.unmute()
     }
     
-    public func updaFrameModifier(): Unit {
-        this.frameModifier = this.frameMult * Float64(this.playSpeed * this.playDirection)
-        this.audioController.setRate(this.playSpeed * this.playDirection)
+    public func updateFrameModifier(): Unit {
+        this.frameModifier = this.frameMult * this.playSpeed * Float64(this.playDirection)
+        this.audioController.setRate(this.playSpeed * Float64(this.playDirection))
     }
 
     public func getPath(): String {

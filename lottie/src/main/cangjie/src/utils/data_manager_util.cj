@@ -7,11 +7,30 @@
  */
 package lottie.utils
 
+public class FilePathObject {
+
+    public var isExist: Bool
+    public var filePath: String
+    init(isExist: Bool, filePath: String) {
+        this.isExist = isExist
+        this.filePath = filePath
+    }
+}
+
+public class JsonFilesDir {
+
+    public var dataName: String
+    public var route: String
+    public init(dataName!: String, route!: String) {
+        this.dataName = dataName
+        this.route = route
+    }
+}
 
 class Processes {
-    var onComplete: (AnimationData) -> Unit
+    var onComplete: (AnimationData, Option<Bool>) -> Unit
     var onError: () -> Unit
-    init(onComplete: (AnimationData) -> Unit, onError: () -> Unit) {
+    init(onComplete: (AnimationData, Option<Bool>) -> Unit, onError: () -> Unit) {
         this.onComplete = onComplete
         this.onError = onError
     }
@@ -25,16 +44,19 @@ class Data <: ToString {
     
     var path: String
     var fullPath: String
+    var isNetwork: Bool
+    var isNetLoad: Bool = false
     var id: String
     var status: String
     
     init(types!: String = "", 
         animation!: AnimationData = AnimationData(),
-        path!: String = "", fullPath!: String = "", id!: String = "", status!: String = ""
+        path!: String = "", isNetwork!: Bool = false, fullPath!: String = "", id!: String = "", status!: String = ""
     ) {
         this.types = types
         this.animation = animation
         this.path = path
+        this.isNetwork = isNetwork
         this.fullPath = fullPath
         this.id = id
         this.status = status
@@ -145,6 +167,7 @@ func checkChars(animationData: AnimationData, completeShapes: (ArrayList<Content
                   r: ArrayKeyframeFloat64(k: [Keyframe<Float64>(k: 0.0)]),
                   o: ArrayKeyframeInt64(k: [Keyframe<Int64>(k: 100)])
                 )
+                //animationData.chars[i].t 不存在的处理逻辑，是适配 SVG 用的。ty: "no" -- SVGShapeElement/SVGElementsRenderer
             }
         }
     }

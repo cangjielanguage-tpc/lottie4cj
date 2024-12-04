@@ -15,12 +15,13 @@ internal import ohos.ability.AbilityStage
 internal import ohos.ability.LaunchReason
 internal import cj_res_entry.app
 
-internal import ohos.file_fs.*
+//internal import ohos.file_fs.*
 internal import ohos.system_date_time.SystemDateTime
 internal import ohos.router.*
 
 internal import std.convert.*
 
 internal import lottie.animation.*
+internal import lottie.utils.*
 
 

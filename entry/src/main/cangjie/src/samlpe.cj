@@ -89,6 +89,16 @@ class LottieSample {
                 Scroll() {
                     Column() {
                         Row() {
+                            Button("下载json").onClick {
+                                evt =>
+                                Hilog.error(0, "lipei", "begin------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
+
+                         }
+                        }.margin(top: 5)
+
+
+
+                        Row() {
                             Button("加载2016").onClick {
                                 evt =>
                                 Hilog.error(0, "lipei", "begin------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
@@ -102,7 +112,11 @@ class LottieSample {
                                         autoplay: true,
                                         name: "2016",
                                         contentMode: "Contain",
+                                        //imagePath: "./images/",                 // 加载读取指定路径下的图片资源
                                         path: "data.json", // 路径加载动画只支持raw文件夹下的相对路径
+                                        //path: "/data/storage/el1/bundle/entry/resources/base/media/data.json",
+                                        //path: "/data/storage/el2/base/files/entry/data.json",
+                                        //pathSourceFrom: 2, //区别json文件来源：1.来自\resources\rawfile\， 2.来自手机中保存的json。（不填默认 1）
                                         animationData: AnimationData(isNull: true),
                                         context: globalAbilityContext
                                     ))
@@ -110,26 +124,34 @@ class LottieSample {
                          }
                         }.margin(top: 5)
 
+
                         Row() {
-                            Button("加载grunt").onClick {
+                            Button("加载--网络zip").onClick {
                                 evt =>
                                 //lottie.destroy("phonemoney")
+                                Hilog.error(0, "lipei", "加载--网络json------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
                                 if (this.animateItem2.isNone()) {
                                      this.animateItem2 = lottie.loadAnimation(AnimationConfig(
+                                        uri: "https://assets7.lottiefiles.com/packages/lf20_sF7uci.json",
+                                        //uri: "https://smarthome-drcn.dbankcdn.com/device/guide/KW38/template/lottie/lottie.zip",
+                                        isNetwork: true,
                                         wrapper_ns: CreateNS("doc"),
                                         container: this.mainCanvasRenderingContext,
                                         renderer: "canvas", // canvas 渲染模式
                                         //loop: true,
                                         autoplay: true,
-                                        name: "phonemoney",
+                                        name: "grunt.json",
                                         contentMode: "Contain",
-                                        path: "grunt.json", // 路径加载动画只支持raw文件夹下的相对路径
+                                        path: "", // 路径加载动画只支持raw文件夹下的相对路径
+                                        //path: "grunt.json", // 路径加载动画只支持raw文件夹下的相对路径
                                         animationData: AnimationData(isNull: true),
                                         context: globalAbilityContext
                                     ))
                                 }
                             }
                         }.margin(top: 5)
+
+
                         Row() {
                         }.margin(top: 5)
                         Row() {}.margin(top: 5)

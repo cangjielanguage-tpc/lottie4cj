@@ -10,7 +10,7 @@ func default_Asset_To_OB_CreateNS(asset: Asset): OB {
     return OB(img: ImgOB(isNull: true), assetData: asset)
 }
 
-
+let SOURCE_BASE64 = "data:image/([a-zA-Z0-9+-]+/?)"
 let TYPE_IMAGE_SOURCE_RAWFILE: Int64 = 0
 let TYPE_IMAGE_SOURCE_BASE64: Int64 = 1
 

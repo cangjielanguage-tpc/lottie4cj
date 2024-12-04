@@ -52,7 +52,7 @@ public class Audio <: ToString {
     }
 
     public func volume(volume: Int64): Unit {}
-    public func setRate(rateValue: Int64): Unit {}
+    public func setRate(rateValue: Float64): Unit {}
     public func resume(): Unit {}
     public func pause(): Unit {}
 

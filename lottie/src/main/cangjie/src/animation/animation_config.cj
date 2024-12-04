@@ -83,15 +83,36 @@ public class AnimationConfig {
     public var animationData: AnimationData = AnimationData(isNull: true)
 
     /**
+     * 读取指定路径下的图片资源
+     * @since 8
+     * @design
+     */
+     public var imagePath: String = ""
+
+    /**
      * 应用内的动画数据文件路径, 仅限json格式
      * path 路径仅支持entry/src/main/ets 路径下的相对路径，不支持跨包路径设置
      * @example path: 'common/lottie/data.json'
      */
     public var path: String = ""
+    //区别json文件来源：1.来自\resources\rawfile\， 2.来自手机中保存的json。
+    public var pathSourceFrom: Int8 = 1
+
+    /**
+     * 读取来自网络路径的动画数据，支持json和zip格式
+     */
+    public var uri: String = ""
+    /**
+     * true优先读取网络资源,false优先读取本地缓存资源
+     */
+    public var isNetwork: Bool = false
+
 
     var context: Option<AbilityContext> = None
 
     public init(
+        uri!: String = "",
+        isNetwork!: Bool = false,
         wrapper_ns!: CreateNS,
         container!: CanvasRenderingContext2D,
         renderer!: String = "canvas",
@@ -99,10 +120,14 @@ public class AnimationConfig {
         autoplay!: Bool = true,
         name!: String = "",
         contentMode!: String = "",
+        imagePath!: String = "",
         path!: String = "",
-        animationData!: AnimationData = AnimationData(),
+        pathSourceFrom!: Int8 = 1,
+        animationData!: AnimationData = AnimationData(isNull: true),
         context!: Option<AbilityContext> = None
     ){
+        this.uri = uri
+        this.isNetwork = isNetwork
         this.wrapper_ns = wrapper_ns
         this.wrapper = LottieCanvasRenderingContext2D(container)
 
@@ -112,7 +137,9 @@ public class AnimationConfig {
         this.autoplay = autoplay
         this.name = name
         this.contentMode = contentMode
+        this.imagePath = imagePath
         this.path = path
+        this.pathSourceFrom = pathSourceFrom
 
         this.animationData = animationData
         this.context = context

@@ -50,7 +50,7 @@ public class AudioControllerFactory {
         }
     }
 
-    public func setRate(rateValue: Int64): Unit {
+    public func setRate(rateValue: Float64): Unit {
         let len: Int64 = this.audios.size
         for (i in 0..len) {
             this.audios[i].setRate(rateValue)

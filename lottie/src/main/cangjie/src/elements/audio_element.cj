@@ -57,7 +57,7 @@ public class AudioElement {
         this._canPlay = true
     }
 
-    public func setRate(rateValue: Int64) {}
+    public func setRate(rateValue: Float64) {}
 
     public func volume(volumeValue: Int64) {
         this._volumeMultiplier = volumeValue;
