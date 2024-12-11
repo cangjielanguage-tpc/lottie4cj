@@ -102,49 +102,65 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 5.加载动画
 
 - 加载动画的时机需要注意，点击按钮加载动画可按照正常逻辑放在点击事件内，如果想要实现进入页面自动播放动画，需要结合Canvas组件的onReady()生命回调周期实现，加载动画时机需放置在onReady()生命周期回调内或及之后。
-- 同一Canvas组件加载多次/不同动画资源，需要手动销毁动画(lottie.destroy('name'))，之后才可再次加载其他动画资源。
+- 同一Canvas组件加载多次/不同动画资源，需要手动销毁动画(lottie.destroy("name"))，之后才可再次加载其他动画资源。
 ```      
     lottie.destroy("2016") //加载动画前先销毁之前加载的动画
     this.lottie: AnimationManager = AnimationManager(this.mainCanvasRenderingContext)
     this.animateItem = lottie.loadAnimation(AnimationConfig(
-        container: this.mainCanvasRenderingContext,           // 渲染上下文
+        container: this.mainCanvasRenderingContext,              // 渲染上下文
+        renderer: "canvas",                                      // canvas 渲染模式
+        loop: -1,                                                // 是否循环播放,默认 -1 循环。
+        autoplay: true,                                          // 是否自动播放，默认true
+        name: "2016",                                            // 动画名称
+        contentMode: "Contain",                                  // 填充的模式
+        animationData: animationData,                            // json动画解析的对象
+        context: globalAbilityContext
+    ))
+    或  
+    this.animateItem = lottie.loadAnimation(AnimationConfig(
+        container: this.mainCanvasRenderingContext,       // 渲染上下文
         renderer: "canvas",                               // canvas 渲染模式
         loop: -1,                                         // 是否循环播放,默认 -1 循环。
         autoplay: true,                                   // 是否自动播放，默认true
         name: "2016",                                     // 动画名称
         contentMode: "Contain",                           // 填充的模式
-        path: "data.json",                                // 路径加载动画只支持raw文件夹下的相对路径
-        animationData: AnimationData(isNull: true),       // json动画解析的对象
+        path: "data.json",                                // 路径加载动画支持：1.raw文件夹下的相对路径和本地路径，2.本地路径要配合 pathSourceFrom 参数使用。
         context: globalAbilityContext
     ))
     或      
     this.animateItem = lottie.loadAnimation(AnimationConfig(
-        container: this.mainCanvasRenderingContext,           // 渲染上下文
-        renderer: "canvas",                               // canvas 渲染模式
-        loop: 1,                                          // 是否循环播放,默认 -1 循环。
-        autoplay: true,                                   // 是否自动播放，默认true
-        name: "2016",                                     // 动画名称
-        contentMode: "Contain",                           // 填充的模式
-        path: "",                                         // 路径加载动画只支持raw文件夹下的相对路径
-        animationData: animationData,                     // json动画解析的对象
+        container: this.mainCanvasRenderingContext,              // 渲染上下文
+        renderer: "canvas",                                      // canvas 渲染模式
+        loop: 1,                                                 // 是否循环播放,默认 -1 循环。
+        autoplay: true,                                          // 是否自动播放，默认true
+        name: "2016",                                            // 动画名称
+        contentMode: "Contain",                                  // 填充的模式
+        path: "/data/storage/el2/base/files/entry/data.json",    // 路径加载动画支持：1.raw文件夹下的相对路径和本地路径，2.本地路径要配合 pathSourceFrom 参数使用。
+        pathSourceFrom: 2,                                       // 区别json文件来源：1.来自\resources\rawfile\， 2.来自手机中保存的json。（不填默认 1）
+        context: globalAbilityContext
+    ))
+    或      
+    this.animateItem = lottie.loadAnimation(AnimationConfig(
+        uri: "https://assets7.lottiefiles.com/packages/lf20_sF7uci.json",  //来自网络路径的动画数据，支持json和zip/gzip格式
+        isNetwork: true,                                                   //true优先读取网络资源,false优先读取本地缓存资源,默认 false。
+        container: this.mainCanvasRenderingContext,                        // 渲染上下文
+        renderer: "canvas",                                                // canvas 渲染模式
+        autoplay: true,                                                    // 是否自动播放，默认true
+        name: "2016",                                                      // 动画名称
+        contentMode: "Contain",                                            // 填充的模式
         context: globalAbilityContext
     ))
 ```
 
-- 加载动画时，path 参数和 animationData 参数，二者选其一。
+- 加载动画时，animationData 参数、path 参数和 uri 参数，三者选其一。
+- 动画来源加载优先级：1.animationData 参数；2.path 参数；3.uri 参数。
+- animationData 参数：可结合ResourceManager进行读取资源文件内容进行设置，调用AnimationDataParser.parse 进行解析。
 - path 参数：1. 支持加载entry/src/main/resources/rawfile/ 文件夹下的相对路径，不支持跨包查找文件；2. 支持加载移动设备中的，但要配合参数 pathSourceFrom 使用方可生效。
 - pathSourceFrom 参数：表示json文件地址：1. rawfile下的对应资源；2. 沙箱路径中的对应资源。（默认为来源 1）
-- animationData 参数：可结合ResourceManager进行读取资源文件内容进行设置，调用AnimationDataParser.parse 进行解析。
 - uri 参数：支持加载网络资源和通过URI路径方式加载动画，该方式需申请 ohos.permission.INTERNET，ohos.permission.GET_NETWORK_INFO两个权限。
 - 加载外部资源图片：应用默认读取rawfile下的对应资源图片，如果设置 pathSourceFrom 参数，则会根据参数值读取对应资源图片。
 
 6.控制动画
-
-- 播放动画
-
-  ```
-  animationItem.play() //当前指定animationItem动画播放
-  ```
 
 - 播放动画
 
@@ -241,7 +257,7 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
   > 注意：第二参数值为true立刻生效, 值为false循环下次播放的时候生效
 
   ```
-  animationItem.playSegments([5.0,15.0],[20.0,30.0], true)
+  animationItem.playSegments([5.0,15.0], true)
   animationItem.playSegments([[5.0,15.0],[20.0,30.0]], true)
   ```
 
@@ -274,10 +290,24 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 
 - 更改动画渲染颜色
 
-  > 注意：第一个参数是开始颜色数组RGBA，第二个参数是结束颜色数组RGBA，第三个参数是动画的层次，第三个参数是对应动画层次的元素的下标值
+  > 注意：第一个参数颜色是RGB值，第二个参数是动画的层次 可不填，第三个参数是对应动画层次的元素的下标值 可不填
 
   ```
-  animationItem.changeColor([255,150,203],[255,150,203], 2,2) //修改该动画第二层第二个元素的颜色
+  animationItem.changeColor([255,150,203])  //修改整个动画的颜色
+  或
+  animationItem.changeColor([255,150,203],2) //修改该动画第二层的颜色
+  或
+  animationItem.changeColor([255,150,203],2,2) //修改该动画第二层第二个元素的颜色
+  ```
+
+  > 注意：第一个数组类型参数是开始颜色数组RGBA，第二个数组类型参数是结束颜色数组RGBA，第三个参数是动画的层次，第四个参数是对应动画层次的元素的下标值
+
+  ```
+  animationItem.changeColor([255,150,203],[51,229,135])  //修改整个动画的颜色
+  或
+  animationItem.changeColor([255,150,203],[51,229,135],2) //修改该动画第二层的颜色
+  或
+  animationItem.changeColor([255,150,203],[51,229,135],2,2) //修改该动画第二层第二个元素的颜色
   ```
 
 - 移除侦听事件
@@ -291,6 +321,7 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
   ```
 
 - 刷新动画布局
+  > 注意：暂不支持此功能
 
   ```
   animationItem.resize()
@@ -306,7 +337,7 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
   ```
 
 - 设置动画的刷帧率
-
+  > 注意：暂不支持此功能
   > 注意：设置动画animator的刷帧率，范围是1~120 帧率越大，功耗越严重
 
   ```
@@ -332,8 +363,8 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 | pause                 | name!: String = ""     | 暂停         |
 | togglePause           | name: String           | 切换暂停       |
 | destroy               | name: String           | 销毁动画       |
-| goToAndStop           | value: String, isFrame: Bool, name: String | 跳到某一时刻并停止  |
-| goToAndPlay           | value: String, isFrame: Bool, name: String | 跳到某一时刻并播放  |
+| goToAndStop           | value: Float64, isFrame: Bool, name: String | 跳到某一时刻并停止  |
+| goToAndPlay           | value: Float64, isFrame: Bool, name: String | 跳到某一时刻并播放  |
 | setSegment            | initNum: Float64, end: Float64      | 设置动画片段     |
 | playSegments          | arr: Array<Array<Float64>>, forceFlag: Bool         | 播放指定片段     |
 | resetSegments         | forceFlag: Bool              | 重置动画       |

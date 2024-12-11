@@ -34,7 +34,7 @@ class LottieSample {
     private var lottie: AnimationManager = AnimationManager(this.canvasRenderingContext)
     private var animateItem: Option<AnimationItem> = None
     private var animateItem2:Option<AnimationItem> = None
-    private var animateName: String = "grunt"
+    private var animateName: String = "AnimationItem_Destroy_11"
 
     protected override func onBackPress(): Bool {
         lottie.destroy("")
@@ -88,32 +88,24 @@ class LottieSample {
 
                 Scroll() {
                     Column() {
-                        Row() {
-                            Button("下载json").onClick {
-                                evt =>
-                                Hilog.error(0, "lipei", "begin------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
-
-                         }
-                        }.margin(top: 5)
-
-
 
                         Row() {
                             Button("加载2016").onClick {
                                 evt =>
                                 Hilog.error(0, "lipei", "begin------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
-                                    //lottie.destroy("phonemoney")
+                                lottie.destroy("2016")
                                 if (this.animateItem.isNone()) {
                                      this.animateItem = lottie.loadAnimation(AnimationConfig(
                                         wrapper_ns: CreateNS("doc"),
                                         container: this.canvasRenderingContext,
                                         renderer: "canvas", // canvas 渲染模式
-                                        //loop: true,
+                                        loop: -1,
                                         autoplay: true,
-                                        name: "2016",
+                                        name: this.animateName,
                                         contentMode: "Contain",
                                         //imagePath: "./images/",                 // 加载读取指定路径下的图片资源
-                                        path: "data.json", // 路径加载动画只支持raw文件夹下的相对路径
+                                        path: "json_lottie/non_img/animation_008.json",
+                                        //path: "data.json", // 路径加载动画只支持raw文件夹下的相对路径
                                         //path: "/data/storage/el1/bundle/entry/resources/base/media/data.json",
                                         //path: "/data/storage/el2/base/files/entry/data.json",
                                         //pathSourceFrom: 2, //区别json文件来源：1.来自\resources\rawfile\， 2.来自手机中保存的json。（不填默认 1）
@@ -122,25 +114,31 @@ class LottieSample {
                                     ))
                                 }
                          }
+                         Button("销毁--2016").onClick {
+                             evt =>
+                             this.animateItem.getOrThrow().destroy("")
+                             this.animateItem = Option<AnimationItem>.None
+                         }
                         }.margin(top: 5)
 
 
                         Row() {
                             Button("加载--网络zip").onClick {
                                 evt =>
-                                //lottie.destroy("phonemoney")
+                                lottie.destroy("lf20_sF7uci.json")
                                 Hilog.error(0, "lipei", "加载--网络json------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
                                 if (this.animateItem2.isNone()) {
                                      this.animateItem2 = lottie.loadAnimation(AnimationConfig(
+                                        //uri: "https://gitcode.com/Cangjie-TPC/lottie4cj/blob/develop/entry/src/main/resources/rawfile/data.json",
                                         uri: "https://assets7.lottiefiles.com/packages/lf20_sF7uci.json",
                                         //uri: "https://smarthome-drcn.dbankcdn.com/device/guide/KW38/template/lottie/lottie.zip",
-                                        isNetwork: true,
+                                        isNetwork: false,
                                         wrapper_ns: CreateNS("doc"),
                                         container: this.mainCanvasRenderingContext,
                                         renderer: "canvas", // canvas 渲染模式
                                         //loop: true,
                                         autoplay: true,
-                                        name: "grunt.json",
+                                        name: "lf20_sF7uci.json",
                                         contentMode: "Contain",
                                         path: "", // 路径加载动画只支持raw文件夹下的相对路径
                                         //path: "grunt.json", // 路径加载动画只支持raw文件夹下的相对路径
@@ -148,6 +146,85 @@ class LottieSample {
                                         context: globalAbilityContext
                                     ))
                                 }
+                            }
+                            Button("销毁--网络zip").onClick {
+                                evt =>
+                                lottie.destroy("lf20_sF7uci.json")
+                            }
+                        }.margin(top: 5)
+
+
+
+                        Row() {
+                            Button("侯召用例测试").onClick { evt =>
+
+                                //测试 setSegment
+                                //if (!this.animateItem.isNone()) {
+                                //    let num1 = 10.0
+                                //    let num2 = 20.0
+                                //    Hilog.error(0, "lipei", "begin----------------------------------setContentMode, num1 = ${num1}")
+                                //    Hilog.error(0, "lipei", "begin----------------------------------setContentMode, num2 = ${num2}")
+                                //    //this.animateItem.getOrThrow().setSegment(num1, num2)
+                                //    //this.animateItem.getOrThrow().playSegments([[5.0, 15.0], [20.0, 30.0]], true)
+                                //    this.animateItem.getOrThrow().setContentMode("Bottom")
+                                //}
+
+                                //测试跳转播放
+                                //if (!this.animateItem.isNone()) {
+                                //    let num = 250.0
+                                //    let falg = true
+                                //    Hilog.error(0, "lipei", "begin----------------------------------goToAndStop, num = ${num}")
+                                //    Hilog.error(0, "lipei", "begin----------------------------------goToAndStop, falg = ${falg}")
+                                //    this.animateItem.getOrThrow().goToAndPlay(num, falg, this.animateName)
+                                //    //this.animateItem.getOrThrow().goToAndPlay("1200ms", false, this.animateName)
+                                //}
+
+                                //测试跳转暂停
+                                //if (!this.animateItem.isNone()) {
+                                //    let num = 250.0
+                                //    let falg = true
+                                //    Hilog.error(0, "lipei", "begin----------------------------------goToAndStop, num = ${num}")
+                                //    Hilog.error(0, "lipei", "begin----------------------------------goToAndStop, falg = ${falg}")
+                                //    this.animateItem.getOrThrow().goToAndStop(num, falg, this.animateName)
+                                //    //this.animateItem.getOrThrow().goToAndStop("1200ms", false, this.animateName)
+                                //}
+
+
+                                //测试播放
+                                //if (!this.animateItem.isNone()) {
+                                //    this.animateItem.getOrThrow().setDirection(1)//正向播放
+                                //    this.animateItem.getOrThrow().play(name:this.animateName)
+                                //}
+                                //测试修改颜色
+                                if (!this.animateItem.isNone()) {
+                                    Hilog.error(0, "lipei", "begin----------------------------------changeColor([255,25, 232],[51,229, 135],0,0)")
+                                    this.animateItem.getOrThrow().changeColor([255,25, 232],[51,229, 135],0,0)
+                                    //this.animateItem.getOrThrow().changeColor([255, 203])
+                                    //this.animateItem.getOrThrow().changeColor([255, 25, 232],[51, 229, 135])
+                                }
+                            }
+                            Button("改变颜色").onClick {
+                                evt =>
+
+                                //测试 setSegment
+                                if (!this.animateItem.isNone()) {
+                                    let num1 = 20.0
+                                    let num2 = 30.0
+                                    Hilog.error(0, "lipei", "begin----------------------------------setSegment, num1 = ${num1}")
+                                    Hilog.error(0, "lipei", "begin----------------------------------setSegment, num2 = ${num2}")
+                                    //this.animateItem.getOrThrow().setSegment(num1, num2)
+                                    this.animateItem.getOrThrow().playSegments([num1, num2], true)
+                                }
+
+                                //if (!this.animateItem.isNone()) {
+                                //    this.animateItem.getOrThrow().destroy(this.animateName)
+                                //    this.animateItem = None
+                                //    Hilog.error(0, "lipei", "begin----------------------------------destroy, this.animateName = ${this.animateName}")
+                                //    //this.animateItem.getOrThrow().changeColor([255, 203],[], 0, 0)
+                                //    //this.animateItem.getOrThrow().changeColor([255,150,203],[], 0, 0)
+                                //    this.animateItem.getOrThrow().changeColor([255,150,203],[51,229,135], 0, 0)
+                                //    //this.animateItem.getOrThrow().changeColor([51,229,135],[])
+                                //}
                             }
                         }.margin(top: 5)
 

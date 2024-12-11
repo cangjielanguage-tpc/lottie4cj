@@ -148,7 +148,7 @@ public class AnimationManager {
         return animItem
     }
 
-    public func setSpeed(val: Float64, animation: String): Unit {
+    public func setSpeed(val: Float64): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.setSpeed(val)
@@ -156,7 +156,7 @@ public class AnimationManager {
         }
     }
 
-    public func setDirection(val: Int64, animation: String): Unit {
+    public func setDirection(val: Int64): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
                 registeredAnimations[i].animation.setDirection(val)
@@ -164,10 +164,10 @@ public class AnimationManager {
         }
     }
 
-    public func play(animation: String): Unit {
+    public func play(animationName!: String = ""): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
-                registeredAnimations[i].animation.play(name: animation)
+                registeredAnimations[i].animation.play(name: animationName)
             }
         }
         _paused = false
@@ -193,35 +193,35 @@ public class AnimationManager {
         initTime = nowTime
     }
 
-    public func pause(animation: String): Unit {
+    public func pause(animationName!: String = ""): Unit {
         _paused= true
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
-                registeredAnimations[i].animation.pause(name: animation)
+                registeredAnimations[i].animation.pause(name: animationName)
             }
         }
     }
 
-    public func goToAndStop(value: Float64, isFrame: Bool, animation: String): Unit {
+    public func goToAndStop(value: Float64, isFrame: Bool, animationName: String): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
-                registeredAnimations[i].animation.goToAndStop(value, isFrame, animation)
+                registeredAnimations[i].animation.goToAndStop(value, isFrame, animationName)
             }
         }
     }
 
-    public func stop(animation: String): Unit {
+    public func stop(animationName: String): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
-                registeredAnimations[i].animation.stop(animation)
+                registeredAnimations[i].animation.stop(animationName)
             }
         }
     }
 
-    public func togglePause(animation: String): Unit {
+    public func togglePause(animationName: String): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
-                registeredAnimations[i].animation.togglePause(animation)
+                registeredAnimations[i].animation.togglePause(animationName)
             }
         }
     }
@@ -270,19 +270,19 @@ public class AnimationManager {
         _packageName = name
     }
 
-    public func destroy(animation: String): Unit {
+    public func destroy(animationName: String): Unit {
         var tag: Bool = false
         for (i in (len - 1)..=0:-1) {
             if (registeredAnimations.size > i) {
-                if (!registeredAnimations[i].animation.isPaused && registeredAnimations[i].animation.name != animation) {
+                if (!registeredAnimations[i].animation.isPaused && registeredAnimations[i].animation.name != animationName) {
                     //如果还有其他动画也在播放，则不需要停止
                     tag = true
                 }
-                registeredAnimations[i].animation.destroy(animation)
+                registeredAnimations[i].animation.destroy(animationName)
             }
         }
         //判断动画是否全部销毁，如果animation全部销毁，则设置Animator的状态为Stopped
-        if (animation == "" || registeredAnimations.size == 0 || !tag) {
+        if (animationName == "" || registeredAnimations.size == 0 || !tag) {
             setAnimatorState(AnimationStatus.Stopped)
             _stopped = true
             _isFrozen = false
@@ -379,26 +379,26 @@ public class AnimationManager {
         activate()
     }
 
-    public func setVolume(val: Int64, animation: String): Unit {
+    public func setVolume(val: Int64, animationName: String): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
-                registeredAnimations[i].animation.setVolume(val, animation)
+                registeredAnimations[i].animation.setVolume(val, animationName)
             }
         }
     }
 
-    public func mute(animation: String): Unit {
+    public func mute(animationName: String): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
-                registeredAnimations[i].animation.mute(animation)
+                registeredAnimations[i].animation.mute(animationName)
             }
         }
     }
 
-    public func unmute(animation: String): Unit {
+    public func unmute(animationName: String): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
-                registeredAnimations[i].animation.unmute(animation)
+                registeredAnimations[i].animation.unmute(animationName)
             }
         }
     }

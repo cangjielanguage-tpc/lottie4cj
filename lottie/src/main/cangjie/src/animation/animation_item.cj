@@ -36,10 +36,14 @@ public class AnimationItem <: BaseEvent {
      * 动画播放结束后, 是否循环播放，默认值true, 值为true时无限循环播放 值类型为number, 且>=1时为设置重复播放的次数
      * 定为 Int64 数据类型，-1 表示true，-2 表示false。
      */
-    public var loop: Int64 = -2
+    /**
+     * 动画播放结束后, 是否循环播放。默认值 -1, 值为 -1 时代表无限循环播放, 值 >=1 时为设置重复播放的次数
+     * 定为 Int64 数据类型，< 0 表示无限循环播放；= 0 表示不循环播放；> 0 为设置重复播放的次数。
+     */
+    public var loop: Int64 = 0
 
     let TRUE = -1
-    let FALSE = -2
+    let FALSE = 0
 
     //是否已经初始化指定的渲染器。
     var hasRenderer: Bool = false
@@ -119,9 +123,12 @@ public class AnimationItem <: BaseEvent {
     }
 
     public func readCacheData(uri: String, resultDir: JsonFilesDir) {
+        func errCallBack(str: String, e: Exception): Unit {
+            this.triggerEvent(str, BMLoadAnimationErrorEvent(e))
+        }
         let existResult: FilePathObject = isCacheExist(uri, resultDir.route) // 沙箱中是否有下载的资源
         if (existResult.isExist) {
-            let cacheData: AnimationData = readJson(uri, resultDir.route)
+            let cacheData: AnimationData = readJson(uri, resultDir.route, errCallBack: errCallBack)
             // 优先读取缓存
             if (uri.endsWith(".json") || uri.endsWith(".js")) {
                 var isExitNetworkAssets: Bool = false
@@ -131,7 +138,7 @@ public class AnimationItem <: BaseEvent {
                         break
                     }
                 }
-                
+
                 if (cacheData.assets.size != 0 && isExitNetworkAssets) {
                     handleAssets(cacheData)
                     this.setupAnimation(cacheData) // 加载有图片资源的json资源
@@ -150,7 +157,7 @@ public class AnimationItem <: BaseEvent {
                 this.setupAnimation(jsonData)
             }
             // 若缓存无资源，加载网络资源
-            downLoadSource.downLoadNetworkSource(uri, inside, resultDir, false, this.context)
+            downLoadSource.downLoadNetworkSource(uri, inside, resultDir, errCallBack, false, this.context)
         }
     }
 
@@ -193,7 +200,7 @@ public class AnimationItem <: BaseEvent {
                     this.setupAnimation(jsonData)
                 } else {
                     // 缓存无资源，返回加载异常
-                    this.triggerEvent("error", BMConfigErrorEvent(err))
+                    this.triggerEvent("error", BMLoadImageErrorEvent(err))
                 }
             }
         } else {
@@ -213,7 +220,7 @@ public class AnimationItem <: BaseEvent {
                     this.setupAnimation(jsonData)
                 } catch (err: Exception) {
                     // 下载失败,返回加载异常
-                    this.triggerEvent("error", BMConfigErrorEvent(err))
+                    this.triggerEvent("error", BMLoadImageErrorEvent(err))
                 }
             }
         }
@@ -331,13 +338,17 @@ public class AnimationItem <: BaseEvent {
                 this.fileName = this.fileName[0 .. index3]
             }
 
-            dataManager.loadAnimation(
-                params.context,
-                params.path,
-                params.isNetwork,
-                this.configAnimation,
-                this.onSetupError
-            )
+            try {
+                dataManager.loadAnimation(
+                    params.context,
+                    params.path,
+                    params.isNetwork,
+                    this.configAnimation,
+                    this.onSetupError
+                )
+            } catch (err: Exception) {
+                this.triggerEvent("error", BMLoadAnimationErrorEvent(err))
+            }
         } else if (params.uri != "") {
             this.loadNetworkResource(params.uri, params.isNetwork, params.context)
         }
@@ -351,8 +362,11 @@ public class AnimationItem <: BaseEvent {
                 this.isNetLoad = isNetLoad
                 this.setupAnimation(jsonData)
             }
+            func errCallBack(str: String, e: Exception): Unit {
+                this.triggerEvent(str, BMLoadAnimationErrorEvent(e))
+            }
             // true 优先加载网络资源
-            downLoadSource.downLoadNetworkSource(uri, inside, resultDir, true, acontext)
+            downLoadSource.downLoadNetworkSource(uri, inside, resultDir, errCallBack, true, acontext)
         } else {
             // false 优先加载缓存资源
             this.readCacheData(uri, resultDir)
@@ -372,7 +386,7 @@ public class AnimationItem <: BaseEvent {
         )
     }
 
-    public func setData(wrapper: CanvasRenderingContext2D, str: String, wrapper_ns!: CreateNS = CreateNS("")) {
+    public func setData(wrapper: CanvasRenderingContext2D, str: String, wrapper_ns: CreateNS) {
         let animationData: AnimationData = AnimationDataParser.parse(str)
         this.setData(wrapper, animationData, wrapper_ns: wrapper_ns)
     }
@@ -568,15 +582,18 @@ public class AnimationItem <: BaseEvent {
         }
     }
 
+    public func resize(): Unit {
+        resize(0, 0)
+    }
+
     public func resize(width: Int64, height: Int64): Unit {
         //添加此验证以实现向后兼容性，以防传递事件对象。
-    
         //防止 this.renderer 为 null，导致读取 updateContainerSize 属性失败
         if (hasRenderer) {
             this.renderer.updateContainerSize(width, height)
         }
     }
-    
+
     public func setSubframe(flag: Bool): Unit {
         this.isSubframeEnabled = flag
     }
@@ -598,15 +615,46 @@ public class AnimationItem <: BaseEvent {
         
         this.trigger("drawnFrame")
     }
-    
-    public func changeColor(color: Array<Int64>, endColor: Array<Int64>, layer: Int64, index: Int64): Unit {
+
+    //修改整个动画的颜色
+    public func changeColor(color: Array<Int64>): Unit {
+        this.changeColor(color, [], 0, 0)
+    }
+
+    //修改该动画第 layer 层的颜色
+    public func changeColor(color: Array<Int64>, layer: Int64): Unit {
+        this.changeColor(color, [], layer, 0)
+    }
+
+    //修改该动画第 layer 层第 index 个元素的颜色
+    public func changeColor(color: Array<Int64>, layer: Int64, index: Int64): Unit {
+        this.changeColor(color, [], layer, index)
+    }
+
+    //修改整个动画的颜色
+    public func changeColor(startColor: Array<Int64>, endColor: Array<Int64>): Unit {
+        this.changeColor(startColor, endColor, 0, 0)
+    }
+
+    //修改该动画第 layer 层的颜色
+    public func changeColor(startColor: Array<Int64>, endColor: Array<Int64>, layer: Int64): Unit {
+        this.changeColor(startColor, endColor, layer, 0)
+    }
+
+    //修改该动画第 layer 层第 index 个元素的颜色
+    public func changeColor(startColor: Array<Int64>, endColor: Array<Int64>, layer: Int64, index: Int64): Unit {
         if (!this.hasRenderer) {
             return
         }
-        this.renderer.changeColor(color, endColor, layer, index)
-        //替换play函数为gotoFrame,防止play方法创建Animator对象，导致修改颜色后刷帧问题
-        this.gotoFrame()
-        this.renderer.renderFrame(0.0, true)
+        try {
+            this.renderer.changeColor(startColor, endColor, layer, index)
+            //替换play函数为gotoFrame,防止play方法创建Animator对象，导致修改颜色后刷帧问题
+            this.gotoFrame()
+            this.renderer.renderFrame(0.0, true)
+        } catch (error: Exception) {
+            Hilog.error(0, "[changeColor]","${this.packageName}-${this.name}--lottie animation exception in changeColor: ${error.message}")
+            //decide how to handle catch case
+        }
     }
 
     public func renderFrame(): Unit {
@@ -765,7 +813,7 @@ public class AnimationItem <: BaseEvent {
         //检查nextValue>totalFrames-1是否用于处理非循环和循环动画。
         //如果动画不循环，它应该停止在totalFrames-1。如果它要循环，它应该完成最后一帧，然后循环。
         if (nextValue >= this.totalFrames - 1.0 && this.frameModifier > 0.0) {
-            if (!(this.loop == TRUE)  || this.playCount == this.loop) {
+            if (this.loop == FALSE || this.playCount == this.loop) {
                 var num: Int64 = 0
                 if (nextValue > this.totalFrames) {
                     num = Int64(nextValue) % Int64(this.totalFrames)
@@ -776,7 +824,10 @@ public class AnimationItem <: BaseEvent {
                 }
             } else if (nextValue >= this.totalFrames) {
                 this.playCount += 1
-                let num: Int64 = Int64(nextValue) % Int64(this.totalFrames)
+                var num: Int64 = 0
+                if (this.totalFrames != 0.0) {
+                    num = Int64(nextValue) % Int64(this.totalFrames)
+                }
                 if (!this.checkSegments(num)) {
                     this.setCurrentRawFrameValue(Float64(num))
                     this._completedLoop = true

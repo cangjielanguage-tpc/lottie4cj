@@ -536,28 +536,81 @@ public class CvShapeElement <: IShapeElement {
                         c_data_k_s[1] = color[1] / 255.0
                         c_data_k_s[2] = color[2] / 255.0
 
-                        c_data_k_e[0] = endColor[0] / 255.0
-                        c_data_k_e[1] = endColor[1] / 255.0
-                        c_data_k_e[2] = endColor[2] / 255.0
+                        if (c_data_k_e.size >= 3) {
+                            c_data_k_e[0] = endColor[0] / 255.0
+                            c_data_k_e[1] = endColor[1] / 255.0
+                            c_data_k_e[2] = endColor[2] / 255.0
+                        }
+                        if (fse.c.data.size > 1) {
+                            var c_data_k1_s: Array<Float64> = Array<Float64>(3, item: 0.0)
+                            if (let Some(v1) <- fse.c.data[1].s) {
+                                if (v1.size >= 3) {
+                                    c_data_k1_s = v1
+                                }
+                                c_data_k1_s[0] = endColor[0] / 255.0
+                                c_data_k1_s[1] = endColor[1] / 255.0
+                                c_data_k1_s[2] = endColor[2] / 255.0
+                            }
+                        }
 
                         fse.o.v = [Float64(color[3])]
                     } else if (color.size == 3) {
-                      c_data_k_s[0] = color[0] / 255.0
-                      c_data_k_s[1] = color[1] / 255.0
-                      c_data_k_s[2] = color[2] / 255.0
+                        if (c_data_k_s.size >= 3) {
+                            c_data_k_s[0] = color[0] / 255.0
+                            c_data_k_s[1] = color[1] / 255.0
+                            c_data_k_s[2] = color[2] / 255.0
+                        }
 
-                      c_data_k_e[0] = endColor[0] / 255.0
-                      c_data_k_e[1] = endColor[1] / 255.0
-                      c_data_k_e[2] = endColor[2] / 255.0
+                        if (c_data_k_e.size >= 3) {
+                            c_data_k_e[0] = endColor[0] / 255.0
+                            c_data_k_e[1] = endColor[1] / 255.0
+                            c_data_k_e[2] = endColor[2] / 255.0
+                        }
+                        if (fse.c.data.size > 1) {
+                            var c_data_k1_s: Array<Float64> = Array<Float64>(3, item: 0.0)
+                            if (let Some(v1) <- fse.c.data[1].s) {
+                                if (v1.size >= 3) {
+                                    c_data_k1_s = v1
+                                }
+                                c_data_k1_s[0] = endColor[0] / 255.0
+                                c_data_k1_s[1] = endColor[1] / 255.0
+                                c_data_k1_s[2] = endColor[2] / 255.0
+                            }
+                        }
                     } else if (color.size == 2) {
-                      c_data_k_s[0] = color[0] / 255.0
-                      c_data_k_s[2] = color[1] / 255.0
+                        c_data_k_s[0] = color[0] / 255.0
+                        c_data_k_s[2] = color[1] / 255.0
 
-                      c_data_k_e[0] = endColor[0] / 255.0
-                      c_data_k_e[2] = endColor[1] / 255.0
+                        if (c_data_k_e.size >= 2) {
+                            c_data_k_e[0] = endColor[0] / 255.0
+                            c_data_k_e[2] = endColor[1] / 255.0
+                        }
+
+                        if (fse.c.data.size > 1) {
+                            var c_data_k1_s: Array<Float64> = Array<Float64>(2, item: 0.0)
+                            if (let Some(v1) <- fse.c.data[1].s) {
+                                if (v1.size >= 2) {
+                                    c_data_k1_s = v1
+                                }
+                                c_data_k1_s[0] = endColor[0] / 255.0
+                                c_data_k1_s[1] = endColor[1] / 255.0
+                            }
+                        }
                     } else if (color.size == 1) {
-                      c_data_k_s[0] = color[0] / 255.0
-                      c_data_k_e[0] = endColor[0] / 255.0
+                        c_data_k_s[0] = color[0] / 255.0
+                        if (c_data_k_e.size >= 1) {
+                            c_data_k_e[0] = endColor[0] / 255.0
+                        }
+
+                        if (fse.c.data.size > 1) {
+                            var c_data_k1_s: Array<Float64> = Array<Float64>(1, item: 0.0)
+                            if (let Some(v1) <- fse.c.data[1].s) {
+                                if (v1.size >= 1) {
+                                    c_data_k1_s = v1
+                                }
+                                c_data_k1_s[0] = endColor[0] / 255.0
+                            }
+                        }
                     }
                 } else {
                     if (color.size == 4) {

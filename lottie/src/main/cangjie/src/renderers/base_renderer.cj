@@ -69,7 +69,7 @@ public open class BaseRenderer {
 
     public open func changeColor(color: Array<Int64>, endColor: Array<Int64>, layer: Int64, index: Int64): Unit {}
     public open func changeColor(color: Array<Int64>, endColor: Int64, layer: Int64, index: Int64): Unit {}
-    public open func changeColor(color: Array<Int64>, layer: Int64, index: Int64): Unit {}
+    public open func changeColor(color: Array<Int64>): Unit {}
     public open func renderFrame(num: Float64, forceRender: Bool): Unit {}
     public open func destroy(): Unit {}
     public open func hide(): Unit {}

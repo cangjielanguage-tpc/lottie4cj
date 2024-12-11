@@ -216,17 +216,24 @@ public func isHaveZip(url: String, readPath: String) {
 }
 
 // 读取json数据
-public func readJson(url: String, readPath: String, errCallBack!: Option<(String) -> Unit> = None): AnimationData {
-    let existResult: FilePathObject = isCacheExist(url, readPath)
-    if (existResult.isExist) {
-        let arrayBuffer: Array<Byte> = FileUtils.readToEnd(existResult.filePath)
-        let bas: ByteArrayStream = ByteArrayStream(arrayBuffer.size)
-        bas.write(arrayBuffer)
-            
-        // 解码的json数据
-        return AnimationDataParser.parse(bas)
-    }
+public func readJson(url: String, readPath: String, errCallBack!: Option<(String, Exception) -> Unit> = None): AnimationData {
+    try {
+        let existResult: FilePathObject = isCacheExist(url, readPath)
+        if (existResult.isExist) {
+            let arrayBuffer: Array<Byte> = FileUtils.readToEnd(existResult.filePath)
+            let str = String.fromUtf8(arrayBuffer)
+            let bas: ByteArrayStream = ByteArrayStream(arrayBuffer.size)
+            bas.write(arrayBuffer)
 
+            // 解码的json数据
+            return AnimationDataParser.parse(bas)
+        }
+    } catch (err: Exception) {
+        Hilog.error(0, "[readJson]", "readJson error, err.message = ${err.message}")
+        if (let Some(v) <- errCallBack) {
+            v("error", err)
+        }
+    }
     return AnimationData(isNull: true)
 }
 

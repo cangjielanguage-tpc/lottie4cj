@@ -76,11 +76,15 @@ public class CvCompElement <: ICompElement {
     }
 
     public override func renderShapeColor(color: Array<Int64>, endColor: Array<Int64>, index: Int64): Unit {
-        if (index == 0) {
+        if (index <= 0) {
             let len: Int64 = this.layers.size
             var i = len - 1
             while (i >= 0) {
-                if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
+                var tag: Bool = true
+                if (this.layers[i].td != 0) {
+                    tag = false
+                }
+                if (tag && (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull))) {
                     this.elements[i].changeColor(color, endColor)
                 }
                 i -= 1
@@ -96,7 +100,11 @@ public class CvCompElement <: ICompElement {
         if (endColor == 0) {
         var len = this.layers.size
         for (i in 0..len) {
-            if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
+            var tag: Bool = true
+            if (this.layers[i].td != 0) {
+                tag = false
+            }
+            if (tag && (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull))) {
                 this.elements[i].changeColor(color, 0)
             }
         }
@@ -110,7 +118,11 @@ public class CvCompElement <: ICompElement {
     public override func renderShapeColor(color: Array<Int64>, index: Int64): Unit {
         var len = this.layers.size
         for (i in 0..len) {
-            if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
+            var tag: Bool = true
+            if (this.layers[i].td != 0) {
+                tag = false
+            }
+            if (tag && (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull))) {
                 this.elements[i].changeColor(color, 0)
             }
         }
