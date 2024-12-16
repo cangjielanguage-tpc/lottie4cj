@@ -11,6 +11,7 @@ package lottie.utils.text
 public class AnimatableTextProperty {
 
     public let fc: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>
+    public let s: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>
     public let sc: PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>
     public let sw: PropertyFactory<Array<Keyframe<Float64>>, Float64>
     public let t: PropertyFactory<ArrayKeyframeFloat64, Float64>
@@ -27,7 +28,6 @@ public class AnimatableTextProperty {
     public let ry: PropertyFactory<Float64, Float64>
     public let sk: PropertyFactory<Float64, Float64>
     public let sa: PropertyFactory<Float64, Float64>
-    public let s: PropertyFactory<Float64, Float64>
     public let a: PropertyFactory<Float64, Float64>
     public let o: PropertyFactory<Float64, Float64>
     public let p: PropertyFactory<Float64, Float64>
@@ -37,12 +37,14 @@ public class AnimatableTextProperty {
 
      public init(
         fc!: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>,
+        s!: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>,
         sc!: PropertyFactory<Array<Keyframe<Array<Float64>>>, Array<Float64>>,
         sw!: PropertyFactory<Array<Keyframe<Float64>>, Float64>,
         t!: PropertyFactory<ArrayKeyframeFloat64, Float64>,
         defaultData!: PropertyFactory<Float64, Float64>
      ){
         this.fc = fc
+        this.s = s
         this.sc = sc
         this.sw = sw
         this.t = t
@@ -52,7 +54,6 @@ public class AnimatableTextProperty {
         this.ry = defaultData
         this.sk = defaultData
         this.sa = defaultData
-        this.s = defaultData
         this.a = defaultData
         this.o = defaultData
         this.p = defaultData
@@ -77,7 +78,7 @@ public class TextAnimatorDataProperty {
     var animatorProps: AnimatableTextPropertiesA
     var container: TextAnimatorProperty
     
-    var a: AnimatableTextProperty
+    public var a: AnimatableTextProperty
     var s: TextSelectorPropFactory
 
     public init (animatorProps: AnimatableTextPropertiesA, container: TextAnimatorProperty, elemGlobalData: GlobalData, elemData: Layer, elemTextPropertyCurrentData: DocumentData, dynamicProperties!: ArrayList<DynamicPropertyContainer>){
@@ -95,7 +96,11 @@ public class TextAnimatorDataProperty {
         let textAnimatorAnimatables: AnimatableTextProperties = animatorProps.a
 
         var vLen: Int64 = 0
-
+        if (textAnimatorAnimatables.s.k.size > 0) { vLen = (textAnimatorAnimatables.s.k[0].s ?? Array<Float64>()).size }
+        var s: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>> = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>(ArrayKeyframeArrayFloat64(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        if (textAnimatorAnimatables.s.k.size > 0) {
+            s = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(textAnimatorAnimatables.s, textAnimatorAnimatables.s.k, 1, 0.01, container, elemGlobalData, elemData, vLen: vLen, dynamicProperties: dynamicProperties)
+        }
         let sw: PropertyFactory<Array<Keyframe<Float64>>, Float64>
         /* sw/sc 为空数组时，需单独处理。 */
         if (textAnimatorAnimatables.sw.size == 0) {
@@ -118,12 +123,20 @@ public class TextAnimatorDataProperty {
         
         //走【分支4】
         if (textAnimatorAnimatables.fc.k.size > 0) { vLen = (textAnimatorAnimatables.fc.k[0].s ?? Array<Float64>()).size }
-        let fc: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>> = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(textAnimatorAnimatables.fc, textAnimatorAnimatables.fc.k, 1, 0.0, container, elemGlobalData, elemData, vLen: vLen, dynamicProperties: dynamicProperties)
-        //走【分支3】
-        let t: PropertyFactory<ArrayKeyframeFloat64, Float64> = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(textAnimatorAnimatables.t, textAnimatorAnimatables.t.k, 0, 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
-    
+        var fc: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>> = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>(ArrayKeyframeArrayFloat64(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        if (textAnimatorAnimatables.fc.k.size > 0) {
+            fc = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(textAnimatorAnimatables.fc, textAnimatorAnimatables.fc.k, 1, 0.0, container, elemGlobalData, elemData, vLen: vLen, dynamicProperties: dynamicProperties)
+        }
+        //let fc: PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>> = PropertyFactory<ArrayKeyframeArrayFloat64, Array<Float64>>.getProp(textAnimatorAnimatables.fc, textAnimatorAnimatables.fc.k, 1, 0.0, container, elemGlobalData, elemData, vLen: vLen, dynamicProperties: dynamicProperties)
+        //走【分支3】  PropertyFactory<Float64, Float64>(0.0, 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        //if (textAnimatorAnimatables.t.k.size > 0) { vLen = (textAnimatorAnimatables.t.k[0].s ?? Array<Float64>()).size }
+        var t: PropertyFactory<ArrayKeyframeFloat64, Float64> = PropertyFactory<ArrayKeyframeFloat64, Float64>(ArrayKeyframeFloat64(), 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        if (textAnimatorAnimatables.t.k.size > 0) {
+            t = PropertyFactory<ArrayKeyframeFloat64, Float64>.getProp(textAnimatorAnimatables.t, textAnimatorAnimatables.t.k, 0, 0.0, container, elemGlobalData, elemData, dynamicProperties: dynamicProperties)
+        }
         this.a = AnimatableTextProperty(
             sw: sw,
+            s: s,
             sc: sc,
             fc: fc,
             t: t,

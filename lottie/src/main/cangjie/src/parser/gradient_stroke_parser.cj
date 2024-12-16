@@ -26,7 +26,6 @@ class GradientStrokeParser {
             match (reader.readName()) {
                 case "nm" =>
                     name = reader.readValue<String>()
-                    break
                 case "g" =>
                     var points: Int64 = -1
                     var p: Int64 = 0

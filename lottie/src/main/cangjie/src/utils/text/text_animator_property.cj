@@ -19,7 +19,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
     var _hasMaskedPath: Bool = false
     var _frameId: Int64 = -1
 
-    var _animatorsData: Array<TextAnimatorDataProperty> = Array<TextAnimatorDataProperty>()
+    public var _animatorsData: Array<TextAnimatorDataProperty> = Array<TextAnimatorDataProperty>()
     /* 暂时在 json 中找不到 layer.t.p。 this._pathData 是空对象。 */
     var _pathData: PathData
     var _moreOptions: MoreOptions
@@ -62,11 +62,11 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         let len: Int64 = this._textData.a.size
         var animatorProps: AnimatableTextPropertiesA = AnimatableTextPropertiesA()
 
-        this._animatorsData = Array<TextAnimatorDataProperty>(len, item: TextAnimatorDataProperty(animatorProps, this, this.elemGlobalData, this.elemData, this.elemTextPropertyCurrentData, dynamicProperties: this.dynamicProperties))
+        this._animatorsData = Array<TextAnimatorDataProperty>(len, item: unsafe {zeroValue<TextAnimatorDataProperty>()})
         for (i in 0..len) {
             /* 数据类型分析: animatorProps  =>  this._textData.a[i]  =>  layer.t.a[i](AnimatableTextPropertiesA) */
             animatorProps = this._textData.a[i]
-            this._animatorsData[i] = TextAnimatorDataProperty(animatorProps, this, this.elemGlobalData, this.elemData, this.elemTextPropertyCurrentData, dynamicProperties: this.dynamicProperties)
+            this._animatorsData[i] = TextAnimatorDataProperty(animatorProps, this, this.elemGlobalData, this.elemData, this.elemTextPropertyCurrentData, dynamicProperties: this.dynamicPropertiesInElem)
         }
 
         this._hasMaskedPath = false
@@ -198,9 +198,9 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         var yOff: Float64 = documentData.finalSize * 1.2 * 0.714
         var firstLine: Bool = true
 
-        var animatorProps: AnimatableTextProperty = animators[0].a
+        var animatorProps: AnimatableTextProperty = unsafe {zeroValue<AnimatableTextProperty>()}
 
-        var animatorSelector: TextSelectorPropFactory = TextSelectorPropFactory(AnimatableTextPropertiesS(), this.elemGlobalData, this.elemData, this.elemTextPropertyCurrentData, dynamicProperties: this.dynamicProperties)
+        var animatorSelector: TextSelectorPropFactory = unsafe {zeroValue<TextSelectorPropFactory>()}
 
         var letterValue: LetterProps = LetterProps()
     
@@ -501,7 +501,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                         }
                     }
                 }
-                if (documentData.strokeWidthAnim) {
+                 if (documentData.strokeWidthAnim) {
                     if (sw < 0.0) {
                         letterSw = 0
                     } else {

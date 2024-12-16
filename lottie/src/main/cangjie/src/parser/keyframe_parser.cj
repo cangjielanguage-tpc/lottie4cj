@@ -12,7 +12,7 @@ class KeyframeParser {
         }
     }
 
-    private static func parseKeyframe<T>(reader: JsonReader, valueParser: ValueParser<T>): Keyframe<T> where T <: ToString {
+    static func parseKeyframe<T>(reader: JsonReader, valueParser: ValueParser<T>): Keyframe<T> where T <: ToString {
         var cp1: PointF = PointF()
         var cp2: PointF = PointF()
 

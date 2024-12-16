@@ -606,7 +606,12 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
         compDataInd!: Int64 = -1
     ): PropertyFactory<T, Array<Float64>> where T <: ToString {
-        var p: PropertyFactory<T, Array<Float64>> = multiDimensionalProperty(data, dataK, mult, container, dataK, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
+        var p: PropertyFactory<T, Array<Float64>>
+        if (dataK.size == 0) {
+            p = valueProperty<T, Array<Float64>>(data, 0.0, mult, container, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties)
+        } else {
+            p = multiDimensionalProperty(data, dataK, mult, container, dataK, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
+        }
         p.containerType = containerType
         if (p.effectsSequence.size != 0) {
             addDynamicPropertyContainer(p)
@@ -626,7 +631,10 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     ): PropertyFactory<T, E> where T <: ToString , E <: ToString {
         var vLen2: Int64 = vLen
         var p: PropertyFactory<T, E>
-        if (dataK[0].k.isSome() && (dataK[0].k.getOrThrow() is Array<Float64>)) {
+        // let p: PropertyFactory<T, Float64> = valueProperty(data, dataK, mult, container, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
+        if (dataK[0].k.isSome() && (dataK[0].k.getOrThrow() is Float64)) {
+            p = valueProperty<T, E>(data, (dataK[0].k.getOrThrow() as Float64).getOrThrow(), mult, container, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties)
+        } else if (dataK[0].k.isSome() && (dataK[0].k.getOrThrow() is Array<Float64>)) {
             p = multiDimensionalProperty<T, E>(data, (dataK[0].k.getOrThrow() as Array<Float64>).getOrThrow(), mult, container,Option<E>.None, elemGlobalData, elemData, types: types, dataA: dataA, vLen: vLen, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
         }else {
             if (types == 0) {
@@ -791,6 +799,11 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         }
         if (arrLen < vLen) {
             arrLen = vLen
+        }
+        if (let Some(v) <- dataK[0].s) {
+            if(v is Array<Float64>) {
+                arrLen = (v as Array<Float64>).getOrThrow().size
+            }
         }
         p.v = Array<Float64>(arrLen, item: initFrameFloat64)
         p.pv = Array<Float64>(arrLen, item: initFrameFloat64)
