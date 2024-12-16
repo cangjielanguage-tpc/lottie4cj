@@ -28,12 +28,12 @@ public class MDF {
 
 public class LetterProps {
 //Color
-    var o: Int64 = 0
+    public var o: Int64 = 0
     public var sw: Int64 = 0
     public var sc: Color = Color(0,0,0)
     public var fc: Color = Color(0,0,0)
     var m: String = ""
-    var p: Array<Float64> = Array<Float64>()
+    public var p: Array<Float64> = Array<Float64>()
     var _mdf: MDF = MDF()
 
     public init(){}

@@ -31,12 +31,17 @@ public class AnimatableTextPropertiesS <: ToString {
     public let rn: Int64
     public let sh: Int64
     public let r: Int64
-
+    public var s: ArrayKeyframeArrayFloat64
+    public var e: ArrayKeyframeArrayFloat64
+    public var o: ArrayKeyframeArrayFloat64
     public var totalChars: Int64 = 0
 
     public init(t!: Int64 = 0,
         xe!: AK = AK(), ne!: AK = AK(), a!: AK = AK(),
-        b!: Int64 = 0, rn!: Int64 = 0, sh!: Int64 = 0, r!: Int64 = 0
+        b!: Int64 = 0, rn!: Int64 = 0, sh!: Int64 = 0, r!: Int64 = 0,
+        s!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64(),
+        e!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64(),
+        o!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64()
     ) {
         this.t = t
         this.xe = xe
@@ -46,6 +51,9 @@ public class AnimatableTextPropertiesS <: ToString {
         this.rn = rn
         this.sh = sh
         this.r = r
+        this.s = s
+        this.e = e
+        this.o = o
     }
 
     public func toString(): String {
@@ -57,7 +65,10 @@ public class AnimatableTextPropertiesS <: ToString {
                "b  = ${b },\n" +
                "rn = ${rn},\n" +
                "sh = ${sh},\n" +
-               "r  = ${r }\n}"
+               "r  = ${r }\n}" +
+               "s  = ${s }\n}" +
+               "e  = ${e }\n}" +
+               "o  = ${o }\n}"
     }
 }
 
@@ -92,6 +103,7 @@ public class AnimatableTextPropertiesA <: ToString {
 public class AnimatableTextProperties <: ToString {
 
     public let fc: ArrayKeyframeArrayFloat64             //0 = color
+    public let s: ArrayKeyframeArrayFloat64             //0 = color
     public let sc: Array<Keyframe<Array<Float64>>>       //1 = stroke
     public let sw: Array<Keyframe<Float64>>              //2 = strokeWidth
     public let t: ArrayKeyframeFloat64                   //3 = tracking
@@ -106,11 +118,13 @@ public class AnimatableTextProperties <: ToString {
      */
     public init(
         fc!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64(),
+        s!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64(),
         sc!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(),
         sw!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
         t!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
     ){
         this.fc = fc
+        this.s = s
         this.sc = sc
         this.sw = sw
         this.t = t
@@ -124,6 +138,7 @@ public class AnimatableTextProperties <: ToString {
     public func toString(): String {
         return "AnimatableTextProperties: {\n" +
                "fc = ${fc},\n" +
+               "s = ${s},\n" +
                "sc = ${sc},\n" +
                "sw = ${sw},\n" +
                "t = ${t}\n}"

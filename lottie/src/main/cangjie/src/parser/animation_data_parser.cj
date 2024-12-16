@@ -64,14 +64,6 @@ public class AnimationDataParser {
                 case "fr" => frameRate = reader.readValue<Float64>()
                 case "v" =>
                     version = reader.readValue<String>()
-                    let versions: Array<String> = version.split(".")
-
-                    let majorVersion: Int32 = Int32.parse(versions[0])
-                    let minorVersion: Int32 = Int32.parse(versions[1])
-                    let patchVersion: Int32 = Int32.parse(versions[2])
-                    if (!Utils.isAtLeastVersion(majorVersion, minorVersion, patchVersion, 4, 0, 0)) {
-                        throw Exception("Lottie only supports bodymovin >= 4.4.0")
-                    }
                 case "layers" => layers = parseLayers(reader, layerMap)
                 case "assets" => assets = parseAssets(reader)
                 case "fonts" => fonts = parseFonts(reader)

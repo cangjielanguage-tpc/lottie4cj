@@ -399,7 +399,7 @@ public class TextProperty {
                 lineWidth += (cLength + trackingOffset + uncollapsedSpaces)
                 uncollapsedSpaces = 0.0
             }
-            letters.append(Letter(l: cLength, an: cLength, add: currentSize, n: newLineFlag, anIndexes: Array<Int64>(), val: val, line: currentLine, animatorJustifyOffset: 0.0))
+            letters.append(Letter(l: cLength, an: cLength, add: currentSize, n: newLineFlag, anIndexes: ArrayList<Int64>(), val: val, line: currentLine, animatorJustifyOffset: 0.0))
             if (anchorGrouping == 2) { /* eslint-disable-line eqeqeq */
                 currentSize += cLength
                 if (val == "" || val == " " || i == len - 1) {
@@ -485,6 +485,9 @@ public class TextProperty {
             if (animatorData.a.sw.size > 0) {
                 documentData.strokeWidthAnim = true
             }
+            if (animatorData.a.fc.k.size > 0) {
+                documentData.fillColorAnim = true
+            }
             /* 未确认 animatorData.a.fh/fs/fb 数据类型 */
             ind = 0
 
@@ -496,6 +499,9 @@ public class TextProperty {
             based = animatorData.s.b
             for (i in 0..len) {
                 letterData = letters[i]
+                if(j >= letterData.anIndexes.size) {
+                    letterData.anIndexes.appendAll(ArrayList<Int64>(j -letterData.anIndexes.size + 1, {i => 0}))
+                }
                 letterData.anIndexes[j] = ind
                 if ((based == 1 && letterData.val != "") || (based == 2 && letterData.val != "" && letterData.val != " ") || (based == 3 && (letterData.n || letterData.val == " " || i == len - 1)) || (based == 4 && (letterData.n || i == len - 1))) { /* eslint-disable-line eqeqeq */
                     if (animatorData.s.rn == 1) {

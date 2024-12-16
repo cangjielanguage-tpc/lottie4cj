@@ -100,7 +100,7 @@ public class CvTextElement <: ITextElement {
             if (singleShape) {
                 this.applyTextPropertiesToMatrix(documentData, matrixHelper, letters[i].line, xPos, yPos)
             }
-            var commands = Array<ArrayList<Float64>>(jLen - 1,item:ArrayList<Float64>())
+            var commands = Array<ArrayList<Float64>>(jLen,item:ArrayList<Float64>())
             var commandsCounter = 0
             for (j in 0..jLen) {
                 if (shapes[j].ty == "sh") {
@@ -138,6 +138,7 @@ public class CvTextElement <: ITextElement {
             if (this.textSpans.size > cnt) {
                 this.textSpans[cnt].elem = commands
             } else {
+                this.textSpans.appendAll(ArrayList<TextSpans>(cnt -textSpans.size + 1, {i => TextSpans(Array<ArrayList<Float64>>())}))
                 this.textSpans[cnt] = TextSpans(commands)
             }
             cnt += 1
@@ -167,8 +168,11 @@ public class CvTextElement <: ITextElement {
         var pathArr=ArrayList<Float64>()
         for (i in 0..len) {
             if (!letters[i].n) {
-                if (let Some(v) <- renderedLetters.get(i)) {
-                    renderedLetter = v
+                renderedLetter = renderedLetters[i];
+                if (let Some(v) <- renderedLetter) {
+                    this.globalData.save(false)
+                    this.globalData.ctxTransform(v.p)
+                    this.globalData.ctxOpacity(Float64(v.o))
                 }
                 if (this.fill) {
                   if (renderedLetter.isSome() && renderedLetter.getOrThrow().fc.toUInt32() != Color(0,0,0).toUInt32()) {
@@ -192,6 +196,7 @@ public class CvTextElement <: ITextElement {
                     }
                   }
                   this.globalData.canvasContext.closePath()
+                  this.globalData.canvasContext.fill()
                 }
                 if (this.stroke) {
                   if (renderedLetter.isSome() && renderedLetter.getOrThrow().sw !=0) {
@@ -227,6 +232,7 @@ public class CvTextElement <: ITextElement {
                   this.globalData.canvasContext.stroke()
                 }
                 if (renderedLetter.isSome()) {
+                    this.globalData.restore(false)
                 }
             }
         }

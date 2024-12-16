@@ -13,7 +13,7 @@ public class Letter <: Equatable<Letter> {
     public var an: Float64
     public var add: Float64
     public var n: Bool
-    public var anIndexes: Array<Int64>
+    public var anIndexes: ArrayList<Int64>
     public var val: String
     public var line: Int64
     public var animatorJustifyOffset: Float64
@@ -26,7 +26,7 @@ public class Letter <: Equatable<Letter> {
         an!: Float64 = 0.0,
         add!: Float64 = 0.0,
         n!: Bool = false,
-        anIndexes!: Array<Int64> = Array<Int64>(),
+        anIndexes!: ArrayList<Int64> = ArrayList<Int64>(),
         val!: String = "",
         line!: Int64 = 0,
         animatorJustifyOffset!: Float64 = 0.0
