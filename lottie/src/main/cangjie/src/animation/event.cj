@@ -107,3 +107,21 @@ public class BMConfigErrorEvent <: BMEvent {
         this.nativeError = nativeError
     }
 }
+
+public class BMLoadAnimationErrorEvent <: BMEvent {
+    var nativeError: Exception
+
+    init(nativeError: Exception) {
+        super("loadAnimation")
+        this.nativeError = nativeError
+    }
+}
+
+public class BMLoadImageErrorEvent <: BMEvent {
+    var nativeError: Exception
+
+    init(nativeError: Exception) {
+        super("loadImage")
+        this.nativeError = nativeError
+    }
+}

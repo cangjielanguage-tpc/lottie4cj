@@ -9,7 +9,9 @@ public class DownLoadSource {
     public func downLoadNetworkSource(
         uri: String, 
         configAnimation: (AnimationData, Bool) -> Unit, 
-        resultDir: JsonFilesDir, cacheFlag: Bool,
+        resultDir: JsonFilesDir,
+        errCallBack: (String, Exception) -> Unit,
+        cacheFlag: Bool,
         context: Option<AbilityContext>
     ): Unit {
         let flag: Bool = downloadUri.contains(uri)
@@ -42,26 +44,35 @@ public class DownLoadSource {
                 gauge: true
             )
 
-            let stageContext = getStageContext(context.getOrThrow())
-            let task = create(stageContext, downloadConfig)
-            let downloadPath: String = downloadConfig.saveas ?? ""
+            try {
+                let stageContext = getStageContext(context.getOrThrow())
+                let task = create(stageContext, downloadConfig)
+                let downloadPath: String = downloadConfig.saveas ?? ""
 
-            func completeCallBackInside() {
-                loadSuccess(downloadPath, uri, resultDir, configAnimation, context)
-            }
-            let createOnCallback = ProgressCallback(completeCallBackInside)
-            task.on("completed", createOnCallback)
-            func failedCallBack(){
-                loadFail(uri, resultDir, configAnimation, cacheFlag)
-            }
-            let failedCallback: ProgressCallback = ProgressCallback(failedCallBack)
-            task.on("failed", failedCallback)
+                func completeCallBackInside() {
+                    loadSuccess(downloadPath, uri, resultDir, configAnimation, errCallBack, context)
+                }
+                let createOnCallback = ProgressCallback(completeCallBackInside)
+                task.on("completed", createOnCallback)
+                func failedCallBack(){
+                    loadFail(uri, resultDir, configAnimation, errCallBack, cacheFlag)
+                }
+                let failedCallback: ProgressCallback = ProgressCallback(failedCallBack)
+                task.on("failed", failedCallback)
 
-            task.start()
+                task.start()
+            } catch (err: Exception) {
+                // 下载失败
+                downloadUri.remove(uri)
+                errCallBack("error", err)
+            }
         }
     }
 
-    func loadSuccess(destPath: String, uri: String, resultDir: JsonFilesDir, configAnimation: (AnimationData, Bool) -> Unit, context: Option<AbilityContext>): Unit {
+    func loadSuccess(destPath: String, uri: String, resultDir: JsonFilesDir, 
+        configAnimation: (AnimationData, Bool) -> Unit, 
+        errCallBack: (String, Exception) -> Unit,context: Option<AbilityContext>
+    ): Unit {
         if (uri.endsWith(".json") || uri.endsWith(".js")) {
             let srcPath = getContext() + "/" + resultDir.dataName
             let destPath = "${resultDir.route}/${resultDir.dataName}"
@@ -94,6 +105,7 @@ public class DownLoadSource {
                 } catch (err: Exception) {
                     // 下载失败加载缓存
                     Hilog.error(0, "[loadSuccess]"," Download error: ${err.message}")
+                    errCallBack("error", err)
                     handleAssets(lottieData)
                     configAnimation(lottieData, false)
                 }
@@ -113,12 +125,13 @@ public class DownLoadSource {
             } catch (err: Exception) {
                 // 解压失败，从Map中移除条目
                 downloadUri.remove(uri)
+                errCallBack("error", err)
             }
         }
     }
 
     func loadFail(uri: String, resultDir: JsonFilesDir,
-        configAnimation: (AnimationData, Bool) -> Unit, 
+        configAnimation: (AnimationData, Bool) -> Unit, errCallBack: (String, Exception) -> Unit,
         cacheFlag: Bool
     ): Unit {
         // 处理网络异常加载缓存
@@ -133,6 +146,7 @@ public class DownLoadSource {
         } else {
             // 缓存无资源，给用户返回加载异常
             downloadUri.remove(uri)
+            errCallBack("error", Exception("download fail: ${uri}"))
         }
     }
 

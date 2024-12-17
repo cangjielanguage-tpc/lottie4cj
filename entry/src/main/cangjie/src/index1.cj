@@ -117,10 +117,10 @@ class MyView1 {
                             v.setContentMode("Top")
                         }
                 }
-                Button("Buttom").onClick{
+                Button("Bottom").onClick{
                     evt =>
                         if (let Some(v) <- this.animateItem) {
-                            v.setContentMode("Buttom")
+                            v.setContentMode("Bottom")
                         }
                 }
                 Button("Contain").onClick{

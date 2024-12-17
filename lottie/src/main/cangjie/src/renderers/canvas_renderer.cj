@@ -20,37 +20,6 @@ public class CanvasRenderer <: CanvasRendererBase {
         if (let Some(v) <- config) {
             this.renderConfig.runExpressions = v.runExpressions
         }
-
-        /*
-        //调试CVCompElement 中图形绘制渲染未生效，未报错问题。 继承关系中成员变量赋值成功与否。【后续删除】
-        this.canvasContext = container
-        this.wrapperInAnimationItem = container
-
-        this.renderConfig = RenderConfig()
-        if (let Some(v) <- config) {
-            this.renderConfig.runExpressions = v.runExpressions
-
-            this.renderConfig.clearCanvas = v.clearCanvas
-
-            this.renderConfig.progressiveLoad = v.progressiveLoad
-            this.renderConfig.preserveAspectRatio = v.preserveAspectRatio
-            this.renderConfig.imagePreserveAspectRatio = v.imagePreserveAspectRatio
-            this.renderConfig.contentVisibility = v.contentVisibility
-            this.renderConfig.className = v.className
-            this.renderConfig.id = v.id
-            this.renderConfig.dpr = v.dpr
-        }
-        // initRenderConfig 函数中同时处理了 dpr
-
-        this.globalData = GlobalData(
-            frameNum: -1.0,
-            _mdf: false,
-            renderConfig: this.renderConfig,
-            currentGlobalAlpha: -1,
-            canvasContext: container
-        )
-        this.rendererType = "canvas"
-        */
     }
 
     public func getRenderedFrame(): Float64{

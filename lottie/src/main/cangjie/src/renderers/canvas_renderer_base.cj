@@ -216,7 +216,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             this.renderConfig.preserveAspectRatio = "xMinYMin meet"
         } else if (contentMode == "Cover") {
             this.renderConfig.preserveAspectRatio = "xMidYMid slice"
-        } else if (contentMode == "Buttom") {
+        } else if (contentMode == "Bottom") {
             this.renderConfig.preserveAspectRatio = "xMaxYMax meet"
         } else if (contentMode == "Contain") {
             this.renderConfig.preserveAspectRatio = "xMidYMid meet"
@@ -260,7 +260,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             this.renderConfig.preserveAspectRatio = "xMinYMin meet"
         } else if (contentMode == "Cover") {
             this.renderConfig.preserveAspectRatio = "xMidYMid slice"
-        } else if (contentMode == "Buttom") {
+        } else if (contentMode == "Bottom") {
             this.renderConfig.preserveAspectRatio = "xMaxYMax meet"
         } else if (contentMode == "Contain") {
             this.renderConfig.preserveAspectRatio = "xMidYMid meet"
@@ -275,9 +275,9 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param height - Type of Int64.
      */
     public func updateContainerSize(): Unit {
-        updateContainerSize(Option<Int64>.None, Option<Int64>.None)
+        updateContainerSize(0, 0)
     }
-    public func updateContainerSize(width: ?Int64, height: ?Int64): Unit {
+    public func updateContainerSize(width: Int64, height: Int64): Unit {
 
         this.canvasContext.restore()
         this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
@@ -286,8 +286,29 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.canvasContext.save()
 
         this.reset()
-        let elementWidth = 174.46153846153845
-        let elementHeight = 200.0
+        var elementWidth = 174.46153846153845
+        var elementHeight = 200.0
+        if (width != 0 && height != 0) {
+            elementWidth = Float64(width)
+            elementHeight = Float64(height)
+        } else {
+            try {
+                //TODO: 等 CanvasRenderingContext2D 能拿到 width 和 height 值之后，后期替换。
+                /*
+                elementHeight = this.canvasContext.ctx2d.height
+                elementWidth = this.canvasContext.ctx2d.width
+                */
+            } catch (err: Exception) {
+                Hilog.error(0, "[updateContainerSize]", "get the width and height from CanvasRenderingContext2D is error: ${err.message}")
+            }
+        }
+
+        if (elementHeight == 0.0) {
+            elementHeight = 200.0  //360
+        }
+        if (elementWidth == 0.0) {
+            elementWidth = 174.46153846153845 //540
+        }
 
         var elementRel: Float64 = 0.0
         var animationRel: Float64 = 0.0
@@ -383,7 +404,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         if (layer == 0) {
             let len: Int64 = this.layers.size
             for (i in 0..len) {
-                if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
+                var tag: Bool = true
+                if (this.layers[i].td != 0) {
+                    tag = false
+                }
+                if (tag && (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull))) {
                     this.elements[i].changeColor(color, endColor)
                 }
             }
@@ -406,7 +431,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         if (endColor == 0) {
             let len: Int64 = this.layers.size
             for (i in 0..len) {
-                if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
+                var tag: Bool = true
+                if (this.layers[i].td != 0) {
+                    tag = false
+                }
+                if (tag && (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull))) {
                     this.elements[i].changeColor(color, 0)
                 }
             }
@@ -424,10 +453,14 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param layer - Type of Int64, Index value of hierarchy.
      * @param index - Type of Int64, The subscript value of elements in the corresponding hierarchy.
      */
-    public override func changeColor(color: Array<Int64>, layer: Int64, index: Int64): Unit {
+    public override func changeColor(color: Array<Int64>): Unit {
         let len: Int64 = this.layers.size
         for (i in 0..len) {
-            if (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull)) {
+            var tag: Bool = true
+            if (this.layers[i].td != 0) {
+                tag = false
+            }
+            if (tag && (this.completeLayers || (this.elements.size > i && !this.elements[i].isNull))) {
                 this.elements[i].changeColor(color, 0)
             }
         }

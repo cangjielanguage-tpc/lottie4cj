@@ -45,7 +45,7 @@ public class AnimationItem <: BaseEvent {
      * 参数 isFrame - true按帧控制, false按时间控制, 缺省默认false
      * 参数 name - 被指定的动画名, 可缺省默认为空
      */
-    public func goToAndStop(value: String, isFrame: Bool, name: String): Unit
+    public func goToAndStop(value: Float64, isFrame: Bool, name: String): Unit
 
     /**
      * 控制动画画面从在某一帧或某个时刻开始播放
@@ -53,7 +53,7 @@ public class AnimationItem <: BaseEvent {
      * 参数 isFrame - true按帧控制, false按时间控制, 缺省默认false
      * 参数 name - 被指定的动画名, 可缺省默认为空
      */
-    public func goToAndPlay(value: String, isFrame: Bool, name: String): Unit
+    public func goToAndPlay(value: Float64, isFrame: Bool, name: String): Unit
 
     /**
      * 限定动画资源播放时的整体帧范围
@@ -79,7 +79,7 @@ public class AnimationItem <: BaseEvent {
      * 设置播放速度
      * 参数 val - speed 值为浮点类型, speed>0正向播放, speed<0反向播放, speed=0暂停播放, speed=1.0/-1.0正常速度播放
      */
-    public func setSpeed(val: Int64): Unit
+    public func setSpeed(val: Float64): Unit
 
     /**
      * 设置播放方向
@@ -111,13 +111,49 @@ public class AnimationItem <: BaseEvent {
     public func removeEventListener(eventName: String, callback: AnimationEventCallback, hascallback!: Bool = true): Unit
 
     /**
-     * 修改动画颜色
-     * 参数 color - 开始颜色数组RGBA
-     * 参数 endColor - 结束颜色数组RGBA
-     * 参数 layer - 层次的下标值
+     * 修改整个动画的颜色
+     * 参数 color - 颜色数组RGBA
+     */
+    public func changeColor(color: Array<Int64>): Unit
+    
+    /**
+     * 修改该动画第 layer 层的颜色
+     * 参数 color - 颜色数组RGBA
+     * 参数 layer - 层次的下标值。当 layer 参数值为 0 时，等同于调用 changeColor(color: Array<Int64>)。
+     */
+    public func changeColor(color: Array<Int64>, layer: Int64): Unit
+
+    /**
+     * 修改该动画第 layer 层第 index 个元素的颜色
+     * 参数 color - 颜色数组RGBA
+     * 参数 layer - 层次的下标值。当 layer 参数值为 0 时，等同于调用 changeColor(color: Array<Int64>)。
      * 参数 inde - 对应层次里面的elements的下标值
      */
-    public func changeColor(color: Array<Int64>, endColor: Array<Int64>, layer: Int64, index: Int64): Unit
+    public func changeColor(color: Array<Int64>, layer: Int64, index: Int64): Unit
+
+    /**
+     * 修改整个动画的颜色
+     * 参数 startColor - 开始颜色数组RGBA
+     * 参数 endColor - 结束颜色数组RGBA
+     */
+     public func changeColor(startColor: Array<Int64>, endColor: Array<Int64>)
+
+    /**
+     * 修改该动画第 layer 层的颜色
+     * 参数 startColor - 开始颜色数组RGBA
+     * 参数 endColor - 结束颜色数组RGBA
+     * 参数 layer - 层次的下标值。当 layer 参数值为 0 时，等同于调用 changeColor(startColor: Array<Int64>, endColor: Array<Int64>)。
+     */
+     public func changeColor(startColor: Array<Int64>, endColor: Array<Int64>, layer: Int64)
+
+    /**
+     * 修改该动画第 layer 层第 index 个元素的颜色
+     * 参数 startColor - 开始颜色数组RGBA
+     * 参数 endColor - 结束颜色数组RGBA
+     * 参数 layer - 层次的下标值。当 layer 参数值为 0 时，等同于调用 changeColor(startColor: Array<Int64>, endColor: Array<Int64>)。
+     * 参数 inde - 对应层次里面的elements的下标值
+     */
+     public func changeColor(startColor: Array<Int64>, endColor: Array<Int64>, layer: Int64, index: Int64)
 
     /**
      * 动画填充模式，默认的填充模式是：Contain
@@ -130,6 +166,8 @@ public class AnimationItem <: BaseEvent {
      * 当动画源帧率高于该值时，该动画的播放帧率会被强制降到该值，否则默认以动画源帧率进行播放，除非另有全局设置；
      * 可通过设置0帧率来取消该限制。
      * 参数 playingFrameRate - 播放帧率
+     *
+     * 备注：暂不支持此功能
      */
     public func setFrameRate(playingFrameRate: Float64): Unit
 }
@@ -153,14 +191,48 @@ public class AnimationManager {
      * @return AnimationItem 返回AnimationItem对象
      */
     public func loadAnimation(ac: AnimationConfig): AnimationItem
-    
+
+    /**
+     * 播放动画
+     * 参数 animationName - 被指定的动画名, 缺省默认为空
+     */
+    public func play(animationName!: String = ""): Unit
+
+    /**
+     * 停止动画
+     * 参数 animationName - 被指定的动画名, 缺省默认为空
+     */
+    public func stop(animationName: String): Unit
+
+    /**
+     * 暂停动画
+     * 参数 animationName - 被指定的动画名, 缺省默认为空
+     */
+    public func pause(animationName!: String = ""): Unit
+
+    /**
+     * 播放或暂停动画
+     * 参数 animationName - 被指定的动画名, 缺省默认为空
+     */
+    public func togglePause(animationName: String): Unit
+
+    /**
+     * 设置播放速度
+     * 参数 val - speed 值为浮点类型, speed>0正向播放, speed<0反向播放, speed=0暂停播放, speed=1.0/-1.0正常速度播放
+     */
+    public func setSpeed(val: Float64): Unit
+
+    /**
+     * 设置播放方向
+     * 参数 val - 1为正向, -1为反向
+     */
+    public func setDirection(val: Int64): Unit
+
     /**
      * 销毁动画
-     *
-     * @param name 动画名称
-     * 
+     * 参数 animationName - 被指定的动画名, 缺省默认为空
      */
-    public func destroy(name: String): Unit 
+    public func destroy(animationName: String): Unit
 
     /**
      * 清除缓存
@@ -169,6 +241,7 @@ public class AnimationManager {
      * @param container 与canvas组件绑定的上下文CanvasRenderingContext2D,用于本地资源路径json文件
      */
     public func clearFileCache(url: String, container: Option<AbilityContext>): Unit
+
 }
 ```
 
@@ -179,6 +252,8 @@ public class AnimationConfig {
     /**
      * 动画配置
      *
+     * @param uri  读取来自网络路径的动画数据，支持json和zip/gzip格式
+     * @param isNetwork  true优先读取网络资源,false优先读取本地缓存资源
      * @param wrapper_ns  CreateNS对象
      * @param container  Canvas组件渲染对象
      * @param renderer  渲染模式,默认为“canvas”
@@ -186,11 +261,15 @@ public class AnimationConfig {
      * @param autoplay  是否自动播放，默认true
      * @param name  动画名称,默认为“”
      * @param contentMode  填充的模式,默认为“”
+     * @param imagePath  读取指定路径下的图片资源,默认为“”
      * @param path  动画路径，路径加载动画只支持raw文件夹下的相对路径,默认为“”
+     * @param pathSourceFrom  区别json文件来源：1.来自entry/src/main/resources/rawfile/ 文件夹下的相对路径， 2.来自本地中保存的json。
      * @param animationData  json动画解析的对象，默认AnimationData()
      * @param context  Ability所对应的context，默认Option<AbilityContext>.None
      */
     public init(
+        uri!: String = "",
+        isNetwork!: Bool = false,
         wrapper_ns!: CreateNS,
         container!: CanvasRenderingContext2D,
         renderer!: String = "canvas",
@@ -198,24 +277,12 @@ public class AnimationConfig {
         autoplay!: Bool = true,
         name!: String = "",
         contentMode!: String = "",
+        imagePath!: String = "",
         path!: String = "",
-        animationData!: AnimationData = AnimationData(),
+        pathSourceFrom!: Int8 = 1,
+        animationData!: AnimationData = AnimationData(isNull: true),
         context!: Option<AbilityContext> = None
-    ){
-        this.wrapper_ns = wrapper_ns
-        this.wrapper = LottieCanvasRenderingContext2D(container)
-
-        this.container = LottieCanvasRenderingContext2D(container)
-        this.renderer = renderer
-        this.loop = loop
-        this.autoplay = autoplay
-        this.name = name
-        this.contentMode = contentMode
-        this.path = path
-
-        this.animationData = animationData
-        this.context = context
-    }
+    )
 }
 ```
 

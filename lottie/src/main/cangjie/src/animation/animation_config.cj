@@ -39,10 +39,10 @@ public class AnimationConfig {
     public var animType: String = ""
 
     /**
-     * 动画播放结束后, 是否循环播放，默认值true, 值为true时无限循环播放 值类型为number, 且>=1时为设置重复播放的次数
-     * 定为 Int64 数据类型，-1 表示true，-2 表示false。
+     * 动画播放结束后, 是否循环播放。默认值 -1, 值为 -1 时代表无限循环播放, 值 >=1 时为设置重复播放的次数
+     * 定为 Int64 数据类型，< 0 表示无限循环播放；= 0 表示 不循环播放；> 0 为设置重复播放的次数。
      */
-    public var loop: Int64 = 0
+    public var loop: Int64 = -1
 
     /**
      * 自动播放设置
@@ -66,7 +66,7 @@ public class AnimationConfig {
     public var packageName: String = ""
 
     /**
-     * 动画填充模式 支持填充模式：Fill, Top, Cover, Buttom, Contain  默认模式是：Contain
+     * 动画填充模式 支持填充模式：Fill, Top, Cover, Bottom, Contain  默认模式是：Contain
      */
     public var contentMode: String = ""
 
@@ -84,22 +84,21 @@ public class AnimationConfig {
 
     /**
      * 读取指定路径下的图片资源
-     * @since 8
-     * @design
      */
      public var imagePath: String = ""
 
     /**
      * 应用内的动画数据文件路径, 仅限json格式
-     * path 路径仅支持entry/src/main/ets 路径下的相对路径，不支持跨包路径设置
-     * @example path: 'common/lottie/data.json'
+     * 1. 支持加载entry/src/main/resources/rawfile/ 文件夹下的相对路径，不支持跨包查找文件；2. 支持加载移动设备中的，但要配合参数 pathSourceFrom 使用方可生效。
+     * @example path: "/lottie/data.json"
+     * @example path: "https://assets7.lottiefiles.com/packages/lf20_sF7uci.json
      */
     public var path: String = ""
     //区别json文件来源：1.来自\resources\rawfile\， 2.来自手机中保存的json。
     public var pathSourceFrom: Int8 = 1
 
     /**
-     * 读取来自网络路径的动画数据，支持json和zip格式
+     * 读取来自网络路径的动画数据，支持json和zip/gzip格式
      */
     public var uri: String = ""
     /**
