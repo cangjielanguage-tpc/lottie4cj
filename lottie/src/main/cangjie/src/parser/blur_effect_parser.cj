@@ -35,7 +35,7 @@ class BlurEffectParser {
             match (reader.readName()) {
                 case "ty" => isCorrectType = reader.readValue<Int64>()
                 case "v" => if (isCorrectType == 0) {
-                    blurEffect = AnimatableValueParser.parseArrayFloat(reader)
+                    blurEffect = AnimatableTextPropertiesParser.ArrayKeyframeArrayFloat64Parser(reader)
                 } else {
                     isNull = false
                     reader.skip()

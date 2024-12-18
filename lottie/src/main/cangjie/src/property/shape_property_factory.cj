@@ -324,7 +324,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         compDataInd!: Int64 = -1
     ): ShapePropertyFactory {
         let sp: ShapePropertyFactory = ShapePropertyFactory(data, types, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
-
+        sp.v = ShapeData(8)
         sp.v.setPathData(true, 0)
 
         sp.d = data.d
@@ -630,8 +630,6 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
             this.v.setTripleAt(x, y, x - ox * perimSegment * roundness * dir, y - oy * perimSegment * roundness * dir, x + ox * perimSegment * roundness * dir, y + oy * perimSegment * roundness * dir, i, replace: true)
             currentAng += angle * dir
         }
-        this.paths.releaseShapes()
-        this.paths.addShape(this.v)
     }
     /* [StarShapeProperty]分隔线------------------------------------------------------------------------------------- */
 
