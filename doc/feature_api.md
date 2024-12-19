@@ -252,12 +252,12 @@ public class AnimationConfig {
     /**
      * 动画配置
      *
-     * @param uri  读取来自网络路径的动画数据，支持json和zip/gzip格式
+     * @param uri  读取来自网络路径的动画数据，支持json和zip/gzip格式。gzip格式只能是单json文件压缩，且结尾为.tar.gz或者.gz。
      * @param isNetwork  true优先读取网络资源,false优先读取本地缓存资源
      * @param wrapper_ns  CreateNS对象
      * @param container  Canvas组件渲染对象
      * @param renderer  渲染模式,默认为“canvas”
-     * @param loop  是否循环播放，默认 -1
+     * @param loop  是否循环播放，默认 -1。当前逻辑是：先播放完成一次，再按照设置的循环次数loop的值，进行对应次数的循环播放。实际播放的次数是：loop+1。
      * @param autoplay  是否自动播放，默认true
      * @param name  动画名称,默认为“”
      * @param contentMode  填充的模式,默认为“”

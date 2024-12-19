@@ -726,7 +726,6 @@ public open class BaseElement <: Equatable<BaseElement> {
     public open func renderInnerContent() {}
 
     public open func renderFrame(forceRender: Bool): Unit {
-        var tmps1 = this.finalTransform.mat.props
         if (this.hidden || this.data.hd) {
             return
         }
@@ -742,9 +741,6 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.prepareLayer()
 
         this.globalData.save(forceRealStack)
-
-        var tmps = this.finalTransform.mat.props
-
         this.globalData.ctxTransform(this.finalTransform.mat.props)
 
         if (let Some(ov) <- this.finalTransform.mProp.o) {

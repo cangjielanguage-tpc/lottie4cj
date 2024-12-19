@@ -205,12 +205,12 @@ public class TextProperty {
     public func buildFinalText(text: String): ArrayList<String> {
         var charactersArray: ArrayList<String> = ArrayList<String>(24)
         var i: Int64 = 0
-        var len = text.size
         var charCode: UInt32 = 0
         var secondCharCode: UInt32 = 0
         var shouldCombine: Bool = false
 
         let chars: Array<Rune> = text.toRuneArray()
+        let len: Int64 = chars.size
 
         while (i < len) {
             charCode = UInt32(chars[i])

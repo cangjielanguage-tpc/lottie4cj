@@ -133,27 +133,44 @@ func decompressZipFile(inFile: String, outFile: String): Int64 {
     return 0
 }
 
-func decompressGzipFile(srcFileName: String, destFileName: String): Int64 {
-    var count: Int64 = 0
-
-    let srcFile: File = File(srcFileName, OpenOption.Open(true, false))
-    let destFile: File = File(destFileName, OpenOption.Create(false))
-
-    var tempBuf: Array<UInt8> = Array<UInt8>(1024, item: 0)
-    let decompressInputStream: DecompressInputStream = DecompressInputStream(srcFile, wrap: GzipFormat, bufLen: 10000)
-    while (true) {
-        var readNum = decompressInputStream.read(tempBuf)
-        if (readNum <= 0) {
-            break
+func decompressGzipFile(srcFileName: String, resultDir: JsonFilesDir): Int64 {
+    try {
+        var destFileName = resultDir.route
+        var lastSegment: String = resultDir.dataName
+        if (lastSegment.endsWith(".tar.gz")) {//.tar.gz  //.gzip
+            lastSegment = lastSegment.replace(".tar.gz", "")
+        } else if (lastSegment.endsWith(".gz")) {
+            lastSegment = lastSegment.replace(".gz", "")
         }
-        destFile.write(tempBuf.slice(0, readNum).toArray())
-        count += readNum
-    }
-    decompressInputStream.close()
+        destFileName = destFileName + "/" + lastSegment + ".json"
 
-    srcFile.close()
-    destFile.close()
-    return count
+        var count: Int64 = 0
+
+        let srcFile: File = File(srcFileName, OpenOption.Open(true, false))
+        let destFile: File = File(destFileName, OpenOption.CreateOrTruncate(false))
+
+        var tempBuf: Array<UInt8> = Array<UInt8>(1024, item: 0)
+        let decompressInputStream: DecompressInputStream = DecompressInputStream(srcFile, wrap: GzipFormat, bufLen: 10000)
+        while (true) {
+            var readNum = decompressInputStream.read(tempBuf)
+            if (readNum <= 0) {
+                break
+            }
+            destFile.write(tempBuf.slice(0, readNum).toArray())
+
+            count += readNum
+        }
+        decompressInputStream.close()
+
+        srcFile.close()
+        destFile.close()
+
+        return count
+    } catch (e: Exception) {
+        // This happens in the Android Studio layout preview.
+        Hilog.error(0, "[decompressGzipFile]","has a error in decompressGzipFile. eror.message: ${e.message}")
+        return 0
+    }
 }
 
 private let ZIP_MAGIC: Array<UInt8> = [0x50, 0x4b, 0x03, 0x04]
@@ -171,19 +188,21 @@ private func matchesMagicBytes(srcFileName: String, magic: Array<UInt8>): Bool {
         return buf == magic
     } catch (e: Exception) {
         // This happens in the Android Studio layout preview.
+        Hilog.error(0, "[matchesMagicBytes]","has a error in matchesMagicBytes. eror.message: ${e.message}")
         return false
     }
 }
 
 // 解压和读取
-public func decompressAndReadJson(url: String, cacheDir: String, fileDir: String): AnimationData {
+public func decompressAndReadJson(url: String, cacheDir: String, resultDir: JsonFilesDir): AnimationData {
     let inFile: String = cacheDir
+    let fileDir = resultDir.route
     let outFile: String = fileDir
 
     if (isZipCompressed(inFile)) {
         decompressZipFile(inFile, outFile)
     } else if (isGzipCompressed(inFile)) {
-        decompressGzipFile(inFile, outFile)
+        decompressGzipFile(inFile, resultDir)
     }
 
     // 解压完成之后读取 json 数据
@@ -362,7 +381,16 @@ public func createFilesDir(url: String, context: Option<AbilityContext>): JsonFi
     let secondLastSegment: String = parts[parts.size - 2]
     let lastSegmentWithExtension: String = parts[parts.size - 1]
     //去除后缀 .zip / .json
-    let lastSegment = lastSegmentWithExtension.replace(".zip", "").replace(".json", "")
+    var lastSegment: String = lastSegmentWithExtension
+    if (lastSegmentWithExtension.endsWith(".zip")) {
+        lastSegment = lastSegmentWithExtension.replace(".zip", "")
+    } else if (lastSegmentWithExtension.endsWith(".tar.gz")) {//.tar.gz  //.gzip
+        lastSegment = lastSegmentWithExtension.replace(".tar.gz", "")
+    } else if (lastSegmentWithExtension.endsWith(".gz")) {
+        lastSegment = lastSegmentWithExtension.replace(".gz", "")
+    } else if (lastSegmentWithExtension.endsWith(".json")) {
+        lastSegment = lastSegmentWithExtension.replace(".json", "")
+    }
 
     let dirPath = FileUtils.downloadFolderLottie
 
