@@ -8,7 +8,7 @@ internal import ohos.component.*
 internal import ohos.state_manage.*
 import ohos.state_macro_manage.*
 
-import ohos.hilog.*
+internal import ohos.hilog.*
 
 internal import ohos.image.Image as MultiImage
 internal import ohos.image.Component as ImageComponent
@@ -104,8 +104,12 @@ class LottieSample {
                                         name: this.animateName,
                                         contentMode: "Contain",
                                         //imagePath: "./images/",                 // 加载读取指定路径下的图片资源
-                                        path: "json_lottie/non_img/animation_008.json",
-                                        //path: "data.json", // 路径加载动画只支持raw文件夹下的相对路径
+                                        //path: "json_lottie/non_img/animation_008.json",
+                                        //path: "json_lottie/banner.json",
+                                        //path: "json_lottie/non_img/gatin.json", //帧率:25p/m 总帧数:80p
+                                        //path: "datas2.json",  //周围点点缺失
+                                        //path: "datas.json",  //周围点点缺失
+                                        path: "data.json", // 路径加载动画只支持raw文件夹下的相对路径
                                         //path: "/data/storage/el1/bundle/entry/resources/base/media/data.json",
                                         //path: "/data/storage/el2/base/files/entry/data.json",
                                         //pathSourceFrom: 2, //区别json文件来源：1.来自\resources\rawfile\， 2.来自手机中保存的json。（不填默认 1）
@@ -129,10 +133,16 @@ class LottieSample {
                                 Hilog.error(0, "lipei", "加载--网络json------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
                                 if (this.animateItem2.isNone()) {
                                      this.animateItem2 = lottie.loadAnimation(AnimationConfig(
-                                        //uri: "https://gitcode.com/Cangjie-TPC/lottie4cj/blob/develop/entry/src/main/resources/rawfile/data.json",
-                                        uri: "https://assets7.lottiefiles.com/packages/lf20_sF7uci.json",
+                                        //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/1a8533870915012cf63396b40f8efdc4f5945af8/data.json",
+                                        //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/cc299f5f461652e529bf576a2efc316982da4c83/animation_008.gzip",
+                                        uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/cc299f5f461652e529bf576a2efc316982da4c83/animation_008.gz",
+                                        //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/c7a064f35b4b31ef359f490863ec96be8d10191a/redbag.gz",
+                                        //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/8142eb1b796d7db4e47db3d981c8cacc840b5eea/redbag.gz",
+                                        //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/36460c771d1471bab72f5a1afb19f39fb2c3a715/json2.zip",
+                                        //uri: "https://gitcode.com/user-attachments/files/3804992/298424de7aba41d0bb35d5fa72b22bdb.zip",
+                                        //uri: "https://assets7.lottiefiles.com/packages/lf20_sF7uci.json",
                                         //uri: "https://smarthome-drcn.dbankcdn.com/device/guide/KW38/template/lottie/lottie.zip",
-                                        isNetwork: false,
+                                        isNetwork: true,
                                         wrapper_ns: CreateNS("doc"),
                                         container: this.mainCanvasRenderingContext,
                                         renderer: "canvas", // canvas 渲染模式
@@ -149,7 +159,8 @@ class LottieSample {
                             }
                             Button("销毁--网络zip").onClick {
                                 evt =>
-                                lottie.destroy("lf20_sF7uci.json")
+                                this.animateItem2.getOrThrow().destroy("")
+                                this.animateItem2 = Option<AnimationItem>.None
                             }
                         }.margin(top: 5)
 
@@ -159,15 +170,15 @@ class LottieSample {
                             Button("侯召用例测试").onClick { evt =>
 
                                 //测试 setSegment
-                                //if (!this.animateItem.isNone()) {
-                                //    let num1 = 10.0
-                                //    let num2 = 20.0
-                                //    Hilog.error(0, "lipei", "begin----------------------------------setContentMode, num1 = ${num1}")
-                                //    Hilog.error(0, "lipei", "begin----------------------------------setContentMode, num2 = ${num2}")
-                                //    //this.animateItem.getOrThrow().setSegment(num1, num2)
-                                //    //this.animateItem.getOrThrow().playSegments([[5.0, 15.0], [20.0, 30.0]], true)
-                                //    this.animateItem.getOrThrow().setContentMode("Bottom")
-                                //}
+                                if (!this.animateItem.isNone()) {
+                                    let num1 = 20.0
+                                    let num2 = this.animateItem.getOrThrow().getDuration(true)
+                                    Hilog.error(0, "lipei", "begin----------------------------------setContentMode, num1 = ${num1}")
+                                    Hilog.error(0, "lipei", "begin----------------------------------setContentMode, num2 = ${num2}")
+                                    this.animateItem.getOrThrow().setSegment(num1, num2)
+                                    //this.animateItem.getOrThrow().playSegments([[5.0, 15.0], [20.0, 30.0]], true)
+                                    //this.animateItem.getOrThrow().setContentMode("Bottom")
+                                }
 
                                 //测试跳转播放
                                 //if (!this.animateItem.isNone()) {
@@ -196,12 +207,12 @@ class LottieSample {
                                 //    this.animateItem.getOrThrow().play(name:this.animateName)
                                 //}
                                 //测试修改颜色
-                                if (!this.animateItem.isNone()) {
-                                    Hilog.error(0, "lipei", "begin----------------------------------changeColor([255,25, 232],[51,229, 135],0,0)")
-                                    this.animateItem.getOrThrow().changeColor([255,25, 232],[51,229, 135],0,0)
-                                    //this.animateItem.getOrThrow().changeColor([255, 203])
-                                    //this.animateItem.getOrThrow().changeColor([255, 25, 232],[51, 229, 135])
-                                }
+                                //if (!this.animateItem.isNone()) {
+                                //    Hilog.error(0, "lipei", "begin----------------------------------changeColor([255,25, 232],[51,229, 135],0,0)")
+                                //    this.animateItem.getOrThrow().changeColor([255,25, 232],[51,229, 135],0,0)
+                                //    //this.animateItem.getOrThrow().changeColor([255, 203])
+                                //    //this.animateItem.getOrThrow().changeColor([255, 25, 232],[51, 229, 135])
+                                //}
                             }
                             Button("改变颜色").onClick {
                                 evt =>

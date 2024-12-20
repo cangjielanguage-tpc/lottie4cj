@@ -121,8 +121,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param op - Type of Int64.
      */
     public func ctxOpacity(op: Float64): Unit {
-        var tmps = this.contextData.getTransform().props;
-
         var currentOpacity: Float64 = this.contextData.getOpacity()
         if (!this.renderConfig.clearCanvas) {
             if (op < 0.0) {
@@ -166,7 +164,6 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param actionFlag - Type of Bool.
      */
     public func save(actionFlag: Bool): Unit {
-        var tmps = this.contextData.getTransform().props
         if (!this.renderConfig.clearCanvas) {
             this.canvasContext.save()
             return

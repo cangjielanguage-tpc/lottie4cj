@@ -429,7 +429,17 @@ public class AnimationManager {
             let parts = path.split("/")
             let secondLastSegment = parts[parts.size - 2]
             let lastSegmentWithExtension = parts[parts.size - 1]
-            let lastSegment = lastSegmentWithExtension.replace(".zip", "").replace(".json", "")
+
+            var lastSegment: String = lastSegmentWithExtension
+            if (lastSegmentWithExtension.endsWith(".zip")) {
+                lastSegment = lastSegmentWithExtension.replace(".zip", "")
+            } else if (lastSegmentWithExtension.endsWith(".tar.gz")) {//.tar.gz  //.gzip
+                lastSegment = lastSegmentWithExtension.replace(".tar.gz", "")
+            } else if (lastSegmentWithExtension.endsWith(".gz")) {
+                lastSegment = lastSegmentWithExtension.replace(".gz", "")
+            } else if (lastSegmentWithExtension.endsWith(".json")) {
+                lastSegment = lastSegmentWithExtension.replace(".json", "")
+            }
 
             var dirPath = FileUtils.downloadBase + "/lottie"  //getContext().filesDir
             let dirPathFirst = "${dirPath}/${secondLastSegment}"

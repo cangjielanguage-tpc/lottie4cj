@@ -74,14 +74,6 @@ public class DownLoadSource {
         errCallBack: (String, Exception) -> Unit,context: Option<AbilityContext>
     ): Unit {
         if (uri.endsWith(".json") || uri.endsWith(".js")) {
-            let srcPath = getContext() + "/" + resultDir.dataName
-            let destPath = "${resultDir.route}/${resultDir.dataName}"
-            try {
-                // 移动文件
-                FileUtils.moveFile(srcPath, destPath, true)
-            } catch (err: Exception) {
-                Hilog.error(0, "[loadSuccess]", "moveFile err: ${err.message}")
-            }
             let lottieData: AnimationData = readJson(uri, destPath)
 
             // 判断assets是否有图片 且 图片的p地址是否是以http或者https开头的
@@ -115,10 +107,10 @@ public class DownLoadSource {
                 downloadUri.remove(uri)
                 configAnimation(lottieData, true)
             }
-        } else if (uri.endsWith(".zip")) {
+        } else if (uri.endsWith(".zip") || uri.endsWith(".gz")) {
             // 要改为异步调用吗？？？
             try {
-                let ad: AnimationData = decompressAndReadJson(uri, destPath, resultDir.route)
+                let ad: AnimationData = decompressAndReadJson(uri, destPath, resultDir)
                 // 解压成功，从Map中移除条目
                 downloadUri.remove(uri)
                 configAnimation(ad, true)
