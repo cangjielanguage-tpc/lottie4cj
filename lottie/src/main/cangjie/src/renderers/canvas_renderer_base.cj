@@ -282,7 +282,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.canvasContext.restore()
         this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
         this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h) /* 清空之前画布 */
-        this.canvasContext.clearRect(0, 0, 0, 0) /* 清空之前画布 */
+        this.canvasContext.clearRect(0.0, 0.0, 174.46153846153845, 200.0) /* 清空之前画布 */
         this.canvasContext.save()
 
         this.reset()
@@ -381,7 +381,11 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * Destroy the CanvasRendererBase.
      */
     public func destroy(): Unit {
-        this.canvasContext.clearRect(0.0,0.0,this.transformCanvas.w, this.transformCanvas.h)
+        this.canvasContext.restore()
+        this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
+        this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h) /* 清空之前画布 */
+        this.canvasContext.clearRect(0.0, 0.0, 174.46153846153845, 200.0) /* 清空之前画布 */
+        this.canvasContext.save()
         let len: Int64 = this.layers.size
         for (i in (len - 1)..=0: -1) {
             if (this.elements.size > i && !this.elements[i].isNull) {
