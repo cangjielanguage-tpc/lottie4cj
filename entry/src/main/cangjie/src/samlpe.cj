@@ -37,7 +37,7 @@ class LottieSample {
     private var animateName: String = "AnimationItem_Destroy_11"
 
     protected override func onBackPress(): Bool {
-        lottie.destroy("")
+        lottie.destroy()
         return false
     }
 
@@ -53,7 +53,7 @@ class LottieSample {
                         //                    this.animateItem?.resize()
                         }).onDisAppear({=>
                             // 组件移除时，可销毁动画资源
-                            //            lottie.destroy("2016")
+                            //            lottie.destroy(animationName: "2016")
                         })
 
                         Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).backgroundColor(Color.GRAY).
@@ -63,7 +63,7 @@ class LottieSample {
                         //                    this.animateItem?.resize()
                         }).onDisAppear({=>
                             // 组件移除时，可销毁动画资源
-                            lottie.destroy(this.animateName)
+                            lottie.destroy(animationName: this.animateName)
                         }).visibility(this.isCanvasVisible).onVisibleAreaChange(
                             [0.0],
                             {
@@ -93,7 +93,7 @@ class LottieSample {
                             Button("加载2016").onClick {
                                 evt =>
                                 Hilog.error(0, "lipei", "begin------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
-                                lottie.destroy("2016")
+                                lottie.destroy(animationName: "2016")
                                 if (this.animateItem.isNone()) {
                                      this.animateItem = lottie.loadAnimation(AnimationConfig(
                                         wrapper_ns: CreateNS("doc"),
@@ -105,7 +105,8 @@ class LottieSample {
                                         contentMode: "Contain",
                                         //imagePath: "./images/",                 // 加载读取指定路径下的图片资源
                                         //path: "json_lottie/non_img/animation_008.json",
-                                        //path: "json_lottie/banner.json",
+                                        //path: "json_lottie/non_img/banner.json",
+                                        //path: "json_lottie/non_img/lights.json",
                                         //path: "json_lottie/non_img/gatin.json", //帧率:25p/m 总帧数:80p
                                         //path: "datas2.json",  //周围点点缺失
                                         //path: "datas.json",  //周围点点缺失
@@ -120,22 +121,25 @@ class LottieSample {
                          }
                          Button("销毁--2016").onClick {
                              evt =>
-                             this.animateItem.getOrThrow().destroy("")
+                             this.animateItem.getOrThrow().destroy()
                              this.animateItem = Option<AnimationItem>.None
                          }
                         }.margin(top: 5)
 
 
                         Row() {
-                            Button("加载--网络zip").onClick {
+                            Button("加载--网络zip-3").onClick {
                                 evt =>
-                                lottie.destroy("lf20_sF7uci.json")
+                                lottie.destroy(animationName: "lf20_sF7uci.json")
                                 Hilog.error(0, "lipei", "加载--网络json------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
                                 if (this.animateItem2.isNone()) {
                                      this.animateItem2 = lottie.loadAnimation(AnimationConfig(
                                         //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/1a8533870915012cf63396b40f8efdc4f5945af8/data.json",
                                         //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/cc299f5f461652e529bf576a2efc316982da4c83/animation_008.gzip",
-                                        uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/cc299f5f461652e529bf576a2efc316982da4c83/animation_008.gz",
+                                        //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/cc299f5f461652e529bf576a2efc316982da4c83/animation_008.gz",
+                                            //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/68f2a7f5987d1be5fc2761668ddca363ba1b9c19/animation_008.tar.gz",
+                                            uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/c1c81ce5ef299171dc0a214ab8cc883a92d55773/animation_008.json",
+                                        //uri: "https://assets7.lottiefiles.com/packages/not_exist.json",//不可达的网络链接
                                         //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/c7a064f35b4b31ef359f490863ec96be8d10191a/redbag.gz",
                                         //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/8142eb1b796d7db4e47db3d981c8cacc840b5eea/redbag.gz",
                                         //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/36460c771d1471bab72f5a1afb19f39fb2c3a715/json2.zip",
@@ -159,7 +163,7 @@ class LottieSample {
                             }
                             Button("销毁--网络zip").onClick {
                                 evt =>
-                                this.animateItem2.getOrThrow().destroy("")
+                                this.animateItem2.getOrThrow().destroy()
                                 this.animateItem2 = Option<AnimationItem>.None
                             }
                         }.margin(top: 5)
@@ -186,8 +190,8 @@ class LottieSample {
                                 //    let falg = true
                                 //    Hilog.error(0, "lipei", "begin----------------------------------goToAndStop, num = ${num}")
                                 //    Hilog.error(0, "lipei", "begin----------------------------------goToAndStop, falg = ${falg}")
-                                //    this.animateItem.getOrThrow().goToAndPlay(num, falg, this.animateName)
-                                //    //this.animateItem.getOrThrow().goToAndPlay("1200ms", false, this.animateName)
+                                //    this.animateItem.getOrThrow().goToAndPlay(num, isFrame: falg, name: this.animateName)
+                                //    //this.animateItem.getOrThrow().goToAndPlay("1200ms", isFrame: false, name: this.animateName)
                                 //}
 
                                 //测试跳转暂停
@@ -196,8 +200,8 @@ class LottieSample {
                                 //    let falg = true
                                 //    Hilog.error(0, "lipei", "begin----------------------------------goToAndStop, num = ${num}")
                                 //    Hilog.error(0, "lipei", "begin----------------------------------goToAndStop, falg = ${falg}")
-                                //    this.animateItem.getOrThrow().goToAndStop(num, falg, this.animateName)
-                                //    //this.animateItem.getOrThrow().goToAndStop("1200ms", false, this.animateName)
+                                //    this.animateItem.getOrThrow().goToAndStop(num, isFrame: falg, name: this.animateName)
+                                //    //this.animateItem.getOrThrow().goToAndStop("1200ms", isFrame: false, name: this.animateName)
                                 //}
 
 
@@ -214,21 +218,22 @@ class LottieSample {
                                 //    //this.animateItem.getOrThrow().changeColor([255, 25, 232],[51, 229, 135])
                                 //}
                             }
-                            Button("改变颜色").onClick {
+                            Button("setSegment").onClick {
                                 evt =>
 
                                 //测试 setSegment
                                 if (!this.animateItem.isNone()) {
-                                    let num1 = 20.0
-                                    let num2 = 30.0
+                                    let num1 = 0.0
+                                    //let num2 = 12.0
+                                    let num2 = 0.0
                                     Hilog.error(0, "lipei", "begin----------------------------------setSegment, num1 = ${num1}")
                                     Hilog.error(0, "lipei", "begin----------------------------------setSegment, num2 = ${num2}")
-                                    //this.animateItem.getOrThrow().setSegment(num1, num2)
-                                    this.animateItem.getOrThrow().playSegments([num1, num2], true)
+                                    this.animateItem.getOrThrow().setSegment(num1, num2)
+                                    //this.animateItem.getOrThrow().playSegments([num1, num2], false)
                                 }
 
                                 //if (!this.animateItem.isNone()) {
-                                //    this.animateItem.getOrThrow().destroy(this.animateName)
+                                //    this.animateItem.getOrThrow().destroy(name: this.animateName)
                                 //    this.animateItem = None
                                 //    Hilog.error(0, "lipei", "begin----------------------------------destroy, this.animateName = ${this.animateName}")
                                 //    //this.animateItem.getOrThrow().changeColor([255, 203],[], 0, 0)
@@ -241,8 +246,15 @@ class LottieSample {
 
 
                         Row() {
+                            Button("clearFileCache").onClick {
+                                lottie.clearFileCache(url: "https://assets7.lottiefiles.com/packages/not_exist.json", container: globalAbilityContext)
+                            }.margin(top:40)
                         }.margin(top: 5)
-                        Row() {}.margin(top: 5)
+                        Row() {
+                            Button("togglePause").onClick {
+                                this.animateItem.getOrThrow().togglePause(name: this.animateName)
+                            }.margin(top:40)
+                        }.margin(top: 5)
                         Row() {}.margin(top: 5)
                         Row() {}.margin(top: 5)
                         Row() {}.margin(top: 5)

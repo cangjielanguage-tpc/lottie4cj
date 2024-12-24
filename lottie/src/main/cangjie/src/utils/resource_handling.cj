@@ -151,14 +151,35 @@ func decompressGzipFile(srcFileName: String, resultDir: JsonFilesDir): Int64 {
 
         var tempBuf: Array<UInt8> = Array<UInt8>(1024, item: 0)
         let decompressInputStream: DecompressInputStream = DecompressInputStream(srcFile, wrap: GzipFormat, bufLen: 10000)
+        var isFirst: Bool = true
+        var isStartJson: Bool = false //开始写入json文件中。
+        var startIndex: Int64 = 0 //开始写入json文件的数组下标。
         while (true) {
             var readNum = decompressInputStream.read(tempBuf)
             if (readNum <= 0) {
                 break
             }
-            destFile.write(tempBuf.slice(0, readNum).toArray())
-
-            count += readNum
+            startIndex = 0
+            if (isFirst) {
+                isFirst = false
+                if (tempBuf[0] == 123){
+                    isStartJson = true
+                }
+            }
+            if (!isStartJson) {
+                let index: Int64 = tempBuf.indexOf(123) ?? -1
+                if (index != -1) {
+                    // { 之后的字符是： \r\n  ||  \n  ||  空格  ||  双引号 "
+                    if ((tempBuf[index + 1] == 13 && tempBuf[index + 2] == 10) || tempBuf[index + 1] == 10 || tempBuf[index + 1] == 32 || tempBuf[index + 1] == 34) {
+                        startIndex = index
+                        isStartJson = true
+                    }
+                }
+            }
+            if (isStartJson) {
+                destFile.write(tempBuf.slice(startIndex, readNum - startIndex).toArray())
+                count += (readNum - startIndex)
+            }
         }
         decompressInputStream.close()
 
@@ -240,7 +261,6 @@ public func readJson(url: String, readPath: String, errCallBack!: Option<(String
         let existResult: FilePathObject = isCacheExist(url, readPath)
         if (existResult.isExist) {
             let arrayBuffer: Array<Byte> = FileUtils.readToEnd(existResult.filePath)
-            let str = String.fromUtf8(arrayBuffer)
             let bas: ByteArrayStream = ByteArrayStream(arrayBuffer.size)
             bas.write(arrayBuffer)
 
@@ -266,6 +286,7 @@ public func isCacheExist(url: String, readPath: String): FilePathObject {
         let lastIndex: Int64 = url.lastIndexOf("/") ?? -1
         let result: String = url[(lastIndex + 1)..url.size] //最后一个斜杠后的字符串
         // 通过沙箱中下载或者解压的文件名来找到文件所在路径
+        // 获取uri后缀
         let suffix: String = getSuffix(url)
 
         if (suffix == ".js" || suffix == ".json") {

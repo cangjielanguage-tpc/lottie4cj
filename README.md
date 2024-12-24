@@ -165,7 +165,7 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 - 播放动画
 
   ```
-  lottie.play("") //所有动画播放
+  lottie.play() //所有动画播放
   或
   animationItem.play() //当前指定animationItem动画播放
   ```
@@ -173,15 +173,15 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 - 停止动画
 
   ```
-  lottie.stop("") //所有动画停止
+  lottie.stop() //所有动画停止
   或
-  animationItem.stop("") //当前指定animationItem动画停止
+  animationItem.stop() //当前指定animationItem动画停止
   ```
 
 - 暂停动画
 
   ```
-  lottie.pause("") //所有动画暂停
+  lottie.pause() //所有动画暂停
   或
   animationItem.pause() //当前指定animationItem动画暂停
   ```
@@ -189,9 +189,9 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 - 切换暂停/播放
 
   ```
-  lottie.togglePause("") //所有动画切换暂停/播放
+  lottie.togglePause() //所有动画切换暂停/播放
   或
-  animationItem.togglePause("") //当前指定animationItem动画切换暂停/播放
+  animationItem.togglePause() //当前指定animationItem动画切换暂停/播放
   ```
 
 - 设置播放速度
@@ -207,7 +207,7 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
   > 注意：direction 1为正向，-1为反向
 
   ```
-  lottie.setDirection(1, "") //所有动画设置播放方向
+  lottie.setDirection(1) //所有动画设置播放方向
   或
   animationItem.setDirection(1) //当前指定animationItem动画设置播放方向
   ```
@@ -219,32 +219,33 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
   lottie.destroy() //销毁所有动画
   或
   lottie.destroy("name") //销毁指定name动画
+  animationItem.destroy() //销毁当前指定animationItem动画
   ```
 
 - 清除缓存
   ```
-  lottie.clearFileCache("", Option<AbilityContext>.None) //清除所有动画缓存
+  lottie.clearFileCache() //清除所有动画缓存
   或
-  lottie.clearFileCache("path", Option<AbilityContext>.None) //清除指定动画缓存
+  lottie.clearFileCache(url: "https://p3-dcd.byteimg.com/obj/motor-mis-img/5ec2c8af22bc17aedafe147a1d38f21d.json") //清除指定动画缓存
   或
-  lottie.clearFileCache("path", container) //清除指定本地动画中网络资源缓存
+  lottie.clearFileCache(url: "common/lottie/data_url.json", container: container) //清除指定本地动画中网络资源缓存
   ```
 
 - 控制动画停止在某一帧或某一时刻
   > 注意：根据第二个参数判断按帧还是按毫秒控制，true 按帧控制，false 按时间控制，缺省默认为false
 
   ```
-  animationItem.goToAndStop(250.0, true, "")
+  animationItem.goToAndStop(250.0, isFrame: true)
   或
-  animationItem.goToAndStop(5000.0, false, "")
+  animationItem.goToAndStop(5000.0, isFrame: false)
   ```
 
 - 控制动画从某一帧或某一时刻开始播放
   > 注意:根据第二参数判断按帧还是按毫秒控制，true 按帧控制，false 按时间控制，缺省默认为false
   ```
-  animationItem.goToAndPlay(250.0,true)
+  animationItem.goToAndPlay(250.0, isFrame: true)
   或
-  animationItem.goToAndPlay(12000.0,false)
+  animationItem.goToAndPlay(12000.0, isFrame: false)
   ```
 
 - 限定动画资源播放时的整体帧范围，即设置动画片段
@@ -279,7 +280,7 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
   > 注意：添加和移除的事件监听，回调函数需是同一个，需预先定义，否则将不能正确移除
 
   ```
-  AnimationEventName = 'enterFrame' | 'loopComplete' | 'complete' | 'segmentStart' | 'destroy' | 'config_ready' | 'data_ready' | 'DOMLoaded' | 'error' | 'data_failed' | 'loaded_images';
+  AnimationEventName = "enterFrame" | "loopComplete" | "complete" | "segmentStart" | "destroy" | "config_ready" | "data_ready" | "DOMLoaded" | "error" | "data_failed" | "loaded_images";
 
   func callback(event: Option<BMEvent>): Unit{
       // TODO something
@@ -359,12 +360,12 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 | 使用方法                  | 类型                     | 相关描述       |
 |-----------------------|------------------------|------------|
 | play                  | name!: String = ""     | 播放         |
-| stop                  | name: String           | 停止         |
+| stop                  | name!: String = ""     | 停止         |
 | pause                 | name!: String = ""     | 暂停         |
-| togglePause           | name: String           | 切换暂停       |
-| destroy               | name: String           | 销毁动画       |
-| goToAndStop           | value: Float64, isFrame: Bool, name: String | 跳到某一时刻并停止  |
-| goToAndPlay           | value: Float64, isFrame: Bool, name: String | 跳到某一时刻并播放  |
+| togglePause           | name!: String = ""     | 切换暂停       |
+| destroy               | name!: String = ""     | 销毁动画       |
+| goToAndStop           | value: Float64, isFrame!: Bool = false, name!: String = "" | 跳到某一时刻并停止  |
+| goToAndPlay           | value: Float64, isFrame!: Bool = false, name!: String = "" | 跳到某一时刻并播放  |
 | setSegment            | initNum: Float64, end: Float64      | 设置动画片段     |
 | playSegments          | arr: Array<Array<Float64>>, forceFlag: Bool         | 播放指定片段     |
 | resetSegments         | forceFlag: Bool              | 重置动画       |
@@ -376,7 +377,7 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 | changeColor           | color: Array<Int64>, endColor: Array<Int64>, layer: Int64, index: Int64  | 更改动画颜色     |
 | setContentMode        | contentMode: String            | 设置填充模式     |
 | setFrameRate          | playingFrameRate: Float64              | 设置动画刷帧率    |
-| cacheFileClear        | url: String, container: Option<AbilityContext>       | 清除文件缓存     |
+| clearFileCache        | url!: String = "", container!: Option<AbilityContext> = None       | 清除文件缓存     |
 
 
 ### 功能示例

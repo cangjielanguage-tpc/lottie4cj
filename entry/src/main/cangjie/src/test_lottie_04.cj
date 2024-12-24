@@ -39,7 +39,7 @@ class LottieSample2 {
 
                 Column() {
                     Button("togglePause").onClick {
-                        manager.togglePause(this.animateName)
+                        manager.togglePause(animationName:this.animateName)
                     }.margin(top:40)
                 }
             }

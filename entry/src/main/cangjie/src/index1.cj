@@ -93,7 +93,7 @@ class MyView1 {
                 Button("销毁").onClick{
                     evt =>
                         if (let Some(v) <- this.animateItem) {
-                            v.destroy("2016")
+                            v.destroy(name: "2016")
                         }
                     this.animateItem = None
                 }
@@ -135,13 +135,13 @@ class MyView1 {
                 Button("结束，并回到第0帧").onClick{
                     evt =>
                         if (let Some(v) <- this.animateItem) {
-                            v.stop("2016")
+                            v.stop(name: "2016")
                         }
                 }
                 Button("切换暂停").onClick{
                     evt =>
                         if (let Some(v) <- this.animateItem) {
-                            v.togglePause("2016")
+                            v.togglePause(name: "2016")
                         }
                 }
               }.margin(top: 5 )
@@ -149,13 +149,13 @@ class MyView1 {
                 Button("跳到某一帧并停止").onClick{
                     evt =>
                         if (let Some(v) <- this.animateItem) {
-                            v.goToAndStop(250.0, true,"")
+                            v.goToAndStop(250.0, isFrame: true)
                         }
                 }
                 Button("跳到某一秒并停止").onClick{
                     evt =>
                         if (let Some(v) <- this.animateItem) {
-                            v.goToAndStop(5000.0, false,"")
+                            v.goToAndStop(5000.0, isFrame: false)
                         }
                 }
               }.margin(top: 5 )
@@ -163,13 +163,13 @@ class MyView1 {
                 Button("跳到某一帧并播放").onClick{
                     evt =>
                         if (let Some(v) <- this.animateItem) {
-                            v.goToAndPlay(250.0, true,"")
+                            v.goToAndPlay(250.0, isFrame: true)
                         }
                 }
                 Button("跳到某一秒并播放").onClick{
                     evt =>
                         if (let Some(v) <- this.animateItem) {
-                            v.goToAndPlay(12000.0, false,"")
+                            v.goToAndPlay(12000.0, isFrame: false)
                         }
                 }
               }.margin(top: 5 )
@@ -293,7 +293,7 @@ class MyView1 {
                 Button("清除文件缓存").onClick{
                     evt =>
                         if (let Some(v) <- this.animateItem) {
-                            lottie.clearFileCache("",Option<AbilityContext>.None)
+                            lottie.clearFileCache()
                         }
                 }
               }.margin(top: 5 )
