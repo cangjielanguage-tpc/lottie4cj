@@ -81,22 +81,22 @@ public class Matrix {
 
     public func setTransform(a: Float64, b: Float64, c: Float64, d: Float64, e: Float64, f: Float64, g: Float64,
         h: Float64, i: Float64, j: Float64, k: Float64, l: Float64, m: Float64, n: Float64, o: Float64, p: Float64) {
-        this.props[0] = a
-        this.props[1] = b
-        this.props[2] = c
-        this.props[3] = d
-        this.props[4] = e
-        this.props[5] = f
-        this.props[6] = g
-        this.props[7] = h
-        this.props[8] = i
-        this.props[9] = j
-        this.props[10] = k
-        this.props[11] = l
-        this.props[12] = m
-        this.props[13] = n
-        this.props[14] = o
-        this.props[15] = p
+        this.props[0] = Float64(Float32(a))
+        this.props[1] = Float64(Float32(b))
+        this.props[2] = Float64(Float32(c))
+        this.props[3] = Float64(Float32(d))
+        this.props[4] = Float64(Float32(e))
+        this.props[5] = Float64(Float32(f))
+        this.props[6] = Float64(Float32(g))
+        this.props[7] = Float64(Float32(h))
+        this.props[8] = Float64(Float32(i))
+        this.props[9] = Float64(Float32(j))
+        this.props[10] = Float64(Float32(k))
+        this.props[11] = Float64(Float32(l))
+        this.props[12] = Float64(Float32(m))
+        this.props[13] = Float64(Float32(n))
+        this.props[14] = Float64(Float32(o))
+        this.props[15] = Float64(Float32(p))
         return this
     }
 
@@ -115,10 +115,10 @@ public class Matrix {
         if (a2 == 1.0 && b2 == 0.0 && c2 == 0.0 && d2 == 0.0 && e2 == 0.0 && f2 == 1.0 && g2 == 0.0 && h2 == 0.0 &&
             i2 == 0.0 && j2 == 0.0 && k2 == 1.0 && l2 == 0.0) {
             // NOTE: commenting this condition because TurboFan deoptimizes code when present
-            _p[12] = _p[12] * a2 + _p[15] * m2
-            _p[13] = _p[13] * f2 + _p[15] * n2
-            _p[14] = _p[14] * k2 + _p[15] * o2
-            _p[15] *= p2
+            _p[12] = Float64(Float32(_p[12] * a2 + _p[15] * m2))
+            _p[13] = Float64(Float32(_p[13] * f2 + _p[15] * n2))
+            _p[14] = Float64(Float32(_p[14] * k2 + _p[15] * o2))
+            _p[15] = Float64(Float32(_p[15]*p2))
             this._identityCalculated = false
             return this
         }
@@ -145,25 +145,25 @@ public class Matrix {
          * bdf
          * 001
          */
-        _p[0] = a1 * a2 + b1 * e2 + c1 * i2 + d1 * m2
-        _p[1] = a1 * b2 + b1 * f2 + c1 * j2 + d1 * n2
-        _p[2] = a1 * c2 + b1 * g2 + c1 * k2 + d1 * o2
-        _p[3] = a1 * d2 + b1 * h2 + c1 * l2 + d1 * p2
+        _p[0] = Float64(Float32(a1 * a2 + b1 * e2 + c1 * i2 + d1 * m2))
+        _p[1] = Float64(Float32(a1 * b2 + b1 * f2 + c1 * j2 + d1 * n2))
+        _p[2] = Float64(Float32(a1 * c2 + b1 * g2 + c1 * k2 + d1 * o2))
+        _p[3] = Float64(Float32(a1 * d2 + b1 * h2 + c1 * l2 + d1 * p2))
 
-        _p[4] = e1 * a2 + f1 * e2 + g1 * i2 + h1 * m2
-        _p[5] = e1 * b2 + f1 * f2 + g1 * j2 + h1 * n2
-        _p[6] = e1 * c2 + f1 * g2 + g1 * k2 + h1 * o2
-        _p[7] = e1 * d2 + f1 * h2 + g1 * l2 + h1 * p2
+        _p[4] = Float64(Float32(e1 * a2 + f1 * e2 + g1 * i2 + h1 * m2))
+        _p[5] = Float64(Float32(e1 * b2 + f1 * f2 + g1 * j2 + h1 * n2))
+        _p[6] = Float64(Float32(e1 * c2 + f1 * g2 + g1 * k2 + h1 * o2))
+        _p[7] = Float64(Float32(e1 * d2 + f1 * h2 + g1 * l2 + h1 * p2))
 
-        _p[8] = i1 * a2 + j1 * e2 + k1 * i2 + l1 * m2
-        _p[9] = i1 * b2 + j1 * f2 + k1 * j2 + l1 * n2
-        _p[10] = i1 * c2 + j1 * g2 + k1 * k2 + l1 * o2
-        _p[11] = i1 * d2 + j1 * h2 + k1 * l2 + l1 * p2
+        _p[8] = Float64(Float32(i1 * a2 + j1 * e2 + k1 * i2 + l1 * m2))
+        _p[9] = Float64(Float32(i1 * b2 + j1 * f2 + k1 * j2 + l1 * n2))
+        _p[10] = Float64(Float32(i1 * c2 + j1 * g2 + k1 * k2 + l1 * o2))
+        _p[11] = Float64(Float32(i1 * d2 + j1 * h2 + k1 * l2 + l1 * p2))
 
-        _p[12] = m1 * a2 + n1 * e2 + o1 * i2 + p1 * m2
-        _p[13] = m1 * b2 + n1 * f2 + o1 * j2 + p1 * n2
-        _p[14] = m1 * c2 + n1 * g2 + o1 * k2 + p1 * o2
-        _p[15] = m1 * d2 + n1 * h2 + o1 * l2 + p1 * p2
+        _p[12] = Float64(Float32(m1 * a2 + n1 * e2 + o1 * i2 + p1 * m2))
+        _p[13] = Float64(Float32(m1 * b2 + n1 * f2 + o1 * j2 + p1 * n2))
+        _p[14] = Float64(Float32(m1 * c2 + n1 * g2 + o1 * k2 + p1 * o2))
+        _p[15] = Float64(Float32(m1 * d2 + n1 * h2 + o1 * l2 + p1 * p2))
 
         this._identityCalculated = false
         return this
