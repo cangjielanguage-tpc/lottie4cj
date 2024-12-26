@@ -33,6 +33,9 @@ public class AnimationDataParser {
     }
 
     public static func parse(bas: ByteArrayStream): AnimationData {
+        if (bas.length == 0) {
+            return AnimationData(isNull: true)
+        }
         var startFrame: Float64 = 0.0
         var endFrame: Float64 = 0.0
         var frameRate: Float64 = 0.0

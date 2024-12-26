@@ -161,9 +161,9 @@ public class CvTextElement <: ITextElement {
         var letters = this.textProperty.currentData.l
         var len = letters.size
         var renderedLetter: ?LetterProps = None
-        var lastFill = Color(0,0,0)
-        var lastStroke = Color(0,0,0)
-        var lastStrokeW: Int64 = -1
+        var lastFill: ?Color= None
+        var lastStroke: ?Color = None
+        var lastStrokeW: ?Int64 = None
         var commands = Array<ArrayList<Float64>>()
         var pathArr=ArrayList<Float64>()
         for (i in 0..len) {
@@ -176,44 +176,44 @@ public class CvTextElement <: ITextElement {
                 }
                 if (this.fill) {
                   if (renderedLetter.isSome() && renderedLetter.getOrThrow().fc.toUInt32() != Color(0,0,0).toUInt32()) {
-                    if (lastFill.toUInt32() != renderedLetter.getOrThrow().fc.toUInt32()) {
+                    if (lastFill.isNone() || (lastFill.getOrThrow().toUInt32() != renderedLetter.getOrThrow().fc.toUInt32())) {
                       lastFill = renderedLetter.getOrThrow().fc
                       ctx.fillStyle(renderedLetter.getOrThrow().fc)
                     }
-                  } else if (lastFill.toUInt32() != this.values.fill.toUInt32()) {
+                  } else if (lastFill.isNone() || (lastFill.getOrThrow().toUInt32() != this.values.fill.toUInt32())) {
                     lastFill = this.values.fill
                     ctx.fillStyle(this.values.fill)
                   }
                   commands = this.textSpans[i].elem
                   jLen = commands.size
-                  this.globalData.canvasContext.beginPath()
+                  ctx.beginPath()
                   for (j in 0..jLen) {
                     pathArr = commands[j]
                     kLen = pathArr.size
-                    this.globalData.canvasContext.moveTo(pathArr[0], pathArr[1])
+                    ctx.moveTo(pathArr[0], pathArr[1])
                     for (k in 2..kLen: 6) {
-                      this.globalData.canvasContext.bezierCurveTo(pathArr[k], pathArr[k + 1], pathArr[k + 2], pathArr[k + 3], pathArr[k + 4], pathArr[k + 5])
+                      ctx.bezierCurveTo(pathArr[k], pathArr[k + 1], pathArr[k + 2], pathArr[k + 3], pathArr[k + 4], pathArr[k + 5])
                     }
                   }
-                  this.globalData.canvasContext.closePath()
-                  this.globalData.canvasContext.fill()
+                  ctx.closePath()
+                  ctx.fill()
                 }
                 if (this.stroke) {
                   if (renderedLetter.isSome() && renderedLetter.getOrThrow().sw !=0) {
-                    if (lastStrokeW != renderedLetter.getOrThrow().sw) {
+                    if (lastStrokeW.isNone() || (lastStrokeW.getOrThrow() != renderedLetter.getOrThrow().sw)) {
                       lastStrokeW = renderedLetter.getOrThrow().sw
                       ctx.lineWidth(renderedLetter.getOrThrow().sw)
                     }
-                  } else if (Float64(lastStrokeW) != this.values.sWidth) {
+                  } else if (lastStrokeW.isNone() || (Float64(lastStrokeW.getOrThrow()) != this.values.sWidth)) {
                     lastStrokeW = Int64(this.values.sWidth)
                     ctx.lineWidth(this.values.sWidth)
                   }
                   if (renderedLetter.isSome() && renderedLetter.getOrThrow().sc.toUInt32() != Color(0,0,0).toUInt32()) {
-                    if (lastStroke.toUInt32() != renderedLetter.getOrThrow().sc.toUInt32() ) {
+                    if (lastStroke.isNone() || (lastStroke.getOrThrow().toUInt32() != renderedLetter.getOrThrow().sc.toUInt32())) {
                       lastStroke = renderedLetter.getOrThrow().sc
                       ctx.strokeStyle(renderedLetter.getOrThrow().sc)
                     }
-                  } else if (lastStroke.toUInt32() != this.values.stroke.toUInt32()) {
+                  } else if (lastStroke.isNone() || (lastStroke.getOrThrow().toUInt32() != this.values.stroke.toUInt32())) {
                     lastStroke = this.values.stroke
                     ctx.strokeStyle(this.values.stroke)
                   }

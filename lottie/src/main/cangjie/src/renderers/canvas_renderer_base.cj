@@ -497,6 +497,8 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         if (this.globalData._mdf) {
             if (this.renderConfig.clearCanvas) {
                 this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h)
+                this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
+                this.canvasContext.clearRect(0.0, 0.0, 174.46153846153845, 200.0) /* 清空之前画布 */
             } else {
                 this.save(false)
             }
