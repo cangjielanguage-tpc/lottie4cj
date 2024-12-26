@@ -19,7 +19,7 @@ public class AnimationItem <: BaseEvent {
      * 停止动画
      * 参数 name - 被指定的动画名, 缺省默认为空
      */
-    public func stop(name: String): Unit
+    public func stop(name!: String = ""): Unit
 
     /**
      * 暂停动画
@@ -31,13 +31,13 @@ public class AnimationItem <: BaseEvent {
      * 播放或暂停动画
      * 参数 name - 被指定的动画名, 缺省默认为空
      */
-    public func togglePause(name: String): Unit
+    public func togglePause(name!: String = ""): Unit
 
     /**
      * 销毁动画
      * 参数 name - 被指定的动画名, 缺省默认为空
      */
-    public func destroy(name: String): Unit
+    public func destroy(name!: String = ""): Unit
 
     /**
      * 控制动画画面停止在某一帧或某个时刻
@@ -45,7 +45,7 @@ public class AnimationItem <: BaseEvent {
      * 参数 isFrame - true按帧控制, false按时间控制, 缺省默认false
      * 参数 name - 被指定的动画名, 可缺省默认为空
      */
-    public func goToAndStop(value: Float64, isFrame: Bool, name: String): Unit
+    public func goToAndStop(value: Float64, isFrame!: Bool = false, name!: String = ""): Unit
 
     /**
      * 控制动画画面从在某一帧或某个时刻开始播放
@@ -53,19 +53,19 @@ public class AnimationItem <: BaseEvent {
      * 参数 isFrame - true按帧控制, false按时间控制, 缺省默认false
      * 参数 name - 被指定的动画名, 可缺省默认为空
      */
-    public func goToAndPlay(value: Float64, isFrame: Bool, name: String): Unit
+    public func goToAndPlay(value: Float64, isFrame!: Bool = false, name!: String = ""): Unit
 
     /**
-     * 限定动画资源播放时的整体帧范围
+     * 限定动画资源播放时的整体帧范围。不可连续调用，再次调用时，需要先调用resetSegments。
      * 参数 initNum - 起始帧号
      * 参数 iend - 结束帧号
      */
     public func setSegment(initNum: Float64, end: Float64): Unit
 
     /**
-     * 设置仅播放指定范围的帧动画
-     * 参数 arr - 片段或片段数组; 若传入的是数组, 且当前loop!=0, 播放结束后, 仅循环播放最后一个片段
-     * 参数 forceFlag - 值为true立刻生效, 值为false循环下次播放的时候生效
+     * 设置仅播放指定范围的帧动画。不可连续调用，再次调用时，需要先调用resetSegments。
+     * 参数 arr - 片段或片段数组，片段必须是长度为 2 的数组; 若传入的是数组, 且当前loop!=0, 播放结束后, 仅循环播放最后一个片段。
+     * 参数 forceFlag - 值为true立刻生效, 值为false循环下次播放的时候生效。
      */
     public func playSegments(arr: Array<Array<Float64>>, forceFlag: Bool): Unit
 
@@ -170,6 +170,15 @@ public class AnimationItem <: BaseEvent {
      * 备注：暂不支持此功能
      */
     public func setFrameRate(playingFrameRate: Float64): Unit
+
+    /**
+     * 刷新动画布局
+     * 参数 width - 画布的宽。宽值 <= 0 时，恢复默认的画布宽值。
+     * 参数 height - 画布的高。高值 <= 0 时，恢复默认的画布高值。
+     *
+     * 备注：暂不支持此功能
+     */
+    public func resize(width!: Int64 = 0, height!: Int64 = 0): Unit
 }
 ```
 
@@ -202,7 +211,7 @@ public class AnimationManager {
      * 停止动画
      * 参数 animationName - 被指定的动画名, 缺省默认为空
      */
-    public func stop(animationName: String): Unit
+    public func stop(animationName!: String = ""): Unit
 
     /**
      * 暂停动画
@@ -214,7 +223,7 @@ public class AnimationManager {
      * 播放或暂停动画
      * 参数 animationName - 被指定的动画名, 缺省默认为空
      */
-    public func togglePause(animationName: String): Unit
+    public func togglePause(animationName!: String = ""): Unit
 
     /**
      * 设置播放速度
@@ -232,7 +241,7 @@ public class AnimationManager {
      * 销毁动画
      * 参数 animationName - 被指定的动画名, 缺省默认为空
      */
-    public func destroy(animationName: String): Unit
+    public func destroy(animationName!: String = ""): Unit
 
     /**
      * 清除缓存
@@ -240,7 +249,7 @@ public class AnimationManager {
      * @param ac 具体动画被清除缓存的地址
      * @param container 与canvas组件绑定的上下文CanvasRenderingContext2D,用于本地资源路径json文件
      */
-    public func clearFileCache(url: String, container: Option<AbilityContext>): Unit
+    public func clearFileCache(url!: String = "", container!: Option<AbilityContext> = None): Unit
 
 }
 ```
@@ -283,6 +292,33 @@ public class AnimationConfig {
         animationData!: AnimationData = AnimationData(isNull: true),
         context!: Option<AbilityContext> = None
     )
+}
+```
+
+
+### class AnimationDataParser
+
+```cangjie
+/**
+ * 用于lottie json的解析器，它解析为AnimationData对象。
+ */
+public class AnimationDataParser {
+    
+    /**
+     * 将动画的 json 数据，解析封装到 AnimationData 实例中。
+     * 
+     * 参数 reader - 动画的 json 数据字符串。
+     * 返回值 AnimationData - 封装动画的 json 数据的实例。
+     */
+    public static func parse (reader: String): AnimationData
+
+    /**
+     * 将动画的 json 数据，解析封装到 AnimationData 实例中。
+     * 
+     * 参数 bas - 读取到的动画的 json 数据存储到 ByteArrayStream 流中。
+     * 返回值 AnimationData - 封装动画的 json 数据的实例。
+     */
+    public static func parse(bas: ByteArrayStream): AnimationData
 }
 ```
 

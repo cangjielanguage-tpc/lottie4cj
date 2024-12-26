@@ -44,6 +44,20 @@ public func readFile(path: String): Array<Byte> {
     return File.readFrom(path)
 }
 
+public func loadPath(src: String, context: Option<AbilityContext>): Array<UInt8> {
+    //获取rawfile的字节数组数据
+    if (let Some(v) <- context) {
+        let stageContext = getStageContext(v)
+        let rm: ResourceManager = ResourceManager.getResourceManager(stageContext)
+        try {
+            let buffer: Array<UInt8> = rm.getRawFileContent(src)
+            return buffer
+        } catch (e: Exception) {
+            Hilog.error(0, "lipei", "begin------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
+        }
+    }
+    return Array<UInt8>()
+}
 
 public func loadMedia(resId: Int32, context: Option<AbilityContext>): Array<UInt8> {
     if (let Some(v) <- context) {

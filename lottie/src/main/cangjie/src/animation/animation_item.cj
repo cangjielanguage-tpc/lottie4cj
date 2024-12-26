@@ -68,8 +68,6 @@ public class AnimationItem <: BaseEvent {
 
     public var drawnFrameEvent: BMEnterFrameEvent
     public var context: Option<AbilityContext> = None
-    public var cacheDir: String = ""
-    public var filesDir: String = ""
 
     public var packageName: String = ""
     public var contentMode: String = ""
@@ -582,11 +580,7 @@ public class AnimationItem <: BaseEvent {
         }
     }
 
-    public func resize(): Unit {
-        resize(0, 0)
-    }
-
-    public func resize(width: Int64, height: Int64): Unit {
+    public func resize(width!: Int64 = 0, height!: Int64 = 0): Unit {
         //添加此验证以实现向后兼容性，以防传递事件对象。
         //防止 this.renderer 为 null，导致读取 updateContainerSize 属性失败
         if (hasRenderer) {
@@ -696,7 +690,7 @@ public class AnimationItem <: BaseEvent {
         }
     }
     
-    public func togglePause(name: String): Unit {
+    public func togglePause(name!: String = ""): Unit {
         if (name != "" && this.name != name) {
             return
         }
@@ -723,7 +717,7 @@ public class AnimationItem <: BaseEvent {
         return nextFrame
     }
 
-    public func stop(name: String): Unit {
+    public func stop(name!: String = ""): Unit {
         if (name != "" && this.name != name) {
             return
         }
@@ -748,19 +742,19 @@ public class AnimationItem <: BaseEvent {
         return marker
     }
 
-    public func goToAndStop(value: String, isFrame: Bool, name: String): Unit {
+    public func goToAndStop(value: String, isFrame!: Bool = false, name!: String = ""): Unit {
         if (name != "" && this.name != name) {
             return
         }
         //使用isNaN()函数来判断一个值是否是NaN值。如果该值为非数字值或NaN值，返回true，否则返回false。
         let marker: MarkerData = this.getMarkerData(value)
         if (!marker.isNull) {
-            this.goToAndStop(marker.time, true, "")
+            this.goToAndStop(marker.time, isFrame: true, name: "")
         }
         this.pause()
     }
 
-    public func goToAndStop(value: Float64, isFrame: Bool, name: String): Unit {
+    public func goToAndStop(value: Float64, isFrame!: Bool = false, name!: String = ""): Unit {
         if (name != "" && this.name != name) {
             return
         }
@@ -773,7 +767,7 @@ public class AnimationItem <: BaseEvent {
         this.pause()
     }
     
-    public func goToAndPlay(value: String, isFrame: Bool, name: String): Unit {
+    public func goToAndPlay(value: String, isFrame!: Bool = false, name!: String = ""): Unit {
         if (name != "" && this.name != name) {
             return
         }
@@ -781,7 +775,7 @@ public class AnimationItem <: BaseEvent {
         var marker: MarkerData = this.getMarkerData(value)
         if (!marker.isNull) {
             if (marker.duration == 0.0) {
-                this.goToAndStop(marker.time, true, "")
+                this.goToAndStop(marker.time, isFrame: true, name: "")
             } else {
                 this.playSegments([marker.time, marker.time + marker.duration], true)
             }
@@ -789,12 +783,12 @@ public class AnimationItem <: BaseEvent {
         this.play()
     }
 
-    public func goToAndPlay(value: Float64, isFrame: Bool, name: String): Unit {
+    public func goToAndPlay(value: Float64, isFrame!: Bool = false, name!: String = ""): Unit {
         if (name != "" && this.name != name) {
             return
         }
         //使用isNaN()函数来判断一个值是否是NaN值。如果该值为非数字值或NaN值，返回true，否则返回false。
-        this.goToAndStop(value, isFrame, name)
+        this.goToAndStop(value, isFrame: isFrame, name: name)
         this.play()
     }
 
@@ -894,6 +888,10 @@ public class AnimationItem <: BaseEvent {
     }
 
     public func setSegment(initNum: Float64, end: Float64): Unit {
+        if (initNum == end) {
+             Hilog.error(0, "[AnimationItem]", "[setSegment]- initNum == end, the setSegment function are not executed.")
+            return
+        }
         var pendingFrame: Float64 = -1.0
         if (this.isPaused) {
             if (this.currentRawFrame + this.firstFrame < initNum) {
@@ -907,11 +905,17 @@ public class AnimationItem <: BaseEvent {
         this.totalFrames = end - initNum
         this.timeCompleted = this.totalFrames
         if (pendingFrame != -1.0) {
-            this.goToAndStop(pendingFrame, true, "")
+            this.goToAndStop(0.0, isFrame: true, name: "")
         }
     }
 
     public func playSegments(arr: Array<Array<Float64>>, forceFlag: Bool): Unit {
+        for (i in 0..arr.size) {
+            if (arr[i].size != 2) {
+                Hilog.error(0, "[AnimationItem]", "[playSegments]- The incoming playback segment data is not compliant. Each set of data must be 2.")
+                return
+            }
+        }
         if (forceFlag) {
             this.segments.clear()
         }
@@ -927,6 +931,10 @@ public class AnimationItem <: BaseEvent {
     }
 
     public func playSegments(arr: Array<Float64>, forceFlag: Bool): Unit {
+        if (arr.size != 2) {
+            Hilog.error(0, "[AnimationItem]", "[playSegments]- The incoming playback segment data is not compliant. The length of the array must be 2.")
+            return
+        }
         if (forceFlag) {
             this.segments.clear()
         }
@@ -959,7 +967,7 @@ public class AnimationItem <: BaseEvent {
         return false
     }
 
-    public func destroy(name: String): Unit {
+    public func destroy(name!: String = ""): Unit {
         if ((name != "" && this.name != name) || !hasRenderer) {
             return
         }

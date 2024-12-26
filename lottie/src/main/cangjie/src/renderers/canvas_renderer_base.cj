@@ -285,7 +285,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.reset()
         var elementWidth = 174.46153846153845
         var elementHeight = 200.0
-        if (width != 0 && height != 0) {
+        if (width > 0 && height > 0) {
             elementWidth = Float64(width)
             elementHeight = Float64(height)
         } else {
@@ -300,10 +300,10 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             }
         }
 
-        if (elementHeight == 0.0) {
+        if (elementHeight <= 0.0) {
             elementHeight = 200.0  //360
         }
-        if (elementWidth == 0.0) {
+        if (elementWidth <= 0.0) {
             elementWidth = 174.46153846153845 //540
         }
 

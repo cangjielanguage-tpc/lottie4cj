@@ -202,26 +202,26 @@ public class AnimationManager {
         }
     }
 
-    public func goToAndStop(value: Float64, isFrame: Bool, animationName: String): Unit {
+    public func goToAndStop(value: Float64, isFrame!: Bool = false, animationName!: String = ""): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
-                registeredAnimations[i].animation.goToAndStop(value, isFrame, animationName)
+                registeredAnimations[i].animation.goToAndStop(value, isFrame: isFrame, name: animationName)
             }
         }
     }
 
-    public func stop(animationName: String): Unit {
+    public func stop(animationName!: String = ""): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
-                registeredAnimations[i].animation.stop(animationName)
+                registeredAnimations[i].animation.stop(name: animationName)
             }
         }
     }
 
-    public func togglePause(animationName: String): Unit {
+    public func togglePause(animationName!: String = ""): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
-                registeredAnimations[i].animation.togglePause(animationName)
+                registeredAnimations[i].animation.togglePause(name: animationName)
             }
         }
     }
@@ -270,7 +270,7 @@ public class AnimationManager {
         _packageName = name
     }
 
-    public func destroy(animationName: String): Unit {
+    public func destroy(animationName!: String = ""): Unit {
         var tag: Bool = false
         for (i in (len - 1)..=0:-1) {
             if (registeredAnimations.size > i) {
@@ -278,7 +278,7 @@ public class AnimationManager {
                     //如果还有其他动画也在播放，则不需要停止
                     tag = true
                 }
-                registeredAnimations[i].animation.destroy(animationName)
+                registeredAnimations[i].animation.destroy(name:animationName)
             }
         }
         //判断动画是否全部销毁，如果animation全部销毁，则设置Animator的状态为Stopped
@@ -331,7 +331,7 @@ public class AnimationManager {
     public func resize(): Unit {
         for (i in 0..len) {
             if (registeredAnimations.size > i) {
-                registeredAnimations[i].animation.resize(0, 0)
+                registeredAnimations[i].animation.resize()
             }
         }
     }
@@ -447,30 +447,35 @@ public class AnimationManager {
             rmdir(dirPath)
         }
         if (let Some(context) <- container) {
-            let arrayBuffer: Array<Byte> = readFile(container, path)
-            let bas: ByteArrayStream = ByteArrayStream(arrayBuffer.size)
-            bas.write(arrayBuffer)
+            try {
+                let arrayBuffer: Array<Byte> = readFile(container, path)
+                if (arrayBuffer.size <= 0) { return }
+                let bas: ByteArrayStream = ByteArrayStream(arrayBuffer.size)
+                bas.write(arrayBuffer)
 
-            // 解码的json数据
-            let jsonObj: AnimationData = AnimationDataParser.parse(bas)
+                // 解码的json数据
+                let jsonObj: AnimationData = AnimationDataParser.parse(bas)
 
-            let loadPath: String = FileUtils.downloadBase + "/lottie/loadImages/"   //getContext().filesDir
+                let loadPath: String = FileUtils.downloadBase + "/lottie/loadImages/"   //getContext().filesDir
 
-            var isExitNetworkAssets: Bool = false
-            for (i in 0..jsonObj.assets.size) {
-                if (jsonObj.assets[i].p.startsWith("http")){
-                    isExitNetworkAssets = true
-                    break
+                var isExitNetworkAssets: Bool = false
+                for (i in 0..jsonObj.assets.size) {
+                    if (jsonObj.assets[i].p.startsWith("http")){
+                        isExitNetworkAssets = true
+                        break
+                    }
                 }
-            }
 
-            if (isExitNetworkAssets) {
-                rmdir(loadPath, jsonObj: jsonObj)
+                if (isExitNetworkAssets) {
+                    rmdir(loadPath, jsonObj: jsonObj)
+                }
+            } catch (err: Exception) {
+                Hilog.error(0, "[AnimationManager]", "[clearSingleFileCache]-lottie delete file and assets failed with error message: ${err.message}")
             }
         }
     }
 
-    public func clearFileCache(url: String, container: Option<AbilityContext>): Unit {
+    public func clearFileCache(url!: String = "", container!: Option<AbilityContext> = None): Unit {
         if (url != "") {
             clearSingleFileCache(url, container)
             return
