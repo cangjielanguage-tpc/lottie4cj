@@ -26,23 +26,27 @@ public class CvImageElement <: IImageElement {
 
     public override  func createContent() {
         if (this.img.width > 0 && (this.assetData.w != this.img.width || this.assetData.h != this.img.height)) {
-            var imgW = this.img.width;
-            var imgH = this.img.height;
-            var imgRel = imgW / imgH;
-            var canvasRel = this.assetData.w / this.assetData.h;
-            var widthCrop: Int64
-            var heightCrop: Int64
-            // assetData.pr 属性不存在 ，var par = this.assetData.pr || this.globalData.renderConfig.imagePreserveAspectRatio;
-            var par = this.globalData.renderConfig.imagePreserveAspectRatio;
-            if ((imgRel > canvasRel && par == "xMidYMid slice") || (imgRel < canvasRel && par != "xMidYMid slice")) {
-              heightCrop = imgH;
-              widthCrop = heightCrop * canvasRel;
-            } else {
-              widthCrop = imgW;
-              heightCrop = widthCrop / canvasRel;
+            try {
+                var imgW: Float64 = Float64(this.img.width)
+                var imgH: Float64 = Float64(this.img.height)
+                var imgRel: Float64 = imgW / imgH
+                var canvasRel: Float64 = Float64(this.assetData.w) / Float64(this.assetData.h)
+                var widthCrop: Float64
+                var heightCrop: Float64
+                // assetData.pr 属性不存在 ，var par = this.assetData.pr || this.globalData.renderConfig.imagePreserveAspectRatio;
+                var par = this.globalData.renderConfig.imagePreserveAspectRatio
+                if ((imgRel > canvasRel && par == "xMidYMid slice") || (imgRel < canvasRel && par != "xMidYMid slice")) {
+                  heightCrop = imgH
+                  widthCrop = heightCrop * canvasRel
+                } else {
+                  widthCrop = imgW
+                  heightCrop = widthCrop / canvasRel
+                }
+                this.canvasContext.drawImage(this.img.pixel_map.getOrThrow(), (imgW - widthCrop) / 2.0, (imgH - heightCrop) / 2.0, widthCrop, heightCrop, 0.0, 0.0, Float64(this.assetData.w), Float64(this.assetData.h))
+            } catch (err: Exception) {
+                Hilog.error(0, "[CvImageElement]","[createContent] has an error: ${err.message}")
             }
-            this.canvasContext.drawImage(this.img.pixel_map.getOrThrow(), (imgW - widthCrop) / 2, (imgH - heightCrop) / 2, widthCrop, heightCrop, 0, 0, this.assetData.w, this.assetData.h);
-          }
+        }
     }
 
     public func renderInnerContent() {
