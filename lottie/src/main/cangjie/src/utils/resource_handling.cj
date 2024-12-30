@@ -335,7 +335,7 @@ public func downLoadImg(lottieData: AnimationData, context: Option<AbilityContex
                         Hilog.error(0, "[downLoadImg]", "moveFile err: ${err.message}")
                     }
                 }
-                let createOnCallback = ProgressCallback(completeCallBackInside)
+                let createOnCallback = ProgressCallback(completeCallBackInside, downloadTask)
                 downloadTask.on("completed", createOnCallback)
                 downloadTask.start()
             }

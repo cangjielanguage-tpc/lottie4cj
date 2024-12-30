@@ -52,17 +52,18 @@ public class DownLoadSource {
                 func completeCallBackInside() {
                     loadSuccess(downloadPath, uri, resultDir, configAnimation, errCallBack, context)
                 }
-                let createOnCallback = ProgressCallback(completeCallBackInside)
+                let createOnCallback = ProgressCallback(completeCallBackInside, task)
                 task.on("completed", createOnCallback)
                 func failedCallBack(){
                     loadFail(uri, resultDir, configAnimation, errCallBack, cacheFlag)
                 }
-                let failedCallback: ProgressCallback = ProgressCallback(failedCallBack)
+                let failedCallback: ProgressCallback = ProgressCallback(failedCallBack, task)
                 task.on("failed", failedCallback)
 
                 task.start()
             } catch (err: Exception) {
                 // 下载失败
+                Hilog.error(0, "[DownLoadSource]","[downLoadNetworkSource] Download error: ${err.message}")
                 downloadUri.remove(uri)
                 errCallBack("error", err)
             }
@@ -116,6 +117,7 @@ public class DownLoadSource {
                 configAnimation(ad, true)
             } catch (err: Exception) {
                 // 解压失败，从Map中移除条目
+                Hilog.error(0, "[DownLoadSource]","[loadSuccess]- decompress error: ${err.message}")
                 downloadUri.remove(uri)
                 errCallBack("error", err)
             }
@@ -137,6 +139,7 @@ public class DownLoadSource {
             configAnimation(cacheData, false)
         } else {
             // 缓存无资源，给用户返回加载异常
+            Hilog.error(0, "[DownLoadSource]","[loadFail]- the file is not exist in cache.")
             downloadUri.remove(uri)
             errCallBack("error", Exception("download fail: ${uri}"))
         }

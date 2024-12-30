@@ -22,7 +22,6 @@ internal import ohos.image.ImageInfo
 internal import ohos.image.InitializationOptions
 internal import ohos.image.createPixelMap
 
-
 @Entry
 @Component
 class LottieSample {
@@ -32,11 +31,15 @@ class LottieSample {
     var mainRenderingSettings: RenderingContextSettings = RenderingContextSettings(antialias: true)
     var mainCanvasRenderingContext: CanvasRenderingContext2D = CanvasRenderingContext2D(this.settings)
     private var lottie: AnimationManager = AnimationManager(this.canvasRenderingContext)
+    //private var lottie1: AnimationManager = AnimationManager(this.canvasRenderingContext)
+    //private var lottie2: AnimationManager = AnimationManager(this.mainCanvasRenderingContext)
     private var animateItem: Option<AnimationItem> = None
     private var animateItem2:Option<AnimationItem> = None
     private var animateName: String = "AnimationItem_Destroy_11"
 
     protected override func onBackPress(): Bool {
+        //lottie1.destroy()
+        //lottie2.destroy()
         lottie.destroy()
         return false
     }
@@ -51,27 +54,30 @@ class LottieSample {
                         Canvas(this.canvasRenderingContext).width(45.percent).height(200).backgroundColor(Color.GRAY).
                             onReady({ =>
                         //                    this.animateItem?.resize()
+                                Hilog.error(0, "", "1-Canvas is onReady")
                         }).onDisAppear({=>
                             // 组件移除时，可销毁动画资源
-                            //            lottie.destroy(animationName: "2016")
+                            //            lottie1.destroy(animationName: "2016")
                         })
 
                         Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).backgroundColor(Color.GRAY).
                             onReady({ =>
+                            Hilog.error(0, "", "2-Canvas is onReady")
                             this.mainCanvasRenderingContext.imageSmoothingEnabled(true)
                             this.mainCanvasRenderingContext.imageSmoothingQuality(QualityType.Medium)
                         //                    this.animateItem?.resize()
                         }).onDisAppear({=>
                             // 组件移除时，可销毁动画资源
-                            lottie.destroy(animationName: this.animateName)
+                            Hilog.error(0, "", "2-Canvas is destroy")
+                            //lottie1.destroy(animationName: this.animateName)
                         }).visibility(this.isCanvasVisible).onVisibleAreaChange(
                             [0.0],
                             {
                                 isVisible, currentRatio => if (isVisible) {
-                                    Hilog.info(0, "", "Canvas Visible")
+                                    Hilog.error(0, "", "2-Canvas Visible")
                                 // this.animateItem?.play()
                                 } else {
-                                    Hilog.info(0, "", "Canvas is not visible")
+                                    Hilog.error(0, "", "2-Canvas is not visible")
                                     // this.animateItem?.pause() //在画布不可见时尝试暂停动画
                                 }
                             }
@@ -93,9 +99,14 @@ class LottieSample {
                             Button("加载2016").onClick {
                                 evt =>
                                 Hilog.error(0, "lipei", "begin------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
-                                lottie.destroy(animationName: "2016")
+                                if (!this.animateItem.isNone()) {
+                                    this.animateItem.getOrThrow().destroy()
+                                    this.animateItem = Option<AnimationItem>.None
+                                }
                                 if (this.animateItem.isNone()) {
-                                     this.animateItem = lottie.loadAnimation(AnimationConfig(
+                                    this.animateItem = lottie.loadAnimation(AnimationConfig(
+                                        //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/c1c81ce5ef299171dc0a214ab8cc883a92d55773/animation_008.json",
+                                        isNetwork: true,
                                         wrapper_ns: CreateNS("doc"),
                                         container: this.canvasRenderingContext,
                                         renderer: "canvas", // canvas 渲染模式
@@ -121,30 +132,35 @@ class LottieSample {
                          }
                          Button("销毁--2016").onClick {
                              evt =>
-                             this.animateItem.getOrThrow().destroy()
-                             this.animateItem = Option<AnimationItem>.None
-                         }
+                                if (let Some(v) <- this.animateItem) {
+                                    v.destroy()
+                                    this.animateItem = Option<AnimationItem>.None
+                                }
+                            }
                         }.margin(top: 5)
 
 
                         Row() {
-                            Button("加载--网络zip-3").onClick {
+                            Button("加载--网络zip").onClick {
                                 evt =>
-                                lottie.destroy(animationName: "lf20_sF7uci.json")
                                 Hilog.error(0, "lipei", "加载--网络json------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
+                                if (!this.animateItem2.isNone()) {
+                                    this.animateItem2.getOrThrow().destroy()
+                                    this.animateItem2 = Option<AnimationItem>.None
+                                }
                                 if (this.animateItem2.isNone()) {
-                                     this.animateItem2 = lottie.loadAnimation(AnimationConfig(
+                                    this.animateItem2 = lottie.loadAnimation(AnimationConfig(
                                         //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/1a8533870915012cf63396b40f8efdc4f5945af8/data.json",
                                         //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/cc299f5f461652e529bf576a2efc316982da4c83/animation_008.gzip",
                                         //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/cc299f5f461652e529bf576a2efc316982da4c83/animation_008.gz",
                                             //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/68f2a7f5987d1be5fc2761668ddca363ba1b9c19/animation_008.tar.gz",
-                                            uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/c1c81ce5ef299171dc0a214ab8cc883a92d55773/animation_008.json",
+                                            //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/c1c81ce5ef299171dc0a214ab8cc883a92d55773/animation_008.json",
                                         //uri: "https://assets7.lottiefiles.com/packages/not_exist.json",//不可达的网络链接
                                         //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/c7a064f35b4b31ef359f490863ec96be8d10191a/redbag.gz",
                                         //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/8142eb1b796d7db4e47db3d981c8cacc840b5eea/redbag.gz",
                                         //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/36460c771d1471bab72f5a1afb19f39fb2c3a715/json2.zip",
                                         //uri: "https://gitcode.com/user-attachments/files/3804992/298424de7aba41d0bb35d5fa72b22bdb.zip",
-                                        //uri: "https://assets7.lottiefiles.com/packages/lf20_sF7uci.json",
+                                        uri: "https://assets7.lottiefiles.com/packages/lf20_sF7uci.json",
                                         //uri: "https://smarthome-drcn.dbankcdn.com/device/guide/KW38/template/lottie/lottie.zip",
                                         isNetwork: true,
                                         wrapper_ns: CreateNS("doc"),
@@ -154,7 +170,7 @@ class LottieSample {
                                         autoplay: true,
                                         name: "lf20_sF7uci.json",
                                         contentMode: "Contain",
-                                        path: "", // 路径加载动画只支持raw文件夹下的相对路径
+                                        //path: "", // 路径加载动画只支持raw文件夹下的相对路径
                                         //path: "grunt.json", // 路径加载动画只支持raw文件夹下的相对路径
                                         animationData: AnimationData(isNull: true),
                                         context: globalAbilityContext
@@ -163,8 +179,10 @@ class LottieSample {
                             }
                             Button("销毁--网络zip").onClick {
                                 evt =>
-                                this.animateItem2.getOrThrow().destroy()
-                                this.animateItem2 = Option<AnimationItem>.None
+                                if (let Some(v) <- this.animateItem2) {
+                                    v.destroy()
+                                    this.animateItem2 = Option<AnimationItem>.None
+                                }
                             }
                         }.margin(top: 5)
 

@@ -21,10 +21,20 @@ func getContext(context: Option<AbilityContext>, ty: String): String {
 
 public class ProgressCallback <: Callback1Argument<Progress> {
     let completeCallBackInside: () -> Unit
-    public init(completeCallBackInside: () -> Unit) {
+    var task: Option<Task> = Option<Task>.None
+    public init(completeCallBackInside: () -> Unit, task: Task) {
         this.completeCallBackInside = completeCallBackInside
+        this.task = task
     }
     public open func invoke(arg: Progress): Unit {
         this.completeCallBackInside()
+        if (let Some(v) <- this.task) {
+            try {
+                remove(v.tid)
+            } catch (err: Exception) {
+                Hilog.error(0, "[DownLoadSourceUtil]","[ProgressCallback] remove task error: ${err.message}")
+            }
+            this.task = Option<Task>.None
+        }
     }
 }
