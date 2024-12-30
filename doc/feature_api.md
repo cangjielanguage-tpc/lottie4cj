@@ -2,7 +2,7 @@
 
 ## 介绍
 
-lottie是一个动画库，它可以解析Adobe After Effects软件通过Bodymovin插件导出的json格式的动画，并在移动设备上进行本地渲染。
+lottie4cj 是一个动画库，它可以解析Adobe After Effects软件通过Bodymovin插件导出的json格式的动画，并在移动设备上进行本地渲染。
 
 ### class AnimationItem
 
@@ -40,16 +40,16 @@ public class AnimationItem <: BaseEvent {
     public func destroy(name!: String = ""): Unit
 
     /**
-     * 控制动画画面停止在某一帧或某个时刻
-     * 参数 value - 帧号(值>=0)或时刻(ms)
+     * 控制动画画面停止在某一帧或某个时刻,判断按帧还是按毫秒控制，true 按帧控制，false 按时间控制
+     * 参数 value - 帧号(值>=0.0)或时刻(ms)
      * 参数 isFrame - true按帧控制, false按时间控制, 缺省默认false
      * 参数 name - 被指定的动画名, 可缺省默认为空
      */
     public func goToAndStop(value: Float64, isFrame!: Bool = false, name!: String = ""): Unit
 
     /**
-     * 控制动画画面从在某一帧或某个时刻开始播放
-     * 参数 value - 帧号(值>=0)或时刻(ms)
+     * 控制动画从某一帧或某一时刻开始播放,判断按帧还是按毫秒控制，true 按帧控制，false 按时间控制
+     * 参数 value - 帧号(值>=0.0)或时刻(ms)
      * 参数 isFrame - true按帧控制, false按时间控制, 缺省默认false
      * 参数 name - 被指定的动画名, 可缺省默认为空
      */
@@ -65,30 +65,30 @@ public class AnimationItem <: BaseEvent {
     /**
      * 设置仅播放指定范围的帧动画。不可连续调用，再次调用时，需要先调用resetSegments。
      * 参数 arr - 片段或片段数组，片段必须是长度为 2 的数组; 若传入的是数组, 且当前loop!=0, 播放结束后, 仅循环播放最后一个片段。
-     * 参数 forceFlag - 值为true立刻生效, 值为false循环下次播放的时候生效。
+     * 参数 forceFlag - 值为true立刻生效, 值为false下次播放的时候生效。
      */
     public func playSegments(arr: Array<Array<Float64>>, forceFlag: Bool): Unit
 
     /**
      * 重置动画播放片段, 使动画重新从第一帧开始播放完整动画
-     * 参数 forceFlag - 值为true立刻生效, 值为false循环下次播放的时候生效
+     * 参数 forceFlag - 值为true立刻生效, 值为false下次播放的时候生效
      */
     public func resetSegments(forceFlag: Bool): Unit
 
     /**
      * 设置播放速度
-     * 参数 val - speed 值为浮点类型, speed>0正向播放, speed<0反向播放, speed=0暂停播放, speed=1.0/-1.0正常速度播放
+     * 参数 val - 为Float64类型, speed>0.0正向播放, speed<0.0反向播放, speed=0.0暂停播放, speed=1.0/-1.0正常速度播放
      */
     public func setSpeed(val: Float64): Unit
 
     /**
      * 设置播放方向
-     * 参数 val - 1为正向, -1为反向
+     * 参数 val - 大于0为正向, 小于0为反向
      */
     public func setDirection(val: Int64): Unit
 
     /**
-     * 获取动画单次完整播放的时间(与播放速度无关)或帧数, 与Lottie.loadAnimation接口入参initialSegment有关
+     * 获取动画单次完整播放的时间(与播放速度无关)或帧数
      * 参数 isFrame - 值为true时获取帧数, 值为false时获取时间(单位ms)
      * 返回值 Float64 - 动画单次完整播放的时间(与播放速度无关)或帧数
      */
@@ -96,15 +96,15 @@ public class AnimationItem <: BaseEvent {
 
     /**
      * 添加侦听事件, 事件完成后会触发指定回调函数
-     * 参数 eventName - 事件名称, 有效范围见AnimationEventName声明
+     * 参数 eventName - 事件名称, 有效取值'enterFrame' | 'loopComplete' | 'complete' | 'segmentStart' | 'destroy' | 'config_ready' | 'data_ready' | 'DOMLoaded' | 'error' | 'data_failed' | 'loaded_images';
      * 参数 callback - 用户自定义回调函数封装的对象
-     * 返回值 () -> Unit - 对应的删除侦听事件
+     * 返回值 () -> Unit - 对应侦听事件的回调函数
      */
     public func addEventListener(eventName: String, callback: AnimationEventCallback): () -> Unit
 
     /**
-     * 添删除侦听事件
-     * 参数 eventName - 事件名称, 有效范围见AnimationEventName声明
+     * 移除侦听事件
+     * 参数 eventName - 事件名称, 有效取值'enterFrame' | 'loopComplete' | 'complete' | 'segmentStart' | 'destroy' | 'config_ready' | 'data_ready' | 'DOMLoaded' | 'error' | 'data_failed' | 'loaded_images';
      * 参数 callback - 用户自定义回调函数； 缺省为空时, 删除此事件的所有回调函数。
      * 参数 hascallback - 是否直接清除此事件名称对应的回调函数。
      */
@@ -112,73 +112,31 @@ public class AnimationItem <: BaseEvent {
 
     /**
      * 修改整个动画的颜色
-     * 参数 color - 颜色数组RGBA
+     * 参数 color - 颜色数组RGB值
      */
     public func changeColor(color: Array<Int64>): Unit
     
     /**
      * 修改该动画第 layer 层的颜色
-     * 参数 color - 颜色数组RGBA
-     * 参数 layer - 层次的下标值。当 layer 参数值为 0 时，等同于调用 changeColor(color: Array<Int64>)。
+     * 参数 color - 颜色数组RGB值
+     * 参数 layer - 层次的下标值。
      */
     public func changeColor(color: Array<Int64>, layer: Int64): Unit
 
     /**
      * 修改该动画第 layer 层第 index 个元素的颜色
-     * 参数 color - 颜色数组RGBA
-     * 参数 layer - 层次的下标值。当 layer 参数值为 0 时，等同于调用 changeColor(color: Array<Int64>)。
+     * 参数 color - 颜色数组RGB值
+     * 参数 layer - 层次的下标值
      * 参数 inde - 对应层次里面的elements的下标值
      */
     public func changeColor(color: Array<Int64>, layer: Int64, index: Int64): Unit
-
-    /**
-     * 修改整个动画的颜色
-     * 参数 startColor - 开始颜色数组RGBA
-     * 参数 endColor - 结束颜色数组RGBA
-     */
-     public func changeColor(startColor: Array<Int64>, endColor: Array<Int64>)
-
-    /**
-     * 修改该动画第 layer 层的颜色
-     * 参数 startColor - 开始颜色数组RGBA
-     * 参数 endColor - 结束颜色数组RGBA
-     * 参数 layer - 层次的下标值。当 layer 参数值为 0 时，等同于调用 changeColor(startColor: Array<Int64>, endColor: Array<Int64>)。
-     */
-     public func changeColor(startColor: Array<Int64>, endColor: Array<Int64>, layer: Int64)
-
-    /**
-     * 修改该动画第 layer 层第 index 个元素的颜色
-     * 参数 startColor - 开始颜色数组RGBA
-     * 参数 endColor - 结束颜色数组RGBA
-     * 参数 layer - 层次的下标值。当 layer 参数值为 0 时，等同于调用 changeColor(startColor: Array<Int64>, endColor: Array<Int64>)。
-     * 参数 inde - 对应层次里面的elements的下标值
-     */
-     public func changeColor(startColor: Array<Int64>, endColor: Array<Int64>, layer: Int64, index: Int64)
 
     /**
      * 动画填充模式，默认的填充模式是：Contain
      * 参数 contentMode - 模式：'Fill','Top','Bottom','Cover','Contain'
      */
     public func setContentMode(contentMode: String): Unit
-
-    /**
-     * 设置当前动画的播放帧率不超过该值，范围1~120。
-     * 当动画源帧率高于该值时，该动画的播放帧率会被强制降到该值，否则默认以动画源帧率进行播放，除非另有全局设置；
-     * 可通过设置0帧率来取消该限制。
-     * 参数 playingFrameRate - 播放帧率
-     *
-     * 备注：暂不支持此功能
-     */
-    public func setFrameRate(playingFrameRate: Float64): Unit
-
-    /**
-     * 刷新动画布局
-     * 参数 width - 画布的宽。宽值 <= 0 时，恢复默认的画布宽值。
-     * 参数 height - 画布的高。高值 <= 0 时，恢复默认的画布高值。
-     *
-     * 备注：暂不支持此功能
-     */
-    public func resize(width!: Int64 = 0, height!: Int64 = 0): Unit
+    
 }
 ```
 
@@ -227,13 +185,13 @@ public class AnimationManager {
 
     /**
      * 设置播放速度
-     * 参数 val - speed 值为浮点类型, speed>0正向播放, speed<0反向播放, speed=0暂停播放, speed=1.0/-1.0正常速度播放
+     * 参数 val - 为Float64类型, speed>0.0正向播放, speed<0.0反向播放, speed=0.0暂停播放, speed=1.0/-1.0正常速度播放
      */
     public func setSpeed(val: Float64): Unit
 
     /**
      * 设置播放方向
-     * 参数 val - 1为正向, -1为反向
+     * 参数 val - 大于0为正向, 小于0为反向
      */
     public func setDirection(val: Int64): Unit
 
@@ -246,8 +204,8 @@ public class AnimationManager {
     /**
      * 清除缓存
      *
-     * @param ac 具体动画被清除缓存的地址
-     * @param container 与canvas组件绑定的上下文CanvasRenderingContext2D,用于本地资源路径json文件
+     * @param url 具体动画被清除缓存的地址,默认值为空
+     * @param container 与canvas组件绑定的上下文CanvasRenderingContext2D,用于本地资源路径json文件，默认值为None
      */
     public func clearFileCache(url!: String = "", container!: Option<AbilityContext> = None): Unit
 
@@ -265,15 +223,15 @@ public class AnimationConfig {
      * @param isNetwork  true优先读取网络资源,false优先读取本地缓存资源
      * @param wrapper_ns  CreateNS对象
      * @param container  Canvas组件渲染对象
-     * @param renderer  渲染模式,默认为“canvas”
-     * @param loop  是否循环播放，默认 -1。当前逻辑是：先播放完成一次，再按照设置的循环次数loop的值，进行对应次数的循环播放。实际播放的次数是：loop+1。
+     * @param renderer  渲染方式,当前仅支持canvas 渲染模式
+     * @param loop  是否循环播放，默认 -1。当前逻辑是：先完整播放一次，再按照设置的循环次数loop的值，进行对应次数的循环播放。实际播放的次数是：loop+1。
      * @param autoplay  是否自动播放，默认true
-     * @param name  动画名称,默认为“”
-     * @param contentMode  填充的模式,默认为“”
-     * @param imagePath  读取指定路径下的图片资源,默认为“”
-     * @param path  动画路径，路径加载动画只支持raw文件夹下的相对路径,默认为“”
+     * @param name  动画播放名称,控制动画的播放、暂停、销毁等功能，默认为“”
+     * @param contentMode  填充的模式,默认为“”，支持模式：'Fill','Top','Bottom','Cover','Contain'
+     * @param imagePath  读取路径只支持rawfile文件夹下的相对路径下的图片资源,默认为“”
+     * @param path  动画路径，路径加载动画只支持rawfile文件夹下的相对路径,默认为“”
      * @param pathSourceFrom  区别json文件来源：1.来自entry/src/main/resources/rawfile/ 文件夹下的相对路径， 2.来自本地中保存的json。
-     * @param animationData  json动画解析的对象，默认AnimationData()
+     * @param animationData  json动画解析的对象，默认AnimationData(isNull: true)，其它构造方式参考AnimationDataParser
      * @param context  Ability所对应的context，默认Option<AbilityContext>.None
      */
     public init(
@@ -347,7 +305,7 @@ private var lottie: AnimationManager = AnimationManager(this.canvasRenderingCont
 private var animateItem: Option<AnimationItem> = None
 
     protected override func onBackPress(): Bool {
-        lottie.destroy("")
+        lottie.destroy(animationName: "2016")
         return false
     }
 
@@ -375,7 +333,7 @@ private var animateItem: Option<AnimationItem> = None
                                         autoplay: true,
                                         name: "2016",
                                         contentMode: "Contain",
-                                        path: "data.json", // 路径加载动画只支持raw文件夹下的相对路径
+                                        path: "data.json", 
                                         animationData: AnimationData(isNull: true),
                                         context: globalAbilityContext
                                     ))
