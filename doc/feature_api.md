@@ -77,13 +77,13 @@ public class AnimationItem <: BaseEvent {
 
     /**
      * 设置播放速度
-     * 参数 val - 为Float64类型, speed>0.0正向播放, speed<0.0反向播放, speed=0.0暂停播放, speed=1.0/-1.0正常速度播放
+     * 参数 val - 为Float64类型, val>0.0正向播放, val<0.0反向播放, val=0.0暂停播放, val=1.0/-1.0正常速度播放
      */
     public func setSpeed(val: Float64): Unit
 
     /**
      * 设置播放方向
-     * 参数 val - 大于0为正向, 小于0为反向
+     * 参数 val - 大于等于0为正向, 小于0为反向
      */
     public func setDirection(val: Int64): Unit
 
@@ -127,7 +127,7 @@ public class AnimationItem <: BaseEvent {
      * 修改该动画第 layer 层第 index 个元素的颜色
      * 参数 color - 颜色数组RGB值
      * 参数 layer - 层次的下标值
-     * 参数 inde - 对应层次里面的elements的下标值
+     * 参数 index - 对应层次里面的elements的下标值
      */
     public func changeColor(color: Array<Int64>, layer: Int64, index: Int64): Unit
 
@@ -185,13 +185,13 @@ public class AnimationManager {
 
     /**
      * 设置播放速度
-     * 参数 val - 为Float64类型, speed>0.0正向播放, speed<0.0反向播放, speed=0.0暂停播放, speed=1.0/-1.0正常速度播放
+     * 参数 val - 为Float64类型, val>0.0正向播放, val<0.0反向播放, val=0.0暂停播放, val=1.0/-1.0正常速度播放
      */
     public func setSpeed(val: Float64): Unit
 
     /**
      * 设置播放方向
-     * 参数 val - 大于0为正向, 小于0为反向
+     * 参数 val - 大于等于0为正向, 小于0为反向
      */
     public func setDirection(val: Int64): Unit
 
@@ -226,7 +226,7 @@ public class AnimationConfig {
      * @param renderer  渲染方式,当前仅支持canvas 渲染模式
      * @param loop  是否循环播放，默认 -1。当前逻辑是：先完整播放一次，再按照设置的循环次数loop的值，进行对应次数的循环播放。实际播放的次数是：loop+1。
      * @param autoplay  是否自动播放，默认true
-     * @param name  动画播放名称,控制动画的播放、暂停、销毁等功能，默认为“”
+     * @param name  动画名称,控制动画的播放、暂停、销毁等功能，默认为“”
      * @param contentMode  填充的模式,默认为“”，支持模式：'Fill','Top','Bottom','Cover','Contain'
      * @param imagePath  读取路径只支持rawfile文件夹下的相对路径下的图片资源,默认为“”
      * @param path  动画路径，路径加载动画只支持rawfile文件夹下的相对路径,默认为“”
