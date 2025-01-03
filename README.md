@@ -144,7 +144,7 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 5.加载动画
 
 - 加载动画的时机需要注意，点击按钮加载动画可按照正常逻辑放在点击事件内，如果想要实现进入页面自动播放动画，需要结合Canvas组件的onReady()生命回调周期实现，加载动画时机需放置在onReady()生命周期回调内或及之后。
-- 同一Canvas组件加载多次/不同动画资源，需要手动销毁动画(lottie.destroy("2016"))，之后才可再次加载其他动画资源。
+- 同一Canvas组件加载多次/不同动画资源，需要手动销毁动画(lottie.destroy(animationName："2016"))，之后才可再次加载其他动画资源。
 ```      
     lottie.destroy(animationName："2016") //加载动画前先销毁之前加载的动画
     this.lottie: AnimationManager = AnimationManager(this.mainCanvasRenderingContext)
@@ -237,7 +237,7 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
   ```
 
 - 设置播放速度
-  > 注意：speed>0.0正向播放, speed<0.0反向播放, speed=0.0暂停播放, speed=1.0/-1.0正常速度播放
+  > 注意：val>0.0正向播放, val<0.0反向播放, val=0.0暂停播放, val=1.0/-1.0正常速度播放
 
   ```
   lottie.setSpeed(1.0) //所有动画设置播放速度
@@ -246,7 +246,7 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
   ```
 
 - 设置动画播放方向
-  > 注意：direction 大于0为正向，小于0为反向
+  > 注意：val 大于等于0为正向，小于0为反向
 
   ```
   lottie.setDirection(1) //所有动画正向播放
@@ -372,7 +372,7 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 | playSegments          | arr: Array<Array<Float64>>, forceFlag: Bool         | 播放指定片段          |
 | resetSegments         | forceFlag: Bool              | 重置动画            |
 | setSpeed              | val: Float64                  | 设置播放速度          |
-| setDirection          | direction: Int64              | 设置播放方向          |
+| setDirection          | val: Int64              | 设置播放方向          |
 | getDuration           | isFrame: Bool              | 获取动画时长          |
 | addEventListener      | eventName: String, callback: AnimationEventCallback     | 添加监听状态          |
 | removeEventListener   | eventName: String, callback: AnimationEventCallback, hascallback!: Bool = true         | 移除监听状态          |
