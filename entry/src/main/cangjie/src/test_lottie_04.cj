@@ -23,6 +23,10 @@ class LottieSample2 {
         this.manager.loadAnimation(this.cfg)
     }
 
+    protected override func onBackPress(): Bool {
+        this.manager.destroy(animationName:this.animateName)
+        return false
+    }
 
     func build() {
         Scroll() {
@@ -45,23 +49,6 @@ class LottieSample2 {
             }
         }.scrollBar(BarState.Off).width(100.percent)
     }
-/*
-    let cfg:AnimationConfig = AnimationConfig(
-                                uri: "https://assets7.lottiefiles.com/packages/lf20_sF7uci.json",//可达的网络链接,json不含图片资源
-                                isNetwork: true,
-                                wrapper_ns: CreateNS("doc"),
-                                container: this.canvasRenderingContext,
-                                renderer: "canvas",
-                                loop: -1,
-                                autoplay: true,
-                                name: this.animateName,
-                                contentMode: "Contain",
-//                                imagePath: "",
-//                                path: "",
-//                                pathSourceFrom: 1,//1.来自entry/src/main/resources/rawfile/ 文件夹下的相对路径， 2.来自本地中保存的json
-//                                animationData: AnimationData(isNull: true),
-                                context: globalAbilityContext
-                            )*/
 
     let cfg:AnimationConfig = AnimationConfig(
                                         uri: "https://assets7.lottiefiles.com/packages/lf20_sF7uci.json",
@@ -69,12 +56,10 @@ class LottieSample2 {
                                         wrapper_ns: CreateNS("doc"),
                                         container: this.canvasRenderingContext,
                                         renderer: "canvas", // canvas 渲染模式
-                                        //loop: true,
                                         autoplay: true,
-                                        name: "lf20_sF7uci.json",
+                                        name: this.animateName,
                                         contentMode: "Contain",
                                         path: "", // 路径加载动画只支持raw文件夹下的相对路径
-                                        //path: "grunt.json", // 路径加载动画只支持raw文件夹下的相对路径
                                         animationData: AnimationData(isNull: true),
                                         context: globalAbilityContext
                                     )
