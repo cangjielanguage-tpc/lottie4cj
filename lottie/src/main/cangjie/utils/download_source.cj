@@ -2,7 +2,10 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 package lottie.utils
-
+import tpc.AbilityKit.*
+import tpc.BasicServicesKit.request.agent.*
+import tpc.BasicServicesKit.request.agent.Progress as AgentProgress
+import ohos.hilog.*
 public class DownLoadSource {
     let downloadUri: HashMap<String, Bool> = HashMap<String, Bool>()
 
@@ -12,7 +15,7 @@ public class DownLoadSource {
         resultDir: JsonFilesDir,
         errCallBack: (String, Exception) -> Unit,
         cacheFlag: Bool,
-        context: Option<Context>
+        context: Option<UIAbilityContext>
     ): Unit {
         let flag: Bool = downloadUri.contains(uri)
         if (flag) {
@@ -35,8 +38,8 @@ public class DownLoadSource {
             downloadUri.put(uri, true)
 
             let downloadConfig = Config(
-                action: Action.DOWNLOAD,
-                url: uri,
+                Action.DOWNLOAD,
+                uri,
                 mode: Mode.FOREGROUND,
                 overwrite: true,
                 method: "GET",
@@ -45,22 +48,26 @@ public class DownLoadSource {
             )
 
             try {
-                let stageContext = context.getOrThrow().stageContext.getOrThrow()
-                let task = create(stageContext, downloadConfig)
+                create(context.getOrThrow(), downloadConfig,{err,task =>
                 let downloadPath: String = downloadConfig.saveas ?? ""
 
                 func completeCallBackInside() {
                     loadSuccess(downloadPath, uri, resultDir, configAnimation, errCallBack, context)
                 }
-                let createOnCallback = ProgressCallback(completeCallBackInside, task)
-                task.on("completed", createOnCallback)
+                let createOnCallback = ProgressCallback(completeCallBackInside, task.getOrThrow())
+                task.getOrThrow().on("completed", createOnCallback)
                 func failedCallBack(){
                     loadFail(uri, resultDir, configAnimation, errCallBack, cacheFlag)
                 }
-                let failedCallback: ProgressCallback = ProgressCallback(failedCallBack, task)
-                task.on("failed", failedCallback)
+                let failedCallback: ProgressCallback = ProgressCallback(failedCallBack, task.getOrThrow())
+                task.getOrThrow().on("failed", failedCallback)
 
-                task.start()
+                task.getOrThrow().start({err,tas =>
+                        if (let Some(e) <- err) {
+                            errCallBack("error", e)
+                        }
+                   })
+                })
             } catch (err: Exception) {
                 // 下载失败
                 Hilog.error(0, "[DownLoadSource]","[downLoadNetworkSource] Download error: ${err.message}")
@@ -72,7 +79,7 @@ public class DownLoadSource {
 
     func loadSuccess(destPath: String, uri: String, resultDir: JsonFilesDir, 
         configAnimation: (AnimationData, Bool) -> Unit, 
-        errCallBack: (String, Exception) -> Unit,context: Option<Context>
+        errCallBack: (String, Exception) -> Unit,context: Option<UIAbilityContext>
     ): Unit {
         if (uri.endsWith(".json") || uri.endsWith(".js")) {
             let lottieData: AnimationData = readJson(uri, destPath)

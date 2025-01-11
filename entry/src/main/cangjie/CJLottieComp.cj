@@ -1,35 +1,36 @@
 package ohos_app_cangjie_entry
 
-import tpc.UIKit.Text
-import tpc.UIKit.Button
-import tpc.UIKit.Column
-import tpc.UIKit.CustomView
-import tpc.UIKit.Row
-import tpc.UIKit.*
+//import tpc.UIKit.Text
+//import tpc.UIKit.Button
+//import tpc.UIKit.Column
+//import tpc.UIKit.CustomView
+//import tpc.UIKit.Row
+//import tpc.UIKit.*
+//
+//import ohos.state_macro_manage.State
+//import ohos.state_macro_manage.Component
+//import ohos.state_manage.LocalStorage
+//import ohos.state_manage.ObservedProperty
+//import ohos.state_manage.SubscriberManager
+//import ohos.state_manage.ViewStackProcessor
+//import ohos.state_macro_manage.HybridComponentEntry
+//import ohos.hybrid_base.CJPageEntry
+//import ohos.ark_interop.*
+//import ohos.hybrid_base.HybridComponentBase
+//import cj_res_entry.app
+//internal import lottie.model.*
+//internal import lottie.parser.*
+//internal import lottie.animation.*
+//internal import lottie.utils.helpers.*
+//import ohos.state_macro_manage.*
+//import ohos.ark_interop_helper.*
+//import lottie.utils.globContext
+//internal import tpc.UIKit.component_interop.RenderingContextSettings
+//internal import tpc.UIKit.component_interop.CanvasRenderingContext2D
+//internal import tpc.UIKit.component_interop.Canvas
+//import ohos.ark_interop.*
 
-import ohos.state_macro_manage.State
-import ohos.state_macro_manage.Component
-import ohos.state_manage.LocalStorage
-import ohos.state_manage.ObservedProperty
-import ohos.state_manage.SubscriberManager
-import ohos.state_manage.ViewStackProcessor
-import ohos.state_macro_manage.HybridComponentEntry
-import ohos.hybrid_base.CJPageEntry
-import ohos.ark_interop.*
-import ohos.hybrid_base.HybridComponentBase
-import cj_res_entry.app
-internal import lottie.model.*
-internal import lottie.parser.*
-internal import lottie.animation.*
-internal import lottie.utils.helpers.*
-import ohos.state_macro_manage.*
-import ohos.ark_interop_helper.*
-import lottie.utils.globContext
-internal import tpc.UIKit.component_interop.RenderingContextSettings
-internal import tpc.UIKit.component_interop.CanvasRenderingContext2D
-internal import tpc.UIKit.component_interop.Canvas
-import ohos.ark_interop.*
-
+/*
 var animationManager: Option<AnimationManager> = None
 var settings: RenderingContextSettings = RenderingContextSettings(antialias: true)
 var canvasRenderingContext: CanvasRenderingContext2D = CanvasRenderingContext2D(settings)
@@ -121,13 +122,4 @@ public func destroyAnimation(lottieName: String): Unit {
         manager.destroy(animationName:lottieName)
     }
 }
-
-func setContext(ctx: JSContext, callInfo: JSCallInfo) {
-    let jsEnv = ctx.getNapiEnv()
-    let jsValue = arkTsValuetoNapiValue(jsEnv, callInfo[0])
-    if (isStageMode(jsEnv, jsValue)) {
-        globContext.stageContext = getContextStageMode(jsEnv, jsValue)
-        globContext.filesDir = callInfo[0].asObject()["filesDir"].toString()
-    }
-    ctx.undefined().toJSValue()
-}
+*/

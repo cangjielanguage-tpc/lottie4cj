@@ -7,7 +7,9 @@ import tpc.AbilityKit.Want
 import tpc.AbilityKit.AbilityConstant
 import tpc.UIKit.window
 import ohos.hybrid_base.CJPageEntry
+import tpc.AbilityKit.UIAbilityContext
 
+import  ohos.state_manage.*
 let ENTRYABILITY_REGISTER_RESULT = UIAbility.registerCreator("EntryAbility", {=> EntryAbility()})
 
 class EntryAbility <: UIAbility {
@@ -24,6 +26,7 @@ class EntryAbility <: UIAbility {
     }
 
     public override func onWindowStageCreate(windowStage: window.WindowStage): Unit {
+        AppStorage.setOrCreate<UIAbilityContext>("uiAbilityContext", this.context)
         windowStage.loadContent("pages/index", {err, data => ()})
     }
 
@@ -42,5 +45,12 @@ class EntryAbility <: UIAbility {
     public override func onConfigurationUpdate(config: AbilityKit.Configuration): Unit {
       AppLog.info("myAbility onConfigurationUpdate: ${config.mcc}")
       CJPageEntry.getInstance().forceRerenderAllEntry()
+    }
+}
+
+public func getContext(): UIAbilityContext {
+    match (AppStorage.get<UIAbilityContext>("uiAbilityContext")) {
+        case None => throw Exception("uiAbilityContext 尚未保存！！！")
+        case Some(uiAbilityContext) => uiAbilityContext
     }
 }

@@ -9,13 +9,15 @@ internal import std.io.{InputStream, ByteArrayStream}
 
 internal import ohos.bundle_manager.*
 
-internal import ohos.request.agent.*
-internal import ohos.request.agent.Progress as AgentProgress
-
+import tpc.BasicServicesKit.request.agent.*
+import tpc.BasicServicesKit.request.agent.Progress as AgentProgress
 internal import zip4cj.ZipFile
 internal import compress.zlib.*
-internal import ohos.hilog.*
-
+import tpc.BasicServicesKit.AsyncCallback
+import tpc.AbilityKit.*
+import tpc.BasicServicesKit.BusinessException
+import ohos.hilog.*
+import tpc.ArkData.distributedDataObject.*
 // 筛选.json资源
 func filterJson(way: String): String {
     let files: ArrayList<FileInfo> = FileUtils.fileList(way)
@@ -303,17 +305,18 @@ public func isCacheExist(url: String, readPath: String): FilePathObject {
 
 //改为并发异步调用 ???
 // 下载图片至files
-public func downLoadImg(lottieData: AnimationData, context: Option<Context>): ArrayList<Future<Unit>> {
+public func downLoadImg(lottieData: AnimationData, context: Option<UIAbilityContext>): ArrayList<Future<Unit>> {
     let imgRouterFilesDir: String = createImageFilesDir(context)
     let downloadTasks: ArrayList<Future<Unit>> = ArrayList<Future<Unit>>(lottieData.assets.size)
     for (i in 0..lottieData.assets.size){
         let item = lottieData.assets[i]
         if (item.id != "" && item.p.startsWith("http")) {
             item.sourceFrom = 3  //区别图片来源：1.来自\resources\rawfile\， 2.来自手机中保存的图片，3.来自网络下载。
+            //let promise = JSPromiseCapability()
             let future: Future<Unit> = spawn {
                 let downloadConfig = Config(
-                    action: Action.DOWNLOAD,
-                    url: item.p,
+                    Action.DOWNLOAD,
+                    item.p,
                     mode: Mode.FOREGROUND,
                     method: "GET",
                     overwrite: true,
@@ -321,23 +324,50 @@ public func downLoadImg(lottieData: AnimationData, context: Option<Context>): Ar
                     gauge: true
                 )
 
-                let stageContext = context.getOrThrow().stageContext.getOrThrow()
-                let downloadTask = create(stageContext, downloadConfig)
-                func completeCallBackInside() {
-                    let srcPath = getContext() + "/${item.id}.png"
-                    let destPath = "${imgRouterFilesDir}/${item.id}.png"
-                    try {
-                        // 移动文件
-                        if (srcPath != destPath) {
-                            FileUtils.moveFile(srcPath, destPath, true)
+                //let stageContext = getStageContext(context.getOrThrow())
+                create(context.getOrThrow(), downloadConfig,{err,task =>
+                   if (let Some(e) <- err) {
+                        Hilog.error(0xFF00,"lottie_ohos","Failed to request the upload. Code: ${e.code}, message: ${e.message}");
+                        //promise.reject(e.toJSValue())
+                        return
+                   }
+                   func completeCallBackInside() {
+                        let srcPath = getContext() + "/${item.id}.png"
+                        let destPath = "${imgRouterFilesDir}/${item.id}.png"
+                        try {
+                            // 移动文件
+                            if (srcPath != destPath) {
+                                FileUtils.moveFile(srcPath, destPath, true)
+                            }
+                        } catch (err: Exception) {
+                            Hilog.error(0, "[downLoadImg]", "moveFile err: ${err.message}")
                         }
-                    } catch (err: Exception) {
-                        Hilog.error(0, "[downLoadImg]", "moveFile err: ${err.message}")
                     }
-                }
-                let createOnCallback = ProgressCallback(completeCallBackInside, downloadTask)
-                downloadTask.on("completed", createOnCallback)
-                downloadTask.start()
+                    let createOnCallback = ProgressCallback(completeCallBackInside, task.getOrThrow())
+                    task.getOrThrow().on("completed",createOnCallback)
+                    task.getOrThrow().start({err,tas =>
+                        if (let Some(e) <- err) {
+                            Hilog.error(0xFF00,"lottie_ohos","Failed to request the upload. Code: ${e.code}, message: ${e.message}");
+                        //promise.reject(e.toJSValue())
+                            return
+                        }
+                   })
+                })
+//                func completeCallBackInside() {
+//                    let srcPath = getContext() + "/${item.id}.png"
+//                    let destPath = "${imgRouterFilesDir}/${item.id}.png"
+//                    try {
+//                        // 移动文件
+//                        if (srcPath != destPath) {
+//                            FileUtils.moveFile(srcPath, destPath, true)
+//                        }
+//                    } catch (err: Exception) {
+//                        Hilog.error(0, "[downLoadImg]", "moveFile err: ${err.message}")
+//                    }
+//                }
+//                let createOnCallback = ProgressCallback(completeCallBackInside, downloadTask)
+//                downloadTask.on("completed", createOnCallback)
+//                downloadTask.start()
             }
             
             downloadTasks.append(future)
@@ -397,7 +427,7 @@ public func handleZipAssets(lottieData: AnimationData, zipRoute: String): Unit {
 }
 
 // 创建zip和json文件目录
-public func createFilesDir(url: String, context: Option<Context>): JsonFilesDir {
+public func createFilesDir(url: String, context: Option<UIAbilityContext>): JsonFilesDir {
     let parts: Array<String> = url.split("/")
     let secondLastSegment: String = parts[parts.size - 2]
     let lastSegmentWithExtension: String = parts[parts.size - 1]
@@ -432,7 +462,7 @@ public func createFilesDir(url: String, context: Option<Context>): JsonFilesDir 
 }
 
 // 创建images数据的文件夹
-public func createImageFilesDir(context: Option<Context>): String {
+public func createImageFilesDir(context: Option<UIAbilityContext>): String {
     let dirImgPath = getContext()
 
     let dirImgPathFirst: String = FileUtils.downloadFolderImage

@@ -12,9 +12,8 @@ internal import std.convert.*
 internal import lottie.parser.*
 
 internal import ohos.resource_manager.*
-internal import ohos.ability.*
-
-
+internal import tpc.AbilityKit.UIAbilityContext
+import tpc.LocalizationKit.resourceManager.*
 class WorkerProxy {
 
     var workerFn: (Data) -> Unit = default_Data_To_AnimationData
@@ -40,7 +39,7 @@ class WorkerProxy {
 }
 
 public class DataManager {
-    var context:?Context = Option<Context>.None
+    var context:?UIAbilityContext = Option<UIAbilityContext>.None
     var _counterId: Int64 = 1
     var processes: HashMap<String, Processes> = HashMap<String, Processes>(24)
     var workerFn: (Data) -> Unit = default_Data_To_AnimationData
@@ -79,7 +78,7 @@ public class DataManager {
         }
     }
 
-    func loadImage(context: Option<Context>, isNetwork: Bool, jsonData: AnimationData, callback: (AnimationData, Bool) -> Unit, errorCallback: () -> Unit): Unit {
+    func loadImage(context: Option<UIAbilityContext>, isNetwork: Bool, jsonData: AnimationData, callback: (AnimationData, Bool) -> Unit, errorCallback: () -> Unit): Unit {
         // true 优先加载网络资源
         if (isNetwork) {
             try {
@@ -361,7 +360,7 @@ public class DataManager {
     }
 
     /* [7]-解析 json 后封装好的 AnimationData，结果在回调函数 onComplete 参数中。 */
-    public func loadAnimation(context: Option<Context>, path: String, isNetwork: Bool, onComplete: (AnimationData, Option<Bool>) -> Unit, onError: () -> Unit) {
+    public func loadAnimation(context: Option<UIAbilityContext>, path: String, isNetwork: Bool, onComplete: (AnimationData, Option<Bool>) -> Unit, onError: () -> Unit) {
         this.context = context
         setupWorker()
         let processId: String = createProcess(onComplete, onError)
@@ -396,7 +395,7 @@ public class DataManager {
         ))
     }
 
-    func loadAsset(context: Option<Context>, path: String, isNetwork: Bool, fullPath: String, callback: (AnimationData, Bool) -> Unit, errorCallback: () -> Unit): Unit {
+    func loadAsset(context: Option<UIAbilityContext>, path: String, isNetwork: Bool, fullPath: String, callback: (AnimationData, Bool) -> Unit, errorCallback: () -> Unit): Unit {
         Timer.once(Duration.Zero, { =>
             let arrayBuffer: Array<Byte> = readFile(context, path)
             var jsonData: AnimationData = AnimationData(isNull: true)
@@ -435,7 +434,7 @@ public class DataManager {
         })
     }
     
-    func readFile(context: Option<Context>, path: String): Array<Byte> {
+    func readFile(context: Option<UIAbilityContext>, path: String): Array<Byte> {
         var buf: Array<Byte> = Array<Byte>()
         if(path.startsWith("/data/storage/")) {
             buf = FileUtils.readToEnd(path)
@@ -444,15 +443,16 @@ public class DataManager {
         } else if(path.startsWith("file://") || path.startsWith("https:")) {
             /* 通过URL.openStream获取数据 */
         } else {
-            let stageContext = context.getOrThrow().stageContext.getOrThrow()
-            let resMgr = ResourceManager.getResourceManager(stageContext)
-            buf = resMgr.getRawFileContent(path)
+//            let stageContext = getStageContext(context.getOrThrow())
+//            let resMgr = ResourceManager.getResourceManager(stageContext)
+//            buf = resMgr.getRawFileContent(path)
+            buf = context.getOrThrow().resourceManager.getRawFileContent(path)
         }
 
         return buf
     }
     
-    func load(context: Option<Context>, path: String, isNetwork: Bool, fullPath: String, callback: (AnimationData, Bool) -> Unit, errorCallback: () -> Unit): Unit {
+    func load(context: Option<UIAbilityContext>, path: String, isNetwork: Bool, fullPath: String, callback: (AnimationData, Bool) -> Unit, errorCallback: () -> Unit): Unit {
         this.loadAsset(context, path, isNetwork, fullPath, callback, errorCallback)
     }
 

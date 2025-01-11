@@ -8,6 +8,7 @@
 package lottie.animation
 
 import ohos.state_macro_manage.*
+import tpc.AbilityKit.UIAbilityContext
 
 /**
  * 动画事件回调函数声明
@@ -104,7 +105,7 @@ public class AnimationConfig {
     public var isNetwork: Bool = false
 
 
-    var context: Option<Context> = None
+    var context: Option<UIAbilityContext> = None
 
     public init(
         uri!: String = "",
@@ -120,7 +121,7 @@ public class AnimationConfig {
         path!: String = "",
         pathSourceFrom!: Int8 = 1,
         animationData!: AnimationData = AnimationData(isNull: true),
-        context!: Option<Context> = None
+        context!: Option<UIAbilityContext> = None
     ){
         this.uri = uri
         this.isNetwork = isNetwork

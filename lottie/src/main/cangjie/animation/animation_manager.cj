@@ -29,12 +29,12 @@ internal import tpc.UIKit.component_interop.RenderingContextSettings
 internal import tpc.UIKit.component_interop.CanvasRenderingContext2D
 internal import tpc.UIKit.component_interop.Canvas
 import ohos.state_macro_manage.*
-
-internal import ohos.resource_manager.*
+import tpc.AbilityKit.UIAbilityContext
+//internal import ohos.resource_manager.*
 internal import ohos.bundle_manager.*
 
 internal import ohos.hilog.*
-internal import ohos.animator.*
+import ohos.animator.{AnimatorResult,AnimatorOptions,AnimatorFill,AnimatorDirection}
 internal import ohos.system_date_time.*
 
 public class AnimationManager {
@@ -406,7 +406,7 @@ public class AnimationManager {
 
 
 
-    func readFile(context: Option<Context>, path: String): Array<Byte> {
+    func readFile(context: Option<UIAbilityContext>, path: String): Array<Byte> {
         var buf: Array<Byte> = Array<Byte>()
         if(path.startsWith("/data/storage/")) {
             buf = FileUtils.readToEnd(path)
@@ -415,15 +415,13 @@ public class AnimationManager {
         } else if(path.startsWith("file://") || path.startsWith("https:")) {
             /* 通过URL.openStream获取数据 */
         } else {
-            let stageContext = context.getOrThrow().stageContext.getOrThrow()
-            let resMgr = ResourceManager.getResourceManager(stageContext)
-            buf = resMgr.getRawFileContent(path)
+            buf = context.getOrThrow().resourceManager.getRawFileContent(path)
         }
 
         return buf
     }
 
-    func clearSingleFileCache(path: String, container: Option<Context>): Unit {
+    func clearSingleFileCache(path: String, container: Option<UIAbilityContext>): Unit {
         let isHttp = path.startsWith("http")
         if (isHttp) {
             let parts = path.split("/")
@@ -475,7 +473,7 @@ public class AnimationManager {
         }
     }
 
-    public func clearFileCache(url!: String = "", container!: Option<Context> = None): Unit {
+    public func clearFileCache(url!: String = "", container!: Option<UIAbilityContext> = None): Unit {
         if (url != "") {
             clearSingleFileCache(url, container)
             return

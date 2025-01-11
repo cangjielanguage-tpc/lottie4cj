@@ -6,7 +6,7 @@
  * @file This file is AnimationItem.
  */
 package lottie.animation
-
+import tpc.AbilityKit.UIAbilityContext
 public class AnimationItem <: BaseEvent {
  
     public var _animationManager: AnimationManager
@@ -67,7 +67,7 @@ public class AnimationItem <: BaseEvent {
     public var markers: Array<MarkerData> = Array<MarkerData>()
 
     public var drawnFrameEvent: BMEnterFrameEvent
-    public var context: Option<Context> = None
+    public var context: Option<UIAbilityContext> = None
 
     public var packageName: String = ""
     public var contentMode: String = ""
@@ -353,7 +353,7 @@ public class AnimationItem <: BaseEvent {
 
     }
     
-    public func loadNetworkResource(uri: String, isNetwork: Bool, acontext: Option<Context>) {
+    public func loadNetworkResource(uri: String, isNetwork: Bool, acontext: Option<UIAbilityContext>) {
         let resultDir: JsonFilesDir = createFilesDir(uri, acontext)
         if (isNetwork) {
             func inside(jsonData: AnimationData, isNetLoad: Bool): Unit {

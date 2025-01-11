@@ -40,7 +40,7 @@ public class ImagePreloader {
     var imagesLoadedCb: () -> Unit = default_Unit_To_Unit
     var imagesLoadedCbFlag: Bool = false
     var images: ArrayList<OB> = ArrayList<OB>(24)
-    public var context: Option<Context> = Option<Context>.None
+    public var context: Option<UIAbilityContext> = Option<UIAbilityContext>.None
 
     var _elementHelper: CreateNS = CreateNS("")
     
@@ -308,8 +308,9 @@ public class ImagePreloader {
             } else {
                 //获取rawfile的字节数组数据
                 if (let Some(v) <- context) {
-                    let stageContext = v.stageContext.getOrThrow()
-                    let rm: ResourceManager = ResourceManager.getResourceManager(stageContext)
+//                    let stageContext = getStageContext(context.getOrThrow())
+//                    let rm: ResourceManager = ResourceManager.getResourceManager(stageContext)
+                    let rm = v.resourceManager
                     spawn {
                         try {
                             let buffer: Array<UInt8> = rm.getRawFileContent(res)
@@ -442,7 +443,7 @@ public class ImagePreloader {
      * @param elementHelper - Type of CreateNS.
      * @param context - Type of Context.
      */
-    public func setCacheType(types: String, elementHelper: CreateNS, context: Option<Context>, imagePath: String) {
+    public func setCacheType(types: String, elementHelper: CreateNS, context: Option<UIAbilityContext>, imagePath: String) {
         this.context = context
         this.imagePath = imagePath
         if (types == "svg") {

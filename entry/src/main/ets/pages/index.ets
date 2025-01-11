@@ -1,44 +1,21 @@
 import { CJHybridComponentV2 } from 'cjhybridview'
 import { requireCJLib } from 'libark_interop_loader.so'
 
-export interface CJLottie {
-  // 设置上下文对象
-  setContext(context: Object): void
-  // 传递要加载的json文件名称和路径 区分工程目录=1/手机本地路径=2/网络下载=3 设置循环次数和是否自动播放
-  setAnimationConfig(name: String, path: String, pathType: number, loop: number, autoPlay: boolean): void
-  // 操作-开始播放
-  playAnimation(lottieName: string): void
-  // 操作-暂停播放
-  pauseAnimation(lottieName: string): void
-  // 操作-停止播放
-  stopAnimation(lottieName: string): void
-  // 操作-销毁
-  destroyAnimation(lottieName: string): void
-  // 操作-跳转指定位置并停止
-  goAndStopAnimation(lottieName: string): void
-  // 操作-跳转指定位置并播放
-  goAndPlayAnimation(lottieName: string): void
-  // 操作-下次播放循环指定范围的数据
-  setSegmentAnimation(lottieName: string): void
-}
 @Entry
 @Component
 struct Index {
-  cjlottie: CJLottie | null = null
   lottie: number = 0
   lottieName: string = "grunt"
-
-  aboutToAppear(): void {
-    this.cjlottie = requireCJLib("libohos_app_cangjie_entry.so") as CJLottie
-    this.cjlottie.setContext(getContext(this))
-  }
 
   build() {
     Column() {
       CJHybridComponentV2({
         library: 'ohos_app_cangjie_entry',
-        component: 'CJLottieComp'
-      }).height('30%')
+        // component: 'CJLottieComp'
+        component: 'Index'
+      })
+
+      /*
       Column({ space: 20 }) {
         Button("加载phonemoney")
           .onClick(() => {
@@ -99,6 +76,7 @@ struct Index {
           })
           .width('80%')
       }
+       */
     }
     .height('100%')
     .width('100%')
