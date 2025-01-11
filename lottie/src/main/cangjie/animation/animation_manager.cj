@@ -32,7 +32,8 @@ import ohos.state_macro_manage.*
 import tpc.AbilityKit.UIAbilityContext
 
 internal import ohos.hilog.*
-import ohos.animator.{AnimatorResult,AnimatorOptions,AnimatorFill,AnimatorDirection}
+//import ohos.animator.{AnimatorResult,AnimatorOptions,AnimatorFill,AnimatorDirection}
+import tpc.UIKit.animator.*
 //internal import ohos.system_date_time.*
 import tpc.BasicServicesKit.systemDateTime.*
 
@@ -344,18 +345,18 @@ public class AnimationManager {
 
                 initTime = getTime()
                 let options: AnimatorOptions = AnimatorOptions(
-                    duration: 20000,
-                    easing: "linear",
-                    delay: 0,
-                    fill: AnimatorFill.Forwards, //"forwards",
-                    direction: AnimatorDirection.Normal, //"normal",
-                    iterations: -1,
-                    begin: 0.0,
-                    end: 1.0
+                    20000.0,
+                    "linear",
+                     0.0,
+                    AnimatorFill.Forwards, //"forwards",
+                    AnimatorDirection.Normal, //"normal",
+                     -1.0,
+                    0.0,
+                    1.0
                 )
 
-                let backAnimator: AnimatorResult = AnimatorResult(options)
-                backAnimator.onframe = { value: Float64  =>
+                let backAnimator: AnimatorResult = Animator.create(options)
+                backAnimator.onFrame = { value: Float64  =>
                     //AppLog.info("onframe called ${value}")
                     //返回自1970年1月1日午夜（UTC）以来经过的毫秒数
                     resume(getTime())
