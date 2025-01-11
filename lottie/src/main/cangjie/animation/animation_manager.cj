@@ -30,12 +30,11 @@ internal import tpc.UIKit.component_interop.CanvasRenderingContext2D
 internal import tpc.UIKit.component_interop.Canvas
 import ohos.state_macro_manage.*
 import tpc.AbilityKit.UIAbilityContext
-//internal import ohos.resource_manager.*
-internal import ohos.bundle_manager.*
 
 internal import ohos.hilog.*
 import ohos.animator.{AnimatorResult,AnimatorOptions,AnimatorFill,AnimatorDirection}
-internal import ohos.system_date_time.*
+//internal import ohos.system_date_time.*
+import tpc.BasicServicesKit.systemDateTime.*
 
 public class AnimationManager {
 
@@ -343,7 +342,7 @@ public class AnimationManager {
                     v.finish()
                 }
 
-                initTime = SystemDateTime.getCurrentTime()
+                initTime = getTime()
                 let options: AnimatorOptions = AnimatorOptions(
                     duration: 20000,
                     easing: "linear",
@@ -359,7 +358,7 @@ public class AnimationManager {
                 backAnimator.onframe = { value: Float64  =>
                     //AppLog.info("onframe called ${value}")
                     //返回自1970年1月1日午夜（UTC）以来经过的毫秒数
-                    resume(SystemDateTime.getCurrentTime())
+                    resume(getTime())
                 }
                 backAnimator.play()
                 this._animator = backAnimator

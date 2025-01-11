@@ -8,6 +8,7 @@
 package lottie.utils
 
 internal import std.fs.*
+import tpc.AbilityKit.bundleManager.*
 
 /**
  * Get Bundle Name
@@ -15,8 +16,8 @@ internal import std.fs.*
  * @return Type of String, returns bundle name
  */
 func getBundleName(): String {
-    let bundleFlags = GET_BUNDLE_INFO_DEFAULT.getValue()
-    let bundleInfo = BundleManager.getBundleInfoForSelf(bundleFlags)
+    let bundleFlags = BundleFlag.GET_BUNDLE_INFO_DEFAULT
+    let bundleInfo = getBundleInfoForSelf(bundleFlags)
     return bundleInfo.name
 }
 

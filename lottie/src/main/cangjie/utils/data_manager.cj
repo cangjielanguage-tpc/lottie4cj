@@ -11,7 +11,7 @@ internal import std.convert.*
 
 internal import lottie.parser.*
 
-internal import ohos.resource_manager.*
+
 internal import tpc.AbilityKit.UIAbilityContext
 import tpc.LocalizationKit.resourceManager.*
 class WorkerProxy {

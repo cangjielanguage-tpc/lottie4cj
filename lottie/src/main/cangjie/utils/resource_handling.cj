@@ -5,9 +5,7 @@ package lottie.utils
 
 internal import std.io.{InputStream, ByteArrayStream}
 
-//internal import ohos.system_date_time.*
 
-internal import ohos.bundle_manager.*
 
 import tpc.BasicServicesKit.request.agent.*
 import tpc.BasicServicesKit.request.agent.Progress as AgentProgress
