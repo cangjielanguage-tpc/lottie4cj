@@ -19,7 +19,7 @@ internal import lottie.model.*
 internal import lottie.parser.*
 internal import lottie.animation.*
 internal import lottie.utils.helpers.*
-
+internal import tpc.AbilityKit.UIAbilityContext
 //import ohos.prompt_action.*
 //import refreshlayout.base.*
 //import refreshlayout.bezierradar.*
@@ -68,6 +68,12 @@ class Index {
 //
 //        }
 //        .navDestination(bind<String>(pageMap, this))
+    }
+}
+func getContext(): UIAbilityContext {
+    match (globalcontext) {
+        case Some(context)  => context
+    	case _=> throw Exception("can not get globalcontext")
     }
 }
 

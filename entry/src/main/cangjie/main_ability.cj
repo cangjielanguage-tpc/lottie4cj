@@ -11,9 +11,10 @@ import tpc.AbilityKit.UIAbilityContext
 
 import  ohos.state_manage.*
 let ENTRYABILITY_REGISTER_RESULT = UIAbility.registerCreator("EntryAbility", {=> EntryAbility()})
-
+public var globalcontext: ?UIAbilityContext = None
 class EntryAbility <: UIAbility {
     public override func onCreate(want: Want, launchParam: AbilityConstant.LaunchParam): Unit {
+        globalcontext = this.context
         AppLog.info("Ability OnCreated.${want.abilityName}")
         match (launchParam.launchReason) {
             case AbilityConstant.LaunchReason.START_ABILITY => AppLog.info("START_ABILITY")
@@ -48,9 +49,9 @@ class EntryAbility <: UIAbility {
     }
 }
 
-public func getContext(): UIAbilityContext {
-    match (AppStorage.get<UIAbilityContext>("uiAbilityContext")) {
-        case None => throw Exception("uiAbilityContext 尚未保存！！！")
-        case Some(uiAbilityContext) => uiAbilityContext
-    }
-}
+//public func getContext(): UIAbilityContext {
+//    match (AppStorage.get<UIAbilityContext>("uiAbilityContext")) {
+//        case None => throw Exception("uiAbilityContext 尚未保存！！！")
+//        case Some(uiAbilityContext) => uiAbilityContext
+//    }
+//}
