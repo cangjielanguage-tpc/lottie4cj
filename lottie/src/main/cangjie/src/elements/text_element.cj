@@ -47,7 +47,14 @@ public open class ITextElement <: BaseElement {
          */
         this.textProperty = TextProperty(data.t, globalData)
         /* 文本动画属性 */
-        this.textAnimator = TextAnimatorProperty(data.t, this.renderType, globalData, data, this.textProperty.currentData, dynamicProperties: this.dynamicProperties)
+        let cdInd: Int64 = getCompDataInd()
+        let renderedFrame: Array<(Int64) -> Float64>
+        if (this.compType == 1 && this.comp.size >= 1){
+            renderedFrame = [this.comp[0].getRenderedFrameInElemComp]
+        } else {
+            renderedFrame = [this.getRenderedFrameInElemComp]
+        }
+        this.textAnimator = TextAnimatorProperty(data.t, this.renderType, globalData, data, this.textProperty.currentData, dynamicProperties: this.dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: cdInd)
         /* 获取transform（layer.ks）相关的数据 */
         this.initTransform(data, globalData) 
         this.initHierarchy()

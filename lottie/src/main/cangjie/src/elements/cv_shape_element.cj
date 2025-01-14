@@ -171,16 +171,6 @@ public class CvShapeElement <: IShapeElement {
         return elementData
     }
 
-    func getCompDataInd(): Int64 {
-        var cdInd: Int64 = -1
-        if (this.compType == 1 && this.compDataInd != -1) {
-            cdInd = this.compDataInd
-        } else if (this.compType == 1) {
-            cdInd = this.data.ind
-        }
-        return cdInd
-    }
-
     public func createTransformElement(datas: AnimatableTransform) {
         let cdInd: Int64 = getCompDataInd()
 

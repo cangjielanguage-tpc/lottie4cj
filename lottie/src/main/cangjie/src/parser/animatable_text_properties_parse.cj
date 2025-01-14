@@ -113,6 +113,8 @@ public class AnimatableTextPropertiesParser {
         var strokeWidth: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
         var tracking: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>()
 
+        var p: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>()
+
         //"layers"."t"."a"."a"(.{"fc", "sc", "sw", "t"})
         reader.startObject()
         while (reader.peek() != EndObject) {
@@ -122,6 +124,7 @@ public class AnimatableTextPropertiesParser {
                 case "sc" => stroke = AnimatableValueParser.parseColor(reader)
                 case "sw" => strokeWidth = AnimatableValueParser.parseFloat(reader)
                 case "t" => tracking = AnimatableValueParser.parseFloat(reader)
+                case "p" => p = AnimatableValueParser.parseColor(reader)
                 case _ => reader.skip()
             }
         }
@@ -132,7 +135,8 @@ public class AnimatableTextPropertiesParser {
             s: ArrayKeyframeArrayFloat64(k: scolor),
             sc: stroke,
             sw: strokeWidth,
-            t: ArrayKeyframeFloat64(k: tracking)
+            t: ArrayKeyframeFloat64(k: tracking),
+            p: ArrayKeyframeArrayFloat64(k: p)
         )
         return cm
     }

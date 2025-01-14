@@ -107,11 +107,23 @@ class LottieSample {
                                     ))
                                 }
                          }
-                         Button("销毁--2016").onClick {
+                         Button("销毁").onClick {
                              evt =>
                                 if (let Some(v) <- this.animateItem) {
                                     v.destroy()
                                     this.animateItem = Option<AnimationItem>.None
+                                }
+                            }
+                         Button("暂停").onClick {
+                             evt =>
+                                if (let Some(v) <- this.animateItem) {
+                                    v.pause() //当前指定animationItem动画暂停
+                                }
+                            }
+                         Button("播放").onClick {
+                             evt =>
+                                if (let Some(v) <- this.animateItem) {
+                                    v.play() //当前指定animationItem动画播放
                                 }
                             }
                         }.margin(top: 5)
