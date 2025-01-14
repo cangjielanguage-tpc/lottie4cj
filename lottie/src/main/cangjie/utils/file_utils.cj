@@ -7,7 +7,8 @@
  */
 package lottie.utils
 
-import tpc.AbilityKit.bundleManager.*
+import tpc.AbilityKit.bundleManager.BundleFlag
+import tpc.AbilityKit.bundleManager.getBundleInfoForSelf
 
 /**
  * Get Bundle Name
