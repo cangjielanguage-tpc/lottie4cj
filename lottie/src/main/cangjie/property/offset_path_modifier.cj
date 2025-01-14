@@ -3,7 +3,6 @@
  */
 package lottie.property
 
-internal import lottie.inner.*
 
 /* "op", OffsetPathModifier -- 偏移路径修改器 */
 public class OffsetPathModifier <: ShapeModifier {

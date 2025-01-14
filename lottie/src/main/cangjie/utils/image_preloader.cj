@@ -4,17 +4,9 @@
 
 package lottie.utils
 
-//internal import ohos.system_date_time.*
 
-internal import std.regex.*
-internal import std.sync.*
-internal import std.time.*
-
-internal import lottie.inner.*
-internal import tpc.ImageKit.image.*
-
-
-
+import std.regex.*
+import lottie.inner.*
 
 public class ImagePreloader {
 

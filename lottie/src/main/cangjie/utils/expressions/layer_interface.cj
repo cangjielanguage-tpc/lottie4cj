@@ -7,10 +7,6 @@
  */
 package lottie.utils.expressions
 
-internal import lottie.model.*
-internal import lottie.elements.*
-internal import lottie.bezier.*
-internal import lottie.*
 
 public class LayerExpressionInterface <: ExpressionInterface {
 

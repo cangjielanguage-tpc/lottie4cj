@@ -3,8 +3,6 @@
  */
 package lottie.elements
 
-internal import std.collection.*
-
 
 var registeredEffects: HashMap<Int64,RegisteredEffectes> = HashMap<Int64,RegisteredEffectes>()
 

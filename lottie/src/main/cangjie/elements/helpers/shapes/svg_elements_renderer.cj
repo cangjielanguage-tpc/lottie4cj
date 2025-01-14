@@ -3,13 +3,11 @@
  */
 package lottie.elements.helpers.shapes
 
-import std.collection.*
 import std.math.*
 
 import lottie.global_data.*
 import lottie.bezier.*
-internal import lottie.utils.helpers.*
-import lottie.model.*
+
 public type RenderFunction = (Datas, ElementData, Bool) -> Unit
 
 public class SVGElementsRenderer {

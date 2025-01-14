@@ -3,12 +3,7 @@
  */
 package lottie.elements
 
-import lottie.utils.helpers.*
-import lottie.utils.helpers.*
-internal import lottie.property.*
-internal import lottie.pool.*
-
-internal import tpc.UIKit.component_interop.*
+import lottie.pool.*
 public class CvShapeElement <: IShapeElement {
 
     protected var stylesList: ArrayList<StyleElem>

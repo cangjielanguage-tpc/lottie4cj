@@ -7,7 +7,6 @@
  */
 package lottie.pool
 
-internal import lottie.model.*
 
 public open class SegmentsLengthElement <: ToString {
 

@@ -7,8 +7,6 @@
  */
 package lottie.animation
 
-internal import lottie.utils.helpers.*
-
 class RegisteredAnimation {
     var elem: CreateNS
     var animation: AnimationItem

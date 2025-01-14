@@ -7,7 +7,6 @@
  */
 package lottie.utils.helpers
 
-internal import std.collection.*
 
 let svgNS: String = "http://www.w3.org/2000/svg"
 

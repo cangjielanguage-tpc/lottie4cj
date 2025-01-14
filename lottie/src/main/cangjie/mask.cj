@@ -8,15 +8,15 @@
 package lottie
 
 
-internal import std.collection.*
+import std.collection.*
 
 internal import lottie.model.*
-internal import lottie.elements.*
 internal import lottie.utils.helpers.*
-internal import lottie.global_data.*
 internal import lottie.property.*
-internal import lottie.bezier.*
-internal import lottie.inner.*
+import lottie.global_data.*
+import lottie.elements.*
+import lottie.bezier.*
+import lottie.inner.*
 
 /* 调用 MaskElement 的 init 后要立即调用 initEndDrawPath 和 initEndAddRenderableComponent。 */
 public open class MaskElement <: BaseElement {

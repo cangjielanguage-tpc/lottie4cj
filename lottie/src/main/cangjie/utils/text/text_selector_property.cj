@@ -7,7 +7,6 @@
  */
 package lottie.utils.text
 
-internal import lottie.property.*
 
 public class TextSelectorProp {
 

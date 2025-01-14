@@ -8,7 +8,7 @@
 package lottie.property
 
 
-internal import tpc.UIKit.component_interop.CanvasGradient
+import tpc.UIKit.component_interop.CanvasGradient
 import tpc.UIKit.Color
 
 /* (arr[i].ty === 'fl'/'st'/'gf'/'gs') */

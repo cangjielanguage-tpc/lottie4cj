@@ -2,9 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 package lottie.utils
-import tpc.BasicServicesKit.request.agent.*
-import tpc.BasicServicesKit.*
-import ohos.hilog.*
+
 func getContext(): String {
     return FileUtils.downloadFolderLottie
 }
@@ -34,7 +32,7 @@ public class ProgressCallback <: Callback1Argument<Progress> {
             try {
                 remove(v.tid,{err,tas =>()})
             } catch (err: Exception) {
-                Hilog.error(0, "[DownLoadSourceUtil]","[ProgressCallback] remove task error: ${err.message}")
+                //Hilog.error(0, "[DownLoadSourceUtil]","[ProgressCallback] remove task error: ${err.message}")
             }
             this.task = Option<Task>.None
         }

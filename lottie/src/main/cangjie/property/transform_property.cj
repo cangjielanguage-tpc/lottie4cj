@@ -7,7 +7,6 @@
  */
 package lottie.property
 
-internal import ohos.hilog.*
 
 public class TransformCachingAtTime {
 

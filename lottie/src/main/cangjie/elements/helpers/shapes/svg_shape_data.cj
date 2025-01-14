@@ -3,7 +3,6 @@
  */
 package lottie.elements.helpers.shapes
 
-import std.collection.*
 
 public class SVGShapeData {
     public var caches: ArrayList<Object>

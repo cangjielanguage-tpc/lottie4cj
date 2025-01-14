@@ -3,7 +3,6 @@
  */
 package lottie.elements
 
-internal import std.collection.*
 
 public class CvGaussianBlurEffect {
 

@@ -3,7 +3,6 @@
  */
 package lottie.elements.helpers.shapes
 
-import lottie.model.*
 
 public class SVGFillStyleData <: SVGNoStyleData {
     public init(elem: Object, data: Datas,styleOb: SVGStyleData) {

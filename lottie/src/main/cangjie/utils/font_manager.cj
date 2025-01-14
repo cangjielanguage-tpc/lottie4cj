@@ -7,12 +7,6 @@
  */
 package lottie.utils
 
-internal import lottie.model.*
-internal import lottie.utils.helpers.*
-
-internal import std.format.*
-internal import std.collection.*
-
 public type CreateTag = CreateNS
 
 public class FontManager {

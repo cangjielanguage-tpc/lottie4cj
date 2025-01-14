@@ -7,7 +7,7 @@
  */
 package lottie.elements
 
-internal import lottie.elements.helpers.shapes.*
+import lottie.elements.helpers.shapes.*
 
 public open class IShapeElement <: BaseElement {
 

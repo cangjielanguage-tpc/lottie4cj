@@ -7,10 +7,6 @@
  */
 package lottie.pool
 
-internal import lottie.inner.*
-
-internal import std.math.*
-internal import std.collection.*
 
 func defaultFnct(num: Float64): Int64 {
     return 0

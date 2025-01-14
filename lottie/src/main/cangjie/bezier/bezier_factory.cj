@@ -6,8 +6,6 @@
  * @file This file is BezierFactory.
  */
 package lottie.bezier
-import ohos.hilog.*
-internal import std.collection.*
 
 public class BezierFactory {
 

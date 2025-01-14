@@ -3,19 +3,10 @@
  */
 package lottie.utils
 
-internal import std.io.{InputStream, ByteArrayStream}
+import std.io.InputStream
 
-
-
-import tpc.BasicServicesKit.request.agent.*
-import tpc.BasicServicesKit.request.agent.Progress as AgentProgress
-internal import zip4cj.ZipFile
-internal import compress.zlib.*
-import tpc.BasicServicesKit.AsyncCallback
-import tpc.AbilityKit.*
-import tpc.BasicServicesKit.BusinessException
-import ohos.hilog.*
-import tpc.ArkData.distributedDataObject.*
+import zip4cj.ZipFile
+import compress.zlib.*
 // 筛选.json资源
 func filterJson(way: String): String {
     let files: ArrayList<FileInfo> = FileUtils.fileList(way)
@@ -63,7 +54,7 @@ func moveImages(routerDir: String, way: String): Unit {
     try {
         FileUtils.createFolder(dirPath, recursive: true)
     } catch (err: Exception) {
-        Hilog.error(0, "[moveImages]", "mkdir err: ${err.message}")
+        //Hilog.error(0, "[moveImages]", "mkdir err: ${err.message}")
     }
     let newWay = "${routerDir}/${way}/images"
 
@@ -79,7 +70,7 @@ func moveImages(routerDir: String, way: String): Unit {
                 if (srcPath == destPath) { continue }
                 FileUtils.moveDirectory(srcPath, destPath, true)
             } catch (err: Exception) {
-                Hilog.error(0, "[createFilesDir]", "moveDirectory err: ${err.message}")
+//                Hilog.error(0, "[createFilesDir]", "moveDirectory err: ${err.message}")
             }
         }
     }
@@ -95,7 +86,7 @@ func moveImages(routerDir: String, way: String): Unit {
             if (srcPath == destPath) { continue }
             FileUtils.moveFile(srcPath, destPath, true)
         } catch (err: Exception) {
-            Hilog.error(0, "[createFilesDir]", "moveFile err: ${err.message}")
+//            Hilog.error(0, "[createFilesDir]", "moveFile err: ${err.message}")
         }
     }
 }
@@ -120,7 +111,7 @@ func moveJson(routerDir: String, way: String): Unit {
         if (srcPath == destPath) { return }
         FileUtils.moveFile(srcPath, destPath, true)
     } catch (err: Exception) {
-        Hilog.error(0, "[moveJson]", "moveJson err: ${err.message}")
+//        Hilog.error(0, "[moveJson]", "moveJson err: ${err.message}")
     }
 }
 
@@ -189,7 +180,7 @@ func decompressGzipFile(srcFileName: String, resultDir: JsonFilesDir): Int64 {
         return count
     } catch (e: Exception) {
         // This happens in the Android Studio layout preview.
-        Hilog.error(0, "[decompressGzipFile]","has a error in decompressGzipFile. eror.message: ${e.message}")
+//        Hilog.error(0, "[decompressGzipFile]","has a error in decompressGzipFile. eror.message: ${e.message}")
         return 0
     }
 }
@@ -209,7 +200,7 @@ private func matchesMagicBytes(srcFileName: String, magic: Array<UInt8>): Bool {
         return buf == magic
     } catch (e: Exception) {
         // This happens in the Android Studio layout preview.
-        Hilog.error(0, "[matchesMagicBytes]","has a error in matchesMagicBytes. eror.message: ${e.message}")
+//        Hilog.error(0, "[matchesMagicBytes]","has a error in matchesMagicBytes. eror.message: ${e.message}")
         return false
     }
 }
@@ -268,7 +259,7 @@ public func readJson(url: String, readPath: String, errCallBack!: Option<(String
             return AnimationDataParser.parse(bas)
         }
     } catch (err: Exception) {
-        Hilog.error(0, "[readJson]", "readJson error, err.message = ${err.message}")
+//        Hilog.error(0, "[readJson]", "readJson error, err.message = ${err.message}")
         if (let Some(v) <- errCallBack) {
             v("error", err)
         }
@@ -325,7 +316,7 @@ public func downLoadImg(lottieData: AnimationData, context: Option<UIAbilityCont
                 //let stageContext = getStageContext(context.getOrThrow())
                 create(context.getOrThrow(), downloadConfig,{err,task =>
                    if (let Some(e) <- err) {
-                        Hilog.error(0xFF00,"lottie_ohos","Failed to request the upload. Code: ${e.code}, message: ${e.message}");
+//                        Hilog.error(0xFF00,"lottie_ohos","Failed to request the upload. Code: ${e.code}, message: ${e.message}");
                         //promise.reject(e.toJSValue())
                         return
                    }
@@ -338,14 +329,14 @@ public func downLoadImg(lottieData: AnimationData, context: Option<UIAbilityCont
                                 FileUtils.moveFile(srcPath, destPath, true)
                             }
                         } catch (err: Exception) {
-                            Hilog.error(0, "[downLoadImg]", "moveFile err: ${err.message}")
+//                            Hilog.error(0, "[downLoadImg]", "moveFile err: ${err.message}")
                         }
                     }
                     let createOnCallback = ProgressCallback(completeCallBackInside, task.getOrThrow())
                     task.getOrThrow().on("completed",createOnCallback)
                     task.getOrThrow().start({err,tas =>
                         if (let Some(e) <- err) {
-                            Hilog.error(0xFF00,"lottie_ohos","Failed to request the upload. Code: ${e.code}, message: ${e.message}");
+//                            Hilog.error(0xFF00,"lottie_ohos","Failed to request the upload. Code: ${e.code}, message: ${e.message}");
                         //promise.reject(e.toJSValue())
                             return
                         }
@@ -454,7 +445,7 @@ public func createFilesDir(url: String, context: Option<UIAbilityContext>): Json
             }
         }
     } catch (err: Exception) {
-        Hilog.error(0, "[createFilesDir]", "mkdir err: ${err.message}")
+//        Hilog.error(0, "[createFilesDir]", "mkdir err: ${err.message}")
     }
     return JsonFilesDir(dataName: lastSegmentWithExtension, route: dirPathSecond)
 }
@@ -473,7 +464,7 @@ public func createImageFilesDir(context: Option<UIAbilityContext>): String {
             }
         }
     } catch (err: Exception) {
-        Hilog.error(0, "[createFilesDir]", "mkdir imgFiles err: ${err.message}")
+//        Hilog.error(0, "[createFilesDir]", "mkdir imgFiles err: ${err.message}")
     }
     return dirImgPathFirst
 }

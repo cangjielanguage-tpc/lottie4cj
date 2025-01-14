@@ -7,14 +7,7 @@
  */
 package lottie.property
 
-internal import std.math.*
-internal import std.collection.*
 
-internal import lottie.bezier.*
-internal import lottie.inner.*
-internal import lottie.pool.*
-
-import ohos.hilog.*
 
 public type Caching = CachingAtTime
 

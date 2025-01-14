@@ -3,7 +3,6 @@
  */
 package lottie.property
 
-internal import std.collection.*
 
 //data == arr[i].ty === 'sh'/'rc'/'el'/'sr'
 public class CvShapeData <: ContentModelElement {

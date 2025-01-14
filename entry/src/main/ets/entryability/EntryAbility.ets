@@ -1,4 +1,4 @@
-import { AbilityConstant, common, UIAbility, Want, Ability, Configuration } from '@kit.AbilityKit';
+import { AbilityConstant, UIAbility, Want, Ability, Configuration } from '@kit.AbilityKit';
 import { hilog } from '@kit.PerformanceAnalysisKit';
 import { window } from '@kit.ArkUI';
 import { requireCJLib } from "libark_interop_loader.so";
@@ -44,11 +44,6 @@ interface CJAbility {
 
 let lib: CJAbility
 
-// export interface CJLottie {
-//   // 设置上下文对象
-//   setContext(context: common.UIAbilityContext): void
-// }
-
 export default class EntryAbility extends UIAbility {
   cjUIAbilityId: number = 0
 
@@ -59,9 +54,6 @@ export default class EntryAbility extends UIAbility {
     requireCJLib("libohos_app_cangjie_entry.so")
     this.cjUIAbilityId = lib.ark_UIAbility_createCJAbility(this.context.abilityInfo.name, this)
     lib.ark_UIAbility_onCreate(this.cjUIAbilityId, want, launchParam)
-
-    // let contextToCJ = requireCJLib("libohos_app_cangjie_entry.so") as CJLottie
-    // contextToCJ.setContext(this.context)
   }
 
   onWindowStageCreate(windowStage: window.WindowStage): void {

@@ -4,7 +4,6 @@
 
 package lottie.inner
 
-internal import std.math.*
 
 var subframeEnabled: Bool = true
 

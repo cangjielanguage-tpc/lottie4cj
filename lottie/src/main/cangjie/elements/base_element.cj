@@ -7,29 +7,6 @@
  */
 package lottie.elements
 
-import ohos.state_macro_manage.*
-import lottie.model.*
-internal import tpc.UIKit.component_interop.CompositeOperation
-internal import ohos.hilog.*
-
-internal import lottie.elements.helpers.*
-
-internal import lottie.inner.*
-internal import lottie.utils.*
-internal import lottie.utils.helpers.*
-
-
-internal import std.collection.*
-internal import lottie.global_data.*
-internal import lottie.property.*
-
-
-internal import lottie.model.*
-internal import std.collection.ArrayList
-
-
-internal import lottie.bezier.*
-
 
 public func emptyCreateItem(layer: Layer): BaseElement {
     return BaseElement(empty_layer, GlobalData(), isNull: true)

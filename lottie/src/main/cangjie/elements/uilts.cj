@@ -3,7 +3,6 @@
  */
 package lottie.elements
 
-internal import lottie.model.*
 
 var blendModeEnums: HashMap<Int64, String> = HashMap<Int64, String>([
     (0, "source-over"),

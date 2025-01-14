@@ -6,11 +6,12 @@
  * @file This file is BlendModes.
  */
 package lottie.utils.helpers
-import ohos.state_macro_manage.*
-import std.core.Object
-import tpc.UIKit.*
-internal import tpc.UIKit.component_interop.*
-internal import tpc.ImageKit.image.*
+
+import tpc.UIKit.component_interop.*
+import tpc.ImageKit.image.*
+
+internal import std.collection.*
+
 enum MultiType {
     | INT(Int64)
     | FLOAT(Float64)

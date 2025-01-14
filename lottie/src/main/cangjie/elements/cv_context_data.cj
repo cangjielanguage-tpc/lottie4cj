@@ -3,7 +3,6 @@
  */
 package lottie.elements
 
-internal import lottie.bezier.*
 
 public class CvContextData {
 

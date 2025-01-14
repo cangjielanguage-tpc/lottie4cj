@@ -7,12 +7,6 @@
  */
 package lottie.utils.text
 
-internal import lottie.bezier.*
-internal import lottie.inner.*
-internal import lottie.pool.*
-import tpc.UIKit.Color
-internal import lottie.property.*
-
 public class TextAnimatorProperty <: DynamicPropertyContainer {
 
     var _isFirstFrame: Bool = true

@@ -8,15 +8,10 @@
 package lottie.global_data
 
 
-import ohos.state_macro_manage.*
-
-internal import ohos.hilog.*
-
-
-internal import lottie.model.*
-internal import lottie.utils.*
-internal import lottie.utils.helpers.*
-internal import lottie.bezier.*
+import lottie.model.*
+import lottie.utils.*
+import lottie.utils.helpers.*
+import lottie.bezier.*
 
 
 import std.collection.*

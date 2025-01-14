@@ -7,9 +7,7 @@
  */
 package lottie.animation
 
-import ohos.state_macro_manage.*
-import tpc.AbilityKit.UIAbilityContext
-
+import lottie.renderers.*
 /**
  * 动画事件回调函数声明
  */

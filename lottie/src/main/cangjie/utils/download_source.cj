@@ -2,10 +2,7 @@
  * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
  */
 package lottie.utils
-import tpc.AbilityKit.*
-import tpc.BasicServicesKit.request.agent.*
-import tpc.BasicServicesKit.request.agent.Progress as AgentProgress
-import ohos.hilog.*
+
 public class DownLoadSource {
     let downloadUri: HashMap<String, Bool> = HashMap<String, Bool>()
 
@@ -70,7 +67,7 @@ public class DownLoadSource {
                 })
             } catch (err: Exception) {
                 // 下载失败
-                Hilog.error(0, "[DownLoadSource]","[downLoadNetworkSource] Download error: ${err.message}")
+                //Hilog.error(0, "[DownLoadSource]","[downLoadNetworkSource] Download error: ${err.message}")
                 downloadUri.remove(uri)
                 errCallBack("error", err)
             }
@@ -104,7 +101,7 @@ public class DownLoadSource {
                     configAnimation(lottieData, true)
                 } catch (err: Exception) {
                     // 下载失败加载缓存
-                    Hilog.error(0, "[loadSuccess]"," Download error: ${err.message}")
+                    //Hilog.error(0, "[loadSuccess]"," Download error: ${err.message}")
                     errCallBack("error", err)
                     handleAssets(lottieData)
                     configAnimation(lottieData, false)
@@ -124,7 +121,7 @@ public class DownLoadSource {
                 configAnimation(ad, true)
             } catch (err: Exception) {
                 // 解压失败，从Map中移除条目
-                Hilog.error(0, "[DownLoadSource]","[loadSuccess]- decompress error: ${err.message}")
+                //Hilog.error(0, "[DownLoadSource]","[loadSuccess]- decompress error: ${err.message}")
                 downloadUri.remove(uri)
                 errCallBack("error", err)
             }
@@ -146,7 +143,7 @@ public class DownLoadSource {
             configAnimation(cacheData, false)
         } else {
             // 缓存无资源，给用户返回加载异常
-            Hilog.error(0, "[DownLoadSource]","[loadFail]- the file is not exist in cache.")
+            //Hilog.error(0, "[DownLoadSource]","[loadFail]- the file is not exist in cache.")
             downloadUri.remove(uri)
             errCallBack("error", Exception("download fail: ${uri}"))
         }

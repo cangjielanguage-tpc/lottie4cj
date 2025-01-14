@@ -7,34 +7,7 @@
  */
 package lottie.animation
 
-internal import std.sync.*
-internal import std.time.*
-internal import std.math.*
-internal import std.fs.{FileInfo}
-internal import std.collection.HashMap
-internal import std.collection.ArrayList
-internal import std.io.{InputStream, ByteArrayStream}
-
-internal import lottie.inner.*
-internal import lottie.global_data.*
-internal import lottie.model.*
-internal import lottie.parser.*
-internal import lottie.renderers.*
-internal import lottie.elements.*
-internal import lottie.utils.*
-internal import lottie.utils.audio.*
-
-internal import tpc.UIKit.component_interop.CanvasGradient
-internal import tpc.UIKit.component_interop.RenderingContextSettings
-internal import tpc.UIKit.component_interop.CanvasRenderingContext2D
-internal import tpc.UIKit.component_interop.Canvas
-import ohos.state_macro_manage.*
-import tpc.AbilityKit.UIAbilityContext
-
-internal import ohos.hilog.*
-//import ohos.animator.{AnimatorResult,AnimatorOptions,AnimatorFill,AnimatorDirection}
 import tpc.UIKit.animator.*
-//internal import ohos.system_date_time.*
 import tpc.BasicServicesKit.systemDateTime.*
 
 public class AnimationManager {
@@ -468,7 +441,7 @@ public class AnimationManager {
                     rmdir(loadPath, jsonObj: jsonObj)
                 }
             } catch (err: Exception) {
-                Hilog.error(0, "[AnimationManager]", "[clearSingleFileCache]-lottie delete file and assets failed with error message: ${err.message}")
+//                Hilog.error(0, "[AnimationManager]", "[clearSingleFileCache]-lottie delete file and assets failed with error message: ${err.message}")
             }
         }
     }
@@ -492,7 +465,7 @@ public class AnimationManager {
                 try {
                     FileUtils.deleteFile(path + filenames[index])
                 } catch (err: Exception) {
-                    Hilog.error(0, "[AnimationManager]", "[rmAssetsDir]-lottie remove file failed with error message: ${err.message}")
+//                    Hilog.error(0, "[AnimationManager]", "[rmAssetsDir]-lottie remove file failed with error message: ${err.message}")
                 }
             }
         }
@@ -508,11 +481,11 @@ public class AnimationManager {
                 try {
                     FileUtils.deleteFile(dirPath)
                 } catch (errs: Exception) {
-                    Hilog.error(0, "[AnimationManager]", "[rmDirByPath]-lottie remove file failed with error message: ${errs.message}")
+//                    Hilog.error(0, "[AnimationManager]", "[rmDirByPath]-lottie remove file failed with error message: ${errs.message}")
                 }
             }
         } catch (err: Exception) {
-            Hilog.error(0, "[AnimationManager]", "[rmDirByPath]-Method rmDirByPath execute error: ${err.message}")
+//            Hilog.error(0, "[AnimationManager]", "[rmDirByPath]-Method rmDirByPath execute error: ${err.message}")
         }
     }
 
@@ -546,7 +519,7 @@ public class AnimationManager {
                 }
             }
         } catch (err: Exception) {
-            Hilog.error(0, "[AnimationManager]", "lottie rmdir: ${err.message}")
+//            Hilog.error(0, "[AnimationManager]", "lottie rmdir: ${err.message}")
         }
     }
 

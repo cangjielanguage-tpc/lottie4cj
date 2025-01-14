@@ -4,7 +4,6 @@
 
 package lottie.property
 
-internal import lottie.pool.*
 
 func default_unit_to_unit(): Unit {}
 

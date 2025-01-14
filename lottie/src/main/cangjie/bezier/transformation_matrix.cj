@@ -3,9 +3,6 @@
  */
 package lottie.bezier
 
-internal import std.math.*
-
-internal import ohos.hilog.*
 
 public class Matrix {
     public var props: Array<Float64> = Array<Float64>(16, item: 0.0)

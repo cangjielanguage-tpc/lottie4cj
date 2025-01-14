@@ -4,11 +4,6 @@
 
 package lottie.utils.expressions
 
-internal import lottie.global_data.*
-internal import lottie.model.*
-internal import lottie.property.*
-internal import std.collection.*
-
 
 public class SliderEffect <: SuperEffect {
 

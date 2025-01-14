@@ -8,7 +8,6 @@ package lottie.elements
 
  */
 
-internal import std.collection.*
 
 public class SliderEffect <: NoValueEffect {
     public init(data: Effect, elem: GlobalData, datas: Layer, container: GroupEffect, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {

@@ -7,14 +7,6 @@
  */
 package lottie.utils.text
 
-internal import lottie.model.*
-internal import lottie.utils.*
-internal import lottie.global_data.*
-
-internal import std.random.*
-internal import std.collection.*
-internal import std.math.*
-
 public func default_addDynamicProperty(tp: TextProperty): Unit {}
 
 /*

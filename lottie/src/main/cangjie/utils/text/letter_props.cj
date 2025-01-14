@@ -6,7 +6,7 @@
  * @file This file is BaseElement.
  */
 package lottie.utils.text
-import tpc.UIKit.Color
+
 public class MDF {
     var o: Bool = false
     var sw: Bool = false

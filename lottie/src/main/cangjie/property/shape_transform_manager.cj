@@ -3,8 +3,6 @@
  */
 package lottie.property
 
-internal import std.collection.*
-internal import lottie.bezier.*
 
 public class ShapeTransformManager {
 

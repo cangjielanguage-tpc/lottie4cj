@@ -43,7 +43,7 @@ public class CvImageElement <: IImageElement {
                 }
                 this.canvasContext.drawImage(this.img.pixel_map.getOrThrow(), (imgW - widthCrop) / 2.0, (imgH - heightCrop) / 2.0, widthCrop, heightCrop, 0.0, 0.0, Float64(this.assetData.w), Float64(this.assetData.h))
             } catch (err: Exception) {
-                Hilog.error(0, "[CvImageElement]","[createContent] has an error: ${err.message}")
+//                Hilog.error(0, "[CvImageElement]","[createContent] has an error: ${err.message}")
             }
         }
     }

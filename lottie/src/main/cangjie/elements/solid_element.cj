@@ -7,7 +7,6 @@
  */
 package lottie.elements
 
-internal import lottie.model.*
 
 public open class ISolidElement <: BaseElement {
 

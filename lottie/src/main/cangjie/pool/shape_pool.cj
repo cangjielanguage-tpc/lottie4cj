@@ -7,8 +7,6 @@
  */
 package lottie.pool
 
-internal import ohos.hilog.*
-
 /**
  * The shape pool.
  */

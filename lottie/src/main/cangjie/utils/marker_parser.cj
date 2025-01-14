@@ -7,7 +7,7 @@
  */
 package lottie.utils
 
-internal import encoding.json.*
+import encoding.json.*
 
 /**
  * marker parser.

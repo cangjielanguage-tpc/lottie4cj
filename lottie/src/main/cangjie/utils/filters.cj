@@ -3,7 +3,6 @@
  */
 package lottie.utils
 
-internal import lottie.utils.helpers.*
 
 public class FiltersFactory {
     

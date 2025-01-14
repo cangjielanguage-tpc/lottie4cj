@@ -7,10 +7,6 @@
  */
 package lottie.elements
 
-internal import lottie.bezier.*
-internal import lottie.utils.text.*
-
-internal import std.math.*
 
 public open class ITextElement <: BaseElement {
 

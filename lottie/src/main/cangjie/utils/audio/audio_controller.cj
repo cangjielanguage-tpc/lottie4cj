@@ -7,10 +7,10 @@
  */
 package lottie.utils.audio
 
-internal import std.collection.*
+import std.collection.*
 
-internal import lottie.model.*
-internal import lottie.elements.*
+import lottie.model.*
+import lottie.elements.*
 
 func audioFactory(assetPath: String): Audio {
     return Audio()

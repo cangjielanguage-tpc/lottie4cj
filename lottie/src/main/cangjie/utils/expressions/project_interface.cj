@@ -7,7 +7,6 @@
  */
 package lottie.utils.expressions
 
-internal import std.collection.ArrayList
 
 public class ProjectInterface {
 

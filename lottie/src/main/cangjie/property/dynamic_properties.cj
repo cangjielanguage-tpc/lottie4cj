@@ -7,8 +7,6 @@
  */
 package lottie.property
 
-internal import lottie.global_data.*
-internal import lottie.model.*
 
 public open class DynamicPropertyContainer <: ContentModelElement {
 

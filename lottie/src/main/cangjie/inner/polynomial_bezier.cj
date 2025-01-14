@@ -4,9 +4,6 @@
 
 package lottie.inner
 
-internal import std.math.*
-internal import std.collection.*
-
 public class PolynomialBezier {
 
     public var isNull: Bool = false

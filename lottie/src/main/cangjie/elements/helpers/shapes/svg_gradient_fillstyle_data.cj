@@ -3,8 +3,6 @@
  */
 package lottie.elements.helpers.shapes
 
-import std.collection.*
-
 import lottie.utils.*
 import lottie.inner.*
 

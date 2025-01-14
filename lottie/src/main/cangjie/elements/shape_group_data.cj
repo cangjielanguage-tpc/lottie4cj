@@ -3,7 +3,6 @@
  */
 package lottie.elements
 
-internal import lottie.utils.helpers.*
 public class ShapeGroupData {
 
     protected var  it: ArrayList<Object>

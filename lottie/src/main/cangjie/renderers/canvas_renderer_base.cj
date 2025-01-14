@@ -296,7 +296,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
                 elementWidth = this.canvasContext.ctx2d.width
                 */
             } catch (err: Exception) {
-                Hilog.error(0, "[updateContainerSize]", "get the width and height from CanvasRenderingContext2D is error: ${err.message}")
+                //Hilog.error(0, "[updateContainerSize]", "get the width and height from CanvasRenderingContext2D is error: ${err.message}")
             }
         }
 

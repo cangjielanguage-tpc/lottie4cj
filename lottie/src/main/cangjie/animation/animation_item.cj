@@ -6,7 +6,8 @@
  * @file This file is AnimationItem.
  */
 package lottie.animation
-import tpc.AbilityKit.UIAbilityContext
+import lottie.renderers.CanvasRenderer as CanvasRenderers
+import lottie.renderers.BaseRenderer
 public class AnimationItem <: BaseEvent {
  
     public var _animationManager: AnimationManager
@@ -176,7 +177,7 @@ public class AnimationItem <: BaseEvent {
                 this.setupAnimation(jsonData)
             }
         } catch (eror: Exception) {
-            Hilog.error(0, "[loadAnimationData]","${this.packageName}-${this.name}--lottie animation eror.message: ${eror.message}")
+//            Hilog.error(0, "[loadAnimationData]","${this.packageName}-${this.name}--lottie animation eror.message: ${eror.message}")
         }
     }
 
@@ -244,7 +245,7 @@ public class AnimationItem <: BaseEvent {
 
         //根据 animTypes 选择对应的 Renderer。CanvasRenderer/SVGRenderer/HybridRenderer
         if (animTypes == "canvas") {
-            let cvRenderer = CanvasRenderer(params.rendererSettings, params.container)
+            let cvRenderer = CanvasRenderers(params.rendererSettings, params.container)
             this.hasRenderer = true
 
             cvRenderer.globalData.save = cvRenderer.save
@@ -646,7 +647,7 @@ public class AnimationItem <: BaseEvent {
             this.gotoFrame()
             this.renderer.renderFrame(0.0, true)
         } catch (error: Exception) {
-            Hilog.error(0, "[changeColor]","${this.packageName}-${this.name}--lottie animation exception in changeColor: ${error.message}")
+//            Hilog.error(0, "[changeColor]","${this.packageName}-${this.name}--lottie animation exception in changeColor: ${error.message}")
             //decide how to handle catch case
         }
     }
@@ -889,7 +890,7 @@ public class AnimationItem <: BaseEvent {
 
     public func setSegment(initNum: Float64, end: Float64): Unit {
         if (initNum == end) {
-             Hilog.error(0, "[AnimationItem]", "[setSegment]- initNum == end, the setSegment function are not executed.")
+//             Hilog.error(0, "[AnimationItem]", "[setSegment]- initNum == end, the setSegment function are not executed.")
             return
         }
         var pendingFrame: Float64 = -1.0
@@ -912,7 +913,7 @@ public class AnimationItem <: BaseEvent {
     public func playSegments(arr: Array<Array<Float64>>, forceFlag: Bool): Unit {
         for (i in 0..arr.size) {
             if (arr[i].size != 2) {
-                Hilog.error(0, "[AnimationItem]", "[playSegments]- The incoming playback segment data is not compliant. Each set of data must be 2.")
+//                Hilog.error(0, "[AnimationItem]", "[playSegments]- The incoming playback segment data is not compliant. Each set of data must be 2.")
                 return
             }
         }
@@ -932,7 +933,7 @@ public class AnimationItem <: BaseEvent {
 
     public func playSegments(arr: Array<Float64>, forceFlag: Bool): Unit {
         if (arr.size != 2) {
-            Hilog.error(0, "[AnimationItem]", "[playSegments]- The incoming playback segment data is not compliant. The length of the array must be 2.")
+//            Hilog.error(0, "[AnimationItem]", "[playSegments]- The incoming playback segment data is not compliant. The length of the array must be 2.")
             return
         }
         if (forceFlag) {

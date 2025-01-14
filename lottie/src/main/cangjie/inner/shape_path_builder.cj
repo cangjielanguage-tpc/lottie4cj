@@ -7,8 +7,7 @@
  */
 package lottie.inner
 
-internal import lottie.model.*
-internal import lottie.bezier.*
+import lottie.bezier.*
 
 /**
  * Build shape string.
