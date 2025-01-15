@@ -7,8 +7,8 @@
  */
 package lottie.utils
 
-import tpc.AbilityKit.bundleManager.BundleFlag
-import tpc.AbilityKit.bundleManager.getBundleInfoForSelf
+import tpc.AbilityKit.bundleManager.BundleFlag as ABundleFlag
+import tpc.AbilityKit.bundleManager.getBundleInfoForSelf as getBundleInfoForSelfs
 
 /**
  * Get Bundle Name
@@ -16,8 +16,8 @@ import tpc.AbilityKit.bundleManager.getBundleInfoForSelf
  * @return Type of String, returns bundle name
  */
 func getBundleName(): String {
-    let bundleFlags = BundleFlag.GET_BUNDLE_INFO_DEFAULT
-    let bundleInfo = getBundleInfoForSelf(bundleFlags)
+    let bundleFlags = ABundleFlag.GET_BUNDLE_INFO_DEFAULT
+    let bundleInfo = getBundleInfoForSelfs(bundleFlags)
     return bundleInfo.name
 }
 
