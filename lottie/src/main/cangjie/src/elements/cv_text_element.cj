@@ -175,10 +175,10 @@ public class CvTextElement <: ITextElement {
                     this.globalData.ctxOpacity(Float64(v.o))
                 }
                 if (this.fill) {
-                  if (renderedLetter.isSome() && renderedLetter.getOrThrow().fc.toUInt32() != Color(0,0,0).toUInt32()) {
-                    if (lastFill.isNone() || (lastFill.getOrThrow().toUInt32() != renderedLetter.getOrThrow().fc.toUInt32())) {
+                  if (renderedLetter.isSome() && renderedLetter.getOrThrow().fc.isSome()) {
+                    if (lastFill.isNone() || (lastFill.getOrThrow().toUInt32() != renderedLetter.getOrThrow().fc.getOrThrow().toUInt32())) {
                       lastFill = renderedLetter.getOrThrow().fc
-                      ctx.fillStyle(renderedLetter.getOrThrow().fc)
+                      ctx.fillStyle(renderedLetter.getOrThrow().fc.getOrThrow())
                     }
                   } else if (lastFill.isNone() || (lastFill.getOrThrow().toUInt32() != this.values.fill.toUInt32())) {
                     lastFill = this.values.fill

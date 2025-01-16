@@ -222,7 +222,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
 
         var letterSw: Int64 = 0
         var letterSc: Color =  Color(0,0,0)
-        var letterFc: Color = Color(0,0,0)
+        var letterFc: ?Color = None
         var letterM: String = ""
         var letterP: Array<Float64> = this.defaultPropsArray
         var letterO: Int64 = 0
