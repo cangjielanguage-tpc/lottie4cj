@@ -31,14 +31,14 @@ public class LetterProps {
     public var o: Int64 = 0
     public var sw: Int64 = 0
     public var sc: Color = Color(0,0,0)
-    public var fc: Color = Color(0,0,0)
+    public var fc: ?Color = None
     var m: String = ""
     public var p: Array<Float64> = Array<Float64>()
     var _mdf: MDF = MDF()
 
     public init(){}
 
-    public init(o: Int64, sw: Int64, sc: Color, fc: Color, m: String, p: Array<Float64>) {
+    public init(o: Int64, sw: Int64, sc: Color, fc: ?Color, m: String, p: Array<Float64>) {
         this.o = o
         this.sw = sw
         this.sc = sc
@@ -49,13 +49,13 @@ public class LetterProps {
             o: true,
             sw: sw != 0,
             sc: sc.toUInt32() != this.sc.toUInt32(),
-            fc: fc.toUInt32() != this.fc.toUInt32(),
+            fc: fc.isSome(),
             m: true,
             p: true
         )
     }
 
-    func update(o: Int64, sw: Int64, sc: Color, fc: Color, m: String, p: Array<Float64>) {
+    func update(o: Int64, sw: Int64, sc: Color, fc: ?Color, m: String, p: Array<Float64>) {
         this._mdf.o = false
         this._mdf.sw = false
         this._mdf.sc = false
@@ -79,7 +79,13 @@ public class LetterProps {
             this._mdf.sc = true
             updated = true
         }
-        if (this.fc.toUInt32() != fc.toUInt32()) {
+        if (this.fc.isNone() && fc.isNone()) {
+
+        } else if (this.fc.isNone() || fc.isNone()) {
+            this.fc = fc
+            this._mdf.fc = true
+            updated = true
+        } else if (this.fc.getOrThrow().toUInt32() != fc.getOrThrow().toUInt32()) {
             this.fc = fc
             this._mdf.fc = true
             updated = true
