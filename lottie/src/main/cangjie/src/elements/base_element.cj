@@ -187,8 +187,21 @@ public open class BaseElement <: Equatable<BaseElement> {
         this.canvasContext = this.globalData.canvasContext
     }
 
+    func getCompDataInd(): Int64 {
+        var cdInd: Int64 = -1
+        if (this.compType == 1 && this.compDataInd != -1) {
+            cdInd = this.compDataInd
+        } else if (this.compType == 1) {
+            cdInd = this.data.ind
+        }
+        return cdInd
+    }
+
     public func getRenderedFrameInElemComp(_compDataInd: Int64): Float64 {
         if (this.compType == 2 && this.data.ind == _compDataInd) {
+            return this.renderedFrame
+        }
+        if (this.compType == 1 && this.data.ind == _compDataInd) {
             return this.renderedFrame
         }
         if (this.compType == 1 && this.comp.size >= 1){
@@ -203,6 +216,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         if (randerType != "canvas") {
             throw Exception("Non canvas cannot call this function。")
         }
+        /* compType-comp数据类型：1-Element；2-Renderer；3-其他 */
         if (layer.ty == 2) {
             return CvImageElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender, compDataInd: this.data.ind)
         } else if (layer.ty == 0) {
@@ -214,7 +228,7 @@ public open class BaseElement <: Equatable<BaseElement> {
         } else if (layer.ty == 4) {
             return CvShapeElement(layer, this.globalData, this.buildElementParenting, layers: this.layers, elements: this.elements, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender, compDataInd: this.data.ind)
         } else if (layer.ty == 5) {
-            return CvTextElement(layer, globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender, compDataInd: this.data.ind)
+            return CvTextElement(layer, this.globalData, this.buildElementParenting, compType: 1, comp: [this], getElementByIdInRender: this.getElementByIdInRender, compDataInd: this.data.ind)
         } else if (layer.ty == 6) {
             /* 暂不实现  //return this.createAudio(layer) */
             return NullElement(layer, this.globalData)

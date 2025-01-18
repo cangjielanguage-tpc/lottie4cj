@@ -15,8 +15,11 @@ public class TextSelectorProp {
      * 数据来源分析：data  =>  layer.t.a[i].s(AnimatableTextPropertiesS)
      * 数据来源分析：arr  <=  TextAnimatorDataProperty.container 中  =>  TextAnimatorProperty
      */
-    public static func getTextSelectorProp(data: AnimatableTextPropertiesS, elemGlobalData: GlobalData, elemData: Layer, elemTextPropertyCurrentData: DocumentData, dynamicProperties!: ArrayList<DynamicPropertyContainer>): TextSelectorPropFactory {
-        return TextSelectorPropFactory(data, elemGlobalData, elemData, elemTextPropertyCurrentData, dynamicProperties: dynamicProperties)
+    public static func getTextSelectorProp(data: AnimatableTextPropertiesS, elemGlobalData: GlobalData, elemData: Layer,
+        elemTextPropertyCurrentData: DocumentData, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(), compDataInd!: Int64 = -1
+    ): TextSelectorPropFactory {
+        return TextSelectorPropFactory(data, elemGlobalData, elemData, elemTextPropertyCurrentData, dynamicProperties: dynamicProperties, compType: compType, renderedFrame: renderedFrame, compDataInd: compDataInd)
     }
 }
 
@@ -45,10 +48,18 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
     var sm: PropertyFactory<AK, Int64>
 
     /* 数据来源分析：data  =>  layer.t.a[i].s(AnimatableTextPropertiesS) */
-    public init(data: AnimatableTextPropertiesS, elemGlobalData: GlobalData, elemData: Layer, elemTextPropertyCurrentData: DocumentData, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
+    public init(data: AnimatableTextPropertiesS, elemGlobalData: GlobalData, elemData: Layer,
+            elemTextPropertyCurrentData: DocumentData, dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+            compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+            compDataInd!: Int64 = -1
+    ) {
         super(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this.elemTextPropertyCurrentData = elemTextPropertyCurrentData
         this.data = data
+
+        this.compType = compType
+        this.compDataInd = compDataInd
+        this.getRenderedFrame = renderedFrame
 
         let dp: DynamicPropertyContainer = DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: this.dynamicProperties)
         let emptypf = PropertyFactory<AK, Int64>(AK(), 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties)

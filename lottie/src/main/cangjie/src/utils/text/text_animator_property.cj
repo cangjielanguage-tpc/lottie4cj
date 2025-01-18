@@ -34,10 +34,19 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
     /* elem 中用到的成员变量，在初始化后需要单独赋值过来。*/
     public let elemTextPropertyCurrentData: DocumentData
 
-    public init(textData: LayerT, renderType: String, elemGlobalData: GlobalData, elemData: Layer, elemTextPropertyCurrentData: DocumentData, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
+    public init(textData: LayerT, renderType: String, elemGlobalData: GlobalData, elemData: Layer,
+        elemTextPropertyCurrentData: DocumentData,
+        dynamicProperties!: ArrayList<DynamicPropertyContainer>,
+        compType!: Int8 = 0, renderedFrame!: Array<(Int64) -> Float64> = Array<(Int64) -> Float64>(),
+        compDataInd!: Int64 = -1
+    ) {
         super(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
         this._textData = textData
         this._renderType = renderType
+
+        this.compType = compType
+        this.compDataInd = compDataInd
+        this.getRenderedFrame = renderedFrame
 
         this.elemTextPropertyCurrentData = elemTextPropertyCurrentData
 
@@ -63,10 +72,11 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         var animatorProps: AnimatableTextPropertiesA = AnimatableTextPropertiesA()
 
         this._animatorsData = Array<TextAnimatorDataProperty>(len, item: unsafe {zeroValue<TextAnimatorDataProperty>()})
+
         for (i in 0..len) {
             /* 数据类型分析: animatorProps  =>  this._textData.a[i]  =>  layer.t.a[i](AnimatableTextPropertiesA) */
             animatorProps = this._textData.a[i]
-            this._animatorsData[i] = TextAnimatorDataProperty(animatorProps, this, this.elemGlobalData, this.elemData, this.elemTextPropertyCurrentData, dynamicProperties: this.dynamicPropertiesInElem)
+            this._animatorsData[i] = TextAnimatorDataProperty(animatorProps, this, this.elemGlobalData, this.elemData, this.elemTextPropertyCurrentData, dynamicProperties: this.dynamicPropertiesInElem, compType: this.compType, renderedFrame: this.getRenderedFrame, compDataInd: this.compDataInd)
         }
 
         this._hasMaskedPath = false

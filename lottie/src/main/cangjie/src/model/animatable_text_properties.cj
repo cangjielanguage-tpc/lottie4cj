@@ -103,10 +103,12 @@ public class AnimatableTextPropertiesA <: ToString {
 public class AnimatableTextProperties <: ToString {
 
     public let fc: ArrayKeyframeArrayFloat64             //0 = color
-    public let s: ArrayKeyframeArrayFloat64             //0 = color
+    public let s: ArrayKeyframeArrayFloat64              //0 = color
     public let sc: Array<Keyframe<Array<Float64>>>       //1 = stroke
     public let sw: Array<Keyframe<Float64>>              //2 = strokeWidth
     public let t: ArrayKeyframeFloat64                   //3 = tracking
+
+    public let p: ArrayKeyframeArrayFloat64               //4
 
     /**
      * Create a AnimatableTextProperties instance based on parameters.
@@ -121,13 +123,15 @@ public class AnimatableTextProperties <: ToString {
         s!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64(),
         sc!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(),
         sw!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
-        t!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+        t!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64(),
+        p!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64()
     ){
         this.fc = fc
         this.s = s
         this.sc = sc
         this.sw = sw
         this.t = t
+        this.p = p
     }
 
     /**
