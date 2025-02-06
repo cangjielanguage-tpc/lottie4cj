@@ -14,15 +14,12 @@
       [target.x86_64-unknown-windows-gnu.bin-dependencies.package-option]
 
 [dependencies]
-  [dependencies.cj_res_lottie]
-    path = "./cj_res"
-    version = "1.0.0"
   [dependencies.zip4cj]
     tag = "0.53.13"
     git = "https://gitcode.com/Cangjie-TPC/zip4cj.git"
 
 [package]
-  cjc-version = "0.53.13"
+  cjc-version = "0.53.18"
   compile-option = ""
   description = "CangjieUI Application"
   link-option = ""
