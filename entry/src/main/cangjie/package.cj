@@ -23,5 +23,9 @@ internal import std.convert.*
 
 internal import lottie.animation.*
 internal import lottie.utils.*
+internal import lottie.utils.helpers.*
+internal import lottie.model.*
+
+internal import lottie.parser.*
 
 

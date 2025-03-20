@@ -5,7 +5,7 @@
 <p align="center">
 <img alt="" src="https://img.shields.io/badge/release-v0.0.1-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/build-pass-brightgreen" style="display: inline-block;" />
-<img alt="" src="https://img.shields.io/badge/cjc-v0.53.13-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/cjc-v0.53.18-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/cjcov-NA-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/project-open-brightgreen" style="display: inline-block;" />
 </p>
@@ -472,9 +472,9 @@ class LottieSample {
 ## 约束与限制
 在下述版本验证通过：
 
-    DevEco Studio NEXT Developer Beta2(5.0.3.910) 
-    Cangjie Support Plugin 5.0.3.906
-    Cangjie Compiler: 0.53.13 (cjnative)
+    DevEco Studio 5.0.2 Release(5.0.7.200) 
+    Cangjie Support Plugin 5.0.7.100
+    Cangjie Compiler: 0.53.18 (cjnative)
 
 ## 开源协议
 本项目基于 [The MIT License](./LICENSE)，请自由的享受和参与开源。

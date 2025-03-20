@@ -10,18 +10,6 @@ import ohos.state_macro_manage.*
 
 internal import ohos.hilog.*
 
-internal import ohos.image.Image as MultiImage
-internal import ohos.image.Component as ImageComponent
-internal import ohos.image.PixelMap
-internal import ohos.image.createImageSource
-internal import ohos.image.DecodingOptions
-internal import ohos.image.Size
-internal import ohos.image.PixelMapFormat
-internal import ohos.image.Region
-internal import ohos.image.ImageInfo
-internal import ohos.image.InitializationOptions
-internal import ohos.image.createPixelMap
-
 @Entry
 @Component
 class LottieSample {
@@ -83,7 +71,7 @@ class LottieSample {
                     Column() {
 
                         Row() {
-                            Button("加载2016").onClick {
+                            Button("加载2016-3").onClick {
                                 evt =>
                                 Hilog.error(0, "lipei", "begin------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
                                 if (!this.animateItem.isNone()) {

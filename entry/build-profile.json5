@@ -4,6 +4,11 @@
     "cangjieOptions": {
       "path": "./src/main/cangjie/cjpm.toml",
       "abiFilters": ["arm64-v8a","x86_64"]
+    },
+    "nativeLib": {
+      "filter": {
+        "enableOverride": true
+      }
     }
   },
   "buildOptionSet": [
