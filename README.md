@@ -144,9 +144,9 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 5.加载动画
 
 - 加载动画的时机需要注意，点击按钮加载动画可按照正常逻辑放在点击事件内，如果想要实现进入页面自动播放动画，需要结合Canvas组件的onReady()生命回调周期实现，加载动画时机需放置在onReady()生命周期回调内或及之后。
-- 同一Canvas组件加载多次/不同动画资源，需要手动销毁动画(lottie.destroy(animationName："2016"))，之后才可再次加载其他动画资源。
+- 同一Canvas组件加载多次/不同动画资源，需要手动销毁动画(lottie.destroy(animationName: "2016"))，之后才可再次加载其他动画资源。
 ```      
-    lottie.destroy(animationName："2016") //加载动画前先销毁之前加载的动画
+    lottie.destroy(animationName: "2016") //加载动画前先销毁之前加载的动画
     this.lottie: AnimationManager = AnimationManager(this.mainCanvasRenderingContext)
     this.animateItem = lottie.loadAnimation(AnimationConfig(
         container: this.mainCanvasRenderingContext,              // 渲染上下文
@@ -472,8 +472,8 @@ class LottieSample {
 ## 约束与限制
 在下述版本验证通过：
 
-    DevEco Studio 5.0.2 Release(5.0.7.200) 
-    Cangjie Support Plugin 5.0.7.100
+    DevEco Studio 5.0.3 Release(5.0.9.300) 
+    Cangjie Support Plugin 5.0.9.100
     Cangjie Compiler: 0.53.18 (cjnative)
 
 ## 开源协议
