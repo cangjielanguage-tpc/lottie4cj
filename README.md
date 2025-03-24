@@ -63,11 +63,23 @@ lottie4cj是一个动画库，它可以解析Adobe After Effects软件通过Body
   }
 }
 ```
-4. 修改自身应用 entry/src/main/cangjie 下的 cjpm.toml 文件，在 [dependencies] 字段下添加 lottie = {path = "../../../../lottie/src/main/cangjie", version = "1.0.0"}
+4. 修改自身应用 entry/src/main/cangjie 下的 cjpm.toml 文件，在 [dependencies] 字段下添加 lottie 依赖。
 ```shell
 [dependencies]
-lottie = {path = "../../../../lottie/src/main/cangjie", version = "1.0.0"}
+  cj_res_entry = {path = "./cj_res", version = "1.0.0"}
+  lottie = {path = "../../../../lottie/src/main/cangjie", version = "1.0.0"}
 ```
+或
+```shell
+[dependencies]
+  [dependencies.cj_res_entry]
+    path = "./cj_res"
+    version = "1.0.0"
+  [dependencies.lottie]
+    path = "../../../../lottie/src/main/cangjie"
+    version = "1.0.0"
+```
+
 5. 在项目中引用
 ```cangjie
   import lottie.*
@@ -84,8 +96,20 @@ lottie = {path = "../../../../lottie/src/main/cangjie", version = "1.0.0"}
 2. 修改自身应用 entry/src/main/cangjie 下的 cjpm.toml 文件，添加依赖
 ```
 [dependencies]
-lottie = {path = "../../../../third-party/lottie4cj/lottie/src/main/cangjie", version = "1.0.0"}
+  cj_res_entry = {path = "./cj_res", version = "1.0.0"}
+  lottie = {path = "../../../../third-party/lottie4cj/lottie/src/main/cangjie", version = "1.0.0"}
 ```
+或
+```
+[dependencies]
+  [dependencies.cj_res_entry]
+    path = "./cj_res"
+    version = "1.0.0"
+  [dependencies.lottie]
+    path = "../../../../third-party/lottie4cj/lottie/src/main/cangjie"
+    version = "1.0.0"
+```
+
 3. 在项目中引用
 ```cangjie
 import lottie.*
@@ -386,6 +410,37 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 
 功能示例描述:      
 加载动画json文件，进行动画播放。
+
+备注：用例中的 globalAbilityContext，在自身应用 entry/src/main/cangjie/main_ability.cj 文件中，引用、定义并赋值。
+
+```cangjie
+//1.引包
+internal import ohos.ability.AbilityContext
+//2.定义变量 globalAbilityContext
+public var globalAbilityContext: Option<AbilityContext> = Option<AbilityContext>.None
+
+class MainAbility <: Ability {
+    public init() {
+        super()
+        registerSelf()
+    }
+
+    public override func onCreate(want: Want, launchParam: LaunchParam): Unit {
+        AppLog.info("MainAbility OnCreated.${want.abilityName}")
+        //3. 变量 globalAbilityContext 赋值。
+        globalAbilityContext = Option<AbilityContext>.Some(this.context)
+        match (launchParam.launchReason) {
+            case LaunchReason.START_ABILITY => AppLog.info("START_ABILITY")
+            case _ => ()
+        }
+    }
+
+    public override func onWindowStageCreate(windowStage: WindowStage): Unit {
+        AppLog.info("MainAbility onWindowStageCreate.")
+        windowStage.loadContent("Mains")
+    }
+}
+```
 
 示例代码如下：
 
