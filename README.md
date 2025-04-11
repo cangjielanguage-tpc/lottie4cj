@@ -5,7 +5,7 @@
 <p align="center">
 <img alt="" src="https://img.shields.io/badge/release-v0.0.1-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/build-pass-brightgreen" style="display: inline-block;" />
-<img alt="" src="https://img.shields.io/badge/cjc-v0.53.18-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/cjc-v0.53.13-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/cjcov-NA-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/project-open-brightgreen" style="display: inline-block;" />
 </p>
@@ -63,23 +63,11 @@ lottie4cj是一个动画库，它可以解析Adobe After Effects软件通过Body
   }
 }
 ```
-4. 修改自身应用 entry/src/main/cangjie 下的 cjpm.toml 文件，在 [dependencies] 字段下添加 lottie 依赖。
+4. 修改自身应用 entry/src/main/cangjie 下的 cjpm.toml 文件，在 [dependencies] 字段下添加 lottie = {path = "../../../../lottie/src/main/cangjie", version = "1.0.0"}
 ```shell
 [dependencies]
-  cj_res_entry = {path = "./cj_res", version = "1.0.0"}
-  lottie = {path = "../../../../lottie/src/main/cangjie", version = "1.0.0"}
+lottie = {path = "../../../../lottie/src/main/cangjie", version = "1.0.0"}
 ```
-或
-```shell
-[dependencies]
-  [dependencies.cj_res_entry]
-    path = "./cj_res"
-    version = "1.0.0"
-  [dependencies.lottie]
-    path = "../../../../lottie/src/main/cangjie"
-    version = "1.0.0"
-```
-
 5. 在项目中引用
 ```cangjie
   import lottie.*
@@ -96,20 +84,8 @@ lottie4cj是一个动画库，它可以解析Adobe After Effects软件通过Body
 2. 修改自身应用 entry/src/main/cangjie 下的 cjpm.toml 文件，添加依赖
 ```
 [dependencies]
-  cj_res_entry = {path = "./cj_res", version = "1.0.0"}
-  lottie = {path = "../../../../third-party/lottie4cj/lottie/src/main/cangjie", version = "1.0.0"}
+lottie = {path = "../../../../third-party/lottie4cj/lottie/src/main/cangjie", version = "1.0.0"}
 ```
-或
-```
-[dependencies]
-  [dependencies.cj_res_entry]
-    path = "./cj_res"
-    version = "1.0.0"
-  [dependencies.lottie]
-    path = "../../../../third-party/lottie4cj/lottie/src/main/cangjie"
-    version = "1.0.0"
-```
-
 3. 在项目中引用
 ```cangjie
 import lottie.*
@@ -168,9 +144,9 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 5.加载动画
 
 - 加载动画的时机需要注意，点击按钮加载动画可按照正常逻辑放在点击事件内，如果想要实现进入页面自动播放动画，需要结合Canvas组件的onReady()生命回调周期实现，加载动画时机需放置在onReady()生命周期回调内或及之后。
-- 同一Canvas组件加载多次/不同动画资源，需要手动销毁动画(lottie.destroy(animationName: "2016"))，之后才可再次加载其他动画资源。
+- 同一Canvas组件加载多次/不同动画资源，需要手动销毁动画(lottie.destroy(animationName："2016"))，之后才可再次加载其他动画资源。
 ```      
-    lottie.destroy(animationName: "2016") //加载动画前先销毁之前加载的动画
+    lottie.destroy(animationName："2016") //加载动画前先销毁之前加载的动画
     this.lottie: AnimationManager = AnimationManager(this.mainCanvasRenderingContext)
     this.animateItem = lottie.loadAnimation(AnimationConfig(
         container: this.mainCanvasRenderingContext,              // 渲染上下文
@@ -411,37 +387,6 @@ Canvas(this.mainCanvasRenderingContext).width(45.percent).height(200).background
 功能示例描述:      
 加载动画json文件，进行动画播放。
 
-备注：用例中的 globalAbilityContext，在自身应用 entry/src/main/cangjie/main_ability.cj 文件中，引用、定义并赋值。
-
-```cangjie
-//1.引包
-internal import ohos.ability.AbilityContext
-//2.定义变量 globalAbilityContext
-public var globalAbilityContext: Option<AbilityContext> = Option<AbilityContext>.None
-
-class MainAbility <: Ability {
-    public init() {
-        super()
-        registerSelf()
-    }
-
-    public override func onCreate(want: Want, launchParam: LaunchParam): Unit {
-        AppLog.info("MainAbility OnCreated.${want.abilityName}")
-        //3. 变量 globalAbilityContext 赋值。
-        globalAbilityContext = Option<AbilityContext>.Some(this.context)
-        match (launchParam.launchReason) {
-            case LaunchReason.START_ABILITY => AppLog.info("START_ABILITY")
-            case _ => ()
-        }
-    }
-
-    public override func onWindowStageCreate(windowStage: WindowStage): Unit {
-        AppLog.info("MainAbility onWindowStageCreate.")
-        windowStage.loadContent("Mains")
-    }
-}
-```
-
 示例代码如下：
 
 ```cangjie
@@ -527,9 +472,9 @@ class LottieSample {
 ## 约束与限制
 在下述版本验证通过：
 
-    DevEco Studio 5.0.3 Release(5.0.9.300) 
-    Cangjie Support Plugin 5.0.9.100
-    Cangjie Compiler: 0.53.18 (cjnative)
+    DevEco Studio NEXT Developer Beta2(5.0.3.910) 
+    Cangjie Support Plugin 5.0.3.906
+    Cangjie Compiler: 0.53.13 (cjnative)
 
 ## 开源协议
 本项目基于 [The MIT License](./LICENSE)，请自由的享受和参与开源。

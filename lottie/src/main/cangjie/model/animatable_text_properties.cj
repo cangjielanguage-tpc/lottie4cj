@@ -1,0 +1,146 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+
+/**
+ * @file This file is a AnimatableTextProperties structure.
+ */
+package lottie.model
+
+public class AK <: ToString {
+    public let a: Int64
+    public let k: Int64
+    public init(a!: Int64 = 0, k!: Int64 = 0) {
+        this.a = a
+        this.k = k
+    }
+    public func toString(): String {
+        return "AK: {a = ${a}, k = ${k}}"
+    }
+    public func clone(): AK {
+        return AK(a:this.a,k:this.k)
+    }
+}
+
+public class AnimatableTextPropertiesS <: ToString {
+    public let t: Int64
+    public let xe: AK
+    public let ne: AK
+    public let a: AK
+    public let b: Int64
+    public let rn: Int64
+    public let sh: Int64
+    public let r: Int64
+    public var s: ArrayKeyframeArrayFloat64
+    public var e: ArrayKeyframeArrayFloat64
+    public var o: ArrayKeyframeArrayFloat64
+    public var totalChars: Int64 = 0
+
+    public init(t!: Int64 = 0,
+        xe!: AK = AK(), ne!: AK = AK(), a!: AK = AK(),
+        b!: Int64 = 0, rn!: Int64 = 0, sh!: Int64 = 0, r!: Int64 = 0,
+        s!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64(),
+        e!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64(),
+        o!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64()
+    ) {
+        this.t = t
+        this.xe = xe
+        this.ne = ne
+        this.a = a
+        this.b = b
+        this.rn = rn
+        this.sh = sh
+        this.r = r
+        this.s = s
+        this.e = e
+        this.o = o
+    }
+
+    public func toString(): String {
+        return "AnimatableTextPropertiesS-s: {\n" +
+               "t  = ${t },\n" +
+               "xe = ${xe},\n" +
+               "ne = ${ne},\n" +
+               "a  = ${a },\n" +
+               "b  = ${b },\n" +
+               "rn = ${rn},\n" +
+               "sh = ${sh},\n" +
+               "r  = ${r }\n}" +
+               "s  = ${s }\n}" +
+               "e  = ${e }\n}" +
+               "o  = ${o }\n}"
+    }
+}
+
+public class AnimatableTextPropertiesA <: ToString {
+
+    public let a: AnimatableTextProperties
+
+    public let s: AnimatableTextPropertiesS
+
+    /**
+     * Create a AnimatableTextPropertiesA instance based on the parameter.
+     *
+     * @param a - Type of AnimatableTextProperties, the value of a.
+     */
+    public init(a!: AnimatableTextProperties = AnimatableTextProperties(),
+        s!: AnimatableTextPropertiesS = AnimatableTextPropertiesS()
+    ){
+        this.a = a
+        this.s = s
+    }
+
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
+    public func toString(): String {
+        return "AnimatableTextPropertiesA: {a = ${a}, s = ${s}}"
+    }
+}
+
+public class AnimatableTextProperties <: ToString {
+
+    public let fc: ArrayKeyframeArrayFloat64             //0 = color
+    public let s: ArrayKeyframeArrayFloat64             //0 = color
+    public let sc: Array<Keyframe<Array<Float64>>>       //1 = stroke
+    public let sw: Array<Keyframe<Float64>>              //2 = strokeWidth
+    public let t: ArrayKeyframeFloat64                   //3 = tracking
+
+    /**
+     * Create a AnimatableTextProperties instance based on parameters.
+     *
+     * @param fc - Type of ArrayKeyframeArrayFloat64, the value of fc.
+     * @param sc - Type of Array<Keyframe<Array<Float64>>>, the value of sc.
+     * @param sw - Type of Array<Keyframe<Float64>>, the value of sw.
+     * @param t - Type of ArrayKeyframeFloat64, the value of t.
+     */
+    public init(
+        fc!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64(),
+        s!: ArrayKeyframeArrayFloat64 = ArrayKeyframeArrayFloat64(),
+        sc!: Array<Keyframe<Array<Float64>>> = Array<Keyframe<Array<Float64>>>(),
+        sw!: Array<Keyframe<Float64>> = Array<Keyframe<Float64>>(),
+        t!: ArrayKeyframeFloat64 = ArrayKeyframeFloat64()
+    ){
+        this.fc = fc
+        this.s = s
+        this.sc = sc
+        this.sw = sw
+        this.t = t
+    }
+
+    /**
+     * Return to convert the instance into a string and return.
+     *
+     * @return Type of String, converted String.
+     */
+    public func toString(): String {
+        return "AnimatableTextProperties: {\n" +
+               "fc = ${fc},\n" +
+               "s = ${s},\n" +
+               "sc = ${sc},\n" +
+               "sw = ${sw},\n" +
+               "t = ${t}\n}"
+    }
+}
