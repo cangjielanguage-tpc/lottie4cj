@@ -9,6 +9,8 @@ package lottie.utils
 
 internal import std.fs.*
 
+import ohos.bundle_manager.*
+
 /**
  * Get Bundle Name
  *

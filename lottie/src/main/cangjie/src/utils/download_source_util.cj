@@ -3,6 +3,10 @@
  */
 package lottie.utils
 
+import ohos.base.*
+import ohos.request.agent.*
+import ohos.ability.*
+
 func getContext(): String {
     return FileUtils.downloadFolderLottie
 }

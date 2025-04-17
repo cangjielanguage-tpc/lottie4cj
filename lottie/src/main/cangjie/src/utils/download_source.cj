@@ -3,6 +3,11 @@
  */
 package lottie.utils
 
+import ohos.request.agent.*
+
+import ohos.ability.*
+
+
 public class DownLoadSource {
     let downloadUri: HashMap<String, Bool> = HashMap<String, Bool>()
 
@@ -87,14 +92,8 @@ public class DownLoadSource {
             }
             if (lottieData.assets.size > 0 && isExitNetworkAssets) {
                 try {
-                    let downloadTasks: ArrayList<Future<Unit>> = downLoadImg(lottieData, context)
-                    for (future in downloadTasks) {
-                        future.get()
-                    }
-                    
-                    // 下载成功加载网络
-                    handleAssets(lottieData)
-                    configAnimation(lottieData, true)
+                    downLoadImg(lottieData, context, configAnimation)
+                    // 下载成功加载网络--handleAssets和configAnimation的逻辑移入到 downLoadImg 中，下载完成后
                 } catch (err: Exception) {
                     // 下载失败加载缓存
                     Hilog.error(0, "[loadSuccess]"," Download error: ${err.message}")
