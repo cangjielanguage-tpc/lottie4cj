@@ -5,16 +5,20 @@ package lottie.utils
 
 internal import std.io.{InputStream, ByteArrayStream}
 
-internal import ohos.system_date_time.*
+import ohos.system_date_time.*
 
-internal import ohos.base.*
-internal import ohos.bundle_manager.*
+import ohos.base.*
+import ohos.state_manage.*
+import ohos.state_macro_manage.*
+import ohos.bundle_manager.*
 
-internal import ohos.request.agent.*
-internal import ohos.request.agent.Progress as AgentProgress
+import ohos.ability.*
 
-internal import zip4cj.ZipFile
-internal import compress.zlib.*
+import ohos.request.agent.*
+import ohos.request.agent.Progress as AgentProgress
+
+import zip4cj.ZipFile
+import compress.zlib.*
 
 // 筛选.json资源
 func filterJson(way: String): String {
@@ -303,47 +307,148 @@ public func isCacheExist(url: String, readPath: String): FilePathObject {
 
 //改为并发异步调用 ???
 // 下载图片至files
-public func downLoadImg(lottieData: AnimationData, context: Option<AbilityContext>): ArrayList<Future<Unit>> {
+public func downLoadImgAnimationItem(lottieData: AnimationData, context: Option<AbilityContext>, callback: (AnimationData) -> Unit): Unit {
     let imgRouterFilesDir: String = createImageFilesDir(context)
-    let downloadTasks: ArrayList<Future<Unit>> = ArrayList<Future<Unit>>(lottieData.assets.size)
-    for (i in 0..lottieData.assets.size){
-        let item = lottieData.assets[i]
+
+    let assets: Array<Asset> = lottieData.assets
+    let mtx: ReentrantMutex = ReentrantMutex()
+
+    let loadedAssets: AtomicInt64 = AtomicInt64(0)
+    let notLoadedAssets: AtomicInt64 = AtomicInt64(0)
+
+    var num: Int64 = 0
+    for (i in 0..assets.size){
+        let item = assets[i]
         if (item.id != "" && item.p.startsWith("http")) {
             item.sourceFrom = 3  //区别图片来源：1.来自\resources\rawfile\， 2.来自手机中保存的图片，3.来自网络下载。
-            let future: Future<Unit> = spawn {
+            downLoadImgOnce(item, context, imgRouterFilesDir, i, loadedAssets, notLoadedAssets, mtx)
+            num++
+        }
+    }
+
+    let totalImages: Int64 = num
+
+    func checkDownLoadImg(): Unit {
+        if ((loadedAssets.load() + notLoadedAssets.load()) < totalImages) {
+            Timer.once(Duration.millisecond * 20, checkDownLoadImg)
+        } else {
+            // 下载成功加载网络
+            handleAssets(lottieData)
+            callback(lottieData)
+        }
+    }
+    checkDownLoadImg()
+}
+
+public func downLoadImg(lottieData: AnimationData, context: Option<AbilityContext>, callback: (AnimationData, Bool) -> Unit): Unit {
+    let imgRouterFilesDir: String = createImageFilesDir(context)
+
+    let assets: Array<Asset> = lottieData.assets
+    let mtx: ReentrantMutex = ReentrantMutex()
+
+    let loadedAssets: AtomicInt64 = AtomicInt64(0)
+    let notLoadedAssets: AtomicInt64 = AtomicInt64(0)
+
+    var num: Int64 = 0
+    for (i in 0..assets.size){
+        let item = assets[i]
+        if (item.id != "" && item.p.startsWith("http")) {
+            item.sourceFrom = 3  //区别图片来源：1.来自\resources\rawfile\， 2.来自手机中保存的图片，3.来自网络下载。
+            downLoadImgOnce(item, context, imgRouterFilesDir, i, loadedAssets, notLoadedAssets, mtx)
+            num++
+        }
+    }
+
+    let totalImages: Int64 = num
+
+    func checkDownLoadImg(): Unit {
+        if ((loadedAssets.load() + notLoadedAssets.load()) < totalImages) {
+            Timer.once(Duration.millisecond * 10, checkDownLoadImg)
+        } else {
+            // 下载成功加载网络
+            handleAssets(lottieData)
+            callback(lottieData, true)
+        }
+    }
+    checkDownLoadImg()
+}
+
+
+func downLoadImgOnce(item: Asset, context: Option<AbilityContext>, imgRouterFilesDir: String,
+    index: Int64, loadedAssets: AtomicInt64, notLoadedAssets: AtomicInt64, mtx: ReentrantMutex
+): Unit {
+
+    spawn {
+        try (imageLoadLimiter = ImageLoadLimiter()) {
+            let item_id: String = item.id
+            let item_p: String = item.p
+            if (item_id != "" && item_p.startsWith("http")) {
+
                 let downloadConfig = Config(
                     action: Action.DOWNLOAD,
-                    url: item.p,
-                    mode: Mode.FOREGROUND,
-                    method: "GET",
+                    url: item_p,
+                    mode: Mode.BACKGROUND,  //mode: Mode.FOREGROUND,
                     overwrite: true,
-                    saveas: "./${item.id}.png",
+                    method: "GET",
+                    saveas: "${imgRouterFilesDir}/${item_id}.png",
                     gauge: true
                 )
-
+                if (Thread.currentThread.hasPendingCancellation) {
+                    return
+                }
                 let stageContext = getStageContext(context.getOrThrow())
+                if (Thread.currentThread.hasPendingCancellation) {
+                    return
+                }
                 let downloadTask = create(stageContext, downloadConfig)
-                func completeCallBackInside() {
-                    let srcPath = getContext() + "/${item.id}.png"
-                    let destPath = "${imgRouterFilesDir}/${item.id}.png"
+                if (Thread.currentThread.hasPendingCancellation) {
+                    return
+                }
+                let downloadPath: String = downloadConfig.saveas ?? ""
+
+                func completeCallBackInside(): Unit {
+                    let srcPath = downloadPath
+                    let destPath = "${imgRouterFilesDir}/${item_id}.png"
                     try {
                         // 移动文件
                         if (srcPath != destPath) {
                             FileUtils.moveFile(srcPath, destPath, true)
                         }
+                        synchronized(mtx) {
+                            loadedAssets.fetchAdd(1)
+                        }
                     } catch (err: Exception) {
-                        Hilog.error(0, "[downLoadImg]", "moveFile err: ${err.message}")
+                        Hilog.error(0, "[downLoadImg]", "moveFile failed: ${err.message}")
+                        synchronized(mtx) {
+                            notLoadedAssets.fetchAdd(1)
+                        }
                     }
                 }
                 let createOnCallback = ProgressCallback(completeCallBackInside, downloadTask)
                 downloadTask.on("completed", createOnCallback)
+
+                func failedCallBack(): Unit {
+                    Hilog.error(0, "[downLoadImg]", "downLoad File failed.")
+                    synchronized(mtx) {
+                        notLoadedAssets.fetchAdd(1)
+                    }
+                    return
+                }
+                let failedCallback: ProgressCallback = ProgressCallback(failedCallBack, downloadTask)
+                downloadTask.on("failed", failedCallback)
+
+                if (Thread.currentThread.hasPendingCancellation) {
+                    return
+                }
                 downloadTask.start()
             }
-            
-            downloadTasks.append(future)
+        } catch (e: Exception) {
+            synchronized(mtx) {
+                notLoadedAssets.fetchAdd(1)
+            }
         }
     }
-    return downloadTasks
+
 }
 
 // 判断files目录下是否有下载的图片
@@ -372,6 +477,7 @@ public func getSuffix(url: String): String {
 public func handleAssets(lottieData: AnimationData): Unit {
     for(item in lottieData.assets) {
         if (item.id != "" && item.p.startsWith("http")) {
+            item.sourceFrom = 3  //区别图片来源：1.来自\resources\rawfile\， 2.来自手机中保存的图片，3.来自网络下载。
             item.p = "${item.id}.png"
             if (item.u == "") {
                 item.u = "lottie/loadImages/"
@@ -448,4 +554,26 @@ public func createImageFilesDir(context: Option<AbilityContext>): String {
         Hilog.error(0, "[createFilesDir]", "mkdir imgFiles err: ${err.message}")
     }
     return dirImgPathFirst
+}
+
+let semaphore: Semaphore = Semaphore(50)
+
+class ImageLoadLimiter <: Resource {
+    let closed = AtomicBool(false)
+
+    init() {
+        semaphore.acquire()
+    }
+
+    public override func isClosed(): Bool {
+        return closed.load()
+    }
+
+    public override func close(): Unit {
+        if (isClosed()) {
+            return
+        }
+        semaphore.release()
+        closed.store(true)
+    }
 }

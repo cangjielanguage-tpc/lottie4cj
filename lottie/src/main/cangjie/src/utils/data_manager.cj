@@ -11,8 +11,8 @@ internal import std.convert.*
 
 internal import lottie.parser.*
 
-internal import ohos.resource_manager.*
-internal import ohos.ability.*
+import ohos.resource_manager.*
+import ohos.ability.*
 
 
 class WorkerProxy {
@@ -83,14 +83,8 @@ public class DataManager {
         // true 优先加载网络资源
         if (isNetwork) {
             try {
-                let downloadTasks: ArrayList<Future<Unit>> = downLoadImg(jsonData, context)
-                for (future in downloadTasks) {
-                    future.get()
-                }
-
-                // 下载成功加载网络
-                handleAssets(jsonData)
-                callback(jsonData, true)
+                downLoadImg(jsonData, context, callback)
+                // 下载成功加载网络--handleAssets和callback的逻辑移入到 downLoadImg 中，下载完成后
             } catch (err: Exception) {
                 // 处理网络异常加载缓存
                 let imgRouterFilesDir = createImageFilesDir(context)
@@ -113,14 +107,8 @@ public class DataManager {
                 callback(jsonData, false)
             } else {
                 try {
-                    let downloadTasks: ArrayList<Future<Unit>> = downLoadImg(jsonData, context)
-                    for (future in downloadTasks) {
-                        future.get()
-                    }
-
-                    // 下载成功加载网络
-                    handleAssets(jsonData)
-                    callback(jsonData, true)
+                    downLoadImg(jsonData, context, callback)
+                    // 下载成功加载网络--handleAssets和callback的逻辑移入到 downLoadImg 中，下载完成后
                 } catch (err: Exception) {
                     // 下载失败,返回加载异常
                     errorCallback()

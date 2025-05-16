@@ -7,26 +7,27 @@ package lottie.utils
 internal import ohos.hilog.*
 internal import ohos.system_date_time.*
 
+import ohos.ability.*
+import ohos.resource_manager.*
+
 internal import std.regex.*
 internal import std.sync.*
 internal import std.time.*
 
 internal import lottie.inner.*
 
-internal import ohos.image.Image as MultiImage
-internal import ohos.image.Component as ImageComponent
-internal import ohos.image.PixelMap
-internal import ohos.image.createImageSource
-internal import ohos.image.DecodingOptions
-internal import ohos.image.Size
-internal import ohos.image.PixelMapFormat
-internal import ohos.image.Region
-internal import ohos.image.ImageInfo
-internal import ohos.image.InitializationOptions
-internal import ohos.image.createPixelMap
+import ohos.image.Image as MultiImage
+import ohos.image.Component as ImageComponent
+import ohos.image.PixelMap
+import ohos.image.createImageSource
+import ohos.image.DecodingOptions
+import ohos.image.Size
+import ohos.image.PixelMapFormat
+import ohos.image.Region
+import ohos.image.ImageInfo
+import ohos.image.InitializationOptions
+import ohos.image.createPixelMap
 
-internal import ohos.resource_manager.*
-internal import ohos.ability.*
 
 public class ImagePreloader {
 

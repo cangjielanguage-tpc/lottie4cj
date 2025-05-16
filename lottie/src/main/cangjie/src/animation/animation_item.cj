@@ -183,12 +183,8 @@ public class AnimationItem <: BaseEvent {
     public func loadImage(jsonData: AnimationData, isNetwork: Bool): Unit {
         if (isNetwork) {
             try {
-                let res: ArrayList<Future<Unit>> = downLoadImg(jsonData, this.context)
-                for (future in res) {
-                    future.get()
-                }
-                handleAssets(jsonData)
-                this.setupAnimation(jsonData)
+                downLoadImgAnimationItem(jsonData, this.context, this.setupAnimation)
+                // 下载成功加载网络--handleAssets和setupAnimation的逻辑移入到 downLoadImg 中，下载完成后
             } catch (err: Exception) {
                 // 处理网络异常加载缓存
                 let imgRouterFilesDir = createImageFilesDir(this.context)
@@ -210,12 +206,8 @@ public class AnimationItem <: BaseEvent {
                 this.setupAnimation(jsonData)
             } else {
                 try {
-                    let res: ArrayList<Future<Unit>> = downLoadImg(jsonData, this.context)
-                    for (future in res) {
-                        future.get()
-                    }
-                    handleAssets(jsonData)
-                    this.setupAnimation(jsonData)
+                    downLoadImgAnimationItem(jsonData, this.context, this.setupAnimation)
+                    // 下载成功加载网络--handleAssets和setupAnimation的逻辑移入到 downLoadImg 中，下载完成后
                 } catch (err: Exception) {
                     // 下载失败,返回加载异常
                     this.triggerEvent("error", BMLoadImageErrorEvent(err))
