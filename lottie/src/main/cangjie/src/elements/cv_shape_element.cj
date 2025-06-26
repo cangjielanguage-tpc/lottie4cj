@@ -417,6 +417,7 @@ public class CvShapeElement <: IShapeElement {
                 var tmps = currentStyle.preTransforms.finalTransform.props
                 this.globalData.ctxTransform(currentStyle.preTransforms.finalTransform.props)
                 var jLen = elems.size
+                var hasFill: Bool = false
                 for (j in 0..jLen) {
                     if (types == "st" || types == "gs") {
                         ctx.beginPath()
@@ -444,6 +445,7 @@ public class CvShapeElement <: IShapeElement {
                             ctx.bezierCurveTo(nodes[k].pts[0], nodes[k].pts[1], nodes[k].pts[2], nodes[k].pts[3], nodes[k].pts[4], nodes[k].pts[5])
                         } else {
                             ctx.closePath()
+                            hasFill = true
                         }
                     }
                     if (types == "st" || types == "gs") {
@@ -453,7 +455,7 @@ public class CvShapeElement <: IShapeElement {
                         }
                     }
                 }
-                if (types != "st" && types != "gs") {
+                if (types != "st" && types != "gs" && hasFill) {
                     //其实fill方法有两个参数可选：nonzero | evenodd ，“nonzero”是非零环绕原则，也是默认值，“evenodd”为奇偶原则
                     ctx.fill()
                 }
