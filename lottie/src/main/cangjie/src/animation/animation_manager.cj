@@ -357,7 +357,6 @@ public class AnimationManager {
 
                 let backAnimator: AnimatorResult = AnimatorResult(options)
                 backAnimator.onframe = { value: Float64  =>
-                    AppLog.info("onframe called ${value}")
                     //返回自1970年1月1日午夜（UTC）以来经过的毫秒数
                     resume(SystemDateTime.getCurrentTime())
                 }
