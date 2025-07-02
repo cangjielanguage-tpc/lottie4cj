@@ -48,7 +48,7 @@ public open class BaseRenderer {
     public var canvasContext: LottieCanvasRenderingContext2D
 
     public var _isFirstFrameInAnimationItem: () -> Float64 = { => 0.0 }
-    public var contentModeInAnimationItem: () -> String = { => "" }
+    public var contentModeInAnimationItem: () -> ContentFIllMode = { => ContentFIllMode.Contain }
 
     public var rendererType: String = ""
 

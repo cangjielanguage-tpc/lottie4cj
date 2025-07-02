@@ -70,7 +70,7 @@ public class AnimationItem <: BaseEvent {
     public var context: Option<AbilityContext> = None
 
     public var packageName: String = ""
-    public var contentMode: String = ""
+    public var contentMode: ContentFIllMode = ContentFIllMode.Contain
 
     public var userPlayingFrameRate: Float64 = 0.0    // the max playing frame rate of this animation
     public var isNetLoad: Bool = false
@@ -220,7 +220,7 @@ public class AnimationItem <: BaseEvent {
         return this._isFirstFrame
     }
 
-    func contentModeInAnimationItem(): String {
+    func contentModeInAnimationItem(): ContentFIllMode {
         this.contentMode
     }
 
@@ -694,10 +694,7 @@ public class AnimationItem <: BaseEvent {
     }
 
     public func getNextFrameToPlay(framesNum: Float64): Float64 {
-        var frames: Float64 = framesNum
-        if(frames < 0.0) {
-            frames = -frames
-        }
+        let frames = abs(framesNum)
     
         var nextFrame: Float64 = frames
         // 逆序segment且正向播放 || 正序segment且逆向播放

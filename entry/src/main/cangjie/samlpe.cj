@@ -88,7 +88,7 @@ class LottieSample {
                                         loop: -1,
                                         autoplay: true,
                                         name: this.animateName,
-                                        contentMode: "Contain",
+                                        contentMode: ContentFIllMode.Top,
                                         path: "data.json", // 路径加载动画只支持raw文件夹下的相对路径
                                         animationData: AnimationData(isNull: true),
                                         context: globalAbilityContext
@@ -134,7 +134,7 @@ class LottieSample {
                                         renderer: "canvas", // canvas 渲染模式
                                         autoplay: true,
                                         name: "lf20_sF7uci.json",
-                                        contentMode: "Contain",
+                                        contentMode: ContentFIllMode.Contain,
                                         animationData: AnimationData(isNull: true),
                                         context: globalAbilityContext
                                     ))

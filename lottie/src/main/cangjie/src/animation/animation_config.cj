@@ -68,12 +68,12 @@ public class AnimationConfig {
     /**
      * 动画填充模式 支持填充模式：Fill, Top, Cover, Bottom, Contain  默认模式是：Contain
      */
-    public var contentMode: String = ""
+    public var contentMode: ContentFIllMode = ContentFIllMode.Contain
 
     public var rendererSettings: RenderConfig = RenderConfig()
     public var autoloadSegments: Bool = true
     public var assetsPath: String = ""
-    public var audioFactory: (String) -> Audio = { m => return Audio() }
+    public var audioFactory: (String) -> Audio = { _ => return Audio() }
     // hasAudioFactory 表示 audioFactory 是否有实际代码逻辑。
     public var hasAudioFactory: Bool = false
 
@@ -118,7 +118,7 @@ public class AnimationConfig {
         loop!: Int64 = -1,
         autoplay!: Bool = true,
         name!: String = "",
-        contentMode!: String = "",
+        contentMode!: ContentFIllMode = ContentFIllMode.Contain,
         imagePath!: String = "",
         path!: String = "",
         pathSourceFrom!: Int8 = 1,
