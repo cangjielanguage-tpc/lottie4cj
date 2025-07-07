@@ -6,9 +6,9 @@ package lottie.bezier
 internal import std.math.*
 
 internal import ohos.hilog.*
-
+const PROPS_NUM = 16
 public class Matrix {
-    public var props: Array<Float64> = Array<Float64>(16, item: 0.0)
+    public var props: Array<Float64> = Array<Float64>(PROPS_NUM, item: 0.0)
 
     var _identity: Bool = true
     var _identityCalculated: Bool = false
@@ -123,22 +123,22 @@ public class Matrix {
             return this
         }
 
-        var a1 = _p[0]
-        var b1 = _p[1]
-        var c1 = _p[2]
-        var d1 = _p[3]
-        var e1 = _p[4]
-        var f1 = _p[5]
-        var g1 = _p[6]
-        var h1 = _p[7]
-        var i1 = _p[8]
-        var j1 = _p[9]
-        var k1 = _p[10]
-        var l1 = _p[11]
-        var m1 = _p[12]
-        var n1 = _p[13]
-        var o1 = _p[14]
-        var p1 = _p[15]
+        let a1 = _p[0]
+        let b1 = _p[1]
+        let c1 = _p[2]
+        let d1 = _p[3]
+        let e1 = _p[4]
+        let f1 = _p[5]
+        let g1 = _p[6]
+        let h1 = _p[7]
+        let i1 = _p[8]
+        let j1 = _p[9]
+        let k1 = _p[10]
+        let l1 = _p[11]
+        let m1 = _p[12]
+        let n1 = _p[13]
+        let o1 = _p[14]
+        let p1 = _p[15]
 
         /* matrix order (canvas compatible):
          * ace
@@ -182,7 +182,7 @@ public class Matrix {
 
     public func equals(matr: Matrix) {
         var i = 0
-        while (i < 16) {
+        while (i < props.size) {
             if (matr.props[i] != this.props[i]) {
                 return false
             }
@@ -192,14 +192,14 @@ public class Matrix {
     }
 
     public func clone(matr: Matrix) {
-        for (i in 0..16) {
+        for (i in 0..props.size) {
             matr.props[i] = this.props[i]
         }
         return matr
     }
 
     public func cloneFromProps(props: Array<Float64>) {
-        for (i in 0..16) {
+        for (i in 0..props.size) {
             this.props[i] = props[i]
         }
     }
@@ -309,7 +309,7 @@ public class Matrix {
         var props = this.props
         var cssValue = "matrix3d("
         var v: Float64 = 10000.0
-        while (i < 16) {
+        while (i < props.size) {
             cssValue += "${round(props[i] * v) / v}"
             if (i == 15) {
                 cssValue += ")"

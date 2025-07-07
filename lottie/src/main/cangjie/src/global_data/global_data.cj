@@ -207,3 +207,26 @@ public func indexOf<T>(referenceNode: T, arr: ArrayList<T>): Int64 where T <: Ob
     }
     return -1
 }
+
+public enum ContentFIllMode  <: Equatable<ContentFIllMode>{
+	|Fill
+	|Top
+	|Cover
+	|Bottom
+	|Contain
+
+    public operator func ==(rhs: ContentFIllMode): Bool {
+        match ((this, rhs)) {
+            case (Fill, Fill) => true
+            case (Top, Top) => true
+            case (Cover, Cover) => true
+            case (Bottom, Bottom) => true
+            case (Contain, Contain) => true
+            case _ => false
+        }
+    }
+
+    public operator func !=(rhs: ContentFIllMode): Bool {
+        return !(this == rhs)
+    }
+}

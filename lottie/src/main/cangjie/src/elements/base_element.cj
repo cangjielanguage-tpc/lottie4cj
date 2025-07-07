@@ -314,11 +314,9 @@ public open class BaseElement <: Equatable<BaseElement> {
     }
 
     public open func checkPendingElements(): Unit {
-        var index = this.pendingElements.size
         while (this.pendingElements.size != 0) {
             let element: BaseElement = this.pendingElements.remove(this.pendingElements.size - 1)
             element.checkParenting()
-            index--
         }
     }
 
@@ -358,7 +356,8 @@ public open class BaseElement <: Equatable<BaseElement> {
         }
         let len: Int64 = this.data.masksProperties.size
         for (i in 0..len) {
-            if ((this.data.masksProperties[i].mode != "n" && this.data.masksProperties[i].cl)) {
+            let dataMasks = this.data.masksProperties[i]
+            if (dataMasks.mode != "n" && dataMasks.cl) {
                 return true
             }
         }
@@ -394,9 +393,10 @@ public open class BaseElement <: Equatable<BaseElement> {
         let len: Int64 = this.dynamicProperties.size
 
         for (i in 0..len) {
-            if (isVisible || (this._isParent && this.dynamicProperties[i].propType == "transform")) {
-                this.dynamicProperties[i].getValue()
-                if (this.dynamicProperties[i]._mdf) {
+            let dynamicTmps = this.dynamicProperties[i]
+            if (isVisible || (this._isParent && dynamicTmps.propType == "transform")) {
+                dynamicTmps.getValue()
+                if (dynamicTmps._mdf) {
                     this.globalData._mdf = true
                     this._mdf = true
                 }

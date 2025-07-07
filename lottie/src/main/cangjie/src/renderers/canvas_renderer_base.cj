@@ -206,16 +206,16 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      * @param animData - Type of AnimationData, an instance of the json data that encapsulates the animation.
      */
     public func configAnimation(animData: AnimationData): Unit {
-        let contentMode: String = contentModeInAnimationItem()
-        if (contentMode == "Fill") {
+        let contentMode: ContentFIllMode = contentModeInAnimationItem()
+        if (contentMode == ContentFIllMode.Fill) {
             this.renderConfig.preserveAspectRatio = "none"
-        } else if (contentMode == "Top") {
+        } else if (contentMode == ContentFIllMode.Top) {
             this.renderConfig.preserveAspectRatio = "xMinYMin meet"
-        } else if (contentMode == "Cover") {
+        } else if (contentMode == ContentFIllMode.Cover) {
             this.renderConfig.preserveAspectRatio = "xMidYMid slice"
-        } else if (contentMode == "Bottom") {
+        } else if (contentMode == ContentFIllMode.Bottom) {
             this.renderConfig.preserveAspectRatio = "xMaxYMax meet"
-        } else if (contentMode == "Contain") {
+        } else if (contentMode == ContentFIllMode.Contain) {
             this.renderConfig.preserveAspectRatio = "xMidYMid meet"
         }
 

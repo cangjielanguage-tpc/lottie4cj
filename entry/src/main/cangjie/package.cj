@@ -25,6 +25,7 @@ internal import lottie.animation.*
 internal import lottie.utils.*
 internal import lottie.utils.helpers.*
 internal import lottie.model.*
+internal import lottie.global_data.*
 
 internal import lottie.parser.*
 
