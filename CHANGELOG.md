@@ -1,3 +1,9 @@
+## 1.0.3
+
+- 适配仓颉 1.0.0。
+  - DevEco Studio 5.1.0 Release(5.1.0.828SP1)
+  - Cangjie Support Plugin 5.1.0.828
+  - Cangjie Compiler: 1.0.0 (cjnative)
 
 ## 1.0.2
 

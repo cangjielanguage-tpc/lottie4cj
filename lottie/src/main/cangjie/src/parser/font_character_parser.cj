@@ -29,7 +29,7 @@ class FontCharacterParser {
                         if (reader.readName() == DATA_NAMES) {
                             reader.startArray()
                             while (reader.peek() != EndArray) {
-                                shapes.append(ContentModelParser.parse(reader))
+                                shapes.add(ContentModelParser.parse(reader))
                             }
                             reader.endArray()
                         } else {

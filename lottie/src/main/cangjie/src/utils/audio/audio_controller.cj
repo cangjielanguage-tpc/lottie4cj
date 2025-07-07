@@ -33,7 +33,7 @@ public class AudioControllerFactory {
     }
 
     public func addAudio(audio: AudioElement) {
-        this.audios.append(audio)
+        this.audios.add(audio)
     }
 
     public func pause(): Unit {

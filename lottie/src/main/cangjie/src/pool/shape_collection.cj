@@ -25,9 +25,9 @@ public class ShapeCollection {
      */
     public func addShape(shapeData: ShapeData): Unit {
         if (this.shapes.size > this._length) {
-            this.shapes.set(this._length, shapeData)
+            this.shapes.add(shapeData, at: this._length)
         } else {
-            this.shapes.append(shapeData)
+            this.shapes.add(shapeData)
         }
         this._length += 1
     }
@@ -38,7 +38,7 @@ public class ShapeCollection {
         sc._maxLength = this._maxLength
         var rc = ArrayList<ShapeData>(this.shapes.size)
         for(i in 0..this.shapes.size) {
-            rc.append(this.shapes[i].clone())
+            rc.add(this.shapes[i].clone())
         }
         sc.shapes = rc
         return sc

@@ -3,11 +3,10 @@
  */
 package lottie.parser
 
-internal import encoding.json.stream.JsonReader
-internal import encoding.json.stream.JsonToken
+internal import stdx.encoding.json.stream.JsonReader
+internal import stdx.encoding.json.stream.JsonToken
 internal import lottie.model.*
 internal import std.collection.*
-internal import std.log.*
 
 public interface ValueParser<T> {
     func parse(reader: JsonReader): T
@@ -78,7 +77,7 @@ public class ScaleXYParser <: ValueParser<Array<Float64>> {
             case Some(JsonToken.JsonNumber) =>
                 var sList: ArrayList<Float64> = ArrayList<Float64>()
                 while (reader.peek() != EndArray) {
-                    sList.append(reader.readValue<Float64>())
+                    sList.add(reader.readValue<Float64>())
                 }
                 return sList.toArray()
             case Some(JsonToken.BeginArray) => reader.readValue<Array<Float64>>()
@@ -108,7 +107,7 @@ public class ArrayFloat64Parser <: ValueParser<Array<Float64>> {
         } else {
             var pointArray: ArrayList<Float64> = ArrayList<Float64>()
             while (reader.peek() != EndArray) {
-                pointArray.append(reader.readValue<Float64>())
+                pointArray.add(reader.readValue<Float64>())
             }
             return pointArray.toArray()
         }
@@ -198,13 +197,13 @@ public class DocumentDataParser <: ValueParser<DocumentData> {
                 case "ps" =>
                     reader.startArray()
                     while (reader.peek() != JsonToken.EndArray) {
-                        boxPosition.append(reader.readValue<Float64>())
+                        boxPosition.add(reader.readValue<Float64>())
                     }
                     reader.endArray()
                 case "sz" =>
                     reader.startArray()
                     while (reader.peek() != JsonToken.EndArray) {
-                        boxSize.append(reader.readValue<Float64>())
+                        boxSize.add(reader.readValue<Float64>())
                     }
                     reader.endArray()
                 case _ => reader.skip()

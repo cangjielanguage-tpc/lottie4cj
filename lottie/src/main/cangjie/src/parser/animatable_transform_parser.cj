@@ -49,7 +49,7 @@ public class AnimatableTransformParser {
                     reader.endObject()
                 case "p" => position = AnimatablePathValueParser.parseSplitPath(reader)
                 case "s" => scale.k = AnimatableValueParser.parseScale(reader)
-                case "rz" => logger.log(LogLevel.INFO, "Lottie doesn't support 3D layers.")
+                case "rz" => Hilog.info(0, "[AnimatableTransformParser]", "Lottie doesn't support 3D layers.")
                              reader.skip()
                 case "r" => rotation.k = AnimatableValueParser.parseFloat(reader)
                 case "o" => opacity.k = AnimatableValueParser.parseInteger(reader)

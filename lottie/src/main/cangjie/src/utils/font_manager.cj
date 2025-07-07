@@ -10,7 +10,7 @@ package lottie.utils
 internal import lottie.model.*
 internal import lottie.utils.helpers.*
 
-internal import std.format.*
+internal import std.convert.*
 internal import std.collection.*
 
 public type CreateTag = CreateNS
@@ -92,7 +92,7 @@ public class FontManager {
                 j += 1
             }
             if (!found) {
-                this.chars.append(fchars[i])
+                this.chars.add(fchars[i])
                 jLen += 1
             }
         }

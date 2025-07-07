@@ -6,7 +6,7 @@ package lottie.parser
 class KeyframesParser {
     static func parse<T>(reader: JsonReader, valueParser: ValueParser<T>): Array<Keyframe<T>> where T <: ToString {
         if (reader.peek() == JsonToken.JsonNull) {
-            logger.log(LogLevel.INFO, "Lottie doesn't support expressions.")
+            Hilog.info(0, "[KeyframesParser]", "Lottie doesn't support expressions.")
             return Array<Keyframe<T>>()
         }
         let keyframes = ArrayList<Keyframe<T>>()
@@ -17,15 +17,15 @@ class KeyframesParser {
                 case "k" => if (reader.peek() == JsonToken.BeginArray) {
                     reader.startArray()
                     if (reader.peek() == JsonToken.JsonNumber) {
-                        keyframes.append(KeyframeParser.parse(reader, valueParser, false))
+                        keyframes.add(KeyframeParser.parse(reader, valueParser, false))
                     } else if (reader.peek() == JsonToken.BeginObject) {
                         while (reader.peek() != JsonToken.EndArray) {
-                            keyframes.append(KeyframeParser.parse(reader, valueParser, true))
+                            keyframes.add(KeyframeParser.parse(reader, valueParser, true))
                         }
                     }
                     reader.endArray()
                 } else {
-                    keyframes.append(KeyframeParser.parse(reader, valueParser, false))
+                    keyframes.add(KeyframeParser.parse(reader, valueParser, false))
                 }
                 case _ => reader.skip()
             }

@@ -85,13 +85,13 @@ public class LayerParser {
                 case "masksProperties" => // 10   // mask list
                     reader.startArray()
                     while (reader.peek() != EndArray) {
-                        masks.append(MaskParser.parse(reader))
+                        masks.add(MaskParser.parse(reader))
                     }
                     reader.endArray()
                 case "shapes" => // 11   // Shape layer
                     reader.startArray()
                     while (reader.peek() != EndArray) {
-                        shapes.append(ContentModelParser.parse(reader))
+                        shapes.add(ContentModelParser.parse(reader))
                     }
                     reader.endArray()
                 case "t" => // 12
@@ -107,7 +107,7 @@ public class LayerParser {
                             case "a" =>
                                 reader.startArray()
                                 while (reader.peek() != EndArray) {
-                                    tda.append(AnimatableTextPropertiesParser.parse(reader))
+                                    tda.add(AnimatableTextPropertiesParser.parse(reader))
                                 }
                                 reader.endArray()
                             case "m" => tm = handleLayerTMA(reader)
@@ -143,7 +143,7 @@ public class LayerParser {
                                     }
                                 case "nm" =>
                                     nm = reader.readValue<String>()
-                                    effectNames.append(nm)
+                                    effectNames.add(nm)
                                 case "mn" => mnStr = reader.readValue<String>()
                                 case "np" => npNum = reader.readValue<Int64>()
                                 case "en" => enNum = reader.readValue<Int64>()
@@ -158,7 +158,7 @@ public class LayerParser {
                         layef.np = npNum
                         layef.en = enNum
                         layef.ix = ixNum
-                        ef.append(layef)
+                        ef.add(layef)
                     }
                     reader.endArray()
                 case "sr" => timeStretch = reader.readValue<Float64>()
@@ -247,7 +247,7 @@ public class LayerParser {
                             case "k" =>
                                 reader.startArray()
                                 while (reader.peek() != EndArray) {
-                                    k.append(reader.readValue<Int64>())
+                                    k.add(reader.readValue<Int64>())
                                 }
                                 reader.endArray()
                             case "ix" => ix = reader.readValue<Int64>()

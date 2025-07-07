@@ -5,6 +5,7 @@ package lottie.utils
 
 import ohos.base.*
 import ohos.request.agent.*
+import ohos.request.agent.remove as os_remove
 import ohos.ability.*
 
 func getContext(): String {
@@ -34,7 +35,7 @@ public class ProgressCallback <: Callback1Argument<Progress> {
         this.completeCallBackInside()
         if (let Some(v) <- this.task) {
             try {
-                remove(v.tid)
+                os_remove(v.tid)
             } catch (err: Exception) {
                 Hilog.error(0, "[DownLoadSourceUtil]","[ProgressCallback] remove task error: ${err.message}")
             }

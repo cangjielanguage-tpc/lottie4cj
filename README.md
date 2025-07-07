@@ -3,9 +3,9 @@
 </div>
 
 <p align="center">
-<img alt="" src="https://img.shields.io/badge/release-v1.0.2-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/release-v1.0.3-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/build-pass-brightgreen" style="display: inline-block;" />
-<img alt="" src="https://img.shields.io/badge/cjc-v0.53.21-brightgreen" style="display: inline-block;" />
+<img alt="" src="https://img.shields.io/badge/cjc-v1.0.0-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/cjcov-NA-brightgreen" style="display: inline-block;" />
 <img alt="" src="https://img.shields.io/badge/project-open-brightgreen" style="display: inline-block;" />
 </p>
@@ -447,7 +447,7 @@ class MainAbility <: Ability {
 ```cangjie
 package ohos_app_cangjie_entry
 
-internal import ohos.base.*
+internal import ohos.base.*	
 internal import ohos.component.*
 internal import ohos.state_manage.*
 import ohos.state_macro_manage.*
@@ -527,9 +527,9 @@ class LottieSample {
 ## 约束与限制
 在下述版本验证通过：
 
-    DevEco Studio 5.0.5 Release(5.0.13.210) 
-    Cangjie Support Plugin 5.0.13.210
-    Cangjie Compiler: 0.53.21 (cjnative)
+    DevEco Studio 5.1.0 Release(5.1.0.828SP1) 
+    Cangjie Support Plugin 5.1.0.828
+    Cangjie Compiler: 1.0.0 (cjnative)
 
 ## 开源协议
 本项目基于 [The MIT License](./LICENSE)，请自由的享受和参与开源。

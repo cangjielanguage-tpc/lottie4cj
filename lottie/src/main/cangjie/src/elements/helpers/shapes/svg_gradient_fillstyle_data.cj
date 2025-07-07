@@ -37,7 +37,7 @@ public class SVGGradientFillStyleData <: SVGNoStyleData{
         for (j in 0..jLen:4) {
             stop = CreateNS("stop")
             gfill.appendChild(stop)
-            stops.append(stop)
+            stops.add(stop)
         }
 
         if (data.ty == "gf") {
@@ -74,7 +74,7 @@ public class SVGGradientFillStyleData <: SVGNoStyleData{
                 stop = CreateNS("stop")
                 stop.setAttribute("stop-color", "rgb(255,255,255)")
                 opFill.appendChild(stop)
-                stops.append(stop)
+                stops.add(stop)
             }
             if (data.ty == "gf") {
 

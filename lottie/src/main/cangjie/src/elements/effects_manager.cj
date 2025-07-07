@@ -19,7 +19,7 @@ public class EffectsManager {
         var effectItem: GroupEffect
         for (i in 0..len) {
             effectItem = GroupEffect(effects[i], element, data, dynamicProperties: dynamicProperties)
-            this.effectElements.append(effectItem)
+            this.effectElements.add(effectItem)
         }
     }
 }
@@ -53,7 +53,7 @@ public class GroupEffect <: DynamicPropertyContainer {
             }
 
             if (let Some(v) <- eff) {
-                this.effectElements.append(v)
+                this.effectElements.add(v)
             }
         }
     }

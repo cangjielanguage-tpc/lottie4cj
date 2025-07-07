@@ -138,7 +138,7 @@ func intersectsImpl(d1: BoundingBoxObject, d2: BoundingBoxObject, depth: Int64, 
         return
     }
     if (depth >= maxRecursion || (d1.width <= tolerance && d1.height <= tolerance && d2.width <= tolerance && d2.height <= tolerance)) {
-        intersectionsArr.append([d1.t, d2.t])
+        intersectionsArr.add([d1.t, d2.t])
         return
     }
     let d1s: Array<BoundingBoxObject> = splitData(d1)

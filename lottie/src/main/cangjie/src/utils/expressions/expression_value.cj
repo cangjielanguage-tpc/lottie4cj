@@ -83,8 +83,8 @@ class ExpressionValue<T, E> <: ExpressionInterface where T <: ToString , E <: To
         if (types != "") {
             if (types == "color") {
                 len = 4
-                this.val = Array<Float64>(len, item: 0.0)
-                arrValue = Array<Float64>(len, item: 0.0)
+                this.val = Array<Float64>(len, repeat: 0.0)
+                arrValue = Array<Float64>(len, repeat: 0.0)
                 for (i in 0..len) {
                     if (i < 3) {
                         arrValue[i] = elementProp.v[i] * mult
@@ -103,8 +103,8 @@ class ExpressionValue<T, E> <: ExpressionInterface where T <: ToString , E <: To
         } else {
             len = elementProp.pv.size
             /* 增加成员变量 val，为了能直接给 expressionValue[i] 赋值。*/
-            this.val = Array<Float64>(len, item: 0.0)
-            arrValue = Array<Float64>(len, item: 0.0)
+            this.val = Array<Float64>(len, repeat: 0.0)
+            arrValue = Array<Float64>(len, repeat: 0.0)
             for (i in 0..len) {
                 arrValue[i] = elementProp.v[i] * mult
                 this.val[i] = arrValue[i]

@@ -89,7 +89,7 @@ public open class TrimModifier <: ShapeModifier {
     }
 
     public func calculateShapeEdges(s: Float64, e: Float64, shapeLength: Float64, addedLength: Float64, totalModifierLength: Float64): Array<Array<Float64>> {
-        var segments: Array<Array<Float64>> = Array<Array<Float64>>(2, item: Array<Float64>())
+        var segments: Array<Array<Float64>> = Array<Array<Float64>>(2, repeat: Array<Float64>())
         var len: Int64 = 0
         if (e <= 1.0) {
             segments[0] = [s, e]
@@ -103,7 +103,7 @@ public open class TrimModifier <: ShapeModifier {
             len = 2
         }
         var index: Int64 = 0
-        let shapeSegments: Array<Array<Float64>> = Array<Array<Float64>>(2, item: Array<Float64>())
+        let shapeSegments: Array<Array<Float64>> = Array<Array<Float64>>(2, repeat: Array<Float64>())
 
         var segmentOb: Array<Float64> = Array<Float64>()
         for (i in 0..len) {
@@ -235,7 +235,7 @@ public open class TrimModifier <: ShapeModifier {
                     } else {
                         pathsData = this.releasePathsData(shapeData.pathsData)
                         shapeData.pathsData = pathsData
-                        pathsData = Array<SegmentsLengthElement>(jLen, item: SegmentsLengthElement())
+                        pathsData = Array<SegmentsLengthElement>(jLen, repeat: SegmentsLengthElement())
                         for (j in 0..jLen) {
                             /* 数据类型分析推测：pathData = segmentsLengthPool.newElement()  =>   pathData.lengths[i] = bezierLengthPool.newElement() */
                             pathData = Bez.getSegmentsLength(shapePaths.shapes[j])
@@ -279,14 +279,14 @@ public open class TrimModifier <: ShapeModifier {
                         let shapeData_totalShapeLength: Float64 = shapeData.totalShapeLength
                         if (shapeE <= 1.0) {
                             /* [注意]-直接用 Array<Int64> 代替 [s: s, e: e]，s 代表下标 0，e 代表下标 1。 */
-                            segments.append([shapeData_totalShapeLength * shapeS, shapeData_totalShapeLength * shapeE])
+                            segments.add([shapeData_totalShapeLength * shapeS, shapeData_totalShapeLength * shapeE])
                             segmentsLength = 1
                         } else if (shapeS >= 1.0) {
-                            segments.append([shapeData_totalShapeLength * (shapeS - 1.0), shapeData_totalShapeLength * (shapeE - 1.0)])
+                            segments.add([shapeData_totalShapeLength * (shapeS - 1.0), shapeData_totalShapeLength * (shapeE - 1.0)])
                             segmentsLength = 1
                         } else {
-                            segments.append([shapeData_totalShapeLength * shapeS, shapeData_totalShapeLength])
-                            segments.append([0.0, shapeData_totalShapeLength * (shapeE - 1.0)])
+                            segments.add([shapeData_totalShapeLength * shapeS, shapeData_totalShapeLength])
+                            segments.add([0.0, shapeData_totalShapeLength * (shapeE - 1.0)])
                             segmentsLength = 2
                         }
                         var newShapesData: ArrayList<ShapeData> = this.addShapes(shapeData, segments[0], ShapeData())
@@ -295,7 +295,7 @@ public open class TrimModifier <: ShapeModifier {
                                 var lastShapeInCollection = shapeData.shape.paths.shapes[shapeData.shape.paths._length - 1]
                                 if (lastShapeInCollection.c) {
                                     /* pop() 方法用于删除数组的最后一个元素并返回删除的元素。 */
-                                    var lastShape: ShapeData = newShapesData.remove(newShapesData.size - 1)
+                                    var lastShape: ShapeData = newShapesData.remove(at: newShapesData.size - 1)
                                     this.addPaths(newShapesData, localShapeCollection)
                                     newShapesData = this.addShapes(shapeData, segments[1], lastShape)
                                 } else {
@@ -383,7 +383,7 @@ public open class TrimModifier <: ShapeModifier {
             segmentCount = shapePath._length
             initPos = shapePath._length
         }
-        shapes.append(shapePath)
+        shapes.add(shapePath)
         for (i in 0..len) {
             lengths = pathsData[i].lengths
             shapePath.c = shapePaths[i].c
@@ -449,7 +449,7 @@ public open class TrimModifier <: ShapeModifier {
                 shapePath = shapePool.newElement()
                 shapePath = ShapeData()
                 newShape = true
-                shapes.append(shapePath)
+                shapes.add(shapePath)
                 segmentCount = 0
             }
         }

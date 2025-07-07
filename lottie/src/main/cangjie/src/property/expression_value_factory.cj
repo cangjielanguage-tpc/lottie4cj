@@ -120,8 +120,8 @@ public class ExpressionPropertyInterface<T, E> <: ExpressionInterface where T <:
 
         let len: Int64 = property.pv.size
         
-        let expressionValue: ExpressionValue<T, E> = ExpressionValue<T, E>(property, Array<Float64>(len, item: 0.0))
-        let arrValue: Array<Float64> = Array<Float64>(len, item: 0.0)
+        let expressionValue: ExpressionValue<T, E> = ExpressionValue<T, E>(property, Array<Float64>(len, repeat: 0.0))
+        let arrValue: Array<Float64> = Array<Float64>(len, repeat: 0.0)
         expressionValue.value = arrValue
         completeProperty(expressionValue, "multidimensional")
 
