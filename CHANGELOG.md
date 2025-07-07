@@ -1,4 +1,12 @@
 
+## 1.0.2
+
+- 修复动画播放中循环打印 warn 日志 bug。
+- 适配仓颉 0.53.21。
+  - DevEco Studio 5.0.5 Release(5.0.13.210)
+  - Cangjie Support Plugin 5.0.13.210
+  - Cangjie Compiler: 0.53.21 (cjnative)
+
 ## 1.0.1
 
 - 修复并发图片下载后动画显示不全的 bug。

@@ -19,7 +19,7 @@
     git = "https://gitcode.com/Cangjie-TPC/zip4cj.git"
 
 [package]
-  cjc-version = "0.53.19"
+  cjc-version = "0.53.21"
   compile-option = ""
   description = "CangjieUI Application"
   link-option = ""

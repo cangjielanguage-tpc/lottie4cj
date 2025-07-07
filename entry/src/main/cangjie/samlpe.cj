@@ -71,7 +71,7 @@ class LottieSample {
                     Column() {
 
                         Row() {
-                            Button("加载2016-3").onClick {
+                            Button("加载2016").onClick {
                                 evt =>
                                 Hilog.error(0, "lipei", "begin------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
                                 if (!this.animateItem.isNone()) {
