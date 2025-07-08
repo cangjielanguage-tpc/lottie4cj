@@ -3,7 +3,8 @@
  */
 package lottie.elements
 
-import ohos.image.*
+import kit.ImageKit.*
+
 public class CvImageElement <: IImageElement {
 
     var img:ImgOB

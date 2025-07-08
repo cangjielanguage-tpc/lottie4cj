@@ -14,7 +14,7 @@ public class EffectsManager <: SuperEffect {
         var effectItem: GroupEffect
         for (i in 0..len) {
             effectItem = GroupEffect(effects[i], element, data, propertyGroup, dynamicProperties: dynamicProperties)
-            this.effectElements.append(effectItem)
+            this.effectElements.add(effectItem)
         }
     }
     
@@ -75,7 +75,7 @@ public class GroupEffect <: SuperEffect {
                     eff = NoValueEffect(effects[i],element,datas, this, propertyGroup, dynamicProperties: dynamicProperties)
             }
             if (let Some(v) <- eff) {
-                this.effectElements.append(v)
+                this.effectElements.add(v)
             }
         }
     }

@@ -7,7 +7,7 @@
  */
 package lottie.model
 
-import lottie.utils.helpers.UnionType
+internal import lottie.utils.helpers.UnionType
 
 public class Layer <: ToString {
 
@@ -20,7 +20,7 @@ public class Layer <: ToString {
     public var isAsset: Bool = false
 
     //RenderableElement编译用。
-    public var textData: Size = Size()
+    public var textData: SizeLottie = SizeLottie()
     public var width: Int64 = 0
     public var height: Int64 = 0
     public var ddd: Int64 = 0

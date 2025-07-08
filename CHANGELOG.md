@@ -1,3 +1,12 @@
+## 1.0.3
+
+- 修复缺失 saveLayer 和 restoreLayer 接口造成的图层层级显示效果 bug;
+- 修复 setFrameRate 设置播放帧率不生效 bug;
+- 增加动画尺寸自适应 UI 页面设置的大小功能。
+- 适配仓颉 1.0.0。
+  - DevEco Studio 5.1.0 Release(5.1.0.828SP1)
+  - Cangjie Support Plugin 5.1.0.828
+  - Cangjie Compiler: 1.0.0 (cjnative)
 
 ## 1.0.2
 

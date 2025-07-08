@@ -60,7 +60,7 @@ public open class ShapeModifier <: DynamicPropertyContainer {
             /* 为动态特性添加形状。它涵盖了形状没有应用效果的情况，在每个滴答声中重置其_mdf状态。 */
             data.sh.addDynamicProperty(data.sh)
             var shapeData: ShapeDataShapeModifiers = ShapeDataShapeModifiers(shape: data.sh, data: data, localShapeCollection: ShapeCollection())
-            this.shapes.append(shapeData)
+            this.shapes.add(shapeData)
             this.addShapeToModifier(shapeData)
             if (this._isAnimated) {
                 /* 数据来源分析：data => CVShapeData/SVGShapeData */

@@ -3,8 +3,6 @@
  */
 package lottie.utils
 
-internal import lottie.utils.helpers.*
-
 public class FiltersFactory {
     
     public static func createFilter(filId: String, skipCoordinates!: Bool= false) {

@@ -38,7 +38,7 @@ public class shapeCollectionPool {
             shapePool.release(shapeCollection.shapes[i])
         }
         shapeCollection._length = 0
-        pool.append(shapeCollection)
+        pool.add(shapeCollection)
         this._length += 1
     }
 

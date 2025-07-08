@@ -84,7 +84,7 @@ public open class DynamicPropertyContainer <: ContentModelElement {
                 return
             }
         }
-        this.dynamicProperties.append(dpc)
+        this.dynamicProperties.add(dpc)
         /*  1-FrameElement; 2-TransformPropertyFactory; 3-其他Property  */
         if (containerType == 2 && this.container.size == 1) {
             this.container[0].addDynamicProperty(this)
@@ -102,7 +102,7 @@ public open class DynamicPropertyContainer <: ContentModelElement {
                 return
             }
         }
-        this.dynamicPropertiesInElem.append(props)
+        this.dynamicPropertiesInElem.add(props)
     }
 
     public func iterateDynamicProperties(): Unit {

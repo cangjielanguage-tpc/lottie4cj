@@ -13,7 +13,7 @@ internal import std.math.*
 internal import std.fs.{FileInfo}
 internal import std.collection.HashMap
 internal import std.collection.ArrayList
-internal import std.io.{InputStream, ByteArrayStream}
+internal import std.io.{InputStream, ByteBuffer}
 
 internal import lottie.inner.*
 internal import lottie.global_data.*
@@ -24,18 +24,19 @@ internal import lottie.elements.*
 internal import lottie.utils.*
 internal import lottie.utils.audio.*
 
-internal import ohos.base.*
-internal import ohos.component.*
+internal import kit.UIKit.*
+
 internal import ohos.animator.*
-internal import ohos.state_manage.*
+
 import ohos.state_macro_manage.*
 
-internal import ohos.ability.*
-internal import ohos.resource_manager.*
-internal import ohos.bundle_manager.*
+internal import kit.AbilityKit.*
+internal import kit.LocalizationKit.ResourceManager
 
-internal import ohos.hilog.*
-internal import ohos.system_date_time.*
+internal import kit.PerformanceAnalysisKit.Hilog
+internal import kit.BasicServicesKit.SystemDateTime
+
+internal import kit.ArkGraphics2D.*
 
 public class AnimationManager {
 
@@ -45,7 +46,7 @@ public class AnimationManager {
 
     var params: AnimationConfig
 
-    var registeredAnimations: ArrayList<RegisteredAnimation> = ArrayList<RegisteredAnimation>()
+    var registeredAnimations: ArrayList<RegisteredAnimation> = ArrayList<RegisteredAnimation>(4)
     var initTime: Int64 = 0
     var animatorTime: Int64 = 0
     var len: Int64 = 0
@@ -56,8 +57,13 @@ public class AnimationManager {
 
     var _packageName: String = ""
 
+    var frameRate: Float64 = 0.0
+    var _frameRate: Bool = false
+
     //需要引入 @ohos.animator 的 AnimatorResult
     var _animator: ?AnimatorResult = None
+    var _displaySync: Option<DisplaySync> = None
+    var useDisplaySync: Bool = true
 
 
     //当前Animator的状态
@@ -78,7 +84,7 @@ public class AnimationManager {
             if (registeredAnimations.size > i) {
                 if (refEq(registeredAnimations[i].animation, animItem)) {
                     //splice: 从数组中添加或删除元素。-- splice(i, 1) 此处是删除--删除下标 i 处元素
-                    registeredAnimations.remove(i)
+                    registeredAnimations.remove(at: i)
                     i -= 1
                     len -= 1
                     if (!animItem.isPaused) {
@@ -115,7 +121,7 @@ public class AnimationManager {
         let lenAnims: Int64 = registeredAnimations.size
         var animations: ArrayList<AnimationItem> = ArrayList<AnimationItem>(24)
         for (i in 0..lenAnims) {
-            animations.append(registeredAnimations[i].animation)
+            animations.add(registeredAnimations[i].animation)
         }
         return animations
     }
@@ -133,8 +139,10 @@ public class AnimationManager {
         animItem.addEventListener("destroy", AnimationEventCallback(this.removeElement))
         animItem.addEventListener("_active", AnimationEventCallback(this.addPlayingCount))
         animItem.addEventListener("_idle", AnimationEventCallback(this.subtractPlayingCount))
-        registeredAnimations.append(RegisteredAnimation( elem: element, animation: animItem ))
+        registeredAnimations.add(RegisteredAnimation( elem: element, animation: animItem ))
         len += 1
+        _frameRate = false
+        frameRate = 0.0
     }
 
     public func loadAnimation(ac: AnimationConfig): AnimationItem {
@@ -235,14 +243,24 @@ public class AnimationManager {
             _stopped = true
         }
         //需要引入 @ohos.animator 的 AnimatorResult
-        if (let Some(v) <- this._animator) {
-            if (state == AnimationStatus.Paused) {
-                v.pause()
+        if (useDisplaySync) {
+            if (let Some(v) <- this._displaySync) {
+                if (state == AnimationStatus.Stopped) {
+                    v.stop()
+                }
             }
-            if (state == AnimationStatus.Stopped) {
-                v.finish()
+        } else {
+            if (let Some(v) <- this._animator) {
+                if (state == AnimationStatus.Paused) {
+                    v.pause()
+                }
+                if (state == AnimationStatus.Stopped) {
+                    v.finish()
+                    this._animator = None
+                }
             }
         }
+
         animatorState = state
     }
 
@@ -270,13 +288,59 @@ public class AnimationManager {
         _packageName = name
     }
 
+    /**
+     * 设置animator的刷帧率
+     * @param frameRates 帧率
+     * @param tag 是否是应用自定义设置的
+     */
+    public func setFrameRate(frameRates: Float64, tag: Bool) {
+        if (tag) {
+            _frameRate = tag
+            setAnimatorFrameRate(frameRates)
+        } else {
+            if (!_frameRate && frameRates > frameRate) {
+                setAnimatorFrameRate(frameRates)
+            }
+        }
+    }
+
+    func setAnimatorFrameRate(frameRatesNew: Float64) {
+        var frameRates: Float64 = frameRatesNew
+        if (frameRates <= 0.0 || frameRates > 120.0) {
+            frameRates = 30.0
+        }
+        frameRate = frameRates
+
+        if (frameRate > 0.0 && frameRate <= 120.0) {
+            var expectedFrameRate = ExpectedFrameRateRange(
+                min: 1,
+                max: 120,
+                expected: Int32(frameRate)
+            )
+            if (useDisplaySync) {
+                if (let Some(v) <- this._displaySync) {
+                    v.setExpectedFrameRateRange(expectedFrameRate)
+                }
+            } else {
+                if (let Some(v) <- this._animator) {
+                    v.setExpectedFrameRateRange(expectedFrameRate)
+                }
+            }
+        }
+    }
+
     public func destroy(animationName!: String = ""): Unit {
         var tag: Bool = false
+        var maxRate: Float64 = 0.0
         for (i in (len - 1)..=0:-1) {
             if (registeredAnimations.size > i) {
                 if (!registeredAnimations[i].animation.isPaused && registeredAnimations[i].animation.name != animationName) {
                     //如果还有其他动画也在播放，则不需要停止
                     tag = true
+                    let frameRates = registeredAnimations[i].animation.userPlayingFrameRate
+                    if (frameRates > maxRate) {
+                        maxRate = frameRates
+                    }
                 }
                 registeredAnimations[i].animation.destroy(name:animationName)
             }
@@ -287,6 +351,11 @@ public class AnimationManager {
             _stopped = true
             _isFrozen = false
             this._animator = None
+            this._displaySync = None
+        } else {
+            if (maxRate > 0.0) {
+                setAnimatorFrameRate(maxRate)
+            }
         }
     }
 
@@ -339,8 +408,28 @@ public class AnimationManager {
     func activate() {
         if (!_isFrozen && playingAnimationsNum != 0) {
             if (_stopped) {
+                if (useDisplaySync) {
+                    try {
+                        if (let Some(v) <- this._displaySync) {
+                            return
+                        }
+                        this.useDisplaySync = true
+                        let ds: DisplaySync = DisplaySync.create()
+                        let onframe = Callback(resume)
+                        ds.on(OnOffType.FRAME, onframe)
+                        ds.start()
+                        this._displaySync = ds
+                        return
+                    } catch (e: Exception) {
+                        Hilog.error(0, "SingletonLooper", "lottie4cj no displaySync. API level may be too low: ${e.message}")
+                        // fallback to animator
+                    }
+                }
+
+                this.useDisplaySync = false
+
                 if (let Some(v) <- this._animator) {
-                    v.finish()
+                    return
                 }
 
                 initTime = SystemDateTime.getCurrentTime()
@@ -356,10 +445,12 @@ public class AnimationManager {
                 )
 
                 let backAnimator: AnimatorResult = AnimatorResult(options)
+                setAnimatorFrameRate(frameRate)
                 backAnimator.onframe = { value: Float64  =>
                     //返回自1970年1月1日午夜（UTC）以来经过的毫秒数
                     resume(SystemDateTime.getCurrentTime())
                 }
+
                 backAnimator.play()
                 this._animator = backAnimator
 
@@ -449,7 +540,7 @@ public class AnimationManager {
             try {
                 let arrayBuffer: Array<Byte> = readFile(container, path)
                 if (arrayBuffer.size <= 0) { return }
-                let bas: ByteArrayStream = ByteArrayStream(arrayBuffer.size)
+                let bas: ByteBuffer = ByteBuffer(arrayBuffer.size)
                 bas.write(arrayBuffer)
 
                 // 解码的json数据
@@ -519,10 +610,14 @@ public class AnimationManager {
 
     func rmdir(path: String, jsonObj!: AnimationData = AnimationData(isNull: true)): Unit {
         try {
-            let files: ArrayList<FileInfo> = FileUtils.fileList(path)
-            let filenames: Array<String> = Array<String>(files.size, item: "")
+            let files: Array<FileInfo> = FileUtils.fileList(path) //.fileList()//isRegular()
+            let filenames: Array<String> = Array<String>(files.size, repeat: "")
             for (i in 0..files.size) {
-                let fileName: String = files[i].path.fileName ?? ""
+                let item: FileInfo = files[i]
+                if (!item.isRegular()) {
+                	continue
+                }
+                let fileName: String = files[i].path.fileName
                 filenames[i] = fileName
             }
 
@@ -535,9 +630,12 @@ public class AnimationManager {
                     rmDirByPath(path, filenames[i], isDirectory: false)
                 }
 
-                let directorys: ArrayList<FileInfo> = FileUtils.directoryList(path)
-                let directorynames: Array<String> = Array<String>(directorys.size, item: "")
+                let directorys: Array<FileInfo> = FileUtils.directoryList(path)
+                let directorynames: Array<String> = Array<String>(directorys.size, repeat: "")
                 for (i in 0..directorys.size) {
+                    if (!directorys[i].isDirectory()){
+                        continue
+                    }
                     let res: Array<String> = directorys[i].path.toString().split("/", removeEmpty: true)
                     let fileName = res[res.size - 1]
                     directorynames[i] = fileName

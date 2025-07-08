@@ -66,7 +66,7 @@ public class MaskManagerInterface {
         
         this.emptyMaskInterface = MaskInterface(emptyViewData, Mask())
         this.emptyMaskInterface.isNull = true
-        this._masksInterfaces = Array<MaskInterface>(this.len, item: this.emptyMaskInterface)
+        this._masksInterfaces = Array<MaskInterface>(this.len, repeat: this.emptyMaskInterface)
         
         for (i in 0..this.len) {
             this._masksInterfaces[i] = MaskInterface(viewDataInMaskElement[i], masksPropertiesInMaskElement[i])

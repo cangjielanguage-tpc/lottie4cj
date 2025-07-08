@@ -21,7 +21,7 @@ public class EffectsExpressionInterface {
              * LayerIndexEffect/MaskIndexEffect/EffectsManager/NoValueEffect
              * GroupEffect 和 9个 Effect 是有关联关系的。暂定 SuperEffect 是 9个 Effect 的父类。
              */
-            effectElements.append(createGroupInterface(effectsData[i], SuperEffect(LayerEF(), GlobalData(), Layer(), propertyGroup, dynamicProperties: ArrayList<DynamicPropertyContainer>()), propertyGroup, elem))
+            effectElements.add(createGroupInterface(effectsData[i], SuperEffect(LayerEF(), GlobalData(), Layer(), propertyGroup, dynamicProperties: ArrayList<DynamicPropertyContainer>()), propertyGroup, elem))
         }
         let effects: Array<LayerEF> = elem.data.ef
 
@@ -83,10 +83,10 @@ public class EffectsExpressionInterface {
 
         for (i in 0..len) {
             if (data.ef[i].ty == 5) {
-                effectElements.append(createGroupInterface(data.ef[i], elements.effectElements[i], elements.effectElements[i].propertyGroup, elem))
+                effectElements.add(createGroupInterface(data.ef[i], elements.effectElements[i], elements.effectElements[i].propertyGroup, elem))
             } else {
                 /* 返回值类型为 EffectsInterfaceFunction */
-                effectElements.append(createValueInterface(elements.effectElements[i], data.ef[i].ty, elem, _propertyGroup))
+                effectElements.add(createValueInterface(elements.effectElements[i], data.ef[i].ty, elem, _propertyGroup))
             }
         }
 

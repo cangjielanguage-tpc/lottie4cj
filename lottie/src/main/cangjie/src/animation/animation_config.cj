@@ -7,10 +7,7 @@
  */
 package lottie.animation
 
-import ohos.base.*
-import ohos.component.*
-import ohos.state_manage.*
-import ohos.state_macro_manage.*
+internal import kit.UIKit.*
 
 /**
  * 动画事件回调函数声明

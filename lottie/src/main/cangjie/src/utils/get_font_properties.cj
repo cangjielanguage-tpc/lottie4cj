@@ -7,6 +7,8 @@
  */
 package lottie.utils
 
+
+
 public class FontProps {
     public let style: String
     public let weight: String
@@ -16,7 +18,7 @@ public class FontProps {
     }
 }
 
-public func getFontProperties(fontData: Font): FontProps {
+public func getFontProperties(fontData: LottieFont): FontProps {
     var styles: Array<String> = Array<String>()
     if (!fontData.fStyle.isEmpty()) {
         fontData.fStyle.split(" ")

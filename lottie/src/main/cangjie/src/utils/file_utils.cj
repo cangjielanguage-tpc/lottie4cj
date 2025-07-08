@@ -7,10 +7,6 @@
  */
 package lottie.utils
 
-internal import std.fs.*
-
-import ohos.bundle_manager.*
-
 /**
  * Get Bundle Name
  *
@@ -33,14 +29,14 @@ public class FileUtils {
 
     public static let SEPARATOR: String = "/"
 
-    public static func fileList(way: String): ArrayList<FileInfo> {
-        return Directory(way).fileList()
+    public static func fileList(way: String): Array<FileInfo> {
+        return Directory.readFrom(way) //.fileList()//isRegular()
     }
-    public static func fileAndDirectoryList(way: String): ArrayList<FileInfo> {
-        return Directory(way).entryList()
+    public static func fileAndDirectoryList(way: String): Array<FileInfo> {
+        return Directory.readFrom(way) //.entryList()
     }
-    public static func directoryList(way: String): ArrayList<FileInfo> {
-        return Directory(way).directoryList()
+    public static func directoryList(way: String): Array<FileInfo> {
+        return Directory.readFrom(way) //.directoryList()//isDirectory()
     }
 
 
@@ -51,7 +47,7 @@ public class FileUtils {
      * @Return Type of Bool, returns true if the path file exists, otherwise returns false.
      */
     public static func accessSync(path: String): Bool {
-        return File.exists(path)
+        return exists(path)
     }
 
     /**
@@ -65,31 +61,33 @@ public class FileUtils {
     }
 
     public static func readLenToBuffer(path: String, magic_size: Int64): Array<Byte> {
-        let file: File = File(path, OpenOption.Open(true, false))
-        let buf: Array<Byte> = Array<Byte>(magic_size, item:0)
+        let file: File = File(path, OpenMode.Read)
+        let buf: Array<Byte> = Array<Byte>(magic_size, repeat:0)
         file.read(buf)
         file.close()
         return buf
     }
 
     public static func moveDirectory(srcPath: String, destPath: String, overwrite: Bool): Unit {
-        Directory.move(srcPath, destPath, overwrite)
+        copy(srcPath, to: destPath, overwrite: overwrite)
+        remove(srcPath, recursive: true)
     }
 
     public static func moveFile(srcPath: String, destPath: String, overwrite: Bool): Unit {
-        File.move(srcPath, destPath, overwrite)
+        copy(srcPath, to: destPath, overwrite: overwrite)
+        remove(srcPath, recursive: false)
     }
 
     public static func deleteDirectory(path: String, recursive!: Bool = false): Unit {
-        Directory.delete(path, recursive: recursive)
+        remove(path, recursive: recursive)
     }
 
     public static func deleteFile(path: String): Unit {
-        File.delete(path)
+        remove(path, recursive: false)
     }
 
-    public static func listFileSync(path: String): ArrayList<FileInfo> {
-        let files: ArrayList<FileInfo> = Directory(path).fileList()
+    public static func listFileSync(path: String): Array<FileInfo> {
+        let files: Array<FileInfo> = Directory.readFrom(path) //.fileList()//isRegular()
         return files
     }
 
@@ -100,7 +98,7 @@ public class FileUtils {
      * @Param path - The absolute path of the folder can only be generated for paths within the permission range.
      */
     public static func createFolder(path: String, recursive!: Bool = false): Unit {
-        let exists: Bool = Directory.exists(path)
+        let exists: Bool = exists(path)
         if (recursive) {
             if (!exists) {
                 let lastInterval: Int64 = path.lastIndexOf(FileUtils.SEPARATOR) ?? -1

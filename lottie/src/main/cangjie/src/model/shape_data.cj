@@ -44,9 +44,9 @@ public class ShapeData <: ToString {
         }
         let empty_point: PointF = PointF()
         empty_point.isNull = true
-        this.v = Array<PointF>(this._maxLength, item: empty_point)
-        this.i = Array<PointF>(this._maxLength, item: empty_point)
-        this.o = Array<PointF>(this._maxLength, item: empty_point)
+        this.v = Array<PointF>(this._maxLength, repeat: empty_point)
+        this.i = Array<PointF>(this._maxLength, repeat: empty_point)
+        this.o = Array<PointF>(this._maxLength, repeat: empty_point)
     }
 
     /**
@@ -149,9 +149,9 @@ public class ShapeData <: ToString {
     public func doubleArrayLength() {
         let empty_point: PointF = PointF()
         empty_point.isNull = true
-        this.v = this.v.concat(Array<PointF>(this._maxLength, item: empty_point))
-        this.i = this.i.concat(Array<PointF>(this._maxLength, item: empty_point))
-        this.o = this.o.concat(Array<PointF>(this._maxLength, item: empty_point))
+        this.v = this.v.concat(Array<PointF>(this._maxLength, repeat: empty_point))
+        this.i = this.i.concat(Array<PointF>(this._maxLength, repeat: empty_point))
+        this.o = this.o.concat(Array<PointF>(this._maxLength, repeat: empty_point))
         this._maxLength *= 2
     }
     
@@ -167,13 +167,13 @@ public class ShapeData <: ToString {
         empty_point.isNull = true
         let length: Int64 = maxLength - this._maxLength
         if (this._maxLength == 0) {
-            this.v = Array<PointF>(maxLength, item: empty_point)
-            this.i = Array<PointF>(maxLength, item: empty_point)
-            this.o = Array<PointF>(maxLength, item: empty_point)
+            this.v = Array<PointF>(maxLength, repeat: empty_point)
+            this.i = Array<PointF>(maxLength, repeat: empty_point)
+            this.o = Array<PointF>(maxLength, repeat: empty_point)
         } else {
-            this.v = this.v.concat(Array<PointF>(maxLength, item: empty_point))
-            this.i = this.i.concat(Array<PointF>(maxLength, item: empty_point))
-            this.o = this.o.concat(Array<PointF>(maxLength, item: empty_point))
+            this.v = this.v.concat(Array<PointF>(maxLength, repeat: empty_point))
+            this.i = this.i.concat(Array<PointF>(maxLength, repeat: empty_point))
+            this.o = this.o.concat(Array<PointF>(maxLength, repeat: empty_point))
         }
         this._maxLength += maxLength
     }
@@ -276,9 +276,9 @@ public class ShapeData <: ToString {
         src.c = this.c
         src._length = this._length
         src._maxLength = this._maxLength
-        var vr: Array<PointF> = Array<PointF>(this.v.size,item: PointF())
-        var ur: Array<PointF> = Array<PointF>(this.i.size,item: PointF())
-        var ors: Array<PointF> = Array<PointF>(this.o.size,item: PointF())
+        var vr: Array<PointF> = Array<PointF>(this.v.size,repeat: PointF())
+        var ur: Array<PointF> = Array<PointF>(this.i.size,repeat: PointF())
+        var ors: Array<PointF> = Array<PointF>(this.o.size,repeat: PointF())
         for (i in 0..this.v.size) {
             vr[i] = this.v[i].clone()
         }

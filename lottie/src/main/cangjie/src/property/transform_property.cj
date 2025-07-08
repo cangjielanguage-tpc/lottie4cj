@@ -7,7 +7,7 @@
  */
 package lottie.property
 
-internal import ohos.hilog.*
+internal import kit.PerformanceAnalysisKit.Hilog
 
 public class TransformCachingAtTime {
 
@@ -415,8 +415,8 @@ public class TransformProperty <: DynamicPropertyContainer {
                 }
             }
             if (this.autoOriented) {
-                var v1: Array<Float64> = Array<Float64>(2, item: 0.0)
-                var v2: Array<Float64> = Array<Float64>(2, item: 0.0)
+                var v1: Array<Float64> = Array<Float64>(2, repeat: 0.0)
+                var v2: Array<Float64> = Array<Float64>(2, repeat: 0.0)
                 frameRate = this.elemGlobalData.frameRate
                 var pflag: Bool = false
                 if (let Some(p_v) <- this.p) {
@@ -550,7 +550,7 @@ public class TransformProperty <: DynamicPropertyContainer {
                 return
             }
         }
-        this.dynamicPropertiesInElem.append(props)
+        this.dynamicPropertiesInElem.add(props)
     }
 
     public func _addDynamicProperty(dpc: DynamicPropertyContainer): Unit {

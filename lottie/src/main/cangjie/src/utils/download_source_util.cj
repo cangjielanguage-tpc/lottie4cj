@@ -3,10 +3,6 @@
  */
 package lottie.utils
 
-import ohos.base.*
-import ohos.request.agent.*
-import ohos.ability.*
-
 func getContext(): String {
     return FileUtils.downloadFolderLottie
 }
@@ -23,18 +19,18 @@ func getContext(context: Option<AbilityContext>, ty: String): String {
     return ""
 }
 
-public class ProgressCallback <: Callback1Argument<Progress> {
+public class ProgressCallback <: Callback1Argument<AgentProgress> {
     let completeCallBackInside: () -> Unit
     var task: Option<Task> = Option<Task>.None
     public init(completeCallBackInside: () -> Unit, task: Task) {
         this.completeCallBackInside = completeCallBackInside
         this.task = task
     }
-    public open func invoke(arg: Progress): Unit {
+    public open func invoke(arg: AgentProgress): Unit {
         this.completeCallBackInside()
         if (let Some(v) <- this.task) {
             try {
-                remove(v.tid)
+                removeAgent(v.tid)
             } catch (err: Exception) {
                 Hilog.error(0, "[DownLoadSourceUtil]","[ProgressCallback] remove task error: ${err.message}")
             }

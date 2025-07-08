@@ -194,7 +194,7 @@ public class TextSelectorPropFactory <: DynamicPropertyContainer {
                 mult = 0.0
             } else {
                 ind = min(max(0.0, ind + 0.5 - s), e - s)
-                mult = (1.0 + (cos((Float64.PI + Float64.PI * 2.0 * (ind) / (e - s))))) / 2.0   /*  eslint-disable-line  */
+                mult = (1.0 + (cos((Float64.GetPI() + Float64.GetPI() * 2.0 * (ind) / (e - s))))) / 2.0   /*  eslint-disable-line  */
             }
             mult = easer(mult)
         } else {

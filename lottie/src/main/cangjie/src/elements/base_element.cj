@@ -7,13 +7,10 @@
  */
 package lottie.elements
 
-internal import ohos.base.*
-internal import ohos.component.*
-internal import ohos.state_manage.*
-import ohos.state_macro_manage.*
+internal import kit.UIKit.*
 
-internal import ohos.hilog.*
-internal import ohos.image.PixelMap
+internal import kit.PerformanceAnalysisKit.Hilog
+internal import kit.ImageKit.PixelMap
 
 internal import lottie.elements.helpers.*
 
@@ -260,7 +257,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     /* BaseRenderer.prototype.buildElementParenting---------------------------------------------------------------- */
     public func addPendingElement(element: BaseElement): Unit {
-        this.pendingElements.append(element)
+        this.pendingElements.add(element)
     }
     public func buildElementParenting(element: BaseElement, parentName: Int64, hierarchy: ArrayList<BaseElement>): Unit {
         let elements: Array<BaseElement> = this.elements
@@ -272,14 +269,14 @@ public open class BaseElement <: Equatable<BaseElement> {
                     this.buildItem(i)
                     this.addPendingElement(element)
                 } else {
-                    hierarchy.append(elements[i])
+                    hierarchy.add(elements[i])
                     elements[i].setAsParent()
                     if (layers[i].parent != -1) {
                         this.buildElementParenting(element, layers[i].parent, hierarchy)
                     } else {
                         let bes: ArrayList<BaseElement> = ArrayList<BaseElement>(hierarchy.size)
                         for(i in 0..hierarchy.size) {
-                            bes.append(hierarchy[i])
+                            bes.add(hierarchy[i])
                         }
                         element.setHierarchy(bes)
                     }
@@ -315,7 +312,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     public open func checkPendingElements(): Unit {
         while (this.pendingElements.size != 0) {
-            let element: BaseElement = this.pendingElements.remove(this.pendingElements.size - 1)
+            let element: BaseElement = this.pendingElements.remove(at: this.pendingElements.size - 1)
             element.checkParenting()
         }
     }
@@ -416,7 +413,7 @@ public open class BaseElement <: Equatable<BaseElement> {
                 return
             }
         }
-        this.dynamicProperties.append(props)
+        this.dynamicProperties.add(props)
     }
 
     /* FrameElement-2----------------------------------------------------------------------------- */
@@ -522,7 +519,7 @@ public open class BaseElement <: Equatable<BaseElement> {
     public func globalToLocal(pt2: Array<Float64>): Array<Float64> {
         var pt: Array<Float64> = pt2
         var transforms: ArrayList<FinalTransform> =  ArrayList<FinalTransform>()
-        transforms.append(this.finalTransform)
+        transforms.add(this.finalTransform)
 
         let len: Int64 = transforms.size
         var ptNew: Array<Float64> = [0.0, 0.0, 0.0]
@@ -558,14 +555,14 @@ public open class BaseElement <: Equatable<BaseElement> {
                 return
             }
         }
-        this.renderableComponents.append(component)
+        this.renderableComponents.add(component)
     }
 
     public func removeRenderableComponent(component: BaseElement) {
         for (i in 0..this.renderableComponents.size) {
             let rc = this.renderableComponents[i]
             if (refEq(rc, component)) {
-                this.renderableComponents.remove(i)
+                this.renderableComponents.remove(at: i)
             }
         }
     }
@@ -575,14 +572,14 @@ public open class BaseElement <: Equatable<BaseElement> {
                 return
             }
         }
-        this.renderableComponents1.append(component)
+        this.renderableComponents1.add(component)
     }
 
     public func removeRenderableComponent(component: CvEffects) {
         for (i in (this.renderableComponents1.size-1)..=0:-1) {
             let rc = this.renderableComponents1[i]
             if (refEq(rc, component)) {
-                this.renderableComponents1.remove(i)
+                this.renderableComponents1.remove(at: i)
             }
         }
     }
@@ -644,11 +641,11 @@ public open class BaseElement <: Equatable<BaseElement> {
         return SourceRect(top: 0, left: 0, width: 100, height: 100)
     }
 
-    public func getLayerSize(): Size {
+    public func getLayerSize(): SizeLottie {
         if (this.data.ty == 5) {
-            return Size(width: this.data.textData.width, height: this.data.textData.height)
+            return SizeLottie(width: this.data.textData.width, height: this.data.textData.height)
         }
-        return Size(width: this.data.width, height: this.data.height)
+        return SizeLottie(width: this.data.width, height: this.data.height)
     }
 
     public open func createRenderableComponents() {
@@ -680,7 +677,7 @@ public open class BaseElement <: Equatable<BaseElement> {
     public open func exitLayer () {
         if (this.data.tt >= 1) {
             /* 恢复图层 */
-            this.canvasContext.restore()
+            this.canvasContext.restoreLayer()
             /* 将递归图层和mask动效图层进行指定混合 */
             match (operationsMap[this.data.tt]) {
                case "destination-in" => this.canvasContext.globalCompositeOperation(CompositeOperation.DestinationIn)
@@ -688,7 +685,7 @@ public open class BaseElement <: Equatable<BaseElement> {
                case _ =>  this.canvasContext.globalCompositeOperation(CompositeOperation.DestinationIn)
             }
             /* 保存mask动效层 */
-            this.canvasContext.save()
+            this.canvasContext.saveLayer()
             
             /* 对之前的混合模式还原成默认模式 */
             this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
@@ -707,8 +704,8 @@ public open class BaseElement <: Equatable<BaseElement> {
                 v.renderFrame(true)
             }
             /* 恢复图层 */
-            this.canvasContext.restore()
-            this.canvasContext.restore()
+            this.canvasContext.restoreLayer()
+            this.canvasContext.restoreLayer()
 
             this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
         }
@@ -730,9 +727,9 @@ public open class BaseElement <: Equatable<BaseElement> {
          if (this.data.tt >= 1) {
             this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
 
-            this.canvasContext.save()
+            this.canvasContext.saveLayer()
             /* 保存递归图层 */
-            this.canvasContext.save()
+            this.canvasContext.saveLayer()
             /* 对之前的混合模式还原成默认模式 */
             this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
          }

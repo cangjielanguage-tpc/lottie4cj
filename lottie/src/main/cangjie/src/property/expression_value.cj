@@ -79,8 +79,8 @@ public class ExpressionValue<T, E> <: ExpressionInterface where T <: ToString , 
         if (types != "") {
             if (types == "color") {
                 len = 4
-                this.val = Array<Float64>(len, item: 0.0)
-                arrValue = Array<Float64>(len, item: 0.0)
+                this.val = Array<Float64>(len, repeat: 0.0)
+                arrValue = Array<Float64>(len, repeat: 0.0)
                 for (i in 0..len) {
                     if (i < 3) {
                         arrValue[i] = elementProp.v[i] * mult
@@ -97,8 +97,8 @@ public class ExpressionValue<T, E> <: ExpressionInterface where T <: ToString , 
             this.value = [vals]
         } else {
             len = elementProp.pv.size
-            this.val = Array<Float64>(len, item: 0.0)
-            arrValue = Array<Float64>(len, item: 0.0)
+            this.val = Array<Float64>(len, repeat: 0.0)
+            arrValue = Array<Float64>(len, repeat: 0.0)
             for (i in 0..len) {
                 arrValue[i] = elementProp.v[i] * mult
                 this.val[i] = arrValue[i]

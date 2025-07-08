@@ -7,7 +7,7 @@
  */
 package lottie.pool
 
-internal import ohos.hilog.*
+internal import kit.PerformanceAnalysisKit.Hilog
 
 /**
  * The shape pool.

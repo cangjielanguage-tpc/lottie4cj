@@ -6,7 +6,9 @@
  * @file This file is BaseElement.
  */
 package lottie.utils.text
-internal import ohos.base.*
+
+internal import kit.UIKit.*
+
 public class MDF {
     var o: Bool = false
     var sw: Bool = false

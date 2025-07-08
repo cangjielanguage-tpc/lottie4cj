@@ -14,7 +14,7 @@ internal import lottie.bezier.*
 internal import lottie.inner.*
 internal import lottie.pool.*
 
-import ohos.hilog.*
+import kit.PerformanceAnalysisKit.Hilog
 
 public type Caching = CachingAtTime
 
@@ -125,7 +125,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         var newValue: Array<Float64> = Array<Float64>()
         /* 移到后面处理？ */
         if (this.propType == "multidimensional") {
-            newValue = Array<Float64>(this.pv.size, item: 0.0)
+            newValue = Array<Float64>(this.pv.size, repeat: 0.0)
         }
         var iterationIndex: Int64 = caching.lastIndex
         var i: Int64 = iterationIndex
@@ -178,7 +178,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 case w: PointF => [w.x, w.y, 0.0]
                 case w: Int64 => [Float64(w)]
                 case w: Array<Int64> =>
-                    let temp = Array<Float64>(w.size, item: 0.0)
+                    let temp = Array<Float64>(w.size, repeat: 0.0)
                     for(tempIndex in 0..temp.size) {
                         temp[tempIndex] = Float64(w[tempIndex])
                     }
@@ -191,7 +191,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
 
         /* 加一层数组越界拦截处理 */
         if (this.pv.size < keyData_s.size && this.propType == "multidimensional") {
-            newValue = Array<Float64>(keyData_s.size, item: 0.0)
+            newValue = Array<Float64>(keyData_s.size, repeat: 0.0)
         }
 
 
@@ -203,7 +203,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 case w: PointF => [w.x, w.y, 0.0]
                 case w: Int64 => [Float64(w)]
                 case w: Array<Int64> =>
-                    let temp = Array<Float64>(w.size, item: 0.0)
+                    let temp = Array<Float64>(w.size, repeat: 0.0)
                     for(tempIndex in 0..temp.size) {
                         temp[tempIndex] = Float64(w[tempIndex])
                     }
@@ -221,7 +221,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 case w: PointF => [w.x, w.y, 0.0]
                 case w: Int64 => [Float64(w)]
                 case w: Array<Int64> =>
-                    let temp = Array<Float64>(w.size, item: 0.0)
+                    let temp = Array<Float64>(w.size, repeat: 0.0)
                     for(tempIndex in 0..temp.size) {
                         temp[tempIndex] = Float64(w[tempIndex])
                     }
@@ -385,7 +385,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     }
 
     func slerp(a: Array<Float64>, b: Array<Float64>, t: Float64): Array<Float64> {
-        let out: Array<Float64> = Array<Float64>(4, item: 0.0)
+        let out: Array<Float64> = Array<Float64>(4, repeat: 0.0)
         let ax: Float64 = a[0]
         let ay: Float64 = a[1]
         let az: Float64 = a[2]
@@ -533,7 +533,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
     }
 
     public func addEffect(effectFunction: () -> Array<Float64>): Unit {
-        this.effectsSequence.append(effectFunction)
+        this.effectsSequence.add(effectFunction)
         this.container[0].addDynamicProperty(this)
     }
 
@@ -715,9 +715,9 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         p.frameId = -1
 
         let len: Int64 = dataK.size
-        p.v = Array<Float64>(len, item: 0.0)
-        p.pv = Array<Float64>(len, item: 0.0)
-        p.vel = Array<Float64>(len, item: 0.0)
+        p.v = Array<Float64>(len, repeat: 0.0)
+        p.pv = Array<Float64>(len, repeat: 0.0)
+        p.vel = Array<Float64>(len, repeat: 0.0)
         var num: Float64 = 0.0
         for (i in 0..len) {
             /* 此处的 dataK 是一个数组Array<number> */
@@ -761,7 +761,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         p.pv = [initFrameFloat64]
         p._isFirstFrame = true
         if (types == 0 || types == 1) {
-            p.effectsSequence.append(p.getValueAtCurrentTime)
+            p.effectsSequence.add(p.getValueAtCurrentTime)
         }
         return p
     }
@@ -805,12 +805,12 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
                 arrLen = (v as Array<Float64>).getOrThrow().size
             }
         }
-        p.v = Array<Float64>(arrLen, item: initFrameFloat64)
-        p.pv = Array<Float64>(arrLen, item: initFrameFloat64)
+        p.v = Array<Float64>(arrLen, repeat: initFrameFloat64)
+        p.pv = Array<Float64>(arrLen, repeat: initFrameFloat64)
 
-        p._caching = Caching(lastFrame: initFrame, lastIndex: 0, value: Array<Float64>(arrLen, item: 0.0))
+        p._caching = Caching(lastFrame: initFrame, lastIndex: 0, value: Array<Float64>(arrLen, repeat: 0.0))
         if (types == 0 || types == 1) {
-            p.effectsSequence.append(p.getValueAtCurrentTime)
+            p.effectsSequence.add(p.getValueAtCurrentTime)
         }
         return p
     }
@@ -830,7 +830,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             if (dataA == 1) {
                 len = vLen
             }
-            value = Array<Float64>(len, item: 0.0)
+            value = Array<Float64>(len, repeat: 0.0)
         }
         p._cachingAtTime.value = value
         if (p.k) {
@@ -873,7 +873,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
 
         var v1: Array<Float64> = this.getValueAtTime(frameNum)
         var v2: Array<Float64> = this.getValueAtTime(frameNum + delta)
-        var velocity: Array<Float64> = Array<Float64>(v1.size, item: 0.0)
+        var velocity: Array<Float64> = Array<Float64>(v1.size, repeat: 0.0)
         if (v1.size == 1) {
             velocity = [(v2[0] - v1[0]) / delta]
         } else if (v1.size != 0) {
@@ -915,7 +915,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
         if (frameNum != Float64(this._cachingAtTime.lastFrame)) {
             this._cachingAtTime.lastIndex = 0
             if (Float64(this._cachingAtTime.lastFrame) < frameNum) {
-                return Array<Float64>([Float64(this._cachingAtTime.lastIndex)])
+                return [Float64(this._cachingAtTime.lastIndex)]
             }
             this._cachingAtTime.value = this.interpolateValue(frameNum, this._cachingAtTime)
             this._cachingAtTime.lastFrame = frameNum
@@ -970,7 +970,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             let current: Array<Float64> = this.getValueAtTime((Float64(Int64(currentFrame - firstKeyFrame) % Int64(cycleDuration)) + firstKeyFrame) / this.elemGlobalData.frameRate) /*  eslint-disable-line  */
             let repeats: Float64 = floor((currentFrame - firstKeyFrame) / cycleDuration)
             if (this.pv.size != 0) {
-                ret = Array<Float64>(initV.size, item: 0.0)
+                ret = Array<Float64>(initV.size, repeat: 0.0)
                 len = ret.size
                 for (i in 0..len) {
                     ret[i] = (endV[i] - initV[i]) * repeats + current[i]
@@ -982,7 +982,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             let lastValue: Array<Float64> = this.getValueAtTime(lastKeyFrame / this.elemGlobalData.frameRate)
             let nextLastValue: Array<Float64> = this.getValueAtTime((lastKeyFrame - 0.001) / this.elemGlobalData.frameRate)
             if (this.pv.size != 0) {
-                ret = Array<Float64>(lastValue.size, item: 0.0)
+                ret = Array<Float64>(lastValue.size, repeat: 0.0)
                 len = ret.size
                 for (i in 0..len) {
                     ret[i] = lastValue[i] + (lastValue[i] - nextLastValue[i]) * ((currentFrame - lastKeyFrame) / this.elemGlobalData.frameRate) / 0.0005 /*  eslint-disable-line  */
@@ -1039,7 +1039,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             let current: Array<Float64> = this.getValueAtTime((cycleDuration - Float64(Int64(firstKeyFrame - currentFrame) % Int64(cycleDuration)) + firstKeyFrame) / this.elemGlobalData.frameRate)
             let repeats = floor((firstKeyFrame - currentFrame) / cycleDuration) + 1.0
             if (this.pv.size > 0) {
-                ret = Array<Float64>(initV.size, item: 0.0)
+                ret = Array<Float64>(initV.size, repeat: 0.0)
                 len = ret.size
                 for (i in 0..len) {
                     ret[i] = current[i] - (endV[i] - initV[i]) * repeats
@@ -1051,7 +1051,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
             let firstValue: Array<Float64> = this.getValueAtTime(firstKeyFrame / this.elemGlobalData.frameRate)
             let nextFirstValue: Array<Float64> = this.getValueAtTime((firstKeyFrame + 0.001) / this.elemGlobalData.frameRate)
             if (this.pv.size > 0) {
-                ret = Array<Float64>(firstValue.size, item: 0.0)
+                ret = Array<Float64>(firstValue.size, repeat: 0.0)
                 len = ret.size
                 for (i in 0..len) {
                     ret[i] = firstValue[i] + ((firstValue[i] - nextFirstValue[i]) * (firstKeyFrame - currentFrame)) / 0.001
@@ -1099,7 +1099,7 @@ public class PropertyFactory<T, E> <: DynamicPropertyContainer where T <: ToStri
 
         var value: Array<Float64> = [0.0]
         if (this.pv.size > 0) {
-            value = Array<Float64>(this.pv.size, item: 0.0)
+            value = Array<Float64>(this.pv.size, repeat: 0.0)
         }
         var sampleValue: Array<Float64> = Array<Float64>()
         let len: Int64 = Int64(samples)

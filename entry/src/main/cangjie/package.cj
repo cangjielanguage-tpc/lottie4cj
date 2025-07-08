@@ -13,9 +13,8 @@ internal import ohos.base.*
 internal import ohos.component.*
 internal import ohos.ability.AbilityStage
 internal import ohos.ability.LaunchReason
-internal import cj_res_entry.app
+internal import kit.LocalizationKit.*
 
-//internal import ohos.file_fs.*
 internal import ohos.system_date_time.SystemDateTime
 internal import ohos.router.*
 

@@ -8,11 +8,13 @@
 package lottie.utils
 
 internal import std.convert.*
+internal import std.fs.*
 
 internal import lottie.parser.*
+internal import lottie.utils.helpers.*
 
-import ohos.resource_manager.*
-import ohos.ability.*
+internal import kit.LocalizationKit.ResourceManager
+internal import kit.UIKit.*
 
 
 class WorkerProxy {
@@ -344,7 +346,7 @@ public class DataManager {
         _counterId += 1
         let id: String = "processId_" + _counterId.toString()
         let p: Processes = Processes(onComplete, onError)
-        processes.put(id, p)
+        processes.add(id, p)
         return id
     }
 
@@ -393,7 +395,7 @@ public class DataManager {
                  * 将字符串转为 json 对象.
                  * cj 直接调用 AnimationDataParser.parse(reader: String): AnimationData
                  */
-                let bas: ByteArrayStream = ByteArrayStream(arrayBuffer.size)
+                let bas: ByteBuffer = ByteBuffer(arrayBuffer.size)
                 bas.write(arrayBuffer)
 
                 // 解码的json数据

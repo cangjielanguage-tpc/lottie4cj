@@ -30,7 +30,7 @@ public class CvEffects {
                 filterManager = CvGaussianBlurEffect(elem.effectsManager.effectElements[i], elem)
             }
             if (let Some(v) <- filterManager) {
-                this.filters.append(v)
+                this.filters.add(v)
             }
         }
 
@@ -52,7 +52,7 @@ public class CvEffects {
 
 public func registerCVEffect(id: Int64, effect: CvGaussianBlurEffect, countsAsEffect: Bool) {
     //注册高斯模糊效果监听
-    registeredEffects.put(id,RegisteredEffectes(effect,countsAsEffect))
+    registeredEffects.add(id,RegisteredEffectes(effect,countsAsEffect))
 }
 
 public class RegisteredEffectes {

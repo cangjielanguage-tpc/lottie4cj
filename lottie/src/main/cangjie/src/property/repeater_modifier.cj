@@ -70,7 +70,7 @@ public class RepeaterModifier <: ShapeModifier {
         this.initModifierProperties(rp, elemGlobalData, elemData)
         for (i in 0..pos) {
                 /* unshift() 方法可向数组的开头添加一个或更多元素，并返回新的长度。 -- this._elements.unshift(arr.splice(i,1)[0]) */
-            this._elements.append(arr[i])
+            this._elements.add(arr[i])
         }
         if (this.dynamicProperties.size > 0) {
             this.k = true
@@ -227,7 +227,7 @@ public class RepeaterModifier <: ShapeModifier {
                         nm: "Transform"
                     )
 
-                    it.append(tr)
+                    it.add(tr)
                     
                     let group: ShapeGroup = ShapeGroup(
                         nm: "",
@@ -235,8 +235,8 @@ public class RepeaterModifier <: ShapeModifier {
                     )
                     /* splice: 从数组中添加或删除元素。--此处都是添加--在下标0处，删除0个长度，添加group */
                     /* 单次扩展数组，改为最后一次性扩展 */
-                    this.arr.prepend(group)
-                    this._groups.prepend(group)
+                    this.arr.add(group, at: 0)
+                    this._groups.add(group, at: 0)
                     this._currentCopies += 1
                 }
                 this.reloadShapesInShapeElement()

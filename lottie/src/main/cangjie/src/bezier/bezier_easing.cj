@@ -27,7 +27,7 @@ public class BezierEasing {
     //points is an array of [ mX1, mY1, mX2, mY2 ]
     init(points: Array<Float64>) {
         this._p = points
-        this._mSampleValues = Array<Float64>(kSplineTableSize, item: 0.0)
+        this._mSampleValues = Array<Float64>(kSplineTableSize, repeat: 0.0)
         this._precomputed = false
     }
 

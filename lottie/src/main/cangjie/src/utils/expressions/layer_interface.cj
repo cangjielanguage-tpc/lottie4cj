@@ -12,6 +12,9 @@ internal import lottie.elements.*
 internal import lottie.bezier.*
 internal import lottie.*
 
+internal import lottie.model.Font as LottieFont
+internal import lottie.model.Fonts as LottieFonts
+
 public class LayerExpressionInterface <: ExpressionInterface {
 
     var mask: Option<MaskManagerInterface> = None

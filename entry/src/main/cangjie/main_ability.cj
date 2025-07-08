@@ -1,13 +1,18 @@
 package ohos_app_cangjie_entry
 
 internal import ohos.base.AppLog
-internal import ohos.ability.AbilityStage
+internal import ohos.ability.Want
+internal import ohos.ability.UIAbility
+internal import ohos.ability.LaunchParam
 internal import ohos.ability.LaunchReason
-internal import cj_res_entry.app
+internal import ohos.window.WindowStage
+
+internal import ohos.ability.AbilityStage
+internal import kit.LocalizationKit.*
 
 public var globalAbilityContext: Option<AbilityContext> = Option<AbilityContext>.None
 
-class MainAbility <: Ability {
+class MainAbility <: UIAbility {
     public init() {
         super()
         registerSelf()

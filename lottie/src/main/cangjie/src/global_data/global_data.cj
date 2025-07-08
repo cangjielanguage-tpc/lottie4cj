@@ -7,12 +7,10 @@
  */
 package lottie.global_data
 
-internal import ohos.base.*
-internal import ohos.component.*
-internal import ohos.state_manage.*
+internal import ohos.animator.*
 import ohos.state_macro_manage.*
 
-internal import ohos.hilog.*
+internal import kit.PerformanceAnalysisKit.Hilog
 
 
 internal import lottie.model.*

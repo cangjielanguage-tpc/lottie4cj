@@ -54,12 +54,12 @@ func joinLines(outputBezier: ShapeData, seg1: PolynomialBezier, seg2: Polynomial
     /* 圆形 */
     if (lineJoin == 2) {
         let angleOut: Float64 = -seg1.tangentAngle(1.0)
-        let angleIn: Float64 = -seg2.tangentAngle(0.0) + Float64.PI
+        let angleIn: Float64 = -seg2.tangentAngle(0.0) + Float64.GetPI()
         let center: Array<Float64> = lineIntersection(
             p0,
-            polarOffset(p0, angleOut + Float64.PI / 2.0, 100.0),
+            polarOffset(p0, angleOut + Float64.GetPI() / 2.0, 100.0),
             p1,
-            polarOffset(p1, angleOut + Float64.PI / 2.0, 100.0)
+            polarOffset(p1, angleOut + Float64.GetPI() / 2.0, 100.0)
         )
         var radius: Float64 = 0.0
         if (center.size >= 2) {
@@ -110,7 +110,7 @@ func getIntersection(a: PolynomialBezier, b: PolynomialBezier): Array<Float64> {
     let intersect: ArrayList<Array<Float64>> = a.intersections(b, 0.0, 0)
 
     if (intersect.size > 0 && intersect[0].size > 0 && floatEqual(intersect[0][0], 1.0)) {
-        intersect.remove(0)
+        intersect.remove(at: 0)
     }
     if (intersect.size > 0) {
         return intersect[0]

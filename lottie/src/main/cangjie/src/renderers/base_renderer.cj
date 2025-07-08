@@ -7,12 +7,10 @@
  */
 package lottie.renderers
 
-internal import ohos.base.*
-internal import ohos.component.*
-internal import ohos.state_manage.*
+internal import ohos.animator.*
 import ohos.state_macro_manage.*
 
-internal import ohos.hilog.*
+internal import kit.PerformanceAnalysisKit.Hilog
 
 internal import lottie.model.*
 internal import lottie.elements.*
@@ -226,14 +224,14 @@ public open class BaseRenderer {
                     this.buildItem(i)
                     this.addPendingElement(element)
                 } else {
-                    hierarchy.append(elements[i])
+                    hierarchy.add(elements[i])
                     elements[i].setAsParent()
                     if (layers[i].parent != -1) {
                         this.buildElementParenting(element, layers[i].parent, hierarchy)
                     } else {
                         let bes: ArrayList<HierarchyElement> = ArrayList<HierarchyElement>(hierarchy.size)
                         for(i in 0..hierarchy.size) {
-                            bes.append(hierarchy[i])
+                            bes.add(hierarchy[i])
                         }
                         element.setHierarchy(bes)
                     }
@@ -248,7 +246,7 @@ public open class BaseRenderer {
      * @param element - Type of BaseElement.
      */
     public func addPendingElement(element: BaseElement): Unit {
-        this.pendingElements.append(element)
+        this.pendingElements.add(element)
     }
 
     /**

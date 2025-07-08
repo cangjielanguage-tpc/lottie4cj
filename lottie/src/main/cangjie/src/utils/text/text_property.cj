@@ -15,6 +15,9 @@ internal import std.random.*
 internal import std.collection.*
 internal import std.math.*
 
+internal import lottie.model.Font as LottieFont
+internal import lottie.model.Fonts as LottieFonts
+
 public func default_addDynamicProperty(tp: TextProperty): Unit {}
 
 /*
@@ -125,7 +128,7 @@ public class TextProperty {
     }
 
     public func addEffect(effectFunction: (DocumentData, String) -> DocumentData) {
-        this.effectsSequence.append(effectFunction)
+        this.effectsSequence.add(effectFunction)
         this.addDynamicPropertyInTextElement(this)
     }
 
@@ -223,11 +226,11 @@ public class TextProperty {
                         charactersArray[charactersArray.size - 1] = charactersArray[charactersArray.size - 1] + String(chars[i..(i+2)])
                         shouldCombine = false
                     } else {
-                        charactersArray.append(String(chars[i..(i+2)]))
+                        charactersArray.add(String(chars[i..(i+2)]))
                     }
                     i += 1
                 } else {
-                    charactersArray.append(chars[i].toString())
+                    charactersArray.add(chars[i].toString())
                 }
             } else if (charCode > 0xDBFF) {
                 secondCharCode = UInt32(chars[i + 1])
@@ -236,13 +239,13 @@ public class TextProperty {
                     charactersArray[charactersArray.size - 1] = charactersArray[charactersArray.size - 1] + String(chars[i..(i+2)])
                     i += 1
                 } else {
-                    charactersArray.append(chars[i].toString())
+                    charactersArray.add(chars[i].toString())
                 }
             } else if (FontManager.isZeroWidthJoiner(charCode, 0)) {
                 charactersArray[charactersArray.size - 1] = charactersArray[charactersArray.size - 1] + chars[i].toString()
                 shouldCombine = true
             } else {
-                charactersArray.append(chars[i].toString())
+                charactersArray.add(chars[i].toString())
             }
             i += 1
         }
@@ -266,7 +269,7 @@ public class TextProperty {
         var lineWidth: Float64 = 0.0
         var maxLineWidth: Float64 = 0.0
 
-        var fontData: Font = fontManager.getFontByName(documentData.f)
+        var fontData: LottieFont = fontManager.getFontByName(documentData.f)
         var charData: FontCharacter = FontCharacter(CharsData(shapes: ArrayList<ContentModel>()), "", 0.0, 0.0, "", "")
 
         var cLength: Float64 = 0.0
@@ -335,9 +338,9 @@ public class TextProperty {
                         }
 
                         if (lastSpaceIndex == idx) {
-                            finalText.remove(idx)
+                            finalText.remove(at: idx)
                         } else {
-                            finalText.insert(idx, "\r")
+                            finalText.add("\r", at: idx)
                         }
 
                         lastSpaceIndex = -1
@@ -370,7 +373,7 @@ public class TextProperty {
             charCode = UInt32(currentChar.toRuneArray()[0])
             if (charCode == 13 || charCode == 3) {
                 uncollapsedSpaces = 0.0
-                lineWidths.append(lineWidth)
+                lineWidths.add(lineWidth)
 
                 if (lineWidth > maxLineWidth) {
                     maxLineWidth = lineWidth
@@ -399,7 +402,7 @@ public class TextProperty {
                 lineWidth += (cLength + trackingOffset + uncollapsedSpaces)
                 uncollapsedSpaces = 0.0
             }
-            letters.append(Letter(l: cLength, an: cLength, add: currentSize, n: newLineFlag, anIndexes: ArrayList<Int64>(), val: val, line: currentLine, animatorJustifyOffset: 0.0))
+            letters.add(Letter(l: cLength, an: cLength, add: currentSize, n: newLineFlag, anIndexes: ArrayList<Int64>(), val: val, line: currentLine, animatorJustifyOffset: 0.0))
             if (anchorGrouping == 2) { /* eslint-disable-line eqeqeq */
                 currentSize += cLength
                 if (val == "" || val == " " || i == len - 1) {
@@ -442,7 +445,7 @@ public class TextProperty {
             maxLineWidth = lineWidth
         }
 
-        lineWidths.append(lineWidth)
+        lineWidths.add(lineWidth)
         if (documentData.sz.size > 0) {
             documentData.boxWidth = [documentData.sz[0]]
             documentData.justifyOffset = 0.0
@@ -500,12 +503,12 @@ public class TextProperty {
             for (i in 0..len) {
                 letterData = letters[i]
                 if(j >= letterData.anIndexes.size) {
-                    letterData.anIndexes.appendAll(ArrayList<Int64>(j -letterData.anIndexes.size + 1, {i => 0}))
+                    letterData.anIndexes.add(all: ArrayList<Int64>(j -letterData.anIndexes.size + 1, {i => 0}))
                 }
                 letterData.anIndexes[j] = ind
                 if ((based == 1 && letterData.val != "") || (based == 2 && letterData.val != "" && letterData.val != " ") || (based == 3 && (letterData.n || letterData.val == " " || i == len - 1)) || (based == 4 && (letterData.n || i == len - 1))) { /* eslint-disable-line eqeqeq */
                     if (animatorData.s.rn == 1) {
-                        indexes.append(ind)
+                        indexes.add(ind)
                     }
                     ind += 1
                 }
@@ -520,10 +523,9 @@ public class TextProperty {
                     if (currentInd != letterData.anIndexes[j]) { /* eslint-disable-line eqeqeq */
                         currentInd = letterData.anIndexes[j]
 
-                        let m: Random = Random()
-                        m.seed = 3
+                        let m: Random = Random(3)
                         let num: Float64 = m.nextFloat64()
-                        newInd = indexes.remove(Int64(floor(num * Float64(indexes.size))))
+                        newInd = indexes.remove(at: Int64(floor(num * Float64(indexes.size))))
                     }
                     letterData.anIndexes[j] = newInd
                 }

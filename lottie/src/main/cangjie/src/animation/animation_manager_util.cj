@@ -9,6 +9,17 @@ package lottie.animation
 
 internal import lottie.utils.helpers.*
 
+public class Callback <: Callback1Argument<IntervalInfo> {
+    let resume: (Int64) -> Unit
+    public init(resume: (Int64) -> Unit) {
+        this.resume = resume
+    }
+    public open func invoke(arg: IntervalInfo): Unit {
+        //返回自1970年1月1日午夜（UTC）以来经过的毫秒数
+        resume(SystemDateTime.getCurrentTime())
+    }
+}
+
 class RegisteredAnimation {
     var elem: CreateNS
     var animation: AnimationItem

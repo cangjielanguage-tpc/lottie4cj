@@ -3,28 +3,33 @@
  */
 package lottie.utils
 
-internal import std.io.{InputStream, ByteArrayStream}
+internal import std.io.{InputStream, ByteBuffer}
 
-import ohos.system_date_time.*
+import kit.BasicServicesKit.SystemDateTime
 
-import ohos.base.*
-import ohos.state_manage.*
-import ohos.state_macro_manage.*
-import ohos.bundle_manager.*
+internal import kit.UIKit.*
 
-import ohos.ability.*
+internal import kit.AbilityKit.*
 
-import ohos.request.agent.*
-import ohos.request.agent.Progress as AgentProgress
+internal import kit.BasicServicesKit.*
+internal import kit.BasicServicesKit.Progress as AgentProgress
+internal import kit.BasicServicesKit.remove as removeAgent
+internal import kit.BasicServicesKit.Task as Task
+internal import kit.BasicServicesKit.Action as ActionAgent
 
 import zip4cj.ZipFile
-import compress.zlib.*
+
+import stdx.compress.zlib.*
 
 // 筛选.json资源
 func filterJson(way: String): String {
-    let files: ArrayList<FileInfo> = FileUtils.fileList(way)
-    for (item in files) {
-        let fileNames: String = item.path.fileName ?? ""
+    let files: Array<FileInfo> = FileUtils.fileList(way) //.fileList()//isRegular()
+    for (i in 0..files.size) {
+        let item: FileInfo = files[i]
+        if (!item.isRegular()) {
+        	continue
+        }
+        let fileNames: String = item.path.fileName
         if (fileNames.endsWith(".json")) {
             return fileNames
         }
@@ -34,8 +39,11 @@ func filterJson(way: String): String {
 
 // 判断解压之后的zip中是否有其他文件夹
 func isHaveDirectory(way: String): String {
-    let files: ArrayList<FileInfo> = FileUtils.directoryList(way)
+    let files: Array<FileInfo> = FileUtils.directoryList(way) //.directoryList()//isDirectory()
     for (i in 0..files.size) {
+        if (!files[i].isDirectory()){
+            continue
+        }
         let res: Array<String> = files[i].path.toString().split("/", removeEmpty: true)
         let fileName = res[res.size - 1]
         if (fileName != "__MACOSX" && fileName != "images") {
@@ -49,8 +57,11 @@ func isHaveDirectory(way: String): String {
 
 // 判断是否是images文件夹
 func isImagesDir(way: String): Bool {
-    let files: ArrayList<FileInfo> = FileUtils.directoryList(way)
+    let files: Array<FileInfo> = FileUtils.directoryList(way) //.directoryList()//isDirectory()
     for (i in 0..files.size) {
+        if (!files[i].isDirectory()){
+            continue
+        }
         let res: Array<String> = files[i].path.toString().split("/", removeEmpty: true)
         let fileName = res[res.size - 1]
         if (fileName == "images" && isHaveImg("${way}/${fileName}")) {
@@ -71,8 +82,12 @@ func moveImages(routerDir: String, way: String): Unit {
     }
     let newWay = "${routerDir}/${way}/images"
 
-    let directorys: ArrayList<FileInfo> = FileUtils.directoryList(newWay)
-    for (item in directorys) {
+    let directorys: Array<FileInfo> = FileUtils.directoryList(newWay) //.directoryList()//isDirectory()
+    for (i in 0..directorys.size) {
+        let item: FileInfo = directorys[i]
+        if (!item.isDirectory()){
+            continue
+        }
         let res: Array<String> = item.path.toString().split("/", removeEmpty: true)
         let fileName = res[res.size - 1]
         if (fileName == "images" && isHaveImg("${way}/${fileName}")) {
@@ -88,9 +103,13 @@ func moveImages(routerDir: String, way: String): Unit {
         }
     }
 
-    let files: ArrayList<FileInfo> = FileUtils.fileList(way)
-    for (item in files) {
-        let fileNames: String = item.path.fileName ?? ""
+    let files: Array<FileInfo> = FileUtils.fileList(way) //.fileList()//isRegular()
+    for (i in 0..files.size) {
+        let item: FileInfo = files[i]
+        if (!item.isRegular()) {
+        	continue
+        }
+        let fileNames: String = item.path.fileName
         if (!fileNames.endsWith(".png")) { continue }
         let srcPath = "${newWay}/${fileNames}"
         let destPath = "${dirPath}/${fileNames}"
@@ -107,10 +126,14 @@ func moveImages(routerDir: String, way: String): Unit {
 // 移动解压之后的文件中带有文件夹的json
 func moveJson(routerDir: String, way: String): Unit {
     let jsonWay = "${routerDir}/${way}"
-    let files: ArrayList<FileInfo> = Directory(jsonWay).fileList()
+    let files: Array<FileInfo> = FileUtils.fileList(jsonWay) //.directoryList()//isDirectory()
     var newJson: String = ""
-    for (item in files) {
-        let fileNames: String = item.path.fileName ?? ""
+    for (i in 0..files.size) {
+        let item: FileInfo = files[i]
+        if (!item.isDirectory()){
+            continue
+        }
+        let fileNames: String = item.path.fileName
         if (fileNames.endsWith(".json")) {
             newJson = fileNames
             break
@@ -150,10 +173,10 @@ func decompressGzipFile(srcFileName: String, resultDir: JsonFilesDir): Int64 {
 
         var count: Int64 = 0
 
-        let srcFile: File = File(srcFileName, OpenOption.Open(true, false))
-        let destFile: File = File(destFileName, OpenOption.CreateOrTruncate(false))
+        let srcFile: File = File(srcFileName, OpenMode.Read)
+        let destFile: File = File(destFileName, OpenMode.Write)
 
-        var tempBuf: Array<UInt8> = Array<UInt8>(1024, item: 0)
+        var tempBuf: Array<UInt8> = Array<UInt8>(1024, repeat: 0)
         let decompressInputStream: DecompressInputStream = DecompressInputStream(srcFile, wrap: GzipFormat, bufLen: 10000)
         var isFirst: Bool = true
         var isStartJson: Bool = false //开始写入json文件中。
@@ -265,7 +288,7 @@ public func readJson(url: String, readPath: String, errCallBack!: Option<(String
         let existResult: FilePathObject = isCacheExist(url, readPath)
         if (existResult.isExist) {
             let arrayBuffer: Array<Byte> = FileUtils.readToEnd(existResult.filePath)
-            let bas: ByteArrayStream = ByteArrayStream(arrayBuffer.size)
+            let bas: ByteBuffer = ByteBuffer(arrayBuffer.size)
             bas.write(arrayBuffer)
 
             // 解码的json数据
@@ -385,7 +408,7 @@ func downLoadImgOnce(item: Asset, context: Option<AbilityContext>, imgRouterFile
             if (item_id != "" && item_p.startsWith("http")) {
 
                 let downloadConfig = Config(
-                    action: Action.DOWNLOAD,
+                    action: ActionAgent.DOWNLOAD,
                     url: item_p,
                     mode: Mode.BACKGROUND,  //mode: Mode.FOREGROUND,
                     overwrite: true,
@@ -453,9 +476,13 @@ func downLoadImgOnce(item: Asset, context: Option<AbilityContext>, imgRouterFile
 
 // 判断files目录下是否有下载的图片
 public func isHaveImg(way: String): Bool {
-    let files: ArrayList<FileInfo> = Directory(way).fileList()
-    for (item in files) {
-        let fileNames: String = item.path.fileName ?? ""
+    let files: Array<FileInfo> = FileUtils.fileList(way) //.fileList()//isRegular()
+    for (i in 0..files.size) {
+        let item: FileInfo = files[i]
+        if (!item.isRegular()) {
+        	continue
+        }
+        let fileNames: String = item.path.fileName
         if (fileNames.endsWith(".png")) {
             return true
         }
@@ -526,7 +553,7 @@ public func createFilesDir(url: String, context: Option<AbilityContext>): JsonFi
     let dirArray: Array<String> = [dirPath, dirPathFirst, dirPathSecond]
     try {
         for(str in dirArray){
-            let res: Bool = Directory.exists(str)
+            let res: Bool = exists(str)
             if (!res) {
                 FileUtils.createFolder(str, recursive: true)
             }
@@ -545,7 +572,7 @@ public func createImageFilesDir(context: Option<AbilityContext>): String {
     let dirImagesArray: Array<String> = [dirImgPath, dirImgPathFirst]
     try {
         for(str in dirImagesArray){
-            let res: Bool = Directory.exists(str)
+            let res: Bool = exists(str)
             if (!res) {
                 FileUtils.createFolder(str, recursive: true)
             }
