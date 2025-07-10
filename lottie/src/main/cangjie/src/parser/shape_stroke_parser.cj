@@ -42,7 +42,7 @@ class ShapeStrokeParser {
                         reader.endObject()
 
                         let cmd: ContentModelD = ContentModelD(n: n, v: ContentModelDK(k: val))
-                        lineDashPattern.append(cmd)
+                        lineDashPattern.add(cmd)
                     }
                     reader.endArray()
 

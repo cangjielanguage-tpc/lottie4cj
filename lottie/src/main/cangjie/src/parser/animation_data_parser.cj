@@ -10,12 +10,9 @@ package lottie.parser
 internal import std.math.*
 internal import std.collection.*
 internal import std.convert.*
-internal import std.log.*
-internal import std.io.{InputStream, ByteArrayStream}
-internal import encoding.json.stream.*
+internal import std.io.{InputStream, ByteBuffer}
+internal import stdx.encoding.json.stream.*
 internal import lottie.model.*
-
-public let logger: SimpleLogger = SimpleLogger()
 
 /**
  * A parser for lottie json that parses into AnimationData objects.
@@ -29,10 +26,10 @@ public class AnimationDataParser {
      * @return Type of AnimationData, an instance of the json data that encapsulates the animation.
      */
     public static func parse(inputstr: String): AnimationData {
-        return parse(ByteArrayStream.fromString(inputstr))
+        return parse(ByteBuffer(inputstr.toArray()))
     }
 
-    public static func parse(bas: ByteArrayStream): AnimationData {
+    public static func parse(bas: ByteBuffer): AnimationData {
         if (bas.length == 0) {
             return AnimationData(isNull: true)
         }
@@ -107,8 +104,8 @@ public class AnimationDataParser {
             if (layer.ty == LAYERS_TY_IMAGE) {
                 imageCount++
             }
-            layers.append(layer)
-            layerMap.put(layer.ind, layer)
+            layers.add(layer)
+            layerMap.add(layer.ind, layer)
         }
         reader.endArray()
         return layers.toArray()
@@ -143,7 +140,7 @@ public class AnimationDataParser {
             }
 
             reader.endObject()
-            assets.append(Asset(id, layers, width, height, imageFileName, relativeFolder, e))
+            assets.add(Asset(id, layers, width, height, imageFileName, relativeFolder, e))
         }
         reader.endArray()
         return assets.toArray()
@@ -155,7 +152,7 @@ public class AnimationDataParser {
         if (reader.readName() == "list") {
             reader.startArray()
             while (reader.peek() != JsonToken.EndArray) {
-                fonts.append(FontParser.parse(reader))
+                fonts.add(FontParser.parse(reader))
             }
             reader.endArray()
         }
@@ -167,7 +164,7 @@ public class AnimationDataParser {
         let chars: ArrayList<FontCharacter> = ArrayList<FontCharacter>()
         reader.startArray()
         while (reader.peek() != EndArray) {
-            chars.append(FontCharacterParser.parse(reader))
+            chars.add(FontCharacterParser.parse(reader))
         }
         reader.endArray()
         return chars.toArray()
@@ -190,7 +187,7 @@ public class AnimationDataParser {
                 }
             }
             reader.endObject()
-            markers.append(Marker(comment, frame, durationFrames))
+            markers.add(Marker(comment, frame, durationFrames))
         }
         reader.endArray()
         return markers.toArray()

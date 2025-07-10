@@ -28,7 +28,7 @@ public class DashProperty <: DynamicPropertyContainer {
     var dashStr: String = ""
 
     public var dashArray: Array<Float64>
-    public var dashoffset: Array<Float64> = Array<Float64>(1, item: 0.0)
+    public var dashoffset: Array<Float64> = Array<Float64>(1, repeat: 0.0)
 
     public init(data: Array<ContentModelD>, renderer: String, elemGlobalData: GlobalData, elemData: Layer, dynamicProperties!: ArrayList<DynamicPropertyContainer>) {
         super(elemGlobalData, elemData, dynamicProperties: dynamicProperties)
@@ -38,9 +38,9 @@ public class DashProperty <: DynamicPropertyContainer {
 
         let len: Int64 = data.size
         if (data.size > 0) {
-            this.dashArray = Array<Float64>(len - 1, item: 0.0)
+            this.dashArray = Array<Float64>(len - 1, repeat: 0.0)
             let empty_dp: DataProp<ContentModelDK, Float64> = DataProp<ContentModelDK, Float64>(n: "", p: PropertyFactory<ContentModelDK, Float64>(empty_ContentModelDK, 0.0, DynamicPropertyContainer(elemGlobalData, elemData, dynamicProperties: dynamicProperties), elemGlobalData, elemData, dynamicProperties: dynamicProperties))
-            this.dataProps = Array<DataProp<ContentModelDK, Float64>>(data.size, item: empty_dp)
+            this.dataProps = Array<DataProp<ContentModelDK, Float64>>(data.size, repeat: empty_dp)
         } else {
             this.dashArray = Array<Float64>()
         }

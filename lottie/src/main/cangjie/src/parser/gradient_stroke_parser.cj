@@ -65,7 +65,7 @@ class GradientStrokeParser {
                         }
                         reader.endObject()
                         let cmd: ContentModelD = ContentModelD(n: n, v: ContentModelDK(k: v))
-                        lineDashPattern.append(cmd)
+                        lineDashPattern.add(cmd)
                     }
                     reader.endArray()
                 case _ => reader.skip()

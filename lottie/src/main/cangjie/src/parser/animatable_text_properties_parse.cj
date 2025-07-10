@@ -75,14 +75,14 @@ public class AnimatableTextPropertiesParser {
                     reader.startArray()
                     if (reader.peek() == JsonToken.BeginObject) {
                         while (reader.peek() != JsonToken.EndArray) {
-                            keyframes.append(KeyframeParser.parseKeyframe<Array<Float64>>(reader, ScaleXYParser.INSTANCE))
+                            keyframes.add(KeyframeParser.parseKeyframe<Array<Float64>>(reader, ScaleXYParser.INSTANCE))
                         }
                     }
                     reader.endArray()
                 } else if (reader.peek() == JsonToken.JsonNumber) {
                     var scc = Keyframe<Array<Float64>>()
                     scc.k = [Float64(reader.readValue<Int64>())]
-                    keyframes.append(scc)
+                    keyframes.add(scc)
                 }
                 case _ => reader.skip()
             }

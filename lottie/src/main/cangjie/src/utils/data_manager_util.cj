@@ -196,12 +196,12 @@ func checkColors(animationData: AnimationData): Unit {
                 if (shapes[i].ty == "fl") {
                     let shape: ShapeFill = (shapes[i] as ShapeFill).getOrThrow()
                     c = shape.c
-                    c_k = Array<Keyframe<Array<Float64>>>(c.size, item: Keyframe<Array<Float64>>())
+                    c_k = Array<Keyframe<Array<Float64>>>(c.size, repeat: Keyframe<Array<Float64>>())
                     shape.c = c_k
                 } else if (shapes[i].ty == "st") {
                     let shape: ShapeStroke = (shapes[i] as ShapeStroke).getOrThrow()
                     c = shape.c
-                    c_k = Array<Keyframe<Array<Float64>>>(c.size, item: Keyframe<Array<Float64>>())
+                    c_k = Array<Keyframe<Array<Float64>>>(c.size, repeat: Keyframe<Array<Float64>>())
                     shape.c = c_k
                 }
                 
@@ -210,7 +210,7 @@ func checkColors(animationData: AnimationData): Unit {
                     for (j in 0..jLen) {
                         let keyframe: Keyframe<Array<Float64>> = Keyframe<Array<Float64>>()
                         if (let Some(v) <- c[j].s) {
-                            let s: Array<Float64> = Array<Float64>(4, item: 0.0)
+                            let s: Array<Float64> = Array<Float64>(4, repeat: 0.0)
                             s[0] = v[0] / 255.0
                             s[1] = v[1] / 255.0
                             s[2] = v[2] / 255.0
@@ -218,7 +218,7 @@ func checkColors(animationData: AnimationData): Unit {
                             keyframe.s = s
                         }
                         if (let Some(v) <- c[j].e) {
-                            let e: Array<Float64> = Array<Float64>(4, item: 0.0)
+                            let e: Array<Float64> = Array<Float64>(4, repeat: 0.0)
                             e[0] = v[0] / 255.0
                             e[1] = v[1] / 255.0
                             e[2] = v[2] / 255.0
@@ -230,7 +230,7 @@ func checkColors(animationData: AnimationData): Unit {
                 } else if (c.size == 1) { /* json 中 k 是一个对象 => 数据保存在 ShapeFill/ShapeStroke.c[i](Keyframe<Array<Float64>>).k [中] */
                     let keyframe: Keyframe<Array<Float64>> = Keyframe<Array<Float64>>()
                     if (let Some(v) <- c[0].k) {
-                        let k: Array<Float64> = Array<Float64>(4, item: 0.0)
+                        let k: Array<Float64> = Array<Float64>(4, repeat: 0.0)
                         k[0] = v[0] / 255.0
                         k[1] = v[1] / 255.0
                         k[2] = v[2] / 255.0

@@ -47,7 +47,7 @@ public open class MaskElement <: BaseElement {
         let pf: PropertyFactory<Array<Keyframe<Int64>>, Int64> = empty_pf_Array_Keyframe_Int64
         let spf: ShapePropertyFactory = empty_spf
         let emptyViewData: ViewData = ViewData(op: pf, props: spf)
-        this.viewData = Array<ViewData>(len, item: emptyViewData)
+        this.viewData = Array<ViewData>(len, repeat: emptyViewData)
         
         let empty_createNS: CreateNS = CreateNS("")
     
@@ -85,7 +85,7 @@ public open class MaskElement <: BaseElement {
                 rect = CreateNS("rect")
                 rect.setAttribute("fill", "#ffffff")
 
-                currentMasks.append(rect)
+                currentMasks.add(rect)
             } else {
                 rect = empty_createNS
             }
@@ -179,9 +179,9 @@ public open class MaskElement <: BaseElement {
                     g.setAttribute("mask", "url(" + getLocationHref() + "#" + layerId + "_" + count.toString() + ")")
     
                     currentMasks.clear()
-                    currentMasks.append(g)
+                    currentMasks.add(g)
                 } else {
-                    currentMasks.append(path)
+                    currentMasks.add(path)
                 }
                 /*
                  * 无法在此处初始化 solidPath。

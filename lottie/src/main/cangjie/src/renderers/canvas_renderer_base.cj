@@ -237,7 +237,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.globalData.transformCanvas = this.transformCanvas
 
         let emptyBaseElement: BaseElement = BaseElement(Layer(), globalData, isNull: true)
-        this.elements = Array<BaseElement>(animData.layers.size, item: emptyBaseElement)
+        this.elements = Array<BaseElement>(animData.layers.size, repeat: emptyBaseElement)
         this.updateContainerSize()
     }
 
@@ -537,7 +537,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
      */
     public func checkPendingElements(): Unit {
         while (this.pendingElements.size != 0) {
-            let element: BaseElement = this.pendingElements.remove(this.pendingElements.size - 1)
+            let element: BaseElement = this.pendingElements.remove(at: this.pendingElements.size - 1)
             element.checkParenting()
         }
     }

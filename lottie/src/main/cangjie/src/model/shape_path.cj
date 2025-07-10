@@ -48,7 +48,7 @@ public class ShapePath <: ContentModel {
     }
 
     public func clone(): ShapePath {
-        var tmpks: Array<Keyframe<ShapeData>> = Array<Keyframe<ShapeData>>(this.ks.size,item: unsafe {zeroValue<Keyframe<ShapeData>>()})
+        var tmpks: Array<Keyframe<ShapeData>> = Array<Keyframe<ShapeData>>(this.ks.size,repeat: unsafe {zeroValue<Keyframe<ShapeData>>()})
         for (i in 0..this.ks.size) {
             tmpks[i] = this.ks[i].clone()
         }

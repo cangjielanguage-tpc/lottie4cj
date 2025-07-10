@@ -39,7 +39,7 @@ public class CvTextElement <: ITextElement {
         this.currentRender = None
         this.renderType = "canvas"
         this.values = ValuesData(Color(0, 0, 0, alpha: 0.0), Color(0, 0, 0, alpha: 0.0), 0.0,
-            FValue(Length(0.0, unitType: LengthType.px), ""))
+            FValue(0.0, ""))
         this.initElement(data, globalData)
     }
 
@@ -66,7 +66,7 @@ public class CvTextElement <: ITextElement {
         var letters: ArrayList<Letter> = documentData.l
         var matrixHelper: Matrix = Matrix()
         this.stroke = hasStroke
-        this.values.fValue.value1 = Length(documentData.finalSize, unitType: LengthType.px)
+        this.values.fValue.value1 = documentData.finalSize
         this.values.fValue.value2 = this.globalData.fontManager.getFontByName(documentData.f).fFamily
         var len: Int64 = documentData.finalText.size
         var xPos = 0.0
@@ -100,7 +100,7 @@ public class CvTextElement <: ITextElement {
             if (singleShape) {
                 this.applyTextPropertiesToMatrix(documentData, matrixHelper, letters[i].line, xPos, yPos)
             }
-            var commands = Array<ArrayList<Float64>>(jLen,item:ArrayList<Float64>())
+            var commands = Array<ArrayList<Float64>>(jLen, repeat: ArrayList<Float64>())
             var commandsCounter = 0
             for (j in 0..jLen) {
                 if (shapes[j].ty == "sh") {
@@ -110,10 +110,10 @@ public class CvTextElement <: ITextElement {
                     var k = 1
                     while (k < kLen) {
                         if (k == 1) {
-                            pathArr.appendAll([matrixHelper.applyToX(pathNodes.v[0].x, pathNodes.v[0].y, 0.0),
+                            pathArr.add(all: [matrixHelper.applyToX(pathNodes.v[0].x, pathNodes.v[0].y, 0.0),
                                 matrixHelper.applyToY(pathNodes.v[0].x, pathNodes.v[0].y, 0.0)])
                         }
-                        pathArr.appendAll([matrixHelper.applyToX(pathNodes.o[k - 1].x, pathNodes.o[k - 1].y, 0.0),
+                        pathArr.add(all: [matrixHelper.applyToX(pathNodes.o[k - 1].x, pathNodes.o[k - 1].y, 0.0),
                             matrixHelper.applyToY(pathNodes.o[k - 1].x, pathNodes.o[k - 1].y, 0.0),
                             matrixHelper.applyToX(pathNodes.i[k].x, pathNodes.i[k].y, 0.0),
                             matrixHelper.applyToY(pathNodes.i[k].x, pathNodes.i[k].y, 0.0),
@@ -121,7 +121,7 @@ public class CvTextElement <: ITextElement {
                             matrixHelper.applyToY(pathNodes.v[k].x, pathNodes.v[k].y, 0.0)])
                         k += 1
                     }
-                    pathArr.appendAll([matrixHelper.applyToX(pathNodes.o[k - 1].x, pathNodes.o[k - 1].y, 0.0),
+                    pathArr.add(all: [matrixHelper.applyToX(pathNodes.o[k - 1].x, pathNodes.o[k - 1].y, 0.0),
                         matrixHelper.applyToY(pathNodes.o[k - 1].x, pathNodes.o[k - 1].y, 0.0),
                         matrixHelper.applyToX(pathNodes.i[0].x, pathNodes.i[0].y, 0.0),
                         matrixHelper.applyToY(pathNodes.i[0].x, pathNodes.i[0].y, 0.0),
@@ -138,7 +138,7 @@ public class CvTextElement <: ITextElement {
             if (this.textSpans.size > cnt) {
                 this.textSpans[cnt].elem = commands
             } else {
-                this.textSpans.appendAll(ArrayList<TextSpans>(cnt -textSpans.size + 1, {i => TextSpans(Array<ArrayList<Float64>>())}))
+                this.textSpans.add(all: ArrayList<TextSpans>(cnt -textSpans.size + 1, {i => TextSpans(Array<ArrayList<Float64>>())}))
                 this.textSpans[cnt] = TextSpans(commands)
             }
             cnt += 1

@@ -14,7 +14,7 @@ public let isSafari: Bool = false
 let _shouldRoundValues: Bool = false
 
 public var defaultCurveSegments: Int64 = 150
-public let degToRads: Float64 = Float64.PI / 180.0
+public let degToRads: Float64 = Float64.GetPI() / 180.0
 public let roundCorner: Float64 = 0.5519
 
 let initialDefaultFrame: Int64 = -999999

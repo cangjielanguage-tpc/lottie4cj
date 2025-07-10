@@ -7,17 +7,19 @@
  */
 package lottie.parser
 
+internal import ohos.hilog.Hilog
+
 public class AnimatablePathValueParser {
     public static func parse(reader: JsonReader): Array<Keyframe<PointF>> {
         let keyframes = ArrayList<Keyframe<PointF>>()
         if (reader.peek() == JsonToken.BeginArray) {
             reader.startArray()
             while (reader.peek() != JsonToken.EndArray) {
-                keyframes.append(PathKeyframeParser.parse(reader))
+                keyframes.add(PathKeyframeParser.parse(reader))
             }
             reader.endArray()
         } else {
-            keyframes.append(Keyframe<PointF>(k: JsonUtils.jsonToPoint(reader)))
+            keyframes.add(Keyframe<PointF>(k: JsonUtils.jsonToPoint(reader)))
         }
         // Once extra memory copy
         return keyframes.toArray()
@@ -59,7 +61,7 @@ public class AnimatablePathValueParser {
         reader.endObject()
 
         if (hasExpressions) {
-            logger.log(LogLevel.INFO, "Lottie doesn't support expressions.")
+            Hilog.info(0, "[AnimatablePathValueParser]","Lottie doesn't support expressions.")
         }
 
         return AnimatableSplitDimensionPathValue(

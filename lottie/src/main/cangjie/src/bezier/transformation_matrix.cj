@@ -6,9 +6,11 @@ package lottie.bezier
 internal import std.math.*
 
 internal import ohos.hilog.*
+
 const PROPS_NUM = 16
+
 public class Matrix {
-    public var props: Array<Float64> = Array<Float64>(PROPS_NUM, item: 0.0)
+    public var props: Array<Float64> = Array<Float64>(PROPS_NUM, repeat: 0.0)
 
     var _identity: Bool = true
     var _identityCalculated: Bool = false
@@ -260,7 +262,7 @@ public class Matrix {
     }
 
     public func applyToTriplePoints(pt1: Array<Float64>, pt2: Array<Float64>, pt3: Array<Float64>) {
-        var arr = Array<Float64>(6, item: 0.0)
+        var arr = Array<Float64>(6, repeat: 0.0)
         if (this.isIdentity()) {
             arr[0] = pt1[0]
             arr[1] = pt1[1]

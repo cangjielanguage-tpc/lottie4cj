@@ -25,7 +25,7 @@ public class CvCompElement <: ICompElement {
         //使用了data.layers暂时使用AnimationData
         this.layers = data.layers
 
-        this.elements = Array<BaseElement>(this.layers.size, item: BaseElement(Layer(), GlobalData(), isNull: true))
+        this.elements = Array<BaseElement>(this.layers.size, repeat: BaseElement(Layer(), GlobalData(), isNull: true))
 
         //tm暂时不是data属性
         this.initElement(data, globalData)

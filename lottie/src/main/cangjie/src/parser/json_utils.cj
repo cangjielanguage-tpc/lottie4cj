@@ -3,8 +3,8 @@
  */
 package lottie.parser
 
-import encoding.json.JsonArray
-import encoding.json.JsonNull
+import stdx.encoding.json.JsonArray
+import stdx.encoding.json.JsonNull
 
 class JsonUtils {
 
@@ -27,7 +27,7 @@ class JsonUtils {
         var pointArray: ArrayList<Float64> = ArrayList<Float64>()
         reader.startArray()
         while (reader.peek() != EndArray) {
-            pointArray.append(reader.readValue<Float64>())
+            pointArray.add(reader.readValue<Float64>())
         }
         reader.endArray()
         return pointArray.toArray()
@@ -38,7 +38,7 @@ class JsonUtils {
         reader.startArray()
         while (reader.peek() == JsonToken.BeginArray) {
             reader.startArray()
-            points.append(jsonToPoint(reader))
+            points.add(jsonToPoint(reader))
             reader.endArray()
         }
         reader.endArray()

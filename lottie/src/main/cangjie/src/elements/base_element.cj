@@ -260,7 +260,7 @@ public open class BaseElement <: Equatable<BaseElement> {
 
     /* BaseRenderer.prototype.buildElementParenting---------------------------------------------------------------- */
     public func addPendingElement(element: BaseElement): Unit {
-        this.pendingElements.append(element)
+        this.pendingElements.add(element)
     }
     public func buildElementParenting(element: BaseElement, parentName: Int64, hierarchy: ArrayList<BaseElement>): Unit {
         let elements: Array<BaseElement> = this.elements
@@ -272,14 +272,14 @@ public open class BaseElement <: Equatable<BaseElement> {
                     this.buildItem(i)
                     this.addPendingElement(element)
                 } else {
-                    hierarchy.append(elements[i])
+                    hierarchy.add(elements[i])
                     elements[i].setAsParent()
                     if (layers[i].parent != -1) {
                         this.buildElementParenting(element, layers[i].parent, hierarchy)
                     } else {
                         let bes: ArrayList<BaseElement> = ArrayList<BaseElement>(hierarchy.size)
                         for(i in 0..hierarchy.size) {
-                            bes.append(hierarchy[i])
+                            bes.add(hierarchy[i])
                         }
                         element.setHierarchy(bes)
                     }
@@ -314,9 +314,11 @@ public open class BaseElement <: Equatable<BaseElement> {
     }
 
     public open func checkPendingElements(): Unit {
+        var index = this.pendingElements.size
         while (this.pendingElements.size != 0) {
-            let element: BaseElement = this.pendingElements.remove(this.pendingElements.size - 1)
+            let element: BaseElement = this.pendingElements.remove(at: this.pendingElements.size - 1)
             element.checkParenting()
+            index--
         }
     }
 
@@ -416,7 +418,7 @@ public open class BaseElement <: Equatable<BaseElement> {
                 return
             }
         }
-        this.dynamicProperties.append(props)
+        this.dynamicProperties.add(props)
     }
 
     /* FrameElement-2----------------------------------------------------------------------------- */
@@ -522,7 +524,7 @@ public open class BaseElement <: Equatable<BaseElement> {
     public func globalToLocal(pt2: Array<Float64>): Array<Float64> {
         var pt: Array<Float64> = pt2
         var transforms: ArrayList<FinalTransform> =  ArrayList<FinalTransform>()
-        transforms.append(this.finalTransform)
+        transforms.add(this.finalTransform)
 
         let len: Int64 = transforms.size
         var ptNew: Array<Float64> = [0.0, 0.0, 0.0]
@@ -558,14 +560,14 @@ public open class BaseElement <: Equatable<BaseElement> {
                 return
             }
         }
-        this.renderableComponents.append(component)
+        this.renderableComponents.add(component)
     }
 
     public func removeRenderableComponent(component: BaseElement) {
         for (i in 0..this.renderableComponents.size) {
             let rc = this.renderableComponents[i]
             if (refEq(rc, component)) {
-                this.renderableComponents.remove(i)
+                this.renderableComponents.remove(at: i)
             }
         }
     }
@@ -575,14 +577,14 @@ public open class BaseElement <: Equatable<BaseElement> {
                 return
             }
         }
-        this.renderableComponents1.append(component)
+        this.renderableComponents1.add(component)
     }
 
     public func removeRenderableComponent(component: CvEffects) {
         for (i in (this.renderableComponents1.size-1)..=0:-1) {
             let rc = this.renderableComponents1[i]
             if (refEq(rc, component)) {
-                this.renderableComponents1.remove(i)
+                this.renderableComponents1.remove(at: i)
             }
         }
     }

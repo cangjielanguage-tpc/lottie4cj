@@ -443,7 +443,7 @@ public class AnimationItem <: BaseEvent {
             return
         }
         //shift: 删除并返回数组的第一个元素。
-        let segment: Array<Float64> = segments.remove(0)
+        let segment: Array<Float64> = segments.remove(at: 0)
 
         let strArray: Array<String> = [this.path, this.fileName, "_", this.segmentPos.toString(), ".json"]
         let segmentPath: String = String.join(strArray)
@@ -908,10 +908,10 @@ public class AnimationItem <: BaseEvent {
         if (forceFlag) {
             this.segments.clear()
         }
-        this.segments.appendAll(arr)
+        this.segments.add(all: arr)
         if (this.segments.size > 0 && forceFlag) {
             //shift: 删除并返回数组的第一个元素。
-            let segment: Array<Float64> = this.segments.remove(0)
+            let segment: Array<Float64> = this.segments.remove(at: 0)
             this.adjustSegment(segment, 0.0)
         }
         if (this.isPaused) {
@@ -927,10 +927,10 @@ public class AnimationItem <: BaseEvent {
         if (forceFlag) {
             this.segments.clear()
         }
-        this.segments.append(arr)
+        this.segments.add(arr)
         if (this.segments.size > 0 && forceFlag) {
             //shift: 删除并返回数组的第一个元素。
-            let segment: Array<Float64> = this.segments.remove(0)
+            let segment: Array<Float64> = this.segments.remove(at: 0)
             this.adjustSegment(segment, 0.0)
         }
         if (this.isPaused) {
@@ -940,7 +940,7 @@ public class AnimationItem <: BaseEvent {
 
     public func resetSegments(forceFlag: Bool): Unit {
         this.segments.clear()
-        this.segments.append([this.animationData.ip, this.animationData.op])
+        this.segments.add([this.animationData.ip, this.animationData.op])
         if (forceFlag) {
             this.checkSegments(0)
         }
@@ -949,7 +949,7 @@ public class AnimationItem <: BaseEvent {
     public func checkSegments(offset: Int64): Bool {
         if (this.segments.size > 0) {
             //shift: 删除并返回数组的第一个元素。
-            let segment: Array<Float64> = this.segments.remove(0)
+            let segment: Array<Float64> = this.segments.remove(at: 0)
             this.adjustSegment(segment, Float64(offset))
             return true
         }

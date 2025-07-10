@@ -15,8 +15,8 @@ public let bezierLengthPool: PoolFactory<BezierLengthElement> = PoolFactory<Bezi
 func createBezierLeng(): BezierLengthElement {
     return BezierLengthElement(
         addedLength: 0.0,
-        percents: Array<Float64>(getDefaultCurveSegments(), item: 0.0),
-        lengths: Array<Float64>(getDefaultCurveSegments(), item: 0.0)
+        percents: Array<Float64>(getDefaultCurveSegments(), repeat: 0.0),
+        lengths: Array<Float64>(getDefaultCurveSegments(), repeat: 0.0)
     )
 }
 

@@ -28,7 +28,7 @@ public class GradientColorParser <: ValueParser<Array<Float64>> {
     public func parse(reader: JsonReader): Array<Float64> {
         var pointArray: ArrayList<Float64> = ArrayList<Float64>()
         while (reader.peek() != EndArray) {
-            pointArray.append(reader.readValue<Float64>())
+            pointArray.add(reader.readValue<Float64>())
         }
         return pointArray.toArray()
     }

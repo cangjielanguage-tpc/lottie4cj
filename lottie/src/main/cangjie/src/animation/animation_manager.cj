@@ -13,7 +13,7 @@ internal import std.math.*
 internal import std.fs.{FileInfo}
 internal import std.collection.HashMap
 internal import std.collection.ArrayList
-internal import std.io.{InputStream, ByteArrayStream}
+internal import std.io.{InputStream, ByteBuffer}
 
 internal import lottie.inner.*
 internal import lottie.global_data.*
@@ -78,7 +78,7 @@ public class AnimationManager {
             if (registeredAnimations.size > i) {
                 if (refEq(registeredAnimations[i].animation, animItem)) {
                     //splice: 从数组中添加或删除元素。-- splice(i, 1) 此处是删除--删除下标 i 处元素
-                    registeredAnimations.remove(i)
+                    registeredAnimations.remove(at: i)
                     i -= 1
                     len -= 1
                     if (!animItem.isPaused) {
@@ -115,7 +115,7 @@ public class AnimationManager {
         let lenAnims: Int64 = registeredAnimations.size
         var animations: ArrayList<AnimationItem> = ArrayList<AnimationItem>(24)
         for (i in 0..lenAnims) {
-            animations.append(registeredAnimations[i].animation)
+            animations.add(registeredAnimations[i].animation)
         }
         return animations
     }
@@ -133,7 +133,7 @@ public class AnimationManager {
         animItem.addEventListener("destroy", AnimationEventCallback(this.removeElement))
         animItem.addEventListener("_active", AnimationEventCallback(this.addPlayingCount))
         animItem.addEventListener("_idle", AnimationEventCallback(this.subtractPlayingCount))
-        registeredAnimations.append(RegisteredAnimation( elem: element, animation: animItem ))
+        registeredAnimations.add(RegisteredAnimation( elem: element, animation: animItem ))
         len += 1
     }
 
@@ -449,7 +449,7 @@ public class AnimationManager {
             try {
                 let arrayBuffer: Array<Byte> = readFile(container, path)
                 if (arrayBuffer.size <= 0) { return }
-                let bas: ByteArrayStream = ByteArrayStream(arrayBuffer.size)
+                let bas: ByteBuffer = ByteBuffer(arrayBuffer.size)
                 bas.write(arrayBuffer)
 
                 // 解码的json数据
@@ -519,10 +519,10 @@ public class AnimationManager {
 
     func rmdir(path: String, jsonObj!: AnimationData = AnimationData(isNull: true)): Unit {
         try {
-            let files: ArrayList<FileInfo> = FileUtils.fileList(path)
-            let filenames: Array<String> = Array<String>(files.size, item: "")
+            let files: Array<FileInfo> = FileUtils.fileList(path)
+            let filenames: Array<String> = Array<String>(files.size, repeat: "")
             for (i in 0..files.size) {
-                let fileName: String = files[i].path.fileName ?? ""
+                let fileName: String = files[i].path.fileName
                 filenames[i] = fileName
             }
 
@@ -535,8 +535,8 @@ public class AnimationManager {
                     rmDirByPath(path, filenames[i], isDirectory: false)
                 }
 
-                let directorys: ArrayList<FileInfo> = FileUtils.directoryList(path)
-                let directorynames: Array<String> = Array<String>(directorys.size, item: "")
+                let directorys: Array<FileInfo> = FileUtils.directoryList(path)
+                let directorynames: Array<String> = Array<String>(directorys.size, repeat: "")
                 for (i in 0..directorys.size) {
                     let res: Array<String> = directorys[i].path.toString().split("/", removeEmpty: true)
                     let fileName = res[res.size - 1]

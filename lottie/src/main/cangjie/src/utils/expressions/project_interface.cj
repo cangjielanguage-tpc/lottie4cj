@@ -19,7 +19,7 @@ public class ProjectInterface {
 
     /* comp数据类型：Expressions 中 animation.renderer/CompElement/各个元素类型的Element. */
     public func registerComposition(comp: BaseElement): Unit {
-        this.compositions.append(comp)
+        this.compositions.add(comp)
     }
 
     public func thisProjectFunction(name: String): Option<CompExpressionInterface> {

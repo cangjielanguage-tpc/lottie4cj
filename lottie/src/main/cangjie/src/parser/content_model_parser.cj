@@ -42,9 +42,7 @@ class ContentModelParser {
             case "sr" => model = PolystarShapeParser.parse(reader)
             case "mm" =>
                 model = MergePathsParser.parse(reader)
-                logger.log(
-                    LogLevel.INFO,
-                    "Animation contains merge paths. Merge paths are only " +
+                Hilog.info(0, "[ContentModelParser]", "Animation contains merge paths. Merge paths are only " +
                         "supported on KitKat+ and must be manually enabled by calling " +
                         "enableMergePathsForKitKatAndAbove()."
                 )
