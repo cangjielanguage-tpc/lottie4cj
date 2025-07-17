@@ -1,0 +1,614 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+package lottie.utils
+
+internal import std.io.{InputStream, ByteBuffer}
+
+import ohos.system_date_time.*
+
+import ohos.base.*
+import ohos.state_manage.*
+import ohos.state_macro_manage.*
+import ohos.bundle_manager.*
+
+import ohos.ability.*
+
+import ohos.request.agent.*
+import ohos.request.agent.Progress as AgentProgress
+
+import zip4cj.ZipFile
+import stdx.compress.zlib.*
+import ohos.zlib.ZipOptions
+
+// 筛选.json资源
+func filterJson(way: String): String {
+    let files: Array<FileInfo> = FileUtils.fileList(way) //.fileList()//isRegular()
+    for (i in 0..files.size) {
+        let item: FileInfo = files[i]
+        if (!item.isRegular()) {
+        	continue
+        }
+        let fileNames: String = item.path.fileName
+        if (fileNames.endsWith(".json")) {
+            return fileNames
+        }
+    }
+    return ""
+}
+
+// 判断解压之后的zip中是否有其他文件夹
+func isHaveDirectory(way: String): String {
+    let files: Array<FileInfo> = FileUtils.directoryList(way) //.directoryList()//isDirectory()
+    for (i in 0..files.size) {
+        if (!files[i].isDirectory()){
+            continue
+        }
+        let res: Array<String> = files[i].path.toString().split("/", removeEmpty: true)
+        let fileName = res[res.size - 1]
+        if (fileName != "__MACOSX" && fileName != "images") {
+            if (filterJson("${way}/${fileName}") != "" && isImagesDir("${way}/${fileName}")) {
+                return fileName
+            }
+        }
+    }
+    return ""
+}
+
+// 判断是否是images文件夹
+func isImagesDir(way: String): Bool {
+    let files: Array<FileInfo> = FileUtils.directoryList(way) //.directoryList()//isDirectory()
+    for (i in 0..files.size) {
+        if (!files[i].isDirectory()){
+            continue
+        }
+        let res: Array<String> = files[i].path.toString().split("/", removeEmpty: true)
+        let fileName = res[res.size - 1]
+        if (fileName == "images" && isHaveImg("${way}/${fileName}")) {
+            return true
+        }
+    }
+    return false
+}
+
+// 移动解压之后的文件中带有文件夹的image
+func moveImages(routerDir: String, way: String): Unit {
+    // files创建新images文件夹
+    let dirPath: String = routerDir + "/images"
+    try {
+        FileUtils.createFolder(dirPath, recursive: true)
+    } catch (err: Exception) {
+        Hilog.error(0, "[moveImages]", "mkdir err: ${err.message}")
+    }
+    let newWay = "${routerDir}/${way}/images"
+
+    let directorys: Array<FileInfo> = FileUtils.directoryList(newWay) //.directoryList()//isDirectory()
+    for (i in 0..directorys.size) {
+        let item: FileInfo = directorys[i]
+        if (!item.isDirectory()){
+            continue
+        }
+        let res: Array<String> = item.path.toString().split("/", removeEmpty: true)
+        let fileName = res[res.size - 1]
+        if (fileName == "images" && isHaveImg("${way}/${fileName}")) {
+            let srcPath = "${newWay}/${fileName}"
+            let destPath = "${dirPath}/${fileName}"
+            try {
+                // 移动文件加
+                if (srcPath == destPath) { continue }
+                FileUtils.moveDirectory(srcPath, destPath, true)
+            } catch (err: Exception) {
+                Hilog.error(0, "[createFilesDir]", "moveDirectory err: ${err.message}")
+            }
+        }
+    }
+
+    let files: Array<FileInfo> = FileUtils.fileList(way) //.fileList()//isRegular()
+    for (i in 0..files.size) {
+        let item: FileInfo = files[i]
+        if (!item.isRegular()) {
+        	continue
+        }
+        let fileNames: String = item.path.fileName
+        if (!fileNames.endsWith(".png")) { continue }
+        let srcPath = "${newWay}/${fileNames}"
+        let destPath = "${dirPath}/${fileNames}"
+        try {
+            // 移动文件
+            if (srcPath == destPath) { continue }
+            FileUtils.moveFile(srcPath, destPath, true)
+        } catch (err: Exception) {
+            Hilog.error(0, "[createFilesDir]", "moveFile err: ${err.message}")
+        }
+    }
+}
+
+// 移动解压之后的文件中带有文件夹的json
+func moveJson(routerDir: String, way: String): Unit {
+    let jsonWay = "${routerDir}/${way}"
+    let files: Array<FileInfo> = FileUtils.fileList(jsonWay) //.directoryList()//isDirectory()
+    var newJson: String = ""
+    for (i in 0..files.size) {
+        let item: FileInfo = files[i]
+        if (!item.isDirectory()){
+            continue
+        }
+        let fileNames: String = item.path.fileName
+        if (fileNames.endsWith(".json")) {
+            newJson = fileNames
+            break
+        }
+    }
+
+    let srcPath = "${jsonWay}/${newJson}"
+    let destPath = "${routerDir}/${newJson}"
+    try {
+        // 移动文件
+        if (srcPath == destPath) { return }
+        FileUtils.moveFile(srcPath, destPath, true)
+    } catch (err: Exception) {
+        Hilog.error(0, "[moveJson]", "moveJson err: ${err.message}")
+    }
+}
+
+func decompressZipFile(inFile: String, outFile: String): Int64 {
+    let zipFile = ZipFile(inFile)          // 创建ZipFile类
+    zipFile.setRunInThread(false)          // 设置是否用子线程运行任务
+    zipFile.extractAll(outFile)            // 解压到 output 文件夹, 文件夹不存在则创建
+    zipFile.close()                        // 资源关闭
+
+    //let oprions: ZipOptions = ZipOptions()
+    //try {
+    //	Zip.deCompressFile(inFile, outFile, oprions: options)
+    //} catch (e: Exception) {
+    //	Hilog.error(0, "[decompressZipFile]", "decompress zip file error: ${e.toString()}")
+    //}
+
+    return 0
+}
+
+func decompressGzipFile(srcFileName: String, resultDir: JsonFilesDir): Int64 {
+    try {
+        var destFileName = resultDir.route
+        var lastSegment: String = resultDir.dataName
+        if (lastSegment.endsWith(".tar.gz")) {//.tar.gz  //.gzip
+            lastSegment = lastSegment.replace(".tar.gz", "")
+        } else if (lastSegment.endsWith(".gz")) {
+            lastSegment = lastSegment.replace(".gz", "")
+        }
+        destFileName = destFileName + "/" + lastSegment + ".json"
+
+        var count: Int64 = 0
+
+        let srcFile: File = File(srcFileName, OpenMode.Read)
+        let destFile: File = File(destFileName, OpenMode.Write)
+
+        var tempBuf: Array<UInt8> = Array<UInt8>(1024, repeat: 0)
+        let decompressInputStream: DecompressInputStream = DecompressInputStream(srcFile, wrap: GzipFormat, bufLen: 10000)
+        var isFirst: Bool = true
+        var isStartJson: Bool = false //开始写入json文件中。
+        var startIndex: Int64 = 0 //开始写入json文件的数组下标。
+        while (true) {
+            var readNum = decompressInputStream.read(tempBuf)
+            if (readNum <= 0) {
+                break
+            }
+            startIndex = 0
+            if (isFirst) {
+                isFirst = false
+                if (tempBuf[0] == 123){
+                    isStartJson = true
+                }
+            }
+            if (!isStartJson) {
+                let index: Int64 = tempBuf.indexOf(123) ?? -1
+                if (index != -1) {
+                    // { 之后的字符是： \r\n  ||  \n  ||  空格  ||  双引号 "
+                    if ((tempBuf[index + 1] == 13 && tempBuf[index + 2] == 10) || tempBuf[index + 1] == 10 || tempBuf[index + 1] == 32 || tempBuf[index + 1] == 34) {
+                        startIndex = index
+                        isStartJson = true
+                    }
+                }
+            }
+            if (isStartJson) {
+                destFile.write(tempBuf.slice(startIndex, readNum - startIndex).toArray())
+                count += (readNum - startIndex)
+            }
+        }
+        decompressInputStream.close()
+
+        srcFile.close()
+        destFile.close()
+
+        return count
+    } catch (e: Exception) {
+        // This happens in the Android Studio layout preview.
+        Hilog.error(0, "[decompressGzipFile]","has a error in decompressGzipFile. eror.message: ${e.message}")
+        return 0
+    }
+}
+
+private let ZIP_MAGIC: Array<UInt8> = [0x50, 0x4b, 0x03, 0x04]
+private let GZIP_MAGIC: Array<UInt8> = [0x1f, 0x8b, 0x08]
+
+func isZipCompressed(srcFileName: String): Bool {
+    return matchesMagicBytes(srcFileName, ZIP_MAGIC)
+}
+func isGzipCompressed(srcFileName: String): Bool {
+    return matchesMagicBytes(srcFileName, GZIP_MAGIC)
+}
+private func matchesMagicBytes(srcFileName: String, magic: Array<UInt8>): Bool {
+    try {
+        let buf: Array<Byte> = FileUtils.readLenToBuffer(srcFileName, magic.size)
+        return buf == magic
+    } catch (e: Exception) {
+        // This happens in the Android Studio layout preview.
+        Hilog.error(0, "[matchesMagicBytes]","has a error in matchesMagicBytes. eror.message: ${e.message}")
+        return false
+    }
+}
+
+// 解压和读取
+public func decompressAndReadJson(url: String, cacheDir: String, resultDir: JsonFilesDir): AnimationData {
+    let inFile: String = cacheDir
+    let fileDir = resultDir.route
+    let outFile: String = fileDir
+
+    if (isZipCompressed(inFile)) {
+        decompressZipFile(inFile, outFile)
+    } else if (isGzipCompressed(inFile)) {
+        decompressGzipFile(inFile, resultDir)
+    }
+
+    // 解压完成之后读取 json 数据
+    if (isHaveDirectory(fileDir) != "") {
+        let newFileDir: String = isHaveDirectory(fileDir)
+        moveImages(fileDir, newFileDir)
+        moveJson(fileDir, newFileDir)
+        let zipData: AnimationData = readJson(url, fileDir)
+        // 修改u路径
+        handleZipAssets(zipData, fileDir)
+        return zipData
+    } else {
+        let zipData: AnimationData = readJson(url, fileDir)
+        // 修改u路径
+        handleZipAssets(zipData, fileDir)
+        return zipData
+    }
+
+}
+
+// 判断沙箱中是否有下载的zip资源
+public func isHaveZip(url: String, readPath: String) {
+    let lastIndex: Int64 = url.lastIndexOf("/") ?? -1
+    let result: String = url[(lastIndex + 1)..url.size]
+    // 通过沙箱中下载或者解压的文件名来找到文件所在路径
+    let filePath = readPath + "/" + result
+    //同步方法判断沙箱里的文件是否存在
+    let isExist: Bool = FileUtils.accessSync(filePath)
+    return isExist
+}
+
+// 读取json数据
+public func readJson(url: String, readPath: String, errCallBack!: Option<(String, Exception) -> Unit> = None): AnimationData {
+    try {
+        let existResult: FilePathObject = isCacheExist(url, readPath)
+        if (existResult.isExist) {
+            let arrayBuffer: Array<Byte> = FileUtils.readToEnd(existResult.filePath)
+            let bas: ByteBuffer = ByteBuffer(arrayBuffer.size)
+            bas.write(arrayBuffer)
+
+            // 解码的json数据
+            return AnimationDataParser.parse(bas)
+        }
+    } catch (err: Exception) {
+        Hilog.error(0, "[readJson]", "readJson error, err.message = ${err.message}")
+        if (let Some(v) <- errCallBack) {
+            v("error", err)
+        }
+    }
+    return AnimationData(isNull: true)
+}
+
+// 判断沙箱里的文件是否存在
+public func isCacheExist(url: String, readPath: String): FilePathObject {
+
+    let filePath: String 
+    if (readPath.endsWith(".js") || readPath.endsWith(".json")) {
+        filePath = readPath
+    } else {
+        let lastIndex: Int64 = url.lastIndexOf("/") ?? -1
+        let result: String = url[(lastIndex + 1)..url.size] //最后一个斜杠后的字符串
+        // 通过沙箱中下载或者解压的文件名来找到文件所在路径
+        // 获取uri后缀
+        let suffix: String = getSuffix(url)
+
+        if (suffix == ".js" || suffix == ".json") {
+            filePath = readPath + "/" + result
+        } else {
+            filePath = readPath + "/" + filterJson(readPath)
+        }
+    }
+
+    //同步方法判断沙箱里的文件是否存在
+    let isExist: Bool = FileUtils.accessSync(filePath)
+    return FilePathObject(isExist, filePath)
+}
+
+//改为并发异步调用 ???
+// 下载图片至files
+public func downLoadImgAnimationItem(lottieData: AnimationData, context: Option<GlobalContext>, callback: (AnimationData) -> Unit): Unit {
+    let imgRouterFilesDir: String = createImageFilesDir(context)
+
+    let assets: Array<Asset> = lottieData.assets
+    let mtx: ReentrantMutex = ReentrantMutex()
+
+    let loadedAssets: AtomicInt64 = AtomicInt64(0)
+    let notLoadedAssets: AtomicInt64 = AtomicInt64(0)
+
+    var num: Int64 = 0
+    for (i in 0..assets.size){
+        let item = assets[i]
+        if (item.id != "" && item.p.startsWith("http")) {
+            item.sourceFrom = 3  //区别图片来源：1.来自\resources\rawfile\， 2.来自手机中保存的图片，3.来自网络下载。
+            downLoadImgOnce(item, context, imgRouterFilesDir, i, loadedAssets, notLoadedAssets, mtx)
+            num++
+        }
+    }
+
+    let totalImages: Int64 = num
+
+    func checkDownLoadImg(): Unit {
+        if ((loadedAssets.load() + notLoadedAssets.load()) < totalImages) {
+            Timer.once(Duration.millisecond * 20, checkDownLoadImg)
+        } else {
+            // 下载成功加载网络
+            handleAssets(lottieData)
+            callback(lottieData)
+        }
+    }
+    checkDownLoadImg()
+}
+
+public func downLoadImg(lottieData: AnimationData, context: Option<GlobalContext>, callback: (AnimationData, Bool) -> Unit): Unit {
+    let imgRouterFilesDir: String = createImageFilesDir(context)
+
+    let assets: Array<Asset> = lottieData.assets
+    let mtx: ReentrantMutex = ReentrantMutex()
+
+    let loadedAssets: AtomicInt64 = AtomicInt64(0)
+    let notLoadedAssets: AtomicInt64 = AtomicInt64(0)
+
+    var num: Int64 = 0
+    for (i in 0..assets.size){
+        let item = assets[i]
+        if (item.id != "" && item.p.startsWith("http")) {
+            item.sourceFrom = 3  //区别图片来源：1.来自\resources\rawfile\， 2.来自手机中保存的图片，3.来自网络下载。
+            downLoadImgOnce(item, context, imgRouterFilesDir, i, loadedAssets, notLoadedAssets, mtx)
+            num++
+        }
+    }
+
+    let totalImages: Int64 = num
+
+    func checkDownLoadImg(): Unit {
+        if ((loadedAssets.load() + notLoadedAssets.load()) < totalImages) {
+            Timer.once(Duration.millisecond * 10, checkDownLoadImg)
+        } else {
+            // 下载成功加载网络
+            handleAssets(lottieData)
+            callback(lottieData, true)
+        }
+    }
+    checkDownLoadImg()
+}
+
+
+func downLoadImgOnce(item: Asset, context: Option<GlobalContext>, imgRouterFilesDir: String,
+    index: Int64, loadedAssets: AtomicInt64, notLoadedAssets: AtomicInt64, mtx: ReentrantMutex
+): Unit {
+
+    spawn {
+        try (imageLoadLimiter = ImageLoadLimiter()) {
+            let item_id: String = item.id
+            let item_p: String = item.p
+            if (item_id != "" && item_p.startsWith("http")) {
+
+                let downloadConfig = Config(
+                    action: Action.DOWNLOAD,
+                    url: item_p,
+                    mode: Mode.BACKGROUND,  //mode: Mode.FOREGROUND,
+                    overwrite: true,
+                    method: "GET",
+                    saveas: "${imgRouterFilesDir}/${item_id}.png",
+                    gauge: true
+                )
+                if (Thread.currentThread.hasPendingCancellation) {
+                    return
+                }
+//                let stageContext = getStageContext(context.getOrThrow())
+                let stageContext = context.getOrThrow().stageContext.getOrThrow()
+                if (Thread.currentThread.hasPendingCancellation) {
+                    return
+                }
+                let downloadTask = create(stageContext, downloadConfig)
+                if (Thread.currentThread.hasPendingCancellation) {
+                    return
+                }
+                let downloadPath: String = downloadConfig.saveas ?? ""
+
+                func completeCallBackInside(): Unit {
+                    let srcPath = downloadPath
+                    let destPath = "${imgRouterFilesDir}/${item_id}.png"
+                    try {
+                        // 移动文件
+                        if (srcPath != destPath) {
+                            FileUtils.moveFile(srcPath, destPath, true)
+                        }
+                        synchronized(mtx) {
+                            loadedAssets.fetchAdd(1)
+                        }
+                    } catch (err: Exception) {
+                        Hilog.error(0, "[downLoadImg]", "moveFile failed: ${err.message}")
+                        synchronized(mtx) {
+                            notLoadedAssets.fetchAdd(1)
+                        }
+                    }
+                }
+                let createOnCallback = ProgressCallback(completeCallBackInside, downloadTask)
+                downloadTask.on("completed", createOnCallback)
+
+                func failedCallBack(): Unit {
+                    Hilog.error(0, "[downLoadImg]", "downLoad File failed.")
+                    synchronized(mtx) {
+                        notLoadedAssets.fetchAdd(1)
+                    }
+                    return
+                }
+                let failedCallback: ProgressCallback = ProgressCallback(failedCallBack, downloadTask)
+                downloadTask.on("failed", failedCallback)
+
+                if (Thread.currentThread.hasPendingCancellation) {
+                    return
+                }
+                downloadTask.start()
+            }
+        } catch (e: Exception) {
+            synchronized(mtx) {
+                notLoadedAssets.fetchAdd(1)
+            }
+        }
+    }
+
+}
+
+// 判断files目录下是否有下载的图片
+public func isHaveImg(way: String): Bool {
+    let files: Array<FileInfo> = FileUtils.fileList(way) //.fileList()//isRegular()
+    for (i in 0..files.size) {
+        let item: FileInfo = files[i]
+        if (!item.isRegular()) {
+        	continue
+        }
+        let fileNames: String = item.path.fileName
+        if (fileNames.endsWith(".png")) {
+            return true
+        }
+    }
+    return false
+}
+
+// 获取uri后缀
+public func getSuffix(url: String): String {
+    let lastDotIndex: Int64 = url.lastIndexOf(".") ?? -1
+    if (lastDotIndex != -1 && lastDotIndex < url.size - 1) {
+        return url[lastDotIndex..url.size]
+    } else {
+        return "url中没有找到合适的扩展名"
+    }
+}
+
+// 处理下载有图片json中的assets
+public func handleAssets(lottieData: AnimationData): Unit {
+    for(item in lottieData.assets) {
+        if (item.id != "" && item.p.startsWith("http")) {
+            item.sourceFrom = 3  //区别图片来源：1.来自\resources\rawfile\， 2.来自手机中保存的图片，3.来自网络下载。
+            item.p = "${item.id}.png"
+            if (item.u == "") {
+                item.u = "lottie/loadImages/"
+                item.e = 0
+            }
+        }
+    }
+}
+
+// 处理下载的zip资源图片路径
+public func handleZipAssets(lottieData: AnimationData, zipRoute: String): Unit {
+    let parts: Array<String> = zipRoute.split("/")
+    let lastPart: Array<String> = parts.slice(parts.size-3, 3)
+    let lastPartStr: String = String.join(lastPart, delimiter: "/")
+    // 修改u路径
+    for(i in 0..lottieData.assets.size){
+        let item: Asset = lottieData.assets[i]
+        item.sourceFrom = 3  //区别图片来源：1.来自\resources\rawfile\， 2.来自手机中保存的图片，3.来自网络下载。
+        if (!item.id.isEmpty() && !item.u.isEmpty()) {
+            item.u = "${lastPartStr}/images/"
+        }
+    }
+}
+
+// 创建zip和json文件目录
+public func createFilesDir(url: String, context: Option<GlobalContext>): JsonFilesDir {
+    let parts: Array<String> = url.split("/")
+    let secondLastSegment: String = parts[parts.size - 2]
+    let lastSegmentWithExtension: String = parts[parts.size - 1]
+    //去除后缀 .zip / .json
+    var lastSegment: String = lastSegmentWithExtension
+    if (lastSegmentWithExtension.endsWith(".zip")) {
+        lastSegment = lastSegmentWithExtension.replace(".zip", "")
+    } else if (lastSegmentWithExtension.endsWith(".tar.gz")) {//.tar.gz  //.gzip
+        lastSegment = lastSegmentWithExtension.replace(".tar.gz", "")
+    } else if (lastSegmentWithExtension.endsWith(".gz")) {
+        lastSegment = lastSegmentWithExtension.replace(".gz", "")
+    } else if (lastSegmentWithExtension.endsWith(".json")) {
+        lastSegment = lastSegmentWithExtension.replace(".json", "")
+    }
+
+    let dirPath = FileUtils.downloadFolderLottie
+
+    let dirPathFirst: String = String.join([dirPath, secondLastSegment], delimiter: "/")
+    let dirPathSecond: String = String.join([dirPathFirst, lastSegment], delimiter: "/")
+    let dirArray: Array<String> = [dirPath, dirPathFirst, dirPathSecond]
+    try {
+        for(str in dirArray){
+            let res: Bool = exists(str)
+            if (!res) {
+                FileUtils.createFolder(str, recursive: true)
+            }
+        }
+    } catch (err: Exception) {
+        Hilog.error(0, "[createFilesDir]", "mkdir err: ${err.message}")
+    }
+    return JsonFilesDir(dataName: lastSegmentWithExtension, route: dirPathSecond)
+}
+
+// 创建images数据的文件夹
+public func createImageFilesDir(context: Option<GlobalContext>): String {
+    let dirImgPath = getContext()
+
+    let dirImgPathFirst: String = FileUtils.downloadFolderImage
+    let dirImagesArray: Array<String> = [dirImgPath, dirImgPathFirst]
+    try {
+        for(str in dirImagesArray){
+            let res: Bool = exists(str)
+            if (!res) {
+                FileUtils.createFolder(str, recursive: true)
+            }
+        }
+    } catch (err: Exception) {
+        Hilog.error(0, "[createFilesDir]", "mkdir imgFiles err: ${err.message}")
+    }
+    return dirImgPathFirst
+}
+
+let semaphore: Semaphore = Semaphore(50)
+
+class ImageLoadLimiter <: Resource {
+    let closed = AtomicBool(false)
+
+    init() {
+        semaphore.acquire()
+    }
+
+    public override func isClosed(): Bool {
+        return closed.load()
+    }
+
+    public override func close(): Unit {
+        if (isClosed()) {
+            return
+        }
+        semaphore.release()
+        closed.store(true)
+    }
+}

@@ -1,0 +1,271 @@
+/*
+ * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
+ */
+package lottie.elements
+
+internal import ohos.font.*
+
+public class CvTextElement <: ITextElement {
+    var textSpans: ArrayList<TextSpans>
+    var yOffset: Int64
+    var fillColorAnim: Bool
+    var strokeColorAnim: Bool
+    var strokeWidthAnim: Bool
+    var stroke: Bool
+    var fill: Bool
+    var justifyOffset: Int64
+    var currentRender: Option<String>
+    var values: ValuesData
+
+    public init(data: Layer, globalData: GlobalData,
+        buildElementParentingInComp: (BaseElement, Int64, ArrayList<BaseElement>) -> Unit,
+        compType!: Int8 = 0, comp!: Array<BaseElement> = Array<BaseElement>(),
+        getElementByIdInRender!: (Int64) -> Option<BaseElement> = { m => Option<BaseElement>.None }, compDataInd!: Int64 = -1
+    ) {
+        super(data, globalData)
+        this.compType = compType
+        this.compDataInd = compDataInd
+        this.comp = comp
+        this.buildElementParentingInComp = buildElementParentingInComp
+        this.getElementByIdInRender = getElementByIdInRender
+        this.textSpans = ArrayList<TextSpans>()
+        this.yOffset = 0
+        this.fillColorAnim = false
+        this.strokeColorAnim = false
+        this.strokeWidthAnim = false
+        this.stroke = false
+        this.fill = false
+        this.justifyOffset = 0
+        this.currentRender = None
+        this.renderType = "canvas"
+        this.values = ValuesData(Color(0, 0, 0, alpha: 0.0), Color(0, 0, 0, alpha: 0.0), 0.0,
+            FValue(0.0, ""))
+        this.initElement(data, globalData)
+    }
+
+    public func tHelper() {}
+
+    public func buildNewText() {
+        var documentData = this.textProperty.currentData
+        var hasFill = false
+        if (documentData.fc.isEmpty()) {
+            this.values.fill = Color(0, 0, 0, alpha: 0.0)
+        } else {
+            hasFill = true
+            this.values.fill = this.buildColor(documentData.fc)
+        }
+        this.fill = hasFill
+        var hasStroke = false
+        if (!documentData.sc.isEmpty()) {
+            hasStroke = true
+            this.values.stroke = this.buildColor(documentData.sc)
+            this.values.sWidth = documentData.sw
+        }
+
+        var fontData = this.globalData.fontManager.getFontByName(documentData.f)
+        var letters: ArrayList<Letter> = documentData.l
+        var matrixHelper: Matrix = Matrix()
+        this.stroke = hasStroke
+        this.values.fValue.value1 = documentData.finalSize
+        this.values.fValue.value2 = this.globalData.fontManager.getFontByName(documentData.f).fFamily
+        var len: Int64 = documentData.finalText.size
+        var xPos = 0.0
+        var yPos = 0.0
+        var firstLine = true
+        var cnt = 0
+        var singleShape = this.data.singleShape
+        var trackingOffset = Float64(documentData.tr) * 0.001 * documentData.finalSize
+        for (i in 0..len) {
+            var charData = this.globalData.fontManager.getCharData(documentData.finalText[i], fontData.fStyle,
+                this.globalData.fontManager.getFontByName(documentData.f).fFamily)
+            var shapeData = charData.data
+            matrixHelper.reset()
+            if (singleShape && letters[i].n) {
+                xPos = -trackingOffset
+                yPos += documentData.yOffset
+                if (firstLine) {
+                    yPos += 1.0
+                } else {
+                    yPos += 0.0
+                }
+                firstLine = false
+            }
+            var shapes = if (shapeData.shapes.size > 0) {
+                (shapeData.shapes[0] as ShapeGroup).getOrThrow().it
+            } else {
+                ArrayList<ContentModel>()
+            }
+            var jLen = shapes.size
+            matrixHelper.scale(documentData.finalSize / 100.0, documentData.finalSize / 100.0)
+            if (singleShape) {
+                this.applyTextPropertiesToMatrix(documentData, matrixHelper, letters[i].line, xPos, yPos)
+            }
+            var commands = Array<ArrayList<Float64>>(jLen, repeat: ArrayList<Float64>())
+            var commandsCounter = 0
+            for (j in 0..jLen) {
+                if (shapes[j].ty == "sh") {
+                    var pathNodes = ((shapes[j] as ShapePath).getOrThrow().ks[0] as Keyframe<ShapeData>).getOrThrow().k.getOrThrow()
+                    var kLen = pathNodes.i.size
+                    var pathArr = ArrayList<Float64>()
+                    var k = 1
+                    while (k < kLen) {
+                        if (k == 1) {
+                            pathArr.add(all: [matrixHelper.applyToX(pathNodes.v[0].x, pathNodes.v[0].y, 0.0),
+                                matrixHelper.applyToY(pathNodes.v[0].x, pathNodes.v[0].y, 0.0)])
+                        }
+                        pathArr.add(all: [matrixHelper.applyToX(pathNodes.o[k - 1].x, pathNodes.o[k - 1].y, 0.0),
+                            matrixHelper.applyToY(pathNodes.o[k - 1].x, pathNodes.o[k - 1].y, 0.0),
+                            matrixHelper.applyToX(pathNodes.i[k].x, pathNodes.i[k].y, 0.0),
+                            matrixHelper.applyToY(pathNodes.i[k].x, pathNodes.i[k].y, 0.0),
+                            matrixHelper.applyToX(pathNodes.v[k].x, pathNodes.v[k].y, 0.0),
+                            matrixHelper.applyToY(pathNodes.v[k].x, pathNodes.v[k].y, 0.0)])
+                        k += 1
+                    }
+                    pathArr.add(all: [matrixHelper.applyToX(pathNodes.o[k - 1].x, pathNodes.o[k - 1].y, 0.0),
+                        matrixHelper.applyToY(pathNodes.o[k - 1].x, pathNodes.o[k - 1].y, 0.0),
+                        matrixHelper.applyToX(pathNodes.i[0].x, pathNodes.i[0].y, 0.0),
+                        matrixHelper.applyToY(pathNodes.i[0].x, pathNodes.i[0].y, 0.0),
+                        matrixHelper.applyToX(pathNodes.v[0].x, pathNodes.v[0].y, 0.0),
+                        matrixHelper.applyToY(pathNodes.v[0].x, pathNodes.v[0].y, 0.0)])
+                    commands[commandsCounter] = pathArr
+                    commandsCounter += 1
+                }
+            }
+            if (singleShape) {
+                xPos += letters[i].l
+                xPos += trackingOffset
+            }
+            if (this.textSpans.size > cnt) {
+                this.textSpans[cnt].elem = commands
+            } else {
+                this.textSpans.add(all: ArrayList<TextSpans>(cnt -textSpans.size + 1, {i => TextSpans(Array<ArrayList<Float64>>())}))
+                this.textSpans[cnt] = TextSpans(commands)
+            }
+            cnt += 1
+        }
+    }
+    public override func renderInnerContent() {
+        var ctx = this.canvasContext
+        ctx.font(size: this.values.fValue.value1, family: this.values.fValue.value2)
+        ctx.lineCap(LineCapStyle.Butt)
+        ctx.lineJoin(LineJoinStyle.Miter)
+        ctx.miterLimit(4)
+
+        if (!this.data.singleShape) {
+            this.textAnimator.getMeasures(this.textProperty.currentData, this.lettersChangedFlag)
+        }
+
+        var jLen: Int64
+        var kLen: Int64
+        var renderedLetters: ArrayList<LetterProps> = this.textAnimator.renderedLetters
+        var letters = this.textProperty.currentData.l
+        var len = letters.size
+        var renderedLetter: ?LetterProps = None
+        var lastFill: ?Color= None
+        var lastStroke: ?Color = None
+        var lastStrokeW: ?Int64 = None
+        var commands = Array<ArrayList<Float64>>()
+        var pathArr=ArrayList<Float64>()
+        for (i in 0..len) {
+            if (!letters[i].n) {
+                renderedLetter = renderedLetters[i];
+                if (let Some(v) <- renderedLetter) {
+                    this.globalData.save(false)
+                    this.globalData.ctxTransform(v.p)
+                    this.globalData.ctxOpacity(Float64(v.o))
+                }
+                if (this.fill) {
+                  if (renderedLetter.isSome() && renderedLetter.getOrThrow().fc.isSome()) {
+                    if (lastFill.isNone() || (lastFill.getOrThrow().toUInt32() != renderedLetter.getOrThrow().fc.getOrThrow().toUInt32())) {
+                      lastFill = renderedLetter.getOrThrow().fc
+                      ctx.fillStyle(renderedLetter.getOrThrow().fc.getOrThrow())
+                    }
+                  } else if (lastFill.isNone() || (lastFill.getOrThrow().toUInt32() != this.values.fill.toUInt32())) {
+                    lastFill = this.values.fill
+                    ctx.fillStyle(this.values.fill)
+                  }
+                  commands = this.textSpans[i].elem
+                  jLen = commands.size
+                  ctx.beginPath()
+                  for (j in 0..jLen) {
+                    pathArr = commands[j]
+                    kLen = pathArr.size
+                    ctx.moveTo(pathArr[0], pathArr[1])
+                    for (k in 2..kLen: 6) {
+                      ctx.bezierCurveTo(pathArr[k], pathArr[k + 1], pathArr[k + 2], pathArr[k + 3], pathArr[k + 4], pathArr[k + 5])
+                    }
+                  }
+                  ctx.closePath()
+                  ctx.fill()
+                }
+                if (this.stroke) {
+                  if (renderedLetter.isSome() && renderedLetter.getOrThrow().sw !=0) {
+                    if (lastStrokeW.isNone() || (lastStrokeW.getOrThrow() != renderedLetter.getOrThrow().sw)) {
+                      lastStrokeW = renderedLetter.getOrThrow().sw
+                      ctx.lineWidth(renderedLetter.getOrThrow().sw)
+                    }
+                  } else if (lastStrokeW.isNone() || (Float64(lastStrokeW.getOrThrow()) != this.values.sWidth)) {
+                    lastStrokeW = Int64(this.values.sWidth)
+                    ctx.lineWidth(this.values.sWidth)
+                  }
+                  if (renderedLetter.isSome() && renderedLetter.getOrThrow().sc.toUInt32() != Color(0,0,0).toUInt32()) {
+                    if (lastStroke.isNone() || (lastStroke.getOrThrow().toUInt32() != renderedLetter.getOrThrow().sc.toUInt32())) {
+                      lastStroke = renderedLetter.getOrThrow().sc
+                      ctx.strokeStyle(renderedLetter.getOrThrow().sc)
+                    }
+                  } else if (lastStroke.isNone() || (lastStroke.getOrThrow().toUInt32() != this.values.stroke.toUInt32())) {
+                    lastStroke = this.values.stroke
+                    ctx.strokeStyle(this.values.stroke)
+                  }
+                  commands = this.textSpans[i].elem
+                  jLen = commands.size
+                  this.globalData.canvasContext.beginPath()
+                  for (j in 0..jLen) {
+                    pathArr = commands[j]
+                    kLen = pathArr.size
+                    this.globalData.canvasContext.moveTo(pathArr[0], pathArr[1])
+                    for (k in 2..kLen:6) {
+                      this.globalData.canvasContext.bezierCurveTo(pathArr[k], pathArr[k + 1], pathArr[k + 2], pathArr[k + 3], pathArr[k + 4], pathArr[k + 5])
+                    }
+                  }
+                  this.globalData.canvasContext.closePath()
+                  this.globalData.canvasContext.stroke()
+                }
+                if (renderedLetter.isSome()) {
+                    this.globalData.restore(false)
+                }
+            }
+        }
+    }
+}
+
+public class ValuesData {
+    var fill: Color
+    var stroke: Color
+    var sWidth: Float64
+    var fValue: FValue
+
+    public init(fill: Color, stroke: Color, sWidth: Float64, fValue: FValue) {
+        this.fill = fill
+        this.stroke = stroke
+        this.sWidth = sWidth
+        this.fValue = fValue
+    }
+}
+
+public class FValue {
+    var value1: Length
+    var value2: String
+
+    public init(value1: Length, value2: String) {
+        this.value1 = value1
+        this.value2 = value2
+    }
+}
+
+public class TextSpans {
+    var elem: Array<ArrayList<Float64>>
+    public init(elem: Array<ArrayList<Float64>>) {
+        this.elem = elem
+    }
+}

@@ -1,33 +1,40 @@
 package ohos_app_cangjie_entry
 
-internal import ohos.base.LengthProp
-internal import ohos.component.Column
-internal import ohos.component.Row
-internal import ohos.component.Button
-internal import ohos.component.Text
-internal import ohos.component.CustomView
-internal import ohos.component.CJEntry
-internal import ohos.component.loadNativeView
-internal import ohos.state_manage.SubscriberManager
-internal import ohos.state_manage.ObservedProperty
-internal import ohos.state_manage.LocalStorage
-import ohos.state_macro_manage.Entry
-import ohos.state_macro_manage.Component
-import ohos.state_macro_manage.State
-import ohos.state_macro_manage.r
+internal import ohos.ark_interop.*
+internal import ohos.ark_interop_helper.*
+import ohos.hilog.Hilog
+import lottie.utils.globContext
 
-@Entry
-@Component
-class EntryView {
-    @State
-    var message: String = "Hello Cangjie"
-    func build() {
-        Row {
-            Column {
-                Button(message).onClick {
-                    evt => AppLog.info("Hello Cangjie")
-                }.fontSize(40).height(80)
-            }.width(100.percent)
-        }.height(100.percent)
+//public class GlobalContext {
+//	static var _context: Option<StageContext> = None
+//    public static func setContext(context: StageContext) {
+//    	_context = context
+//    }
+//    public static func getContext(): Option<StageContext> {
+//    	return _context
+//    }
+//}
+
+// 全局函数，提供给arkTs调用，传递context参数
+func setContext(runtime: JSContext, callInfo: JSCallInfo): JSValue {
+	let jsEnv = runtime.getNapiEnv()
+    let jsValue = arkTsValuetoNapiValue(jsEnv, callInfo[0])
+    if (isStageMode(jsEnv, jsValue)) {
+        // getContextStageMode(jsEnv, jsValue)方法返回StageContext，赋值给lottie库里的全局context即可
+        globContext.stageContext = getContextStageMode(jsEnv, jsValue)
+//        globContext.filesDir = callInfo[0].asObject()["filesDir"].toString()
+        Hilog.error(0xFFFF, "setContext", "[setContext]------------ 是否接收到StageContext：${globContext.stageContext.isNone()}")
     }
+    runtime.undefined().toJSValue()
+}
+
+func testCJ(runtime: JSContext, callInfo: JSCallInfo): JSValue {
+    let result = "Hello ${callInfo[0].toString(runtime)}"
+    runtime.string(result).toJSValue()
+}
+
+let EXPORT_MODULE = JSModule.registerModule {
+    runtime, exports =>
+        exports["testCJ"] = runtime.function(testCJ).toJSValue()
+        exports["setContext"] = runtime.function(setContext).toJSValue()
 }

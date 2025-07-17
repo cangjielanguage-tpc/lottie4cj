@@ -17,3 +17,5 @@
 oh-package-lock.json5
 **/cjpm.lock
 /.bitfun
+**/IDL_Dependencies_List~
+**/build-script-cache
