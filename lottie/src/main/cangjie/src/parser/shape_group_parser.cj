@@ -17,7 +17,7 @@ class ShapeGroupParser {
                 case "it" =>
                     reader.startArray()
                     while (reader.peek() != JsonToken.EndArray) {
-                        items.append(ContentModelParser.parse(reader))
+                        items.add(ContentModelParser.parse(reader))
                     }
                     reader.endArray()
                 case "cix" => cix = reader.readValue<Int64>()

@@ -273,10 +273,10 @@ public class AnimationDataParser {
     /**
      * 将动画的 json 数据，解析封装到 AnimationData 实例中。
      * 
-     * 参数 bas - 读取到的动画的 json 数据存储到 ByteArrayStream 流中。
+     * 参数 bas - 读取到的动画的 json 数据存储到 ByteBuffer 流中。
      * 返回值 AnimationData - 封装动画的 json 数据的实例。
      */
-    public static func parse(bas: ByteArrayStream): AnimationData
+    public static func parse(bas: ByteBuffer): AnimationData
 }
 ```
 

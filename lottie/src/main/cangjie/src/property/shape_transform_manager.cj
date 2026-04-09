@@ -29,8 +29,8 @@ public class ShapeTransformManager {
             return v
         } else {
             let seq: Sequence = Sequence(transforms: transforms.clone(), finalTransform: Matrix(), _mdf: false)
-            this.sequences.put(key, seq)
-            this.sequenceList.append(seq)
+            this.sequences.add(key, seq)
+            this.sequenceList.add(seq)
             return seq
         }
     }

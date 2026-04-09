@@ -19,7 +19,7 @@ public class CvMaskElement <: RenderableElement {
         super(data, element.globalData)
         this.element = element
         this.masksProperties = this.data.masksProperties
-        this.viewData = Array<ShapePropertyFactory>(this.masksProperties.size,item: unsafe {zeroValue<ShapePropertyFactory>()})
+        this.viewData = Array<ShapePropertyFactory>(this.masksProperties.size,repeat: unsafe {zeroValue<ShapePropertyFactory>()})
         this.list = ArrayList<Array<Float64>>()
         var len = this.masksProperties.size
         var hasMasks = false
@@ -97,7 +97,7 @@ public class CvMaskElement <: RenderableElement {
                   j = jLen - 1
                   while ( j > 0) {
                     var ptsd = transform.applyToTriplePoints([data.o[j - 1].x,data.o[j - 1].y], [data.i[j].x,data.i[j].y], [data.v[j].x,data.v[j].y]);
-                    this.list.append(ptsd);
+                    this.list.add(ptsd);
                          j--
                   }
 

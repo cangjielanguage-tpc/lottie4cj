@@ -92,7 +92,7 @@ public class CreateNS <: ToString & Equatable<CreateNS> {
      */
     public func setAttributeNS(n: String, k: String, v: String): Unit {
         this.setAttribute("xmlns", n)
-        this.ks.put(k, v)
+        this.ks.add(k, v)
     }
 
     /**
@@ -102,7 +102,7 @@ public class CreateNS <: ToString & Equatable<CreateNS> {
      * @param v - Type of String.
      */
     public func setAttribute(k: String, v: String): Unit {
-        this.ks.put(k, v)
+        this.ks.add(k, v)
     }
 
     /**
@@ -112,7 +112,7 @@ public class CreateNS <: ToString & Equatable<CreateNS> {
      */
     public func appendChild(element: Option<CreateNS>): Unit {
         if (let Some(v) <- element) {
-            this.childs.append(v)
+            this.childs.add(v)
         }
     }
 
@@ -124,7 +124,7 @@ public class CreateNS <: ToString & Equatable<CreateNS> {
      */
     public func insertBefore(newNode: CreateNS, referenceNode: CreateNS): Unit {
         let addindex: Int64 = this.indexOf(referenceNode, this.childs)
-        this.childs.insert(addindex, newNode)
+        this.childs.add(newNode, at: addindex)
     }
 
     func indexOf(referenceNode: CreateNS, arr: ArrayList<CreateNS>): Int64 {

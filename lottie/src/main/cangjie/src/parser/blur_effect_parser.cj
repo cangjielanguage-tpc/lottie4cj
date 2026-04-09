@@ -12,7 +12,7 @@ class BlurEffectParser {
                 case "ef" =>
                     reader.startArray()
                     while (reader.peek() != EndArray) {
-                        ef.append(maybeParseInnerEffect(reader))
+                        ef.add(maybeParseInnerEffect(reader))
                     }
                     reader.endArray()
                 case _ => reader.skip()

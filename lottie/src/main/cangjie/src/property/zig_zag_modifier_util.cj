@@ -9,8 +9,8 @@ func setPoint(outputBezier: ShapeData, point: PointF, angle: Float64, direction:
 }
 
 func setPoint(outputBezier: ShapeData, point: Array<Float64>, angle: Float64, direction: Float64, amplitude: Float64, outAmplitude: Float64, inAmplitude: Float64): Unit {
-    let angO = angle - Float64.PI / 2.0
-    let angI = angle + Float64.PI / 2.0
+    let angO = angle - Float64.GetPI() / 2.0
+    let angI = angle + Float64.GetPI() / 2.0
     let px: Float64 = point[0] + cos(angle) * direction * amplitude
     let py: Float64 = point[1] - sin(angle) * direction * amplitude
 
@@ -30,7 +30,7 @@ func getPerpendicularVector(pt1: PointF, pt2: PointF): Array<Float64> {
         pt2.x - pt1.x,
         pt2.y - pt1.y
     ]
-    let rot: Float64 = -Float64.PI * 0.5
+    let rot: Float64 = -Float64.GetPI() * 0.5
     let rotatedVector: Array<Float64> = [
       cos(rot) * vector[0] - sin(rot) * vector[1],
       sin(rot) * vector[0] + cos(rot) * vector[1]

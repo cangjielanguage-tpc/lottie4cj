@@ -37,7 +37,7 @@ public class DownLoadSource {
             Timer.once(Duration.millisecond * 100, inside)
         } else {
             // 将URI添加到Map中，表示下载已经开始
-            downloadUri.put(uri, true)
+            downloadUri.add(uri, true)
 
             let downloadConfig = Config(
                 action: Action.DOWNLOAD,

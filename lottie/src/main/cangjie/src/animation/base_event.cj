@@ -33,13 +33,13 @@ public open class BaseEvent <: BMEvent {
     
     public func addEventListener(eventName: String, callback: AnimationEventCallback): () -> Unit {
         var view = this._cbs.entryView(eventName)
-        if (let Some(v) <- view.getValue()) {
+        if (let Some(v) <- view.value) {
             v
         } else {
             let arr = ArrayList<AnimationEventCallback>()
-            view.setValue(arr)
+            view.value = arr
             arr
-        }.append(callback)
+        }.add(callback)
 
         return { => this.removeEventListener(eventName, callback) }
     }
@@ -64,7 +64,7 @@ public open class BaseEvent <: BMEvent {
                     while (i < len) {
                         if (refEq(callbacks[i], callback)) {
                             //splice: 从数组中添加或删除元素。--此处是删除--删除下标 i 处元素
-                            callbacks.remove(i)
+                            callbacks.remove(at: i)
 
                             i -= 1
                             len -= 1

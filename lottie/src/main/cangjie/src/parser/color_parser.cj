@@ -22,7 +22,7 @@ public class ColorParser <: ValueParser<Array<Float64>> {
      */
     public func parse(reader: JsonReader): Array<Float64> {
         let isArray = reader.peek() == JsonToken.BeginArray
-        let res: Array<Float64> = Array<Float64>(4, item: 1.0)
+        let res: Array<Float64> = Array<Float64>(4, repeat: 1.0)
         if (isArray) {
             reader.startArray()
         }

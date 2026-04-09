@@ -119,7 +119,7 @@ public open class IShapeElement <: BaseElement {
                 return
             }
         }
-        elements.append(ProcessedElement(elem, pos))
+        elements.add(ProcessedElement(elem, pos))
     }
     
     public func prepareFrame(num: Float64) {

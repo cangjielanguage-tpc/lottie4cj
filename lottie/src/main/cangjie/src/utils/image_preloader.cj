@@ -375,10 +375,10 @@ public class ImagePreloader {
                 }
                 if (assets[i].t == "" || assets[i].t == "seq") {
                     this.totalImages += 1
-                    this.images.append(this._createImageData(assets[i]))
+                    this.images.add(this._createImageData(assets[i]))
                 } else if (assets[i].t == "3") {
                     this.totalFootages += 1
-                    this.images.append(this.createFootageData(assets[i]))
+                    this.images.add(this.createFootageData(assets[i]))
                 }
             }
         }

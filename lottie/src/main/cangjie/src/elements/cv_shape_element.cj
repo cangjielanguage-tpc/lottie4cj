@@ -158,7 +158,7 @@ public class CvShapeElement <: IShapeElement {
                 styleElem.r = "nonzero"
             }
         }
-        this.stylesList.append(styleElem)
+        this.stylesList.add(styleElem)
         elementData.style = styleElem
         return elementData
     }
@@ -203,7 +203,7 @@ public class CvShapeElement <: IShapeElement {
             elementData = CvShapeData(this.globalData, this.data, data, this.stylesList, this.transformsManager, dynamicProperties: this.dynamicProperties, compType: 1, renderedFrame: [this.getRenderedFrameInElemComp], compDataInd: cdInd)
         }
 
-        this.shapes.append(elementData)
+        this.shapes.add(elementData)
         this.addShapeToModifiers(elementData)
         return elementData
     }
@@ -227,7 +227,7 @@ public class CvShapeElement <: IShapeElement {
         var len = this.stylesList.size
         for (i in 0..len) {
             if (!this.stylesList[i].closed) {
-                this.stylesList[i].transforms.append(transform)
+                this.stylesList[i].transforms.add(transform)
             }
         }
     }
@@ -236,7 +236,7 @@ public class CvShapeElement <: IShapeElement {
         var len = this.stylesList.size
         for (i in 0..len) {
             if (!this.stylesList[i].closed && this.stylesList[i].transforms.size > i) {
-                this.stylesList[i].transforms.remove(this.stylesList[i].transforms.size - 1)
+                this.stylesList[i].transforms.remove(at: this.stylesList[i].transforms.size - 1)
             }
         }
     }
@@ -267,7 +267,7 @@ public class CvShapeElement <: IShapeElement {
                 arr[i]._shouldRender = shouldRender
             } else {
                 if(i > (itemsData.size-1) ) {
-                    itemsData.appendAll(ArrayList<ContentModelElement>(i -itemsData.size + 1, {i => ContentModelElement()}))
+                    itemsData.add(all: ArrayList<ContentModelElement>(i -itemsData.size + 1, {i => ContentModelElement()}))
                 }
                 var sc = prevViewData[processedPos - 1]
                 itemsData[i] = prevViewData[processedPos - 1]
@@ -282,7 +282,7 @@ public class CvShapeElement <: IShapeElement {
                     fs.style.closed = false
                 }
 
-                ownStyles.append(fs.style)
+                ownStyles.add(fs.style)
             } else if (arr[i].ty == "gr") {
                 var gr: ShapeGroupElement = ShapeGroupElement()
                 if (processedPos == 0) {
@@ -303,7 +303,7 @@ public class CvShapeElement <: IShapeElement {
                     itemsData[i] = currentTransform
                 }
                 let ate: AnimatableTransformElement = (itemsData[i] as AnimatableTransformElement).getOrThrow()
-                ownTransforms.append(ate)
+                ownTransforms.add(ate)
                 this.addTransformToStyleList(ate)
             } else if (arr[i].ty == "sh" || arr[i].ty == "rc" || arr[i].ty == "el" || arr[i].ty == "sr") {
                 if (processedPos == 0) {
@@ -316,23 +316,23 @@ public class CvShapeElement <: IShapeElement {
                     modifier = ShapeModifier.initShapeModifier(arr[i], this.globalData, this.data, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [this.getRenderedFrameInElemComp], compDataInd: cdInd)
                     
                     itemsData[i] = modifier
-                    this.shapeModifiers.append(modifier)
+                    this.shapeModifiers.add(modifier)
                 } else {
                     modifier = (itemsData[i] as ShapeModifier).getOrThrow()
                     modifier.closed = false
                 }
-                ownModifiers.append(modifier)
+                ownModifiers.add(modifier)
             } else if (arr[i].ty == "rp") {
                 if (processedPos == 0) {
                     var modifier = RepeaterModifier(arr, i, itemsData, this.globalData, this.data, reloadShapes, dynamicProperties: this.dynamicProperties, compType: this.compType, renderedFrame: [this.getRenderedFrameInElemComp], compDataInd: cdInd)
                     itemsData[i] = modifier
-                    this.shapeModifiers.append(modifier)
+                    this.shapeModifiers.add(modifier)
                     shouldRender = false
                 } else {
                     var modifier = (itemsData[i] as RepeaterModifier).getOrThrow()
                     modifier.closed = true
                 }
-                ownModifiers.append((itemsData[i] as RepeaterModifier).getOrThrow())
+                ownModifiers.add((itemsData[i] as RepeaterModifier).getOrThrow())
             }
 
             this.addProcessedElement(arr[i], i + 1)
@@ -534,7 +534,7 @@ public class CvShapeElement <: IShapeElement {
                             c_data_k_e[2] = endColor[2] / 255.0
                         }
                         if (fse.c.data.size > 1) {
-                            var c_data_k1_s: Array<Float64> = Array<Float64>(3, item: 0.0)
+                            var c_data_k1_s: Array<Float64> = Array<Float64>(3, repeat: 0.0)
                             if (let Some(v1) <- fse.c.data[1].s) {
                                 if (v1.size >= 3) {
                                     c_data_k1_s = v1
@@ -559,7 +559,7 @@ public class CvShapeElement <: IShapeElement {
                             c_data_k_e[2] = endColor[2] / 255.0
                         }
                         if (fse.c.data.size > 1) {
-                            var c_data_k1_s: Array<Float64> = Array<Float64>(3, item: 0.0)
+                            var c_data_k1_s: Array<Float64> = Array<Float64>(3, repeat: 0.0)
                             if (let Some(v1) <- fse.c.data[1].s) {
                                 if (v1.size >= 3) {
                                     c_data_k1_s = v1
@@ -579,7 +579,7 @@ public class CvShapeElement <: IShapeElement {
                         }
 
                         if (fse.c.data.size > 1) {
-                            var c_data_k1_s: Array<Float64> = Array<Float64>(2, item: 0.0)
+                            var c_data_k1_s: Array<Float64> = Array<Float64>(2, repeat: 0.0)
                             if (let Some(v1) <- fse.c.data[1].s) {
                                 if (v1.size >= 2) {
                                     c_data_k1_s = v1
@@ -595,7 +595,7 @@ public class CvShapeElement <: IShapeElement {
                         }
 
                         if (fse.c.data.size > 1) {
-                            var c_data_k1_s: Array<Float64> = Array<Float64>(1, item: 0.0)
+                            var c_data_k1_s: Array<Float64> = Array<Float64>(1, repeat: 0.0)
                             if (let Some(v1) <- fse.c.data[1].s) {
                                 if (v1.size >= 1) {
                                     c_data_k1_s = v1
@@ -704,27 +704,27 @@ public class CvShapeElement <: IShapeElement {
                         len = pathNodes._length
                         for (index in 1..len) {
                             if (index == 1) {
-                                shapeNodes.append(StyledShapeTrNodes("m",
+                                shapeNodes.add(StyledShapeTrNodes("m",
                                     p: groupTransformMat.applyToPointArray(pathNodes.v[0].x, pathNodes.v[0].y, 0.0)
                                 ))
                             }
-                            shapeNodes.append(StyledShapeTrNodes("c",
+                            shapeNodes.add(StyledShapeTrNodes("c",
                                 pts: groupTransformMat.applyToTriplePoints([pathNodes.o[index - 1].x,pathNodes.o[index - 1].y], [pathNodes.i[index].x,pathNodes.i[index].y], [pathNodes.v[index].x,pathNodes.v[index].y])
                             ))
                             i = index
                         }
                         if (len == 1) {
-                            shapeNodes.append(StyledShapeTrNodes("m", p: groupTransformMat.applyToPointArray(pathNodes.v[0].x, pathNodes.v[0].y, 0.0)))
+                            shapeNodes.add(StyledShapeTrNodes("m", p: groupTransformMat.applyToPointArray(pathNodes.v[0].x, pathNodes.v[0].y, 0.0)))
                         }
                         if (pathNodes.c  && len > 0) {
-                            shapeNodes.append(StyledShapeTrNodes("c",
+                            shapeNodes.add(StyledShapeTrNodes("c",
                                 pts: groupTransformMat.applyToTriplePoints(
                                                                             [pathNodes.o[i].x,pathNodes.o[i].y],
                                                                             [pathNodes.i[0].x,pathNodes.i[0].y],
                                                                             [pathNodes.v[0].x,pathNodes.v[0].y]
                                                                             )
                             ))
-                            shapeNodes.append(StyledShapeTrNodes( "z"))
+                            shapeNodes.add(StyledShapeTrNodes( "z"))
                         }
                     }
                 }

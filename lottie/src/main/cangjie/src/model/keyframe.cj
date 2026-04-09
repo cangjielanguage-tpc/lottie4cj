@@ -25,7 +25,7 @@ extend Float64 <: Clone<Float64> {
 
 extend<T> Array<T> where T <: Clone<T>{
     public func deepClone(): Array<T> {
-        var sc = Array<T>(this.size,item: unsafe {zeroValue<T>()})
+        var sc = Array<T>(this.size,repeat: unsafe {zeroValue<T>()})
         for (i in 0..sc.size) {
             sc[i] = this[i].deepClone()
         }

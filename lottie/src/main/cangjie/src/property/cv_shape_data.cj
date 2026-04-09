@@ -43,8 +43,8 @@ public class CvShapeData <: ContentModelElement {
         for (i in 0..len) {
             if (!styles[i].closed) {
                 let styledShape: StyledShape = StyledShape(transformsManager.addTransformSequence(styles[i].transforms), ArrayList<StyledShapeTrNodes>())
-                this.styledShapes.append(styledShape)
-                styles[i].elements.append(styledShape)
+                this.styledShapes.add(styledShape)
+                styles[i].elements.add(styledShape)
             }
         }
     }

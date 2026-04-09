@@ -71,7 +71,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         let len: Int64 = this._textData.a.size
         var animatorProps: AnimatableTextPropertiesA = AnimatableTextPropertiesA()
 
-        this._animatorsData = Array<TextAnimatorDataProperty>(len, item: unsafe {zeroValue<TextAnimatorDataProperty>()})
+        this._animatorsData = Array<TextAnimatorDataProperty>(len, repeat: unsafe {zeroValue<TextAnimatorDataProperty>()})
 
         for (i in 0..len) {
             /* 数据类型分析: animatorProps  =>  this._textData.a[i]  =>  layer.t.a[i](AnimatableTextPropertiesA) */
@@ -89,7 +89,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
         let lens: Int64 = this._textData.m.a.k.size
         var arr: Array<Float64> = Array<Float64>()
         if (lens > 0) {
-            arr = Array<Float64>(lens, item: 0.0)
+            arr = Array<Float64>(lens, repeat: 0.0)
             let ak: Array<Int64> = this._textData.m.a.k
             for (i in 0..lens) {
                 arr[i] = Float64(ak[i])
@@ -156,7 +156,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                         [paths.o[j].x - paths.v[j].x, paths.o[j].y - paths.v[j].y],
                         [paths.i[j + 1].x - paths.v[j + 1].x, paths.i[j + 1].y - paths.v[j + 1].y])
                     pathInfo.tLength += bezierData.segmentLength
-                    pathInfo.segments.append(bezierData)
+                    pathInfo.segments.add(bezierData)
                     totalLength += bezierData.segmentLength
                 }
                 i = len
@@ -166,7 +166,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                         [paths.o[i].x - paths.v[i].x, paths.o[i].y - paths.v[i].y],
                         [paths.i[0].x - paths.v[0].x, paths.i[0].y - paths.v[0].y])
                     pathInfo.tLength += bezierData.segmentLength
-                    pathInfo.segments.append(bezierData)
+                    pathInfo.segments.add(bezierData)
                     totalLength += bezierData.segmentLength
                 }
                 this._pathData.pi = pathInfo
@@ -531,11 +531,11 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
                     matrixHelper.translate(0.0, (alignment[1] * yOff) * 0.01 + yPos, tz: 0.0)
                     if (this._pathData.p.v.size > 0) {
                         tanAngle = (currentPoint.point[1] - prevPoint.point[1]) / (currentPoint.point[0] - prevPoint.point[0])
-                        var rot: Float64 = (atan(tanAngle) * 180.0) / Float64.PI
+                        var rot: Float64 = (atan(tanAngle) * 180.0) / Float64.GetPI()
                         if (currentPoint.point[0] < prevPoint.point[0]) {
                             rot += 180.0
                         }
-                        matrixHelper.rotate((-rot * Float64.PI) / 180.0)
+                        matrixHelper.rotate((-rot * Float64.GetPI()) / 180.0)
                     }
                     matrixHelper.translate(xPathPos, yPathPos, tz: 0.0)
                     currentLength -= (alignment[0] * letters[i].an) * 0.005
@@ -572,7 +572,7 @@ public class TextAnimatorProperty <: DynamicPropertyContainer {
     
             if (renderedLettersCount <= i) {
                 letterValue = LetterProps(letterO, letterSw, letterSc, letterFc, letterM, letterP)
-                this.renderedLetters.append(letterValue)
+                this.renderedLetters.add(letterValue)
                 renderedLettersCount += 1
                 this.lettersChangedFlag = true
             } else {

@@ -107,7 +107,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
         this.os = PropertyFactory<ArrayKeyframeFloat64, Float64>(arr, 0.0, dp, elemGlobalData, elemData, dynamicProperties: dynamicProperties, compDataInd: compDataInd)
 
         if (addEffectsSequence) {
-            this.effectsSequence.append(interpolateShapeCurrentTime)
+            this.effectsSequence.add(interpolateShapeCurrentTime)
         }
     }
 
@@ -547,20 +547,20 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
 
     func convertStarToPath(): Unit {
         let numPts: Float64 = floor(this.pt.v[0]) * 2.0
-        let angle: Float64 = (Float64.PI * 2.0) / numPts
+        let angle: Float64 = (Float64.GetPI() * 2.0) / numPts
 
         var longFlag: Bool = true
         let longRad: Float64 = this.or.v[0]
         let shortRad: Float64 = this.ir.v[0]
         let longRound: Float64 = this.os.v[0]
         let shortRound: Float64 = this.is2.v[0]
-        let longPerimSegment: Float64 = (2.0 * Float64.PI * longRad) / (numPts * 2.0)
-        let shortPerimSegment: Float64 = (2.0 * Float64.PI * shortRad) / (numPts * 2.0)
+        let longPerimSegment: Float64 = (2.0 * Float64.GetPI() * longRad) / (numPts * 2.0)
+        let shortPerimSegment: Float64 = (2.0 * Float64.GetPI() * shortRad) / (numPts * 2.0)
 
         var rad: Float64 = 0.0
         var roundness: Float64 = 0.0
         var perimSegment: Float64 = 0.0
-        var currentAng: Float64 = -Float64.PI / 2.0
+        var currentAng: Float64 = -Float64.GetPI() / 2.0
         currentAng += this.r.v[0]
         var dir: Float64 = 1.0
         /* 初始化的时候，已经将 data.d 赋值到 this.d 中了 */
@@ -600,12 +600,12 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
 
     func convertPolygonToPath(): Unit {
         let numPts: Float64 = floor(this.pt.v[0])
-        let angle: Float64 = (Float64.PI * 2.0) / numPts
+        let angle: Float64 = (Float64.GetPI() * 2.0) / numPts
         let rad: Float64 = this.or.v[0]
         let roundness: Float64 = this.os.v[0]
-        let perimSegment: Float64 = (2.0 * Float64.PI * rad) / (numPts * 4.0)
+        let perimSegment: Float64 = (2.0 * Float64.GetPI() * rad) / (numPts * 4.0)
 
-        var currentAng: Float64 = -Float64.PI * 0.5
+        var currentAng: Float64 = -Float64.GetPI() * 0.5
         /* 初始化的时候，已经将 data.d 赋值到 this.d 中了 */
         var dir: Float64 = 1.0
         if (this.d == 3) {
@@ -812,7 +812,7 @@ public class ShapePropertyFactory <: DynamicPropertyContainer {
     }
 
     func addEffect(effectFunction: () -> ShapeData): Unit {
-        this.effectsSequence.append(effectFunction)
+        this.effectsSequence.add(effectFunction)
     }
 
 }
