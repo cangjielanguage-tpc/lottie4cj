@@ -2,7 +2,9 @@
   "apiType": "stageMode",
   "buildOption": {
     "cangjieOptions": {
-      "path": "./cjpm.toml"
+      "path": "./cjpm.toml",
+      "abiFilters": ["arm64-v8a","x86_64"],
+      "flattenLibs": true
     }
   },
   "buildOptionSet": [
