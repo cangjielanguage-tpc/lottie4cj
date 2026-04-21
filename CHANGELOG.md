@@ -1,4 +1,11 @@
 
+## 1.0.5
+
+- 适配仓颉 1.1.0。
+  - DevEco Studio 6.0.0 Release(6.0.0.879)
+  - Cangjie Support Plugin 6.0.0.879
+  - Cangjie Compiler: 1.1.0 (cjnative)
+
 ## 1.0.4
 
 - 修复页面单动画多次连续点击 destroy 和 loadAnimation，卡主几秒后崩溃退出。
