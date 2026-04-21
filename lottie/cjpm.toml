@@ -15,8 +15,11 @@
 
 [dependencies]
   [dependencies.zip4cj]
-    tag = "0.60.5_5.1.1"
+    tag = "1.1.0"
     git = "https://gitcode.com/Cangjie-TPC/zip4cj.git"
+  [dependencies.zlib4cj]
+    git = "https://gitcode.com/Cangjie-TPC/zlib4cj.git"
+    branch = "v1.2.0"
 
 [package]
   cjc-version = "0.48.2"
@@ -27,7 +30,7 @@
   output-type = "dynamic"
   src-dir = "./src/main/cangjie/src"
   target-dir = ""
-  version = "1.0.4"
+  version = "1.0.5"
   [package.package-configuration]
   [package.scripts]
 
