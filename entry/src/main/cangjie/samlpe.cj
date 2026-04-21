@@ -1,6 +1,4 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights resvered.
- */
+
 package ohos_app_cangjie_entry
 
 internal import ohos.base.*
@@ -71,7 +69,7 @@ class LottieSample {
                     Column() {
 
                         Row() {
-                            Button("加载2016-3").onClick {
+                            Button("加载2016").onClick {
                                 evt =>
                                 Hilog.error(0, "lipei", "begin------------times = ${SystemDateTime.getCurrentTime(isNano: true)}")
                                 if (!this.animateItem.isNone()) {
@@ -81,7 +79,7 @@ class LottieSample {
                                 if (this.animateItem.isNone()) {
                                     this.animateItem = lottie.loadAnimation(AnimationConfig(
                                         //uri: "https://raw.gitcode.com/lipeifsxz/testlottie/blobs/c1c81ce5ef299171dc0a214ab8cc883a92d55773/animation_008.json",
-                                        isNetwork: true,
+                                        //isNetwork: true,
                                         wrapper_ns: CreateNS("doc"),
                                         container: this.canvasRenderingContext,
                                         renderer: "canvas", // canvas 渲染模式
