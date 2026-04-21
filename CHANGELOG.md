@@ -1,3 +1,12 @@
+
+## 1.0.4
+
+- 修复页面单动画多次连续点击 destroy 和 loadAnimation，卡主几秒后崩溃退出。
+- 适配仓颉 1.0.5。
+  - DevEco Studio 5.1.1 Release
+  - Cangjie Support Plugin 5.1.1.851
+  - Cangjie Compiler: 1.0.5 (cjnative)
+
 ## 1.0.3
 
 - 修复缺失 saveLayer 和 restoreLayer 接口造成的图层层级显示效果 bug;
@@ -20,9 +29,9 @@
 
 - 修复并发图片下载后动画显示不全的 bug。
 - 适配仓颉 0.53.19。
-    - DevEco Studio 5.0.4 Release(5.0.11.100)
-    - Cangjie Support Plugin 5.0.11.100
-    - Cangjie Compiler: 0.53.19 (cjnative)
+  - DevEco Studio 5.0.4 Release(5.0.11.100)
+  - Cangjie Support Plugin 5.0.11.100
+  - Cangjie Compiler: 0.53.19 (cjnative)
 
 ## 1.0.0
 

@@ -128,7 +128,9 @@ public class AnimationManager {
 
     func addPlayingCount(en: Option<BMEvent>): Unit {
         this.playingAnimationsNum += 1
-        activate()
+        if (this.playingAnimationsNum > 0) {
+            activate()
+        }
     }
 
     func subtractPlayingCount(en: Option<BMEvent>): Unit {
@@ -189,7 +191,7 @@ public class AnimationManager {
             }
         }
         initTime = nowTime
-        if (!(playingAnimationsNum != 0 && !_isFrozen)) {
+        if (!(playingAnimationsNum > 0 && !_isFrozen)) {
             //防止暂停后再播放时，创建新Animator对象
             if(!_paused){
                 _stopped = true
@@ -350,6 +352,9 @@ public class AnimationManager {
             setAnimatorState(AnimationStatus.Stopped)
             _stopped = true
             _isFrozen = false
+            if (let Some(v) <- this._animator) {
+                v.cancel()
+            }
             this._animator = None
             this._displaySync = None
         } else {
@@ -406,8 +411,8 @@ public class AnimationManager {
     }
 
     func activate() {
-        if (!_isFrozen && playingAnimationsNum != 0) {
-            if (_stopped) {
+        if (!_isFrozen && this.playingAnimationsNum > 0) {
+            if (this._stopped) {
                 if (useDisplaySync) {
                     try {
                         if (let Some(v) <- this._displaySync) {
@@ -429,7 +434,9 @@ public class AnimationManager {
                 this.useDisplaySync = false
 
                 if (let Some(v) <- this._animator) {
-                    return
+                    v.play()
+ 	                this._stopped = false
+ 	                return
                 }
 
                 initTime = SystemDateTime.getCurrentTime()
