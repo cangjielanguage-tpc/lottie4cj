@@ -5,16 +5,11 @@
     "description": "$string:module_desc",
     "mainElement": "EntryAbility",
     "deviceTypes": [
-      "phone",
-      "tablet",
-      "2in1"
+      "phone"
     ],
     "requestPermissions": [
       {
-        "name": "ohos.permission.INTERNET"
-      },
-      {
-        "name": "ohos.permission.GET_NETWORK_INFO"
+        "name" : "ohos.permission.INTERNET"
       }
     ],
     "deliveryWithInstall": true,
