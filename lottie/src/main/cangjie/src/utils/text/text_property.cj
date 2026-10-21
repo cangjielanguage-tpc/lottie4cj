@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is BaseElement.
  */
@@ -14,6 +10,9 @@ internal import lottie.global_data.*
 internal import std.random.*
 internal import std.collection.*
 internal import std.math.*
+
+internal import lottie.model.Font as LottieFont
+internal import lottie.model.Fonts as LottieFonts
 
 public func default_addDynamicProperty(tp: TextProperty): Unit {}
 
@@ -266,7 +265,7 @@ public class TextProperty {
         var lineWidth: Float64 = 0.0
         var maxLineWidth: Float64 = 0.0
 
-        var fontData: Font = fontManager.getFontByName(documentData.f)
+        var fontData: LottieFont = fontManager.getFontByName(documentData.f)
         var charData: FontCharacter = FontCharacter(CharsData(shapes: ArrayList<ContentModel>()), "", 0.0, 0.0, "", "")
 
         var cLength: Float64 = 0.0
@@ -520,8 +519,7 @@ public class TextProperty {
                     if (currentInd != letterData.anIndexes[j]) { /* eslint-disable-line eqeqeq */
                         currentInd = letterData.anIndexes[j]
 
-                        let m: Random = Random()
-                        //m.seed = 3
+                        let m: Random = Random(3)
                         let num: Float64 = m.nextFloat64()
                         newInd = indexes.remove(at: Int64(floor(num * Float64(indexes.size))))
                     }

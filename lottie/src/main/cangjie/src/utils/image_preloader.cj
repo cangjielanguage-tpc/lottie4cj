@@ -1,11 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
 
 package lottie.utils
 
-internal import ohos.hilog.*
-internal import ohos.system_date_time.*
+internal import kit.PerformanceAnalysisKit.Hilog
+internal import kit.BasicServicesKit.SystemDateTime
 
 import ohos.ability.*
 import ohos.resource_manager.*
@@ -16,17 +13,20 @@ internal import std.time.*
 
 internal import lottie.inner.*
 
-import ohos.image.Image as MultiImage
-import ohos.image.Component as ImageComponent
-import ohos.image.PixelMap
-import ohos.image.createImageSource
-import ohos.image.DecodingOptions
-import ohos.image.Size
-import ohos.image.PixelMapFormat
-import ohos.image.Region
-import ohos.image.ImageInfo
-import ohos.image.InitializationOptions
-import ohos.image.createPixelMap
+internal import kit.ImageKit.Image as MultiImage
+internal import kit.ImageKit.Component as ImageComponent
+internal import kit.ImageKit.PixelMap
+internal import kit.ImageKit.createImageSource
+internal import kit.ImageKit.DecodingOptions
+
+internal import kit.ImageKit.PixelMapFormat
+internal import kit.ImageKit.Region
+internal import kit.ImageKit.ImageInfo
+internal import kit.ImageKit.InitializationOptions
+internal import kit.ImageKit.createPixelMap
+
+internal import kit.LocalizationKit.ResourceManager
+internal import kit.UIKit.*
 
 
 public class ImagePreloader {

@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is LayerExpressionInterface.
  */
@@ -11,6 +7,9 @@ internal import lottie.model.*
 internal import lottie.elements.*
 internal import lottie.bezier.*
 internal import lottie.*
+
+internal import lottie.model.Font as LottieFont
+internal import lottie.model.Fonts as LottieFonts
 
 public class LayerExpressionInterface <: ExpressionInterface {
 

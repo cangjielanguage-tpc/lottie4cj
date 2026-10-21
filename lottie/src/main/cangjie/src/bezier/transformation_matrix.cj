@@ -1,11 +1,9 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+
 package lottie.bezier
 
 internal import std.math.*
 
-internal import ohos.hilog.*
+internal import kit.PerformanceAnalysisKit.Hilog
 
 const PROPS_NUM = 16
 

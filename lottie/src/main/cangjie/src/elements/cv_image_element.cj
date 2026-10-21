@@ -1,9 +1,8 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+
 package lottie.elements
 
-import ohos.image.*
+import kit.ImageKit.*
+
 public class CvImageElement <: IImageElement {
 
     var img:ImgOB

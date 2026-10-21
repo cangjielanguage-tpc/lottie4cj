@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is IImageElement.
  */
@@ -24,4 +20,4 @@ public let empty_Array_Keyframe_Int64: Array<Keyframe<Int64>> = Array<Keyframe<I
 public let empty_ArrayKeyframeInt64: ArrayKeyframeInt64 = ArrayKeyframeInt64(k: empty_Array_Keyframe_Int64)
 
 public let empty_asset: Asset = Asset("", empty_Array_layer, 0, 0, "", "", 0)
-public let empty_size: Size = Size()
+public let empty_size: SizeLottie = SizeLottie()

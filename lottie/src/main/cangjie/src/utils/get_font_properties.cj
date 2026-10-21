@@ -1,11 +1,9 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is getFontProperties.
  */
 package lottie.utils
+
+
 
 public class FontProps {
     public let style: String
@@ -16,7 +14,7 @@ public class FontProps {
     }
 }
 
-public func getFontProperties(fontData: Font): FontProps {
+public func getFontProperties(fontData: LottieFont): FontProps {
     var styles: Array<String> = Array<String>()
     if (!fontData.fStyle.isEmpty()) {
         fontData.fStyle.split(" ")

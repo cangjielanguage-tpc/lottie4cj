@@ -1,18 +1,16 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is DataManager.
  */
 package lottie.utils
 
 internal import std.convert.*
+internal import std.fs.*
 
 internal import lottie.parser.*
+internal import lottie.utils.helpers.*
 
-import ohos.resource_manager.*
-import ohos.ability.*
+internal import kit.LocalizationKit.ResourceManager
+internal import kit.UIKit.*
 
 
 class WorkerProxy {

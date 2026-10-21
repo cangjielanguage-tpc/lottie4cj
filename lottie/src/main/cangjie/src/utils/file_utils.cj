@@ -1,16 +1,7 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2023-2024. All rights reserved.
- */
-
 /**
  * @file This file implements FileUtils class functionality.
  */
 package lottie.utils
-
-internal import std.fs.*
-internal import std.fs.remove as fsremove
-
-import ohos.bundle_manager.*
 
 /**
  * Get Bundle Name
@@ -37,7 +28,9 @@ public class FileUtils {
     public static func fileList(way: String): Array<FileInfo> {
         return Directory.readFrom(way)
     }
-
+    public static func fileAndDirectoryList(way: String): Array<FileInfo> {
+        return Directory.readFrom(way)
+    }
     public static func directoryList(way: String): Array<FileInfo> {
         return Directory.readFrom(way)
     }
@@ -72,19 +65,21 @@ public class FileUtils {
     }
 
     public static func moveDirectory(srcPath: String, destPath: String, overwrite: Bool): Unit {
-        rename(srcPath, to: destPath, overwrite: overwrite)
+        copy(srcPath, to: destPath, overwrite: overwrite)
+        remove(srcPath, recursive: true)
     }
 
     public static func moveFile(srcPath: String, destPath: String, overwrite: Bool): Unit {
-        rename(srcPath, to: destPath, overwrite: overwrite)
+        copy(srcPath, to: destPath, overwrite: overwrite)
+        remove(srcPath, recursive: false)
     }
 
     public static func deleteDirectory(path: String, recursive!: Bool = false): Unit {
-        fsremove(path, recursive: recursive)
+        remove(path, recursive: recursive)
     }
 
     public static func deleteFile(path: String): Unit {
-        fsremove(path)
+        remove(path, recursive: false)
     }
 
     public static func listFileSync(path: String): Array<FileInfo> {

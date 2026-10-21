@@ -1,12 +1,5 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
+
 package lottie.utils
-
-import ohos.request.agent.*
-
-import ohos.ability.*
-
 
 public class DownLoadSource {
     let downloadUri: HashMap<String, Bool> = HashMap<String, Bool>()
@@ -40,7 +33,7 @@ public class DownLoadSource {
             downloadUri.add(uri, true)
 
             let downloadConfig = Config(
-                action: Action.DOWNLOAD,
+                action: ActionAgent.DOWNLOAD,
                 url: uri,
                 mode: Mode.FOREGROUND,
                 overwrite: true,

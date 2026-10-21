@@ -1,13 +1,9 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is IImageElement.
  */
 package lottie.model
 
-public class Size <: ToString {
+public class SizeLottie <: ToString {
 
     /* The width */
     public var width: Int64 = 0
@@ -37,6 +33,6 @@ public class Size <: ToString {
      * @return Type of String, converted String.
      */
     public func toString(): String {
-        return "Size = {(width = ${width}), (height = ${height})}"
+        return "SizeLottie = {(width = ${width}), (height = ${height})}"
     }
 }
