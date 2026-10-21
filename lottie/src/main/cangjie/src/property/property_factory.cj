@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is PropertyFactory.
  */
@@ -14,7 +10,7 @@ internal import lottie.bezier.*
 internal import lottie.inner.*
 internal import lottie.pool.*
 
-import ohos.hilog.*
+import kit.PerformanceAnalysisKit.Hilog
 
 public type Caching = CachingAtTime
 

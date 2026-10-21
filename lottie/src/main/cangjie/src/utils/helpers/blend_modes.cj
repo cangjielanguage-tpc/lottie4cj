@@ -1,17 +1,13 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is BlendModes.
  */
 package lottie.utils.helpers
-import ohos.base.*
-import ohos.image.*
-import ohos.component.*
-import ohos.state_manage.*
-import ohos.state_macro_manage.*
-import std.core.Object
+
+internal import kit.ImageKit.*
+
+internal import kit.UIKit.*
+
+internal import std.core.Object
 
 enum MultiType {
     | INT(Int64)
@@ -484,6 +480,20 @@ public class LottieCanvasRenderingContext2D {
     public func save(): Unit {
         this.ctx2d.save()
     }
+    public func restoreLayer(): Unit {
+        this.ctx2d.restoreLayer()
+    }
+    public func saveLayer(): Unit {
+        this.ctx2d.saveLayer()
+    }
+
+    public func width(): Float64 {
+        return this.ctx2d.width()
+    }
+    public func height(): Float64 {
+        return this.ctx2d.height()
+    }
+
     public func createLinearGradient(x0: Float64, y0: Float64, x1: Float64, y1: Float64): CanvasGradient {
         this.ctx2d.createLinearGradient(x0,y0,x1,y1)
     }

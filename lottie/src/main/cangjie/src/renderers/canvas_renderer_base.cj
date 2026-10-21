@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is CanvasRendererBase.
  */
@@ -279,22 +275,19 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.canvasContext.restore()
         this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
         this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h) /* 清空之前画布 */
-        this.canvasContext.clearRect(0.0, 0.0, 174.46153846153845, 200.0) /* 清空之前画布 */
+        this.canvasContext.clearRect(0.0, 0.0, this.canvasContext.width(), this.canvasContext.height()) /* 清空之前画布 */
         this.canvasContext.save()
 
         this.reset()
-        var elementWidth = 174.46153846153845
-        var elementHeight = 200.0
+        var elementWidth = 0.0
+        var elementHeight = 0.0
         if (width > 0 && height > 0) {
             elementWidth = Float64(width)
             elementHeight = Float64(height)
         } else {
             try {
-                //TODO: 等 CanvasRenderingContext2D 能拿到 width 和 height 值之后，后期替换。
-                /*
-                elementHeight = this.canvasContext.ctx2d.height
-                elementWidth = this.canvasContext.ctx2d.width
-                */
+                elementHeight = this.canvasContext.height()
+                elementWidth = this.canvasContext.width()
             } catch (err: Exception) {
                 Hilog.error(0, "[updateContainerSize]", "get the width and height from CanvasRenderingContext2D is error: ${err.message}")
             }
@@ -304,7 +297,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             elementHeight = 200.0  //360
         }
         if (elementWidth <= 0.0) {
-            elementWidth = 174.46153846153845 //540
+            elementWidth = 540.0 //174.46153846153845
         }
 
         var elementRel: Float64 = 0.0
@@ -381,7 +374,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
         this.canvasContext.restore()
         this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
         this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h) /* 清空之前画布 */
-        this.canvasContext.clearRect(0.0, 0.0, 174.46153846153845, 200.0) /* 清空之前画布 */
+        this.canvasContext.clearRect(0.0, 0.0, this.canvasContext.width(), this.canvasContext.height()) /* 清空之前画布 */
         this.canvasContext.save()
         let len: Int64 = this.layers.size
         for (i in (len - 1)..=0: -1) {
@@ -498,7 +491,7 @@ public abstract class CanvasRendererBase <: BaseRenderer {
             if (this.renderConfig.clearCanvas) {
                 this.canvasContext.clearRect(0.0, 0.0, this.transformCanvas.w, this.transformCanvas.h)
                 this.canvasContext.setTransform(1, 0, 0, 1, 0, 0)
-                this.canvasContext.clearRect(0.0, 0.0, 174.46153846153845, 200.0) /* 清空之前画布 */
+                this.canvasContext.clearRect(0.0, 0.0, this.canvasContext.width(), this.canvasContext.height()) /* 清空之前画布 */
             } else {
                 this.save(false)
             }

@@ -1,9 +1,5 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
 
 package lottie.utils
-import ohos.image.*
 
 func default_Unit_To_Unit(): Unit {}
 func default_Asset_To_OB_CreateNS(asset: Asset): OB {

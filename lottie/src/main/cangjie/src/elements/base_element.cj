@@ -1,19 +1,12 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is BaseElement.
  */
 package lottie.elements
 
-internal import ohos.base.*
-internal import ohos.component.*
-internal import ohos.state_manage.*
-import ohos.state_macro_manage.*
+internal import kit.UIKit.*
 
-internal import ohos.hilog.*
-internal import ohos.image.PixelMap
+internal import kit.PerformanceAnalysisKit.Hilog
+internal import kit.ImageKit.PixelMap
 
 internal import lottie.elements.helpers.*
 
@@ -314,11 +307,9 @@ public open class BaseElement <: Equatable<BaseElement> {
     }
 
     public open func checkPendingElements(): Unit {
-        var index = this.pendingElements.size
         while (this.pendingElements.size != 0) {
             let element: BaseElement = this.pendingElements.remove(at: this.pendingElements.size - 1)
             element.checkParenting()
-            index--
         }
     }
 
@@ -646,11 +637,11 @@ public open class BaseElement <: Equatable<BaseElement> {
         return SourceRect(top: 0, left: 0, width: 100, height: 100)
     }
 
-    public func getLayerSize(): Size {
+    public func getLayerSize(): SizeLottie {
         if (this.data.ty == 5) {
-            return Size(width: this.data.textData.width, height: this.data.textData.height)
+            return SizeLottie(width: this.data.textData.width, height: this.data.textData.height)
         }
-        return Size(width: this.data.width, height: this.data.height)
+        return SizeLottie(width: this.data.width, height: this.data.height)
     }
 
     public open func createRenderableComponents() {
@@ -682,7 +673,7 @@ public open class BaseElement <: Equatable<BaseElement> {
     public open func exitLayer () {
         if (this.data.tt >= 1) {
             /* 恢复图层 */
-            this.canvasContext.restore()
+            this.canvasContext.restoreLayer()
             /* 将递归图层和mask动效图层进行指定混合 */
             match (operationsMap[this.data.tt]) {
                case "destination-in" => this.canvasContext.globalCompositeOperation(CompositeOperation.DestinationIn)
@@ -690,7 +681,7 @@ public open class BaseElement <: Equatable<BaseElement> {
                case _ =>  this.canvasContext.globalCompositeOperation(CompositeOperation.DestinationIn)
             }
             /* 保存mask动效层 */
-            this.canvasContext.save()
+            this.canvasContext.saveLayer()
             
             /* 对之前的混合模式还原成默认模式 */
             this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
@@ -709,8 +700,8 @@ public open class BaseElement <: Equatable<BaseElement> {
                 v.renderFrame(true)
             }
             /* 恢复图层 */
-            this.canvasContext.restore()
-            this.canvasContext.restore()
+            this.canvasContext.restoreLayer()
+            this.canvasContext.restoreLayer()
 
             this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
         }
@@ -732,9 +723,9 @@ public open class BaseElement <: Equatable<BaseElement> {
          if (this.data.tt >= 1) {
             this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
 
-            this.canvasContext.save()
+            this.canvasContext.saveLayer()
             /* 保存递归图层 */
-            this.canvasContext.save()
+            this.canvasContext.saveLayer()
             /* 对之前的混合模式还原成默认模式 */
             this.canvasContext.globalCompositeOperation(CompositeOperation.SourceOver)
          }

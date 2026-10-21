@@ -1,13 +1,9 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is shapePool.
  */
 package lottie.pool
 
-internal import ohos.hilog.*
+internal import kit.PerformanceAnalysisKit.Hilog
 
 /**
  * The shape pool.

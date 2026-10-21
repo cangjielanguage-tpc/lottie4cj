@@ -27,7 +27,7 @@
   output-type = "dynamic"
   src-dir = "./src/main/cangjie/src"
   target-dir = ""
-  version = "1.0.6"
+  version = "1.0.7"
   [package.package-configuration]
   [package.scripts]
 

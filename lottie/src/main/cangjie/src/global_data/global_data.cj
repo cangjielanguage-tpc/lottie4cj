@@ -1,18 +1,12 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is a GlobalData structure.
  */
 package lottie.global_data
 
-internal import ohos.base.*
-internal import ohos.component.*
-internal import ohos.state_manage.*
+internal import ohos.animator.*
 import ohos.state_macro_manage.*
 
-internal import ohos.hilog.*
+internal import kit.PerformanceAnalysisKit.Hilog
 
 
 internal import lottie.model.*

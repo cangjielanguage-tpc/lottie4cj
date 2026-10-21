@@ -1,7 +1,3 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is FontManager.
  */
@@ -9,9 +5,11 @@ package lottie.utils
 
 internal import lottie.model.*
 internal import lottie.utils.helpers.*
+internal import lottie.model.Font as LottieFont
+internal import lottie.model.Fonts as LottieFonts
 
 internal import std.convert.*
-internal import std.collection.*
+internal import std.collection.{ArrayList, HashMap}
 
 public type CreateTag = CreateNS
 
@@ -36,7 +34,7 @@ public class FontManager {
 
     public static let zeroWidthJoiner: Array<UInt32> = [65039, 8205]
 
-    public var fonts: Array<Font> = Array<Font>()
+    public var fonts: Array<LottieFont> = Array<LottieFont>()
     public var chars: ArrayList<FontCharacter> = ArrayList<FontCharacter>()
     var typekitLoaded: Int64 = 0
     public var isLoaded: Bool = false
@@ -52,7 +50,7 @@ public class FontManager {
     public init() { }
 
     /* /数据来源分析：fontData == animData.fonts == Fonts */
-    public func addFonts(fontData: Fonts, defs: CreateTag): Unit {
+    public func addFonts(fontData: LottieFonts, defs: CreateTag): Unit {
         if (fontData.isEmpty()) {
             this.isLoaded = true
             return
@@ -104,7 +102,7 @@ public class FontManager {
      * @param name - Type of String.
      * @return Type of Font, result value.
      */
-    public func getFontByName(name: String): Font {
+    public func getFontByName(name: String): LottieFont {
         if (this.fonts.size == 0){
             throw IndexOutOfBoundsException("this.fonts.size = ${this.fonts.size}")
         }

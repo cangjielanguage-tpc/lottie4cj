@@ -1,16 +1,9 @@
-/*
- * Copyright (c) Huawei Technologies Co., Ltd. 2024-2024. All rights reserved.
- */
-
 /**
  * @file This file is AnimationConfig.
  */
 package lottie.animation
 
-import ohos.base.*
-import ohos.component.*
-import ohos.state_manage.*
-import ohos.state_macro_manage.*
+internal import kit.UIKit.*
 
 /**
  * 动画事件回调函数声明
