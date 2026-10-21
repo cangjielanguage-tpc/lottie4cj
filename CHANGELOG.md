@@ -1,4 +1,12 @@
 
+## 1.0.6
+
+- 适配 DevEco Studio 6.1.1。
+  - DevEco Studio 6.1.1 Release (6.1.1.280)
+  - Cangjie Support Plugin 6.1.1 Beta1 (6.1.1.280)
+  - Cangjie Compiler: v1.1.3
+  - compatibility-sdk-6.1.1.280
+
 ## 1.0.5
 
 - 适配仓颉 1.1.0。
